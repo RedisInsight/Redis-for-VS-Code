@@ -1,5 +1,5 @@
 import * as express from 'express'
-import * as bodyParser from 'body-parser'
+// import * as bodyParser from 'body-parser'
 import * as keytar from 'keytar'
 import { Server } from 'socket.io'
 import Redis from 'ioredis'
@@ -53,7 +53,7 @@ export const bootstrap = () => {
   })
 
   // Enable JSON body parsing
-  app.use(bodyParser.json())
+  // app.use(bodyParser.json())
 
   app.get('/', (req, res) => {
     res?.send('Hello from your embedded Express server!')

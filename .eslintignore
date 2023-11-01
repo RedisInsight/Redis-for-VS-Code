@@ -49,3 +49,4 @@ package.json
 *.sass.d.ts
 *.scss.d.ts
 yarn.lock
+pnpm-lock.yaml
