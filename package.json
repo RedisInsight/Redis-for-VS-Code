@@ -65,16 +65,6 @@
   "msw": {
     "workerDirectory": "./src/webviews/test/public"
   },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "eslint --fix"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "devDependencies": {
     "@babel/preset-react": "^7.22.15",
     "@githubocto/tailwind-vscode": "^1.0.4",
@@ -132,7 +122,6 @@
     "husky": "^8.0.3",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^22.1.0",
-    "lint-staged": "^15.0.2",
     "msw": "^2.0.1",
     "msw-storybook-addon": "2.0.0--canary.122.b3ed3b1.0",
     "patch-package": "^8.0.0",
