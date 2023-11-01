@@ -16,7 +16,7 @@ export function useVSCodeState<S>(
   uniqueStateKey: any,
 ): [S, Dispatch<S>] {
   const [localState, setLocalState] = useState(
-    vscodeApi.getState()[uniqueStateKey] || initialState
+    vscodeApi.getState()[uniqueStateKey] || initialState,
   )
 
   const setState = (newState: S) => {

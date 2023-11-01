@@ -12,7 +12,7 @@ export interface GetAppSettingsResponse {
   theme: string
   scanThreshold: number
   batchSize: number
-  agreements: GetUserAgreementsResponse;
+  agreements: GetUserAgreementsResponse
 }
 
 export interface GetUserAgreementsResponse {
@@ -29,18 +29,18 @@ export interface GetAgreementsSpecResponse {
 }
 
 export interface IAgreement {
-  defaultValue: boolean;
-  displayInSetting: boolean;
-  required: boolean;
-  category?: string;
-  since: string;
-  editable: boolean;
-  disabled: boolean;
-  title: string;
-  label: string;
-  description?: string;
+  defaultValue: boolean
+  displayInSetting: boolean
+  required: boolean
+  category?: string
+  since: string
+  editable: boolean
+  disabled: boolean
+  title: string
+  label: string
+  description?: string
 }
 
 export interface IAgreementSpec {
-  [key: string]: IAgreement;
+  [key: string]: IAgreement
 }

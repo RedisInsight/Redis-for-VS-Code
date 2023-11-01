@@ -13,7 +13,7 @@ export default defineConfig({
   resolve: {
     alias: {
       uiSrc: fileURLToPath(new URL('./src/webviews/src', import.meta.url)),
-    }
+    },
   },
   build: {
     outDir: 'dist/webviews',
@@ -33,7 +33,7 @@ export default defineConfig({
     watch: {}, // yes, this is correct
   },
   define: {
-    'process.env': JSON.stringify(process.platform)
+    'process.env': JSON.stringify(process.platform),
   },
 
   // testing

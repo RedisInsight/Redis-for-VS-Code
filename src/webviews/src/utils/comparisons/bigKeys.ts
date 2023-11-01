@@ -2,18 +2,18 @@ import { KeyTypes } from 'uiSrc/constants'
 
 enum HighlightType {
   Length = 'length',
-  Memory = 'memory'
+  Memory = 'memory',
 }
 
 interface DefaultConfig { [key: string]: number }
 
 const defaultMemoryConfig: { [key: string]: number } = {
-  memory: 5_000_000
+  memory: 5_000_000,
 }
 
 const defaultConfig: { [key: string]: number } = {
   length: 5_000,
-  memory: 5_000_000
+  memory: 5_000_000,
 }
 
 const bigKeysConfig: { [key: string]: DefaultConfig } = {

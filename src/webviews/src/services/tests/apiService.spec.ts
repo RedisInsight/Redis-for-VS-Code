@@ -8,7 +8,7 @@ describe('requestInterceptor', () => {
 
     const config: AxiosRequestConfig = {
       headers: {},
-      url: 'http://localhost:8080/databases/123-215gg-23/endpoint'
+      url: 'http://localhost:8080/databases/123-215gg-23/endpoint',
     }
 
     requestInterceptor(config)
@@ -20,7 +20,7 @@ describe('requestInterceptor', () => {
 
     const config: AxiosRequestConfig = {
       headers: {},
-      url: 'http://localhost:8080/settings/123-215gg-23/endpoint'
+      url: 'http://localhost:8080/settings/123-215gg-23/endpoint',
     }
 
     requestInterceptor(config)

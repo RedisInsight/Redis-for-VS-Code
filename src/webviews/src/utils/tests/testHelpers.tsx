@@ -14,9 +14,9 @@ import { initialState as initialStateInstances } from 'uiSrc/slices/connections/
 import { initialState as initialStateUserSettings } from 'uiSrc/slices/user/user-settings.slice'
 
 interface Options {
-  initialState?: RootState;
-  withRouter?: boolean;
-  [property: string]: any;
+  initialState?: RootState
+  withRouter?: boolean
+  [property: string]: any
 }
 
 // root state
@@ -35,7 +35,6 @@ const initialStateDefault: RootState = {
   user: {
     settings: cloneDeep(initialStateUserSettings),
   },
-
 }
 
 // mocked store
@@ -45,7 +44,7 @@ export const mockedStore = mockStore(initialStateDefault)
 // insert mocked store to the render Component
 export const render = (
   ui: JSX.Element,
-  { initialState, withRouter, ...renderOptions }: Options = initialStateDefault
+  { initialState, withRouter, ...renderOptions }: Options = initialStateDefault,
 ) => {
   const Wrapper = ({ children }: { children: JSX.Element }) => (
     <Provider store={mockedStore}>{children}</Provider>

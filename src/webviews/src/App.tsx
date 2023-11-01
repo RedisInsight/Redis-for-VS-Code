@@ -12,7 +12,7 @@ const headers = {
   Origin: 'http://localhost:3000',
 }
 
-// const vscode = acquireVsCodeApi();
+// const vscode = acquireVsCodeApi()
 
 const App: FunctionComponent<AppProps> = () => {
   const [val, setVal] = useVSCodeState<string>('', 'val')
@@ -25,7 +25,7 @@ const App: FunctionComponent<AppProps> = () => {
         {
           method: 'GET',
           headers,
-        }
+        },
       )
       const url = await response.json() || ''
 
@@ -47,9 +47,9 @@ const App: FunctionComponent<AppProps> = () => {
         method: 'POST',
         headers,
         body: JSON.stringify({
-          url: val
-        })
-      }
+          url: val,
+        }),
+      },
     )
 
     const { keys } = await response.json()

@@ -43,7 +43,7 @@ export const bootstrap = () => {
   const io = new Server(server, {
     cors: {
       origin: '*',
-    }
+    },
   })
 
   app.all('/*', (req, res, next) => {
@@ -120,7 +120,7 @@ const getKeys = async (url: string, res?: any) => {
 
   try {
     [total, keys] = await redis.scan(0)
-    // res.status(200).json({ info: convertRedisInfoReplyToObject(info) });
+    // res.status(200).json({ info: convertRedisInfoReplyToObject(info) })
     res.status(200).json({ total, keys })
   } catch (error) {
     res?.status(500).json({ error: 'Error to fetch keys' })
@@ -128,20 +128,20 @@ const getKeys = async (url: string, res?: any) => {
 
   // workspace folder store file
   // try {
-  //   const workspaceFolders = vscode.workspace.workspaceFolders;
+  //   const workspaceFolders = vscode.workspace.workspaceFolders
   //   if (!workspaceFolders || workspaceFolders.length === 0) {
-  //       vscode.window.showErrorMessage('No workspace folders found.');
-  //       return;
+  //       vscode.window.showErrorMessage('No workspace folders found.')
+  //       return
   //   }
 
-  //   const storedUrl = await keytar.getPassword('ri-vsc', 'url');
-  //   const activeWorkspaceFolder = workspaceFolders[0];
-  //   const filePath = vscode.Uri.joinPath(activeWorkspaceFolder.uri, 'keys.txt');
+  //   const storedUrl = await keytar.getPassword('ri-vsc', 'url')
+  //   const activeWorkspaceFolder = workspaceFolders[0]
+  //   const filePath = vscode.Uri.joinPath(activeWorkspaceFolder.uri, 'keys.txt')
 
   //   // Write the user data to the text file in the workspace
-  //   await vscode.workspace.fs.writeFile(filePath, Buffer.from(JSON.stringify({ storedUrl, keys, url }, null, 2)));
+  //   await vscode.workspace.fs.writeFile(filePath, Buffer.from(JSON.stringify({ storedUrl, keys, url }, null, 2)))
   // } catch (error) {
-  //   res?.status(500).json({ error: 'Error failed stored file' });
+  //   res?.status(500).json({ error: 'Error failed stored file' })
   // }
 
   try {
@@ -158,10 +158,10 @@ const getKeys = async (url: string, res?: any) => {
     db.run('INSERT INTO urls (url) VALUES (?)', [url], (err) => {
       if (err) {
         console.error('Error inserting data into the database:', err.message)
-        // socket.emit('userDataError', `Error saving user data: ${err.message}`);
+        // socket.emit('userDataError', `Error saving user data: ${err.message}`)
       } else {
         console.debug('db inserted')
-        // socket.emit('userDataSaved', 'User data saved successfully');
+        // socket.emit('userDataSaved', 'User data saved successfully')
       }
     })
   } catch (error) {

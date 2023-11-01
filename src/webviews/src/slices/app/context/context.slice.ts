@@ -17,7 +17,7 @@ export const initialState: StateAppContext = {
       openNodes: {},
       selectedLeaf: null,
     },
-  }
+  },
 }
 
 // A slice for recipes
@@ -28,7 +28,7 @@ const appContextSlice = createSlice({
     // don't need to reset instanceId
     setAppContextInitialState: (state) => ({
       ...initialState,
-      contextInstanceId: state.contextInstanceId
+      contextInstanceId: state.contextInstanceId,
     }),
     // set connected instance
     setAppContextConnectedInstanceId: (state, { payload }: PayloadAction<string>) => {
@@ -46,14 +46,14 @@ const appContextSlice = createSlice({
       state.dbConfig.treeViewSort = payload
       setDBConfigStorageField(state.contextInstanceId, StorageItem.treeViewSort, payload)
     },
-    setKeysTreeNodesOpen: (state, { payload }: PayloadAction<{ [key: string]: boolean; }>) => {
+    setKeysTreeNodesOpen: (state, { payload }: PayloadAction<{ [key: string]: boolean }>) => {
       state.keys.tree.openNodes = payload
     },
     resetKeysTree: (state) => {
       state.keys.tree.selectedLeaf = null
       state.keys.tree.openNodes = {}
     },
-  }
+  },
 })
 
 // Actions generated from the slice

@@ -122,8 +122,8 @@ export const KeysTree = () => {
       eventData: {
         databaseId: instanceId,
         keyType: type,
-        source: 'keyList'
-      }
+        source: 'keyList',
+      },
     })
   }
 

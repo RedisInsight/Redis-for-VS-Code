@@ -18,8 +18,8 @@ export default {
         <Provider store={store}>
           <Story />
         </Provider>
-      )
-  ]
+      ),
+  ],
 }
 
 // const meta: Meta<typeof KeysTreePage> = {
@@ -46,7 +46,7 @@ const Mockstore = ({ keysState: keysDataState, initState = initialStateKeys, chi
             },
             reducers: {},
           }).reducer,
-        })
+        }),
       },
     })}
   >

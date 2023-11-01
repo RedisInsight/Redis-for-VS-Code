@@ -15,7 +15,7 @@ const REDISTACK_REQUIRE_MODULES: Array<string | Array<string>> = [
 
 const REDISTACK_OPTIONAL_MODULES: Array<string | Array<string>> = [
   RedisDefaultModules.Graph,
-  [RedisDefaultModules.RedisGears, RedisDefaultModules.RedisGears2]
+  [RedisDefaultModules.RedisGears, RedisDefaultModules.RedisGears2],
 ]
 
 const MIN_MODULES_LENGTH = REDISTACK_REQUIRE_MODULES.length
@@ -72,7 +72,7 @@ const isRediStack = (modules: any[], version?: Nullable<string>): boolean => {
 
 const checkRediStack = (instances: Instance[]): Instance[] => (instances.map((instance) => ({
   ...instance,
-  isRediStack: isRediStack(instance.modules, instance.version)
+  isRediStack: isRediStack(instance.modules, instance.version),
 })))
 
 export { checkRediStack, isRediStack }

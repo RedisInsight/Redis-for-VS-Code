@@ -47,7 +47,7 @@ const instancesSlice = createSlice({
       state.loading = false
       state.freeInstance = find(
         [...(orderBy(payload, 'lastConnection', 'desc'))],
-        'cloudDetails.free'
+        'cloudDetails.free',
       ) as unknown as Instance || null
       if (state.connectedInstance.id) {
         const isRediStack = state.data.find((db) => db.id === state.connectedInstance.id)?.isRediStack
@@ -61,7 +61,7 @@ const instancesSlice = createSlice({
       state.loading = false
       state.error = payload
     },
-  }
+  },
 })
 
 // Actions generated from the slice

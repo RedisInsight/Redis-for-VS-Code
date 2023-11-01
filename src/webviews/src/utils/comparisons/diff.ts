@@ -11,7 +11,7 @@ export const isObject = (data: any) => typeof data === 'object'
 export const getDiffKeysOfObjectValues = (obj1: UnknownObject = {}, obj2: UnknownObject = {}): string[] => reduce(
   obj1,
   (result: string[], value, key) => ((isEqual(value, obj2[key])) ? result : result.concat(key)),
-  []
+  [],
 )
 
 export const getFormUpdates = (obj1: UnknownObject = {}, obj2: UnknownObject = {}): UnknownObject => {
@@ -34,6 +34,6 @@ export const getFormUpdates = (obj1: UnknownObject = {}, obj2: UnknownObject = {
 
       return result
     },
-    {}
+    {},
   )
 }

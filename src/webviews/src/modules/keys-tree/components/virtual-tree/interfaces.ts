@@ -14,8 +14,8 @@ export interface TreeNode {
 }
 
 export interface NodeMeta {
-  nestingLevel: number;
-  node: TreeNode;
+  nestingLevel: number
+  node: TreeNode
   data: NodeMetaData
 }
 

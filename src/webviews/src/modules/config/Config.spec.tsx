@@ -33,7 +33,7 @@ vi.mock('uiSrc/slices/user/user-settings.slice', async () => ({
 
 vi.mock('uiSrc/slices/app/info', async () => ({
   ...(await vi.importActual<object>('uiSrc/slices/app/info')),
-  appServerInfoSelector: vi.fn()
+  appServerInfoSelector: vi.fn(),
 }))
 
 vi.mock('uiSrc/services', async () => ({
@@ -50,7 +50,7 @@ describe('Config', () => {
     const afterRenderActions = [
       getServerInfo(),
       getUserConfigSettings(),
-      setSettingsPopupState(false)
+      setSettingsPopupState(false),
     ]
     expect(store.getActions()).toEqual([...afterRenderActions])
   })

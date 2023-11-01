@@ -51,7 +51,7 @@ const propsMock = {
     scanned: 5,
     shardsMeta: {},
     previousResultCount: 1,
-    lastRefreshTime: 3
+    lastRefreshTime: 3,
   } as KeysStoreData,
   loading: false,
   deleting: false,

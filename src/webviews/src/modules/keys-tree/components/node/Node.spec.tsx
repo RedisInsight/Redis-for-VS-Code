@@ -42,7 +42,7 @@ describe('Node', () => {
     const mockData: TreeData = {
       ...mockedData,
       isLeaf: false,
-      fullName: mockDataFullName
+      fullName: mockDataFullName,
     }
 
     const { queryByTestId } = render(<Node {...instance(mockedProps)} data={mockData} />)

@@ -34,7 +34,7 @@ const appInfoSlice = createSlice({
     },
     setEncoding: (state, { payload }: PayloadAction<RedisResponseEncoding>) => {
       state.encoding = payload
-    }
+    },
   },
 })
 

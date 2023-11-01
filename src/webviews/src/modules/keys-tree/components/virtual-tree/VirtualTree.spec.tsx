@@ -56,7 +56,7 @@ describe('VirtualTree', () => {
         {...instance(mockedProps)}
         loading
         setConstructingTree={mockFn}
-      />
+      />,
     )
 
     expect(queryByTestId('virtual-tree-spinner')).toBeInTheDocument()
@@ -69,7 +69,7 @@ describe('VirtualTree', () => {
         {...instance(mockedProps)}
         items={mockedItems}
         setConstructingTree={mockFn}
-      />
+      />,
     )
 
     expect(queryByTestId('node-item_test')).toBeInTheDocument()

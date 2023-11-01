@@ -5,5 +5,5 @@ export * from './storage'
 export * from './vscodeAPI'
 
 export {
-  apiService
+  apiService,
 }

@@ -10,7 +10,7 @@ const apiPrefix = process.env.API_PREFIX || 'api'
 // axios.defaults.adapter = require('axios/lib/adapters/http')
 
 const axiosInstance = axios.create({
-  baseURL: `${baseApiUrl}:${apiPort}/${apiPrefix}/`
+  baseURL: `${baseApiUrl}:${apiPort}/${apiPrefix}/`,
 })
 
 export const requestInterceptor = (config: AxiosRequestConfig): any => {

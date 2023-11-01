@@ -186,7 +186,7 @@ window.ri = {
   bufferToHex,
   hexToBuffer,
   bufferToBinary,
-  binaryToBuffer
+  binaryToBuffer,
 }
 
 // for BE libraries which work with Buffer

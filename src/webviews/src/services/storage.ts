@@ -69,7 +69,7 @@ export const setDBConfigStorageField = (instanceId: string, field: string = '', 
 
     localStorageService.set(StorageItem.dbConfig + instanceId, {
       ...config,
-      [field]: value
+      [field]: value,
     })
   } catch (e) {
     console.error(e)

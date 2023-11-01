@@ -1,15 +1,15 @@
 export interface ICommands {
-  [key: string]: ICommand;
+  [key: string]: ICommand
 }
 
 export interface ICommand {
-  name?: string;
-  summary: string;
-  complexity?: string;
-  arguments?: ICommandArg[];
-  since: string;
-  group: CommandGroup | string;
-  provider?: string;
+  name?: string
+  summary: string
+  complexity?: string
+  arguments?: ICommandArg[]
+  since: string
+  group: CommandGroup | string
+  provider?: string
 }
 
 export enum CommandProvider {
@@ -18,19 +18,19 @@ export enum CommandProvider {
 }
 
 export interface ICommandArg {
-  name?: string[] | string;
-  type?: CommandArgsType[] | CommandArgsType | string | string[];
-  optional?: boolean;
-  enum?: string[];
-  block?: ICommandArg[];
-  command?: string;
-  multiple?: boolean;
-  variadic?: boolean;
-  dsl?: string;
+  name?: string[] | string
+  type?: CommandArgsType[] | CommandArgsType | string | string[]
+  optional?: boolean
+  enum?: string[]
+  block?: ICommandArg[]
+  command?: string
+  multiple?: boolean
+  variadic?: boolean
+  dsl?: string
 }
 
 export interface ICommandArgGenerated extends ICommandArg {
-  generatedName?: string | string[];
+  generatedName?: string | string[]
 }
 
 export enum CommandArgsType {
@@ -71,7 +71,7 @@ export enum CommandGroup {
   CMS = 'cms',
   TopK = 'topk',
   BloomFilter = 'bf',
-  CuckooFilter = 'cf'
+  CuckooFilter = 'cf',
 }
 
 export enum CommandPrefix {
@@ -117,7 +117,7 @@ export enum CommandRSSearchArgument {
 
 export enum DSL {
   cypher = 'cypher',
-  lua = 'lua'
+  lua = 'lua',
 }
 
 export interface IDSLNaming {
@@ -126,5 +126,5 @@ export interface IDSLNaming {
 
 export const DSLNaming: IDSLNaming = {
   [DSL.cypher]: 'Cypher',
-  [DSL.lua]: 'Lua'
+  [DSL.lua]: 'Lua',
 }

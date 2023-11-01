@@ -143,7 +143,7 @@ export const Node = ({
       className={cx(
         styles.nodeContainer, {
           [styles.nodeSelected]: isSelected && isLeaf,
-        }
+        },
       )}
     >
       <NestingLevels />

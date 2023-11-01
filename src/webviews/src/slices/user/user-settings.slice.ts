@@ -117,7 +117,7 @@ export function fetchUserSettingsSpec(onSuccessAction?: () => void, onFailAction
 
     try {
       const { data, status } = await apiService.get<GetAgreementsSpecResponse>(
-        ApiEndpoints.SETTINGS_AGREEMENTS_SPEC
+        ApiEndpoints.SETTINGS_AGREEMENTS_SPEC,
       )
 
       if (isStatusSuccessful(status)) {

@@ -21,15 +21,15 @@ abstract class Webview {
       scriptUri: vscode.Uri.joinPath(
         options.extensionUri,
         // 'dist/webviews/index.es.js'
-        'dist/webviews/index.mjs'
+        'dist/webviews/index.mjs',
       ),
       styleUri: vscode.Uri.joinPath(
         options.extensionUri,
-        'dist/webviews/style.css'
+        'dist/webviews/style.css',
       ),
       nonce: nanoid(),
       handleMessage: () => {},
-      ...options
+      ...options,
     }
   }
 
@@ -99,13 +99,13 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
 
   // Singleton
   public static getInstance(
-    opts: WebviewOptions & { column?: vscode.ViewColumn }
+    opts: WebviewOptions & { column?: vscode.ViewColumn },
   ): WebviewPanel {
     const options = {
       column: vscode.window.activeTextEditor
         ? vscode.window.activeTextEditor.viewColumn
         : undefined,
-      ...opts
+      ...opts,
     }
 
     let instance = WebviewPanel.instances[options.viewId]
@@ -122,7 +122,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
   }
 
   private constructor(
-    opts: WebviewOptions & { column?: vscode.ViewColumn }
+    opts: WebviewOptions & { column?: vscode.ViewColumn },
   ) {
     // Create the webview panel
     super(opts)
@@ -130,7 +130,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
       opts.route,
       opts.title,
       opts.column || vscode.ViewColumn.One,
-      this.getWebviewOptions()
+      this.getWebviewOptions(),
     )
     // Update the content
     this.update()
@@ -154,7 +154,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
     this.panel.webview.onDidReceiveMessage(
       this.handleMessage,
       this,
-      this._disposables
+      this._disposables,
     )
   }
 

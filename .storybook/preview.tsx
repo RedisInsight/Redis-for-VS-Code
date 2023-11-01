@@ -1,11 +1,11 @@
 /** @type { import('@storybook/react').Preview } */
-import React from 'react';
+import React from 'react'
 import { Provider } from 'react-redux'
-import { Decorator, Preview } from '@storybook/react';
-import { DocsContainer } from '@storybook/addon-docs';
-import { themes } from '@storybook/theming';
-import { withThemeByDataAttribute } from '@storybook/addon-themes';
-import { initialize, mswLoader, mswDecorator } from 'msw-storybook-addon';
+import { Decorator, Preview } from '@storybook/react'
+import { DocsContainer } from '@storybook/addon-docs'
+import { themes } from '@storybook/theming'
+import { withThemeByDataAttribute } from '@storybook/addon-themes'
+import { initialize, mswLoader, mswDecorator } from 'msw-storybook-addon'
 
 import { store } from '../src/webviews/src/store'
 import '../src/webviews/vscode.css'
@@ -15,7 +15,7 @@ import '../src/webviews/vscode.css'
  * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
  * to learn how to customize it
  */
-initialize();
+initialize()
 
 export const preview: Preview = {
   parameters: {
@@ -37,7 +37,7 @@ export const preview: Preview = {
     }
   },
   loaders: [mswLoader],
-};
+}
 
 export const decorators: Decorator[] = [
   mswDecorator,

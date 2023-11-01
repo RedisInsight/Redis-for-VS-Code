@@ -13,7 +13,7 @@ export enum RedisResponseEncoding {
 }
 
 export enum RedisResponseBufferType {
-  Buffer = 'Buffer'
+  Buffer = 'Buffer',
 }
 
 export type RedisResponseBuffer = {

@@ -14,7 +14,7 @@ export const Default: Story = {
     totalItemsCount: 100,
     nextCursor: '1',
     scanned: 1,
-  }
+  },
 }
 export const Hidden: Story = {
   args: {

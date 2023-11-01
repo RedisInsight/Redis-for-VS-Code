@@ -14,9 +14,10 @@ lerna-debug.log*
 .DS_Store
 
 # Tests
-/coverage
+coverage
 /.nyc_output
 **/coverage
+storybook-static
 
 # IDEs and editors
 /.idea
@@ -34,25 +35,10 @@ lerna-debug.log*
 
 # App packaged
 release
-main.prod.js
-main.prod.js.map
-redisinsight/ui/main.prod.js
-redisinsight/ui/main.prod.js.map
-renderer.prod.js
-renderer.prod.js.map
-redisinsight/ui/style.css
-redisinsight/ui/style.css.map
-redisinsight/ui/dist
-redisinsight/api/commands
-redisinsight/api/guides
-redisinsight/api/tutorials
-redisinsight/api/content
 dist
 distWeb
 dll
 vendor
-redisinsight/main.js.LICENSE.txt
-redisinsight/main.prod.js.LICENSE.txt
 licenses
 
 
@@ -60,7 +46,6 @@ licenses
 /tests/e2e/report
 /tests/e2e/results
 /tests/e2e/remote
-/tests/e2e/.redisinsight-v2
 
 # Parcel
 .parcel-cache

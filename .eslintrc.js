@@ -6,11 +6,10 @@ module.exports = {
     browser: true,
   },
   extends: ['airbnb-typescript', 'airbnb/hooks', 'plugin:sonarjs/recommended', 'plugin:storybook/recommended'],
-  // extends: ['airbnb', 'airbnb/hooks'],
   plugins: ['@typescript-eslint'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: 2022,
     sourceType: 'module',
     // project: path.join(__dirname, './tsconfig.json'),
     project: path.join(__dirname, './src/webviews/tsconfig.json'),
@@ -43,6 +42,7 @@ module.exports = {
     'import/no-cycle': 'off',
     'import/no-named-as-default-member': 'off',
     'import/no-named-as-default': 'off',
+    'no-unexpected-multiline': 'error',
     'no-plusplus': 'off',
     'no-return-await': 'off',
     'no-underscore-dangle': 'off',
@@ -57,7 +57,6 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/prop-types': 1,
     'react/jsx-one-expression-per-line': 'off',
-    '@typescript-eslint/comma-dangle': 'off',
     '@typescript-eslint/no-shadow': 'off',
     '@typescript-eslint/no-unused-expressions': 'off',
     '@typescript-eslint/semi': ['error', 'never'],
@@ -84,22 +83,22 @@ module.exports = {
           {
             pattern: 'uiSrc/**',
             group: 'internal',
-            position: 'after'
+            position: 'after',
           },
           {
             pattern: 'apiSrc/**',
             group: 'internal',
-            position: 'after'
+            position: 'after',
           },
           {
             pattern: '{.,..}/*.scss', // same directory only
             // pattern: '{.,..}/**/*\.scss' // same & outside directories (e.g. import '../foo/foo.scss')
             group: 'object',
-            position: 'after'
-          }
+            position: 'after',
+          },
         ],
         warnOnUnassignedImports: true,
-        pathGroupsExcludedImportTypes: ['builtin']
+        pathGroupsExcludedImportTypes: ['builtin'],
       },
     ],
   },

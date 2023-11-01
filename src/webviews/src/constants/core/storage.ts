@@ -34,5 +34,5 @@ enum StorageItem {
 export { StorageItem }
 
 export enum ConfigDBStorageItem {
-  slowLogDurationUnit = 'slowLogDurationUnit'
+  slowLogDurationUnit = 'slowLogDurationUnit',
 }

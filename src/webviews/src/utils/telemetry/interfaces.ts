@@ -24,7 +24,7 @@ export interface ITelemetryEvent {
 
 export enum MatchType {
   EXACT_VALUE_NAME = 'EXACT_VALUE_NAME',
-  PATTERN = 'PATTERN'
+  PATTERN = 'PATTERN',
 }
 
 export enum RedisModules {
@@ -35,7 +35,7 @@ export enum RedisModules {
   RedisJSON = 'ReJSON',
   RediSearch = 'search',
   RedisTimeSeries = 'timeseries',
-  'Triggers and Functions' = 'redisgears'
+  'Triggers and Functions' = 'redisgears',
 }
 
 export interface IModuleSummary {

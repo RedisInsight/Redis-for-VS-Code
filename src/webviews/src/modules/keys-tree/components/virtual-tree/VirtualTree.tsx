@@ -128,11 +128,11 @@ const VirtualTree = (props: Props) => {
 
   const formatItem = useCallback((item: KeyInfo) => ({
     ...item,
-    nameString: bufferToString(item.name as string)
+    nameString: bufferToString(item.name as string),
   }), [])
 
   const getMetadata = useCallback((
-    itemsInit: any[][] = []
+    itemsInit: any[][] = [],
   ): void => {
     dispatch(fetchKeysMetadataTree(
       itemsInit,
@@ -140,7 +140,7 @@ const VirtualTree = (props: Props) => {
       controller.current?.signal,
       (loadedItems) =>
         onSuccessFetchedMetadata(loadedItems),
-      () => { rerender({}) }
+      () => { rerender({}) },
     ))
   }, [commonFilterType])
 

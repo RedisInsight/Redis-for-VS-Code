@@ -8,7 +8,7 @@ export const isDifferentConsentsExists = (specs: any, applied: any) =>
 export const compareConsents = (
   specs: any = {},
   applied: any = {},
-  isReturnAllNonRequired: boolean = false
+  isReturnAllNonRequired: boolean = false,
 ): any[] => {
   if (!specs) {
     return []
@@ -19,7 +19,7 @@ export const compareConsents = (
         (isReturnAllNonRequired && !specs[consent]?.required)
         || applied === null
         || !has(applied, consent)
-        || isVersionHigher(specs[consent]?.since, applied.version)
+        || isVersionHigher(specs[consent]?.since, applied.version),
     )
     .map((consent) => ({ ...specs[consent], agreementName: consent }))
 }

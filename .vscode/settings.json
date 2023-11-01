@@ -40,7 +40,8 @@
     "tests/**/__snapshots__": true,
     "yarn.lock": true,
     "**/yarn.lock": true,
-    "*.{css,sass,scss}.d.ts": true
+    "*.{css,sass,scss}.d.ts": true,
+    "storybook-static": true,
   },
   "cSpell.words": [
     "githubocto",

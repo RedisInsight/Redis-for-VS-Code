@@ -70,7 +70,7 @@ const keysSlice = createSlice({
       state.error = ''
     },
     loadMoreKeysSuccess: (state, {
-      payload: { total, scanned, nextCursor, keys, shardsMeta }
+      payload: { total, scanned, nextCursor, keys, shardsMeta },
     }: PayloadAction<KeysStoreData>) => {
       state.data.keys = state.data.keys.concat(keys)
       state.data.total = total
@@ -115,7 +115,7 @@ export function fetchPatternKeysAction(
   count: number,
   telemetryProperties: { [key: string]: any } = {},
   onSuccess?: (data: GetKeysWithDetailsResponse[]) => void,
-  onFailed?: () => void
+  onFailed?: () => void,
 ) {
   return async (dispatch: AppDispatch, stateInit: () => RootState) => {
     dispatch(loadKeys())
@@ -149,7 +149,7 @@ export function fetchPatternKeysAction(
         dispatch(
           loadKeysSuccess({
             data: parseKeysListResponse({}, data),
-          })
+          }),
         )
         let matchValue = '*'
         let event = TelemetryEvent.TREE_VIEW_KEYS_SCANNED
@@ -170,7 +170,7 @@ export function fetchPatternKeysAction(
             scanCount: count,
             source: telemetryProperties.source ?? 'manual',
             ...telemetryProperties,
-          }
+          },
         })
         onSuccess?.(data)
       }
@@ -202,7 +202,7 @@ export function fetchMorePatternKeysAction(cursor: string, count: number) {
       const { data, status } = await apiService.post(
         getUrl(
           state.connections.instances?.connectedInstance?.id ?? '',
-          ApiEndpoints.KEYS
+          ApiEndpoints.KEYS,
         ),
         {
           cursor, count, type, match: match || DEFAULT_SEARCH_MATCH, keysInfo: false,
@@ -227,7 +227,7 @@ export function fetchMorePatternKeysAction(cursor: string, count: number) {
             databaseSize: data[0].total,
             numberOfKeysScanned: state.browser.keys.data.scanned + data[0].scanned,
             scanCount: count,
-          }
+          },
         })
       }
     } catch (_err) {
@@ -246,7 +246,7 @@ export function fetchKeysMetadataTree(
   filter: Nullable<KeyTypes>,
   signal?: AbortSignal,
   onSuccessAction?: (data: KeyInfo[]) => void,
-  onFailAction?: () => void
+  onFailAction?: () => void,
 ) {
   return async (_dispatch: AppDispatch, stateInit: () => RootState) => {
     try {
@@ -254,10 +254,10 @@ export function fetchKeysMetadataTree(
       const { data } = await apiService.post<KeyInfo[]>(
         getUrl(
           state.connections.instances?.connectedInstance?.id,
-          ApiEndpoints.KEYS_METADATA
+          ApiEndpoints.KEYS_METADATA,
         ),
         { keys: keys.map(([,nameBuffer]) => nameBuffer), type: filter || undefined },
-        { params: { encoding: state.app.info.encoding }, signal }
+        { params: { encoding: state.app.info.encoding }, signal },
       )
 
       const newData = data.map((key, i) => ({ ...key, path: keys[i][0] || '' })) as KeyInfo[]

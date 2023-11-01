@@ -15,8 +15,8 @@ export default {
         <Provider store={store}>
           <Story />
         </Provider>
-      )
-  ]
+      ),
+  ],
 }
 
 // A super-simple mock of a redux store
@@ -38,7 +38,7 @@ const Mockstore = ({ keysState, children }: any) => (
             },
             reducers: {},
           }).reducer,
-        })
+        }),
       },
     })}
   >

@@ -6,7 +6,7 @@ export function formatLongName(
   name = '',
   maxNameLength = 500,
   endPartLength = 50,
-  separator = '  ...  '
+  separator = '  ...  ',
 ) {
   // replace whitespace characters to no-break spaces - to prevent collapse spaces
   const currentName = replaceSpaces(name)
