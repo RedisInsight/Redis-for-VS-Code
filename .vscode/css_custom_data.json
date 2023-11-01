@@ -1,0 +1,34 @@
+{
+  "atDirectives": [
+    {
+      "name": "@tailwind",
+      "description": "Use the @tailwind directive to insert Tailwind's `base`, `components`, `utilities`, and `screens` styles into your CSS.",
+      "references": [
+        {
+          "name": "Tailwind's “Functions & Directives” documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives/#tailwind"
+        }
+      ]
+    },
+    {
+      "name": "@screen",
+      "description": "Use the @screen directive to apply Tailwind's responsive breakpoints",
+      "references": [
+        {
+          "name": "Tailwind's “Functions & Directives” documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives/#screen"
+        }
+      ]
+    },
+    {
+      "name": "@layer",
+      "description": "Use the @layer directive to tell Tailwind which \"bucket\" a set of custom styles belong to.",
+      "references": [
+        {
+          "name": "Tailwind's “Functions & Directives” documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives/#layer"
+        }
+      ]
+    }
+  ]
+}

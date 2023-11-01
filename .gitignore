@@ -1,0 +1,69 @@
+# compiled output
+dist
+node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+**/coverage
+
+# IDEs and editors
+/.idea
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.css.d.ts
+*.sass.d.ts
+*.scss.d.ts
+**/*.scss.d.ts
+
+# App packaged
+release
+main.prod.js
+main.prod.js.map
+redisinsight/ui/main.prod.js
+redisinsight/ui/main.prod.js.map
+renderer.prod.js
+renderer.prod.js.map
+redisinsight/ui/style.css
+redisinsight/ui/style.css.map
+redisinsight/ui/dist
+redisinsight/api/commands
+redisinsight/api/guides
+redisinsight/api/tutorials
+redisinsight/api/content
+dist
+distWeb
+dll
+vendor
+redisinsight/main.js.LICENSE.txt
+redisinsight/main.prod.js.LICENSE.txt
+licenses
+
+
+# E2E tests report
+/tests/e2e/report
+/tests/e2e/results
+/tests/e2e/remote
+/tests/e2e/.redisinsight-v2
+
+# Parcel
+.parcel-cache
+
+# caches
+.temp_cache

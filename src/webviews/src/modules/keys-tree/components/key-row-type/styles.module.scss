@@ -1,0 +1,12 @@
+.keyInfoLoading {
+  @apply mt-2 pl-4;
+}
+
+.keyType {
+  @apply text-vscode-foreground pr-4 pl-3 opacity-80;
+  font-size: 11px;
+  line-height: 22px;
+
+  width: 84px;
+  min-width: 84px;
+}
