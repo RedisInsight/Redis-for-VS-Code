@@ -59,7 +59,8 @@
     "test:watch:ui": "vitest watch --ui --dir ./src/webviews/src",
     "test:watch2": "vitest watch Node",
     "test:cov": "vitest run --coverage ./src/webviews/src",
-    "dev": "vite build"
+    "dev": "vite build",
+    "prepare": "husky install"
   },
   "msw": {
     "workerDirectory": "./src/webviews/test/public"
