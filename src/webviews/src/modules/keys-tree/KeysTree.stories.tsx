@@ -19,8 +19,6 @@ export default {
   ]
 }
 
-console.log(123)
-
 // A super-simple mock of a redux store
 const Mockstore = ({ keysState, children }: any) => (
   <Provider
