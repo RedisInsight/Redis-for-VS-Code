@@ -1,7 +1,7 @@
 import * as express from 'express'
 // import * as bodyParser from 'body-parser'
 import * as keytar from 'keytar'
-import { Server } from 'socket.io'
+// import { Server } from 'socket.io'
 import Redis from 'ioredis'
 import { verbose } from 'sqlite3'
 import * as fs from 'fs'
@@ -40,11 +40,11 @@ const db = new sqlite3.Database(dbPath, (err) => {
 export const bootstrap = () => {
   const app = express()
   const server = http.createServer(app)
-  const io = new Server(server, {
-    cors: {
-      origin: '*',
-    },
-  })
+  // const io = new Server(server, {
+  //   cors: {
+  //     origin: '*',
+  //   },
+  // })
 
   app.all('/*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
@@ -79,25 +79,25 @@ export const bootstrap = () => {
     res.status(200).json({ total, keys })
   })
 
-  io.on('connection', (socket: any) => {
-    console.debug('Client connected')
+  // io.on('connection', (socket: any) => {
+  //   console.debug('Client connected')
 
-    socket.on('getKeys', async (url: any) => {
-      try {
-        console.debug('Socket url:', url)
-        const { total, keys } = await getKeys(url)
+  //   socket.on('getKeys', async (url: any) => {
+  //     try {
+  //       console.debug('Socket url:', url)
+  //       const { total, keys } = await getKeys(url)
 
-        socket.emit('getKeysSaved', { total, keys })
-      } catch (err) {
-        const error = err as Error
-        socket.emit('getKeysError', `Error get keys: ${error.message}`)
-      }
-    })
+  //       socket.emit('getKeysSaved', { total, keys })
+  //     } catch (err) {
+  //       const error = err as Error
+  //       socket.emit('getKeysError', `Error get keys: ${error.message}`)
+  //     }
+  //   })
 
-    socket.on('disconnect', () => {
-      console.debug('Client disconnected')
-    })
-  })
+  //   socket.on('disconnect', () => {
+  //     console.debug('Client disconnected')
+  //   })
+  // })
 
   server.listen(3030)
 }

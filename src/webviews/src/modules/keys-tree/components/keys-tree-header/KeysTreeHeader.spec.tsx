@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { render } from 'uiSrc/utils/tests'
+import { render } from 'testSrc/helpers'
 import { KeysTreeHeader } from './KeysTreeHeader'
 
 describe('KeysTreeHeaders', () => {

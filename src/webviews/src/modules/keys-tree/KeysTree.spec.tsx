@@ -1,14 +1,12 @@
 import { cloneDeep } from 'lodash'
 import React from 'react'
 import { cleanup, fireEvent } from '@testing-library/react'
+import { Mock } from 'vitest'
 
 import { stringToBuffer } from 'uiSrc/utils'
 import { KeyTypes } from 'uiSrc/constants'
-import {
-  render,
-  mockedStore,
-} from 'uiSrc/utils/tests'
 import { setKeysTreeNodesOpen } from 'uiSrc/slices/app/context/context.slice'
+import { mockedStore, render } from 'testSrc/helpers'
 import { KeysTree } from './KeysTree'
 import { KeysStoreData } from './slice/interface'
 import { selectedKeyDataSelector } from './slice/keys.slice'
@@ -162,7 +160,7 @@ describe('KeysTree', () => {
         nameString: leaf2FullName,
       });
 
-      (selectedKeyDataSelector as jest.Mock).mockImplementation(selectedKeyDataSelectorMock)
+      (selectedKeyDataSelector as Mock).mockImplementation(selectedKeyDataSelectorMock)
 
       const { getByTestId } = render(<KeysTree />)
 

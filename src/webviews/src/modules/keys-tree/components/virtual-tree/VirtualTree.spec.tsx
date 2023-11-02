@@ -1,7 +1,7 @@
 import React from 'react'
 import { mock, instance } from 'ts-mockito'
 
-import { render } from 'uiSrc/utils/tests'
+import { render } from 'testSrc/helpers'
 import VirtualTree, { Props } from './VirtualTree'
 
 const mockedProps = mock<Props>()
@@ -39,8 +39,8 @@ export const mockVirtualTreeResult = [{
   name: 'test',
 }]
 
-// jest.mock('uiSrc/services', () => ({
-//   ...jest.requireActual('uiSrc/services'),
+// vi.mock('uiSrc/services', () => ({
+//   ...vi.requireActual('uiSrc/services'),
 //   useDisposableWebworker: () => ({ result: mockVirtualTreeResult, run: vi.fn() }),
 // }))
 

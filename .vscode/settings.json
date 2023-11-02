@@ -43,6 +43,7 @@
     "*.{css,sass,scss}.d.ts": true,
     "storybook-static": true,
     "pnpm-lock.yaml": true,
+    "**/pnpm-lock.yaml": true,
   },
   "cSpell.words": [
     "githubocto",

@@ -1,9 +1,14 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { combineReducers, configureStore, createSlice } from '@reduxjs/toolkit'
+import { StoryObj } from '@storybook/react'
+import { HttpResponse, http } from 'msw'
 import { rootReducers, store } from 'uiSrc/store'
+import { getMWSUrl, constants } from 'testSrc/helpers'
 import { KeysTree } from './KeysTree'
 import { initialState as initialStateKeys } from './slice/keys.slice'
+
+type Story = StoryObj<typeof KeysTree>
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
@@ -20,7 +25,7 @@ export default {
 }
 
 // A super-simple mock of a redux store
-const Mockstore = ({ keysState, children }: any) => (
+const MockStore = ({ keysState, children }: any) => (
   <Provider
     store={configureStore({
       reducer: {
@@ -46,15 +51,24 @@ const Mockstore = ({ keysState, children }: any) => (
   </Provider>
 )
 
-const mockKeysData = [{ name: { type: 'Buffer', data: [98, 97, 114, 58, 49] }, type: 'string' }, { name: { type: 'Buffer', data: [102, 111, 111, 58, 50] }, type: 'string' }, { name: { type: 'Buffer', data: [117, 97, 111, 101, 117, 97, 111, 101, 117, 97, 111, 101, 117, 97, 111, 101, 117] } }, { name: { type: 'Buffer', data: [116, 101, 115, 116, 51] } }, { name: { type: 'Buffer', data: [116, 101, 115, 116, 49, 50] }, type: 'string' }, { name: { type: 'Buffer', data: [102, 111, 111, 58, 51] }, type: 'string' }, { name: { type: 'Buffer', data: [116, 101, 115, 116, 50] }, type: 'string' }, { name: { type: 'Buffer', data: [98, 97, 114, 58, 50] }, type: 'string' }, { name: { type: 'Buffer', data: [116, 101, 117, 111, 101, 117] }, type: 'string' }, { name: { type: 'Buffer', data: [102, 111, 111, 58, 49] }, type: 'string' }]
-
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const Default = {}
-export const Mockedstore = {
+export const Default: Story = {}
+export const MockedStore: Story = {
   name: 'Mocked store',
   decorators: [
-    (story: any) => <Mockstore keysState={mockKeysData}>{story()}</Mockstore>,
+    (story) => <MockStore keysState={constants.TEST_KEYS}>{story()}</MockStore>,
   ],
 }
 
-export const Msw = {}
+export const Msw: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.post(
+          getMWSUrl('databases/:instanceId/keys'),
+          () => HttpResponse.json(constants.TEST_KEYS_RESPONSE),
+        ),
+      ],
+    },
+  },
+}

@@ -7,6 +7,8 @@ import { themes } from '@storybook/theming'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import { initialize, mswLoader, mswDecorator } from 'msw-storybook-addon'
 
+import { handlers } from './mswHandlers'
+
 import { store } from '../src/webviews/src/store'
 import '../src/webviews/vscode.css'
 
@@ -15,7 +17,7 @@ import '../src/webviews/vscode.css'
  * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
  * to learn how to customize it
  */
-initialize()
+initialize({ quiet: true }, [...handlers])
 
 export const preview: Preview = {
   parameters: {
@@ -51,7 +53,7 @@ export const decorators: Decorator[] = [
       light: 'light',
       dark: 'dark',
     },
-    defaultTheme: 'light',
+    defaultTheme: 'dark',
     attributeName: 'data-mode',
   }),
 ]

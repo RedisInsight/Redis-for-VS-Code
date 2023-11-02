@@ -3,14 +3,15 @@ import { isNumber } from 'lodash'
 import { sessionStorageService } from 'uiSrc/services'
 import { StorageItem, CustomHeaders } from 'uiSrc/constants'
 
-const baseApiUrl = process.env.BASE_API_URL || 'http://localhost'
-const apiPort = process.env.BASE_API_URL || '5001'
-const apiPrefix = process.env.API_PREFIX || 'api'
+export const BASE_API_URL = process.env.BASE_API_URL || 'http://localhost'
+export const API_PORT = process.env.BASE_API_URL || '5001'
+export const API_PREFIX = process.env.API_PREFIX || 'api'
+export const BASE_URL = `${BASE_API_URL}:${API_PORT}/${API_PREFIX}/`
 
 // axios.defaults.adapter = require('axios/lib/adapters/http')
 
 const axiosInstance = axios.create({
-  baseURL: `${baseApiUrl}:${apiPort}/${apiPrefix}/`,
+  baseURL: BASE_URL,
 })
 
 export const requestInterceptor = (config: AxiosRequestConfig): any => {

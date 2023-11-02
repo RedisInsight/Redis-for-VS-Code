@@ -23,7 +23,7 @@ export const initialState: InitialStateInstances = {
     port: 0,
     version: '',
     nameFromProvider: '',
-    lastConnection: new Date(),
+    lastConnection: null,
     connectionType: ConnectionType.Standalone,
     isRediStack: false,
     modules: [],

@@ -13,6 +13,7 @@ export default defineConfig({
   resolve: {
     alias: {
       uiSrc: fileURLToPath(new URL('./src/webviews/src', import.meta.url)),
+      testSrc: fileURLToPath(new URL('./src/webviews/test', import.meta.url)),
     },
   },
   build: {

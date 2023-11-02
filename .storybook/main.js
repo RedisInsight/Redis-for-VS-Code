@@ -15,6 +15,9 @@ const config = {
   docs: {
     autodocs: 'tag',
   },
+  core: {
+    disableTelemetry: true,
+  },
   staticDirs: ['../src/webviews/test/public']
 }
 export default config

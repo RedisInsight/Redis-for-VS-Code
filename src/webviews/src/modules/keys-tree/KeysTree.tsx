@@ -22,9 +22,7 @@ import { constructKeysToTree } from './utils/constructKeysToTree'
 import VirtualTree from './components/virtual-tree'
 import styles from './styles.module.scss'
 
-export interface Props {}
-
-const parseKeyNames = (keys: KeyInfo[]) =>
+const parseKeyNames = (keys: KeyInfo[] = []) =>
   keys.map((item) =>
     ({ ...item, nameString: item.nameString ?? bufferToString(item.name) }))
 
@@ -38,7 +36,7 @@ export const KeysTree = () => {
 
   const [statusOpen, setStatusOpen] = useState(openNodes)
   const [constructingTree, setConstructingTree] = useState<boolean>(false)
-  const [firstDataLoaded, setFirstDataLoaded] = useState<boolean>(!!keysState.keys.length)
+  const [firstDataLoaded, setFirstDataLoaded] = useState<boolean>(!!keysState.keys?.length)
   const [items, setItems] = useState<KeyInfo[]>(parseKeyNames(keysState.keys ?? []))
 
   const dispatch = useDispatch<AppDispatch>()
@@ -127,7 +125,7 @@ export const KeysTree = () => {
     })
   }
 
-  if (keysState.keys.length === 0) {
+  if (keysState.keys?.length === 0) {
     if (loading || !firstDataLoaded) {
       return <div className="m-auto">{l10n.t('loading...')}</div>
     }
@@ -142,7 +140,7 @@ export const KeysTree = () => {
   }
 
   return (
-    <div className={styles.content}>
+    <div className={styles.content} data-testid="key-tree">
       <VirtualTree
         items={items}
         delimiter={delimiter}

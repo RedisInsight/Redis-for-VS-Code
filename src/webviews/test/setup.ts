@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom'
+import 'jsdom-worker'
 import { vi } from 'vitest'
 
 Object.defineProperty(window, 'matchMedia', {

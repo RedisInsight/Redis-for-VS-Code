@@ -260,7 +260,7 @@ export function fetchKeysMetadataTree(
         { params: { encoding: state.app.info.encoding }, signal },
       )
 
-      const newData = data.map((key, i) => ({ ...key, path: keys[i][0] || '' })) as KeyInfo[]
+      const newData = data.map((key, i) => ({ ...key, path: keys[i][0] || 0 })) as KeyInfo[]
 
       onSuccessAction?.(newData)
     } catch (_err) {

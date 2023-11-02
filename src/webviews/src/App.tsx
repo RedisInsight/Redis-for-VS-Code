@@ -66,7 +66,7 @@ const App: FunctionComponent<AppProps> = () => {
       <div className="text-base text-vscode-foreground flex items-baseline">
         <div className="text-vscode-button-foreground mr-2">
           <VscFlame />
-          <Link to="/view2">Second page</Link>
+          <Link to="/tree">Tree</Link>
         </div>
       </div>
       {!!keys?.length && (

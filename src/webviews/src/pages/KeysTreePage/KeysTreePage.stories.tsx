@@ -6,6 +6,7 @@ import { HttpResponse, http } from 'msw'
 import { combineReducers, configureStore, createSlice } from '@reduxjs/toolkit'
 import { rootReducers, store } from 'uiSrc/store'
 import { initialState as initialStateKeys } from 'uiSrc/modules/keys-tree/slice/keys.slice'
+import { constants, getMWSUrl } from 'testSrc/helpers'
 import { KeysTreePage } from '.'
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
@@ -22,16 +23,10 @@ export default {
   ],
 }
 
-// const meta: Meta<typeof KeysTreePage> = {
-//   title: 'Pages/KeysTreePage',
-//   component: KeysTreePage,
-// }
-
-// export default meta
 type Story = StoryObj<typeof KeysTreePage>
 
 // A super-simple mock of a redux store
-const Mockstore = ({ keysState: keysDataState, initState = initialStateKeys, children }: any) => (
+const MockStore = ({ keysState: keysStateData, children }: any) => (
   <Provider
     store={configureStore({
       reducer: {
@@ -41,8 +36,11 @@ const Mockstore = ({ keysState: keysDataState, initState = initialStateKeys, chi
             name: 'keys',
             initialState:
             {
-              ...initState,
-              data: keysDataState,
+              ...initialStateKeys,
+              data: {
+                ...initialStateKeys.data,
+                ...keysStateData,
+              },
             },
             reducers: {},
           }).reducer,
@@ -54,19 +52,21 @@ const Mockstore = ({ keysState: keysDataState, initState = initialStateKeys, chi
   </Provider>
 )
 
-const mockKeysData = [{ keys: [{ name: { type: 'Buffer', data: [98, 97, 114, 58, 49] }, type: 'string' }, { name: { type: 'Buffer', data: [102, 111, 111, 58, 50] }, type: 'string' }, { name: { type: 'Buffer', data: [117, 97, 111, 101, 117, 97, 111, 101, 117, 97, 111, 101, 117, 97, 111, 101, 117] } }, { name: { type: 'Buffer', data: [116, 101, 115, 116, 51] } }, { name: { type: 'Buffer', data: [116, 101, 115, 116, 49, 50] }, type: 'string' }, { name: { type: 'Buffer', data: [102, 111, 111, 58, 51] }, type: 'string' }, { name: { type: 'Buffer', data: [116, 101, 115, 116, 50] }, type: 'string' }, { name: { type: 'Buffer', data: [98, 97, 114, 58, 50] }, type: 'string' }, { name: { type: 'Buffer', data: [116, 101, 117, 111, 101, 117] }, type: 'string' }, { name: { type: 'Buffer', data: [102, 111, 111, 58, 49] }, type: 'string' }], total: 300, scanned: 3000, cursor: 0 }]
+const noKeysData = [{ total: 0, scanned: 500, keys: [], nextCursor: 0 }]
+const mockPostKeys = [{ keys: [...constants.TEST_KEYS], total: 300, scanned: 3000, cursor: 0 }]
+const mockKeys = { keys: [...constants.TEST_KEYS], total: 300, scanned: 3000, nextCursor: '0' }
+const mockScanMore = { keys: [...constants.TEST_KEYS], total: 3000, scanned: 12, nextCursor: '200' }
 
-const noKeysData = [{ total: 0, scanned: 500, keys: [], cursor: 0 }]
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const Default: Story = {}
 
-export const Mocked: Story = {
+export const Msw: Story = {
   parameters: {
     msw: {
       handlers: [
         http.post(
-          'http://localhost:5001/api/databases/:instanceId/keys',
-          async () => HttpResponse.json(mockKeysData),
+          getMWSUrl('databases/:instanceId/keys'),
+          () => HttpResponse.json(mockPostKeys),
         ),
       ],
     },
@@ -79,8 +79,8 @@ export const NoKeys: Story = {
     msw: {
       handlers: [
         http.post(
-          'http://localhost:5001/api/databases/:instanceId/keys',
-          async () => HttpResponse.json(noKeysData),
+          getMWSUrl('databases/:instanceId/keys'),
+          () => HttpResponse.json(noKeysData),
         ),
       ],
     },
@@ -89,12 +89,12 @@ export const NoKeys: Story = {
 
 export const Store: Story = {
   decorators: [
-    (story) => <Mockstore keysState={mockKeysData}>{story()}</Mockstore>,
+    (story) => <MockStore keysState={mockKeys}>{story()}</MockStore>,
   ],
 }
 
 export const ScanMore: Story = {
   decorators: [
-    (story) => <Mockstore keysState={{ ...mockKeysData, nextCursor: '1', total: null }}>{story()}</Mockstore>,
+    (story) => <MockStore keysState={mockScanMore}>{story()}</MockStore>,
   ],
 }

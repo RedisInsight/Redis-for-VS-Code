@@ -1,17 +1,13 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { createRoot } from 'react-dom/client'
 import {
   MemoryRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
 } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
-import App from 'uiSrc/App'
-import { KeysTreePage } from 'uiSrc/pages'
 import { store } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
+import { AppRoutes } from './Routes'
 
 import '../vscode.css'
 
@@ -20,7 +16,7 @@ import '../vscode.css'
 // const workspace = ''
 
 const container = document.getElementById('root')
-const root = createRoot(container!) // createRoot(container!) if you use TypeScript
+const root = createRoot(container!)
 
 // if (root) {
 //   workspace = root.getAttribute('data-workspace') || ''
@@ -34,20 +30,6 @@ window.addEventListener('message', (e) => {
 })
 
 const rootEl = document.getElementById('root')
-
-function AppRoutes() {
-  const navigate = useNavigate()
-  useEffect(() => {
-    navigate(`/${rootEl?.dataset.route}`, { replace: true })
-  }, [])
-
-  return (
-    <Routes>
-      <Route path="view1" element={<App />} />
-      <Route path="view2" element={<KeysTreePage />} />
-    </Routes>
-  )
-}
 
 root.render(
   <React.StrictMode>

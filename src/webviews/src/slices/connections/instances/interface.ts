@@ -17,7 +17,7 @@ export interface Instance {
   id: string
   endpoints?: Nullable<Endpoint[]>
   connectionType?: ConnectionType
-  lastConnection?: Date
+  lastConnection?: Nullable<Date>
   password?: Nullable<string>
   username?: Nullable<string>
   name?: string

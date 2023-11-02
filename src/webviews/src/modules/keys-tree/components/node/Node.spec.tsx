@@ -1,9 +1,10 @@
 import React from 'react'
 import { NodePublicState } from 'react-vtree/dist/es/Tree'
 import { instance, mock } from 'ts-mockito'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { stringToBuffer } from 'uiSrc/utils'
 import { KeyTypes } from 'uiSrc/constants'
+import { render } from 'testSrc/helpers'
 import { Node } from './Node'
 import { TreeData } from '../virtual-tree/interfaces'
 // import { mockVirtualTreeResult } from '../virtual-tree/VirtualTree.spec'
@@ -28,8 +29,8 @@ const mockedDataWithMetadata = {
   size: 123,
 }
 
-// jest.mock('uiSrc/services', () => ({
-//   ...jest.requireActual('uiSrc/services'),
+// vi.mock('uiSrc/services', () => ({
+//   ...vi.requireActual('uiSrc/services'),
 //   useDisposableWebworker: () => ({ result: mockVirtualTreeResult, run: vi.fn() }),
 // }))
 

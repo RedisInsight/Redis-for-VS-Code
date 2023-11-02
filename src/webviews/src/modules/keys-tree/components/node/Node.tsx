@@ -79,17 +79,21 @@ export const Node = ({
 
   const Folder = () => (
     <div className={styles.nodeName}>
-      {!isOpen && ([
-        <VscChevronRight
-          className={cx(styles.nodeIcon, styles.nodeIconArrow)}
-          data-testid={`node-arrow-icon_${fullName}`}
-        />,
-        <VscFolder className={cx(styles.nodeIcon)} data-testid={`node-folder-icon_${fullName}`} />,
-      ])}
-      {isOpen && ([
-        <VscChevronDown className={cx(styles.nodeIcon, styles.nodeIconArrow)} />,
-        <VscFolderOpened className={cx(styles.nodeIcon)} />,
-      ])}
+      {!isOpen && (
+        <>
+          <VscChevronRight
+            className={cx(styles.nodeIcon, styles.nodeIconArrow)}
+            data-testid={`node-arrow-icon_${fullName}`}
+          />
+          <VscFolder className={cx(styles.nodeIcon)} data-testid={`node-folder-icon_${fullName}`} />
+        </>
+      )}
+      {isOpen && (
+        <>
+          <VscChevronDown className={cx(styles.nodeIcon, styles.nodeIconArrow)} />
+          <VscFolderOpened className={cx(styles.nodeIcon)} />
+        </>
+      )}
       <span className="truncate text-vscode-foreground text" data-testid={`folder-${nameString}`}>
         {nameString}
       </span>
@@ -112,6 +116,7 @@ export const Node = ({
       const left = ((nestingLevel - i) || 1) * PADDING_LEVEL - 2
       return (
         <div
+          key={left}
           className={cx(styles.nestingLevel)}
           style={{ left }}
         />

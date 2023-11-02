@@ -43,11 +43,9 @@ interface OpenedNodes {
   [key: string]: boolean
 }
 
-export const KEYS = 'keys'
-
 const VirtualTree = (props: Props) => {
   const {
-    items,
+    items = [],
     delimiter = DEFAULT_DELIMITER,
     statusOpen = {},
     statusSelected,

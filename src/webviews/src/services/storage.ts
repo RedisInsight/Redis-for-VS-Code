@@ -76,4 +76,4 @@ export const setDBConfigStorageField = (instanceId: string, field: string = '', 
   }
 }
 
-export default StorageService
+export { StorageService }

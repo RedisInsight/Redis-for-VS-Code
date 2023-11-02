@@ -4,7 +4,7 @@ import { screen, fireEvent } from '@testing-library/react'
 import { composeStories } from '@storybook/react'
 import { describe, it, vi } from 'vitest'
 
-import { render } from 'uiSrc/utils/tests'
+import { render } from 'testSrc/helpers'
 import { Props, ScanMore } from './ScanMore'
 import * as stories from './ScanMore.stories'
 

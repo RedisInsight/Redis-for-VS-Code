@@ -1,7 +1,7 @@
 import React from 'react'
 import { cloneDeep } from 'lodash'
 import { cleanup } from '@testing-library/react'
-import { vi } from 'vitest'
+import { Mock, vi } from 'vitest'
 
 import {
   getUserConfigSettings,
@@ -9,7 +9,7 @@ import {
   userSettingsSelector,
 } from 'uiSrc/slices/user/user-settings.slice'
 import { getServerInfo } from 'uiSrc/slices/app/info/info.slice'
-import { mockedStore, render } from 'uiSrc/utils/tests'
+import { mockedStore, render } from 'testSrc/helpers'
 import { Config } from './Config'
 
 let store: typeof mockedStore
@@ -73,7 +73,7 @@ describe('Config', () => {
         },
       },
     });
-    (userSettingsSelector as jest.Mock).mockImplementation(userSettingsSelectorMock)
+    (userSettingsSelector as Mock).mockImplementation(userSettingsSelectorMock)
     render(<Config />)
     const afterRenderActions = [
       getServerInfo(),

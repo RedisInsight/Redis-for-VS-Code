@@ -1,8 +1,8 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
 
-import { render } from '@testing-library/react'
 import { KeyTypes } from 'uiSrc/constants'
+import { render } from 'testSrc/helpers'
 import { Props, KeyRowType } from './KeyRowType'
 
 const mockedProps = mock<Props>()

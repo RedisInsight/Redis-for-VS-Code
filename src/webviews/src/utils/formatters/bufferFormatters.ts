@@ -1,5 +1,4 @@
 import { isString } from 'lodash'
-import { TextDecoder, TextEncoder } from 'text-encoding'
 import { Buffer } from 'buffer'
 import { KeyValueFormat } from 'uiSrc/constants'
 import {
@@ -111,6 +110,7 @@ const bufferToUTF8 = (reply: RedisResponseBuffer): string => decoder.decode(buff
 const UintArrayToString = (reply: UintArray): string => decoder.decode(new Uint8Array(reply))
 
 const UTF8ToBuffer = (reply: string): RedisResponseBuffer => anyToBuffer(encoder.encode(reply))
+const UTF8ToArray = (reply: string): any => anyToBuffer(Array.from(encoder.encode(reply)))
 
 // common formatters
 const stringToBuffer = (data: string, formatResult: KeyValueFormat = KeyValueFormat.Unicode): RedisResponseBuffer => {
@@ -171,6 +171,7 @@ export {
   anyToBuffer,
   bufferToBinary,
   binaryToBuffer,
+  UTF8ToArray,
 }
 
 window.ri = {

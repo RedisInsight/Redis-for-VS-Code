@@ -6,7 +6,7 @@ module.exports = {
     browser: true,
   },
   extends: ['airbnb-typescript', 'airbnb/hooks', 'plugin:sonarjs/recommended', 'plugin:storybook/recommended'],
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'react-refresh'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2022,
@@ -36,6 +36,8 @@ module.exports = {
     'no-bitwise': ['error', { allow: ['|'] }],
     'max-len': ['error', { ignoreComments: true, ignoreStrings: true, ignoreRegExpLiterals: true, code: 120 }],
     'class-methods-use-this': 'off',
+    // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+    'react-refresh/only-export-components': ['warn'],
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
     'import/prefer-default-export': 'off',
@@ -82,6 +84,11 @@ module.exports = {
         pathGroups: [
           {
             pattern: 'uiSrc/**',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: 'testSrc/**',
             group: 'internal',
             position: 'after',
           },

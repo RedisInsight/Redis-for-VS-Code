@@ -72,7 +72,7 @@ abstract class Webview {
 } 'self' data:; style-src ${webview.cspSource}; script-src 'nonce-${this._opts.nonce}'; default-src * self blob">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        
+
         <link href="${styleUri}" rel="stylesheet" />
         <script nonce="${this._opts.nonce}">
           window.acquireVsCodeApi = acquireVsCodeApi;

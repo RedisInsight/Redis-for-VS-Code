@@ -54,7 +54,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         </script>
       </head>
       <body>
-        <div id="root" data-route="view2"></div>
+        <div id="root" data-route="tree"></div>
         <script nonce="${nonce}" src="${scriptUri}"></script>
       </body>
       </html>`
