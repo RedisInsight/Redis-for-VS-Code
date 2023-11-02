@@ -56,7 +56,7 @@ const VirtualTree = (props: Props) => {
     onStatusOpen,
     onStatusSelected,
     setConstructingTree,
-    webworkerFn = () => {},
+    webworkerFn,
     onDeleteClicked,
     onDeleteLeaf,
   } = props
@@ -67,7 +67,6 @@ const VirtualTree = (props: Props) => {
   const nodes = useRef<TreeNode[]>([])
 
   // const { result, run: runWebworker } = useDisposableWebworker(webworkerFn)
-
   const [result, setResult] = useState([])
 
   const dispatch = useDispatch<AppDispatch>()
@@ -100,7 +99,7 @@ const VirtualTree = (props: Props) => {
       return
     }
 
-    setConstructingTree(true)
+    setConstructingTree?.(true)
     // runWebworker?.({ items, delimiter, sorting })
     setResult(webworkerFn?.({ items, delimiter, sorting }))
   }, [items, delimiter])
@@ -249,7 +248,7 @@ const VirtualTree = (props: Props) => {
             </>
           )}
           { nodes.current.length === 0 && loading && (
-            <div className={styles.loadingContainer} style={{ width, height }} data-testid="virtual-tree-spinner">
+            <div className={styles.loadingContainer} style={{ width: width || 0, height: height || 0 }} data-testid="virtual-tree-spinner">
               <div className={styles.loadingBody}>
                 {/* <EuiLoadingSpinner size="xl" className={styles.loadingSpinner} />
                 <EuiIcon type={loadingIcon || 'empty'} className={styles.loadingIcon} /> */}

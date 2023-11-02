@@ -1,4 +1,5 @@
 import type { StoryObj } from '@storybook/react'
+import React from 'react'
 import { ScanMore } from './ScanMore'
 
 type Story = StoryObj<typeof ScanMore>
@@ -6,6 +7,14 @@ type Story = StoryObj<typeof ScanMore>
 export default {
   title: 'Components/ScanMore',
   component: ScanMore,
+  decorators: [
+    (Story: any) =>
+      (
+        <div style={{ width: '200px', position: 'relative' }}>
+          <Story />
+        </div>
+      ),
+  ],
 }
 
 export const Default: Story = {

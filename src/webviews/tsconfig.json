@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "module": "ESNext",
-    "target": "ESNext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "ES2020",
+    "lib": ["dom", "dom.iterable", "ES2020"],
     "outDir": "dist",
     "rootDir": "./",
     "declaration": true,
@@ -25,6 +25,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
+    "isolatedModules": true,
     "allowJs": true,
     "skipLibCheck": true,
     "types": ["vitest/globals"],

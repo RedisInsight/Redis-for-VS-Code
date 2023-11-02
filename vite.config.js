@@ -7,7 +7,6 @@ import path from 'path'
  * @type {import('vite').UserConfig}
  */
 export default defineConfig({
-  // root: 'src/webviews',
   plugins: [react()],
   publicDir: 'src/webviews/public',
   resolve: {
@@ -47,5 +46,11 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/webviews/test/setup.ts'],
+    coverage: {
+      statements: 80,
+      lines: 80,
+      branches: 70,
+      functions: 60,
+    },
   },
 })
