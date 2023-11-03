@@ -1,0 +1,27 @@
+{
+  "scripts": {
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
+    "compile": "tsc -p tsconfig.json",
+    "install:deps": "npm run install:vs-code && npm run install:chrome-driver",
+    "install:chrome-driver": "extest get-chromedriver",
+    "install:vs-code": "extest get-vscode",
+    "test": "npm run compile && extest run-tests dist/**/*.js --code_settings settings.json -r . -e ./test-extensions"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.6",
+    "@types/mocha": "^10.0.2",
+    "@types/node": "18.15.0",
+    "@types/vscode": "^1.83.2",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "chai": "^4.3.10",
+    "eslint": "^7.5.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.2.2",
+    "vscode-extension-tester": "^5.10.0"
+  },
+  "dependencies": {
+
+  }
+}

@@ -13,6 +13,7 @@
     ".vscode-test",
     "src/webviews",
     "jest.config.cjs",
-    "api/**"
+    "api/**",
+    "tests"
   ]
 }
