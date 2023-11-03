@@ -1,0 +1,55 @@
+{
+  "editor.formatOnSave": true,
+  "css.customData": [".vscode/css_custom_data.json"],
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "[javascript, typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ],
+  "files.associations": {
+    "*.css": "postcss",
+    "*.scss": "postcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "files.eol": "\n",
+  "javascript.inlayHints.parameterNames.enabled": "all",
+  "typescript.inlayHints.parameterNames.enabled": "all",
+  "[scss]": {
+    "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter"
+  },
+  "search.exclude": {
+    "**/*.svg": true,
+    "dist": true,
+    "**/dist": true,
+    "node_modules": true,
+    "**/node_modules": true,
+    ".git": true,
+    ".eslintcache": true,
+    "bower_components": true,
+    "release": true,
+    "npm-debug.log.*": true,
+    "tests/**/__snapshots__": true,
+    "yarn.lock": true,
+    "**/yarn.lock": true,
+    "*.{css,sass,scss}.d.ts": true,
+    "storybook-static": true,
+    "pnpm-lock.yaml": true,
+    "**/pnpm-lock.yaml": true,
+    ".storybook/preview-head.html": true,
+  },
+  "cSpell.words": [
+    "githubocto",
+    "tailwindcss",
+    "webviews"
+  ],
+  "testing.automaticallyOpenPeekView": "never",
+}

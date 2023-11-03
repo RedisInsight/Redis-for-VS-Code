@@ -1,0 +1,78 @@
+.nodeContainer {
+  border-left: 3px solid transparent;
+
+  &:hover {
+    background-color: var(--vscode-merge-commonHeaderBackground);
+  }
+}
+
+.nodeContent {
+  @apply flex text-vscode-foreground relative p-0 truncate items-center cursor-pointer justify-between h-full;
+  letter-spacing: -0.13px;
+
+  :global(.moveOnHoverKey) {
+    transition: transform ease 0.3s;
+    &.hide {
+      transform: translateX(-8px);
+    }
+  }
+  :global(.showOnHoverKey) {
+    display: none !important;
+    &.show {
+      display: flex !important;
+    }
+  }
+
+  &:hover {
+    :global(.moveOnHoverKey) {
+      transform: translateX(-8px);
+    }
+    :global(.showOnHoverKey) {
+      display: flex !important;
+    }
+  }
+}
+
+.nodeIcon {
+  @apply mr-2 w-4 h-4;
+  min-width: 16px;
+
+  &Arrow {
+    margin-right: 2px;
+  }
+
+  &Leaf {
+    margin-left: 25px;
+    margin-bottom: 2px;
+  }
+}
+
+.approximate,
+.keyCount {
+  display: inline-block;
+}
+
+.nodeName {
+  @apply flex items-center min-w-0 pr-2;
+}
+
+.approximate {
+  width: 86px;
+  min-width: 86px;
+  text-align: right;
+}
+
+.keyInfoLoading {
+  @apply mt-2 pl-4;
+}
+
+.deletePopover {
+  max-width: 400px !important;
+}
+
+.nestingLevel {
+  @apply w-1 absolute h-max min-h-max opacity-50;
+
+  height: 22px;
+  border-left: 1px solid var(--vscode-foreground);
+}

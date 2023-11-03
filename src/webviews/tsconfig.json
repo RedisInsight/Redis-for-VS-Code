@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2020",
+    "lib": ["dom", "dom.iterable", "ES2020"],
+    "outDir": "dist",
+    "rootDir": "./",
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": true,
+    "jsx": "react",
+    "strict": true,
+    "pretty": true,
+    "sourceMap": true,
+    // "baseUrl": "./",
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "types": ["vitest/globals"],
+    "paths": {
+      "uiSrc/*": [
+        "./src/*"
+      ],
+      "testSrc/*": [
+        "./test/*"
+      ],
+    }
+  },
+  "include": [
+    "App.tsx",
+    "./**/*",
+  ],
+  "exclude": [
+    "node_modules",
+  ]
+}
