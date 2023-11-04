@@ -1,3 +1,4 @@
+export * from './environment/environment'
 export * from './core/api'
 export * from './core/app'
 export * from './core/storage'

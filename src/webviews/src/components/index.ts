@@ -1,2 +1,2 @@
-export * from './no-keys-message'
-export * from './scan-more'
+export { NoKeysMessage } from './no-keys-message'
+export { ScanMore } from './scan-more'
