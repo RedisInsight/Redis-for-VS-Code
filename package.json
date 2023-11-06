@@ -62,8 +62,11 @@
     "test:watch": "vitest watch --dir ./src/webviews/src",
     "test:watch:ui": "vitest watch --ui --dir ./src/webviews/src",
     "test:cov": "vitest run --silent --coverage ./src/webviews/src",
-    "package:prod": "vsce package",
-    "package:stage": "vsce package --pre-release --target darwin-x64",
+    "package:prod": "vsce package --yarn",
+    "package:stage": "vsce package --pre-release --yarn",
+    "package:stage:mac": "vsce package --pre-release  --yarn --target darwin-x64",
+    "package:stage:win": "vsce package --pre-release  --yarn --target win32-x64",
+    "package:stage:linux": "vsce package --pre-release  --yarn --target linux-x64",
     "prepare": "husky install"
   },
   "msw": {
