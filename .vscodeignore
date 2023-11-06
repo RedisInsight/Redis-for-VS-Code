@@ -1,0 +1,41 @@
+# source
+src
+scripts
+assets
+patches
+!assets/logo.png
+
+# output
+# dist
+!dist/webviews/style.css
+!dist/extension.js
+**/*.map
+*.map
+*.vsix
+*.config.js
+# node_modules
+*.zip
+
+# test
+coverage
+test
+tests
+test-workspace
+.vscode-test
+
+# configs
+.husky
+.idea
+.storybook
+.github
+.vscode
+*.local
+tsconfig.*
+.eslintrc*
+.prettier*
+.gitignore
+pnpm-lock.yaml
+
+# esbuild-visualizer
+meta.json
+stats.html

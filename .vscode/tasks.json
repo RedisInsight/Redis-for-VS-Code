@@ -6,7 +6,7 @@
     {
       "label": "vite build",
       "type": "npm",
-      "script": "dev",
+      "script": "build",
       "problemMatcher": {
         "owner": "typescript",
         "fileLocation": "absolute",

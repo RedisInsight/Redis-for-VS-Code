@@ -32,6 +32,8 @@ const App: FunctionComponent<AppProps> = () => {
       setVal(url)
     }
 
+    console.debug({ val })
+
     getUrl()
     handleConnect()
 
@@ -41,21 +43,25 @@ const App: FunctionComponent<AppProps> = () => {
   }, [])
 
   const handleConnect = async () => {
-    const response = await fetch(
-      'http://localhost:3000/connect',
-      {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          url: val,
-        }),
-      },
-    )
+    try {
+      const response = await fetch(
+        'http://localhost:3000/connect',
+        {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            url: 'redis://default:1@redis-10175.c295.ap-southeast-1-1.ec2.cloud.redislabs.com:10175',
+          }),
+        },
+      )
 
-    const { keys } = await response.json()
+      const { keys } = await response.json()
 
-    setKeys(keys)
-    vscodeApi.setState({ keys })
+      setKeys(keys)
+      vscodeApi.setState({ keys })
+    } catch (err) {
+      console.debug({ err })
+    }
   }
 
   return (

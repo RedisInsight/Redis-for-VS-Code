@@ -2,8 +2,8 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import type { StoryObj } from '@storybook/react'
 import { HttpResponse, http } from 'msw'
-
 import { combineReducers, configureStore, createSlice } from '@reduxjs/toolkit'
+
 import { rootReducers, store } from 'uiSrc/store'
 import { initialState as initialStateKeys } from 'uiSrc/modules/keys-tree/slice/keys.slice'
 import { constants, getMWSUrl } from 'testSrc/helpers'

@@ -42,6 +42,8 @@ distWeb
 dll
 vendor
 licenses
+out
+*.vsix
 
 
 # E2E tests report
@@ -54,3 +56,6 @@ licenses
 
 # caches
 .temp_cache
+
+# security
+*.local

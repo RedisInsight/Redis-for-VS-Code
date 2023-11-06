@@ -1,16 +1,13 @@
 import { HttpResponse, http, passthrough } from 'msw'
 
-const BASE_API_URL = process.env.BASE_API_URL || 'http://localhost'
-const API_PORT = process.env.BASE_API_URL || '5001'
-const API_PREFIX = process.env.API_PREFIX || 'api'
-const BASE_URL = `${BASE_API_URL}:${API_PORT}/${API_PREFIX}/`
+import { BASE_URL } from '../src/webviews/src/constants'
 
 const getMWSUrl = (url) =>
   `${BASE_URL}${url.startsWith('/') ? url.slice(1) : url}`
 
 const getMockMetadata = ({ keys }) => keys.map((name) => ({ type: 'string', name }))
 
-export const handlers = [
+export const mswHandlers = [
   http.post(
     getMWSUrl('databases/:instanceId/keys/get-metadata'),
     async ({ request }) =>

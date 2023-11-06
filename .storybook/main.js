@@ -6,6 +6,7 @@ const config = {
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     '@storybook/addon-themes',
+    'storybook-addon-variants',
     'storybook-dark-mode',
   ],
   framework: {
@@ -18,6 +19,6 @@ const config = {
   core: {
     disableTelemetry: true,
   },
-  staticDirs: ['../src/webviews/test/public']
+  staticDirs: ['../src/webviews/test/public'],
 }
 export default config

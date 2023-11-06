@@ -1,8 +1,7 @@
 import apiService from './apiService'
 
-export * from './apiService'
+export { vscodeApi } from './vscodeAPI'
 export * from './storage'
-export * from './vscodeAPI'
 
 export {
   apiService,

@@ -1,2 +1,9 @@
-export * from './statuses'
-export * from './apiResponses'
+export {
+  isStatusInformation,
+  isStatusSuccessful,
+  isStatusRedirection,
+  isStatusClientError,
+  isStatusServerError,
+  isStatusNotFoundError,
+} from './statuses'
+export { getApiErrorMessage, getApiErrorName } from './apiResponses'

@@ -1,5 +1,6 @@
-import * as express from 'express'
-// import * as bodyParser from 'body-parser'
+// import * as express from 'express'
+import express from 'express'
+import * as bodyParser from 'body-parser'
 import * as keytar from 'keytar'
 // import { Server } from 'socket.io'
 import Redis from 'ioredis'
@@ -53,19 +54,23 @@ export const bootstrap = () => {
   })
 
   // Enable JSON body parsing
-  // app.use(bodyParser.json())
+  app.use(bodyParser.json())
 
   app.get('/', (req, res) => {
     res?.send('Hello from your embedded Express server!')
   })
 
   app.get('/url', async (req, res) => {
-    const storedUrl = await keytar.getPassword('ri-vsc', 'url')
+    try {
+      const storedUrl = await keytar.getPassword('ri-vsc', 'url')
 
-    if (storedUrl) {
-      res.status(200).json(storedUrl)
-    } else {
-      res?.status(404).json({ error: 'No stored server response found' })
+      if (storedUrl) {
+        res.status(200).json(storedUrl)
+      } else {
+        res?.status(404).json({ error: 'No stored server response found' })
+      }
+    } catch (error) {
+      res?.status(404).json({ error })
     }
   })
 
@@ -99,7 +104,9 @@ export const bootstrap = () => {
   //   })
   // })
 
-  server.listen(3030)
+  console.debug('server is running')
+
+  server.listen(3000)
 }
 
 const getKeys = async (url: string, res?: any) => {
@@ -115,7 +122,7 @@ const getKeys = async (url: string, res?: any) => {
   try {
     await keytar.setPassword('ri-vsc', 'url', url)
   } catch (error) {
-    res?.status(500).json({ error: 'Error keytar.setPassword' })
+    res?.status(500).json({ error })
   }
 
   try {
