@@ -7,7 +7,7 @@ import { themes } from '@storybook/theming'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import { initialize, mswLoader, mswDecorator } from 'msw-storybook-addon'
 
-import { handlers } from './mswHandlers'
+import { mswHandlers } from './helpers'
 
 import { store } from '../src/webviews/src/store'
 import '../src/webviews/vscode.css'
@@ -17,11 +17,11 @@ import '../src/webviews/vscode.css'
  * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
  * to learn how to customize it
  */
-initialize({ quiet: true }, [...handlers])
+initialize({ quiet: true }, [...mswHandlers])
 
 export const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: "^on[A-Z].*" },
+    actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -29,14 +29,14 @@ export const preview: Preview = {
       },
     },
     darkMode: {
-      dark: {...themes.dark},
-      light: {...themes.light},
+      dark: { ...themes.dark },
+      light: { ...themes.light },
       stylePreview: true,
-      darkClass: 'dark'
+      darkClass: 'dark',
     },
     docs: {
-      container: DocsContainer
-    }
+      container: DocsContainer,
+    },
   },
   loaders: [mswLoader],
 }

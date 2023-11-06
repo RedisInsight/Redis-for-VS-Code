@@ -7,7 +7,7 @@ const getMWSUrl = (url) =>
 
 const getMockMetadata = ({ keys }) => keys.map((name) => ({ type: 'string', name }))
 
-export const handlers = [
+export const mswHandlers = [
   http.post(
     getMWSUrl('databases/:instanceId/keys/get-metadata'),
     async ({ request }) =>

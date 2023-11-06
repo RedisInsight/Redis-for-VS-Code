@@ -5170,6 +5170,13 @@ caniuse-lite@^1.0.30001251, caniuse-lite@^1.0.30001538, caniuse-lite@^1.0.300015
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001561.tgz#752f21f56f96f1b1a52e97aae98c57c562d5d9da"
   integrity sha512-NTt0DNoKe958Q0BE0j0c1V9jbUzhBxHIEJy7asmGrpE0yG63KTV7PLHPnK2E1O9RsQrQ081I3NLuXGS6zht3cw==
 
+cartesian@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/cartesian/-/cartesian-1.0.1.tgz#ae3fc8a63e2ba7e2c4989ce696207457bcae65af"
+  integrity sha512-tR3qKRYpRJ6FXEGuoBwpuCYcwydrk1N2rduy7eWg1Msepi3i5fCxheryw4VBlCqjCbk3Vhjh3eg+IGHtl5H74A==
+  dependencies:
+    xtend "^4.0.1"
+
 chai@^4.2.0, chai@^4.3.10:
   version "4.3.10"
   resolved "https://registry.yarnpkg.com/chai/-/chai-4.3.10.tgz#d784cec635e3b7e2ffb66446a63b4e33bd390384"
@@ -11543,6 +11550,13 @@ storybook-addon-themes@^6.1.0:
     global "^4.4.0"
     memoizerific "^1.11.3"
 
+storybook-addon-variants@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/storybook-addon-variants/-/storybook-addon-variants-0.2.0.tgz#e8038aae3f70c0691e97d11bfe2671de84993d6b"
+  integrity sha512-4woVtd+XsHNHN7XDjFFNns1sVYotjYOh5/FP8AR+CzUK9Eb9WPvQ0re5z5rZztndND0NqhhJ5F65Iy4jrz6OzQ==
+  dependencies:
+    cartesian "^1.0.1"
+
 storybook-dark-mode@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/storybook-dark-mode/-/storybook-dark-mode-3.0.1.tgz#b79e8809fc89da9c06edb5d2d20cba163c256adc"
@@ -13010,7 +13024,7 @@ xmlchars@^2.2.0:
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
 
-xtend@^4.0.0, xtend@~4.0.1:
+xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==
