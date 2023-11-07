@@ -1,0 +1,22 @@
+/* @import "@elastic/eui/src/global_styling/mixins/helpers";
+@import "@elastic/eui/src/components/table/mixins";
+@import "@elastic/eui/src/global_styling/index"; */
+
+.section {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 34px);
+  display: flex;
+}
+
+.title {
+  padding-left: 18px;
+}
+
+.output {
+  white-space: pre-wrap;
+}
+
+.input {
+  padding-bottom: 7px;
+}

@@ -9,10 +9,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": [
-    "javascript",
-    "typescript"
-  ],
+  "eslint.validate": ["javascript", "typescript"],
   "files.associations": {
     "*.css": "postcss",
     "*.scss": "postcss"
@@ -44,12 +41,11 @@
     "storybook-static": true,
     "pnpm-lock.yaml": true,
     "**/pnpm-lock.yaml": true,
-    ".storybook/preview-head.html": true,
+    ".storybook/preview-head.html": true
   },
-  "cSpell.words": [
-    "githubocto",
-    "tailwindcss",
-    "webviews"
-  ],
+  "cSpell.words": ["githubocto", "tailwindcss", "webviews"],
   "testing.automaticallyOpenPeekView": "never",
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
 }

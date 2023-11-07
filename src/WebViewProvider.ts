@@ -1,12 +1,15 @@
 import * as vscode from 'vscode'
 import { getNonce } from './utils'
 
-export class SidebarProvider implements vscode.WebviewViewProvider {
+export class WebViewProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView
 
   _doc?: vscode.TextDocument
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(
+    private readonly _extensionUri: vscode.Uri,
+    private readonly _route: string,
+  ) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView
@@ -33,6 +36,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       // vscode.Uri.joinPath(this._extensionUri, 'dist', 'webviews', 'index.es.js')
       vscode.Uri.joinPath(this._extensionUri, 'dist', 'webviews', 'index.mjs'),
     )
+    const viewRoute = this._route
 
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce()
@@ -46,15 +50,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           Use a content security policy to only allow loading images from https or from our extension directory,
           and only allow scripts that have a specific nonce.
         -->
-        <meta http-equiv="Content-Security-Policy" content="img-src https: data:; style-src 'unsafe-inline' ${
-  webview.cspSource
-}; script-src 'nonce-${nonce}'; default-src * self blob">
+        <meta http-equiv="Content-Security-Policy" content="img-src https: data:;
+        style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonce}'; default-src * self blob">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script nonce="${nonce}">
         </script>
       </head>
       <body>
-        <div id="root" data-route="tree"></div>
+        <div id="root" data-route="${viewRoute}"></div>
         <script nonce="${nonce}" src="${scriptUri}"></script>
       </body>
       </html>`

@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 import App from 'uiSrc/App'
-import { KeysTreePage } from 'uiSrc/pages'
+import { KeysTreePage, CliPage } from 'uiSrc/pages'
 
 const rootEl = document.getElementById('root')
 
@@ -19,6 +19,7 @@ export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="tree" element={<KeysTreePage />} />
+      <Route path="cli" element={<CliPage />} />
       <Route path="view1" element={<App />} />
     </Routes>
   )

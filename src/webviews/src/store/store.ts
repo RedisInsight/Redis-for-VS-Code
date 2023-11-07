@@ -3,8 +3,11 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import keysReducer from 'uiSrc/modules/keys-tree/slice/keys.slice'
 import userSettingsReducer from 'uiSrc/slices/user/user-settings.slice'
 import appInfoReducer from 'uiSrc/slices/app/info/info.slice'
+import appRedisCommandsReducer from 'uiSrc/slices/app/commands/redis-commands.slice'
 import instancesReducer from 'uiSrc/slices/connections/instances/instances.slice'
 import appContextReducer from 'uiSrc/slices/app/context/context.slice'
+// import cliSettingsReducer from 'uiSrc/slices/cli/cli-settings'
+// import outputReducer from 'uiSrc/slices/cli/cli-output'
 
 export const history = createBrowserHistory()
 
@@ -12,6 +15,7 @@ export const rootReducers = {
   app: combineReducers({
     info: appInfoReducer,
     context: appContextReducer,
+    redisCommands: appRedisCommandsReducer,
   }),
   connections: combineReducers({
     instances: instancesReducer,
@@ -19,6 +23,10 @@ export const rootReducers = {
   browser: combineReducers({
     keys: keysReducer,
   }),
+  // cli: combineReducers({
+  //   settings: cliSettingsReducer,
+  //   output: outputReducer,
+  // }),
   user: combineReducers({
     settings: userSettingsReducer,
   }),
