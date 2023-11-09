@@ -2,17 +2,13 @@ import { decode } from 'html-entities'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHotkeys } from 'react-hotkeys-hook'
-import {
-  // useNavigate,
-  useParams,
-} from 'react-router-dom'
 
 import {
   cliSettingsSelector,
-  // createCliClientAction,
+  createCliClientAction,
   setCliEnteringCommand,
   clearSearchingCommand,
-  // toggleCli,
+  toggleCli,
 } from 'uiSrc/slices/cli/cli-settings'
 import {
   concatToOutput,
@@ -26,8 +22,8 @@ import {
   cliTexts,
   ConnectionType,
   CommandMonitor,
-  // CommandPSubscribe,
-  // ommandSubscribe,
+  CommandPSubscribe,
+  CommandSubscribe,
   CommandHello3,
   // Pages
 } from 'uiSrc/constants'
@@ -36,18 +32,19 @@ import { ClusterNodeRole } from 'uiSrc/interfaces'
 import { connectedInstanceSelector } from 'uiSrc/slices/connections/instances/instances.slice'
 import { checkUnsupportedCommand, clearOutput, cliCommandOutput } from 'uiSrc/utils/cliHelper'
 // import { showMonitor } from 'uiSrc/slices/cli/monitor'
-import { SendClusterCommandDto } from 'apiSrc/modules/cli/dto/cli.dto'
+// import { SendClusterCommandDto } from 'apiSrc/modules/cli/dto/cli.dto'
 
 import CliBody from './CliBody'
 
 import styles from './CliBody/styles.module.scss'
+
+const INSTANCE_ID = 'e12bbb1d-eec6-4cee-b8c9-c34eb851fa83'
 
 const CliBodyWrapper = () => {
   const [command, setCommand] = useState('')
 
   // const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { instanceId = '' } = useParams<{ instanceId: string }>()
   const { data = [] } = useSelector(outputSelector)
   const {
     errorClient: error,
@@ -55,14 +52,14 @@ const CliBodyWrapper = () => {
     isEnteringCommand,
     isSearching,
     matchedCommand,
-    // cliClientUuid,
+    cliClientUuid,
   } = useSelector(cliSettingsSelector)
   const { host, port, connectionType } = useSelector(connectedInstanceSelector)
   const { db: currentDbIndex } = useSelector(outputSelector)
 
-  // useEffect(() => {
-  //   !cliClientUuid && dispatch(createCliClientAction(instanceId, handleWorkbenchClick))
-  // }, [])
+  useEffect(() => {
+    !cliClientUuid && dispatch(createCliClientAction(INSTANCE_ID, handleWorkbenchClick))
+  }, [])
 
   useEffect(() => {
     if (!isEnteringCommand) {
@@ -77,17 +74,16 @@ const CliBodyWrapper = () => {
     clearOutput(dispatch)
   }
 
-  // const handleWorkbenchClick = () => {
-  //   dispatch(toggleCli())
-  //   navigate(Pages.workbench(instanceId))
+  const handleWorkbenchClick = () => {
+    dispatch(toggleCli())
 
-  //   sendEventTelemetry({
-  //     event: TelemetryEvent.CLI_WORKBENCH_LINK_CLICKED,
-  //     eventData: {
-  //       databaseId: instanceId,
-  //     },
-  //   })
-  // }
+    sendEventTelemetry({
+      event: TelemetryEvent.CLI_WORKBENCH_LINK_CLICKED,
+      eventData: {
+        databaseId: INSTANCE_ID,
+      },
+    })
+  }
 
   const refHotkeys = useHotkeys<HTMLDivElement>('command+k,ctrl+l', handleClearOutput)
 
@@ -102,25 +98,25 @@ const CliBodyWrapper = () => {
     }
 
     // Flow if MONITOR command was executed
-    // if (checkUnsupportedCommand([CommandMonitor.toLowerCase()], commandLine)) {
-    //   dispatch(concatToOutput(cliTexts.MONITOR_COMMAND_CLI(() => { dispatch(showMonitor()) })))
-    //   resetCommand()
-    //   return
-    // }
+    if (checkUnsupportedCommand([CommandMonitor.toLowerCase()], commandLine)) {
+      dispatch(concatToOutput(cliTexts.MONITOR_COMMAND_CLI(() => { dispatch(showMonitor()) })))
+      resetCommand()
+      return
+    }
 
     // Flow if PSUBSCRIBE command was executed
-    // if (checkUnsupportedCommand([CommandPSubscribe.toLowerCase()], commandLine)) {
-    //   dispatch(concatToOutput(cliTexts.PSUBSCRIBE_COMMAND_CLI(Pages.pubSub(instanceId))))
-    //   resetCommand()
-    //   return
-    // }
+    if (checkUnsupportedCommand([CommandPSubscribe.toLowerCase()], commandLine)) {
+      dispatch(concatToOutput(cliTexts.PSUBSCRIBE_COMMAND_CLI('')))
+      resetCommand()
+      return
+    }
 
     // Flow if SUBSCRIBE command was executed
-    // if (checkUnsupportedCommand([CommandSubscribe.toLowerCase()], commandLine)) {
-    //   dispatch(concatToOutput(cliTexts.SUBSCRIBE_COMMAND_CLI(Pages.pubSub(instanceId))))
-    //   resetCommand()
-    //   return
-    // }
+    if (checkUnsupportedCommand([CommandSubscribe.toLowerCase()], commandLine)) {
+      dispatch(concatToOutput(cliTexts.SUBSCRIBE_COMMAND_CLI('')))
+      resetCommand()
+      return
+    }
 
     // Flow if HELLO 3 command was executed
     if (checkUnsupportedCommand([CommandHello3.toLowerCase()], commandLine)) {
@@ -143,7 +139,7 @@ const CliBodyWrapper = () => {
     sendEventTelemetry({
       event: TelemetryEvent.CLI_COMMAND_SUBMITTED,
       eventData: {
-        databaseId: instanceId,
+        databaseId: INSTANCE_ID,
       },
     })
     if (connectionType !== ConnectionType.Cluster) {
@@ -151,7 +147,7 @@ const CliBodyWrapper = () => {
       return
     }
 
-    const options: SendClusterCommandDto = {
+    const options: any = {
       command,
       nodeOptions: {
         host,

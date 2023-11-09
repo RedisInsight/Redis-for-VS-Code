@@ -53,6 +53,10 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
         <meta http-equiv="Content-Security-Policy" content="img-src https: data:;
         style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonce}'; default-src * self blob">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta
+          http-equiv="Content-Security-Policy"
+          content="style-src 'self' https://*.vscode-cdn.net 'unsafe-inline';"
+        />
         <script nonce="${nonce}">
         </script>
       </head>

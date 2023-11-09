@@ -6,8 +6,8 @@ import appInfoReducer from 'uiSrc/slices/app/info/info.slice'
 import appRedisCommandsReducer from 'uiSrc/slices/app/commands/redis-commands.slice'
 import instancesReducer from 'uiSrc/slices/connections/instances/instances.slice'
 import appContextReducer from 'uiSrc/slices/app/context/context.slice'
-// import cliSettingsReducer from 'uiSrc/slices/cli/cli-settings'
-// import outputReducer from 'uiSrc/slices/cli/cli-output'
+import cliSettingsReducer from 'uiSrc/slices/cli/cli-settings'
+import outputReducer from 'uiSrc/slices/cli/cli-output'
 
 export const history = createBrowserHistory()
 
@@ -23,10 +23,10 @@ export const rootReducers = {
   browser: combineReducers({
     keys: keysReducer,
   }),
-  // cli: combineReducers({
-  //   settings: cliSettingsReducer,
-  //   output: outputReducer,
-  // }),
+  cli: combineReducers({
+    settings: cliSettingsReducer,
+    output: outputReducer,
+  }),
   user: combineReducers({
     settings: userSettingsReducer,
   }),

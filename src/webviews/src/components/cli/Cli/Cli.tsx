@@ -3,7 +3,7 @@ import React from 'react'
 import CliBodyWrapper from 'uiSrc/components/cli/components/cli-body'
 import styles from './styles.module.scss'
 
-const CLI = () => (
+const Cli = () => (
   <div className={styles.container} data-testid="cli">
     <div className={styles.main}>
       <CliBodyWrapper />
@@ -11,4 +11,4 @@ const CLI = () => (
   </div>
 )
 
-export default CLI
+export default Cli

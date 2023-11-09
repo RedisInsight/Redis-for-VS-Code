@@ -1,8 +1,10 @@
+import { AxiosError, AxiosResponseHeaders } from 'axios'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { AxiosError, AxiosResponseHeaders } from 'axios'
-import { apiService, localStorageService } from 'uiSrc/services'
-import { ApiErrors, ApiEndpoints, StorageItem, CommandMonitor, CliOutputFormatterType, cliTexts, ConnectionSuccessOutputText, SelectCommand } from 'uiSrc/constants'
+import { localStorageService } from 'uiSrc/services/storage'
+import { CliOutputFormatterType, cliTexts, ConnectionSuccessOutputText, SelectCommand } from 'uiSrc/constants/cli/cliOutput'
+import { apiService } from 'uiSrc/services'
+import { ApiEndpoints, StorageItem, CommandMonitor, ApiErrors } from 'uiSrc/constants'
 import {
   cliParseTextResponseWithOffset,
   cliParseTextResponseWithRedirect,

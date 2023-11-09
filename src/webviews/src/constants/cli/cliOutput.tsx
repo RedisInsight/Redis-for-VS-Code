@@ -34,9 +34,9 @@ export const InitOutputText = (
         </span>
       )}
     </Fragment>,
-    '\n\n',
+    '\n',
     'Connecting...',
-    '\n\n',
+    '\n',
     'Pinging Redis server on ',
     <EuiTextColor color="default" key={Math.random()}>
       {`${host}:${port}${getDbIndex(dbIndex)}`}

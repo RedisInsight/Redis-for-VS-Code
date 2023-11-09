@@ -36,6 +36,13 @@
           "icon": "media/checklist.svg",
           "contextualTitle": "RedisInsight"
         }
+      ],
+      "ri-panel-view": [
+        {
+          "type": "webview",
+          "id": "ri-panel",
+          "name": "RedisInsight CLI"
+        }
       ]
     },
     "commands": [

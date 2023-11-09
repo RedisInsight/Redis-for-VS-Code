@@ -191,6 +191,7 @@ export function createCliClientAction(
   onFailAction?: (message: string) => void,
 ) {
   return async (dispatch: AppDispatch, stateInit: () => RootState) => {
+    console.log('createClientAction', instanceId)
     const state = stateInit()
     const { host, port, db } = connectedInstanceSelector(state)
     const { data = [] } = outputSelector?.(state) ?? {}

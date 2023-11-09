@@ -31,16 +31,16 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.registerWebviewViewProvider('ri-sidebar', sidebarProvider),
   )
 
-  // const panelProvider = new WebViewProvider(context.extensionUri, 'cli')
-  // context.subscriptions.push(
-  //   vscode.window.registerWebviewViewProvider('ri-panel', panelProvider),
-  // )
+  const panelProvider = new WebViewProvider(context.extensionUri, 'cli')
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider('ri-panel', panelProvider),
+  )
 
-  // context.subscriptions.push(
-  //   vscode.commands.registerCommand('RedisInsight.cliOpen', () => {
-  //     vscode.commands.executeCommand('ri-panel.focus')
-  //   }),
-  // )
+  context.subscriptions.push(
+    vscode.commands.registerCommand('RedisInsight.cliOpen', () => {
+      vscode.commands.executeCommand('ri-panel.focus')
+    }),
+  )
 
   context.subscriptions.push(
     vscode.commands.registerCommand('RedisInsight.openPage', () => {
