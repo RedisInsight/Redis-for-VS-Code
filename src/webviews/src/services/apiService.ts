@@ -1,14 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { isNumber } from 'lodash'
 import { sessionStorageService } from 'uiSrc/services'
-import { StorageItem, CustomHeaders } from 'uiSrc/constants'
-
-export const BASE_API_URL = process.env.BASE_API_URL || 'http://localhost'
-export const API_PORT = process.env.BASE_API_URL || '5000'
-export const API_PREFIX = process.env.API_PREFIX || 'api'
-export const BASE_URL = `${BASE_API_URL}:${API_PORT}/${API_PREFIX}/`
-
-// axios.defaults.adapter = require('axios/lib/adapters/http')
+import { StorageItem, CustomHeaders, BASE_URL } from 'uiSrc/constants'
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,

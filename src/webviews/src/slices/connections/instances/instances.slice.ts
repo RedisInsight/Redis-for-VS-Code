@@ -2,14 +2,10 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { find, orderBy } from 'lodash'
 import { AxiosError } from 'axios'
 import { apiService, localStorageService } from 'uiSrc/services'
-import { ApiEndpoints, ConnectionType, StorageItem } from 'uiSrc/constants'
+import { ApiEndpoints, CONNECTED_INSTANCE_ID, ConnectionType, StorageItem } from 'uiSrc/constants'
 import { checkRediStack, getApiErrorMessage, isStatusSuccessful } from 'uiSrc/utils'
 import { AppDispatch, RootState } from 'uiSrc/store'
 import { Instance, InitialStateInstances } from './interface'
-
-// const connectedInstanceId = ''
-// const connectedInstanceId = 'e0344b61-9575-4af6-9b35-8723faeed6cd' // huge bd
-const connectedInstanceId = 'e12bbb1d-eec6-4cee-b8c9-c34eb851fa83'
 
 export const initialState: InitialStateInstances = {
   loading: false,
@@ -17,7 +13,7 @@ export const initialState: InitialStateInstances = {
   data: [],
   freeInstance: null,
   connectedInstance: {
-    id: connectedInstanceId,
+    id: CONNECTED_INSTANCE_ID,
     name: '',
     host: '',
     port: 0,

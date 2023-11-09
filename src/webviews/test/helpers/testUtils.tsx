@@ -12,7 +12,7 @@ import { initialState as initialStateAppInfo } from 'uiSrc/slices/app/info/info.
 import { initialState as initialStateAppContext } from 'uiSrc/slices/app/context/context.slice'
 import { initialState as initialStateInstances } from 'uiSrc/slices/connections/instances/instances.slice'
 import { initialState as initialStateUserSettings } from 'uiSrc/slices/user/user-settings.slice'
-import { BASE_URL } from 'uiSrc/services'
+import { BASE_URL } from 'uiSrc/constants'
 
 interface Options {
   initialState?: RootState

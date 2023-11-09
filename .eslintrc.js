@@ -79,6 +79,7 @@ module.exports = {
     'sonarjs/no-duplicate-string': 'off',
     'sonarjs/cognitive-complexity': [1, 20],
     'sonarjs/no-identical-functions': [0, 5],
+    'arrow-parens': 'off',
     'import/order': [
       1,
       {
