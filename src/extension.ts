@@ -13,6 +13,9 @@ import { WebViewProvider } from './WebViewProvider'
 let myStatusBarItem: vscode.StatusBarItem
 let server: http.Server | undefined
 export function activate(context: vscode.ExtensionContext) {
+  const sidebarProvider = new WebViewProvider(context.extensionUri, 'tree')
+  const panelProvider = new WebViewProvider(context.extensionUri, 'cli')
+
   // Create a status bar item with a text and an icon
   myStatusBarItem = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left,
@@ -24,25 +27,17 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Show the status bar item
   myStatusBarItem.show()
-  context.subscriptions.push(myStatusBarItem)
+  // context.subscriptions.push(myStatusBarItem)
 
-  const sidebarProvider = new WebViewProvider(context.extensionUri, 'tree')
   context.subscriptions.push(
+    myStatusBarItem,
     vscode.window.registerWebviewViewProvider('ri-sidebar', sidebarProvider),
-  )
-
-  const panelProvider = new WebViewProvider(context.extensionUri, 'cli')
-  context.subscriptions.push(
     vscode.window.registerWebviewViewProvider('ri-panel', panelProvider),
-  )
 
-  context.subscriptions.push(
     vscode.commands.registerCommand('RedisInsight.cliOpen', () => {
       vscode.commands.executeCommand('ri-panel.focus')
     }),
-  )
 
-  context.subscriptions.push(
     vscode.commands.registerCommand('RedisInsight.openPage', () => {
       WebviewPanel.getInstance({
         extensionUri: context.extensionUri,
@@ -52,6 +47,17 @@ export function activate(context: vscode.ExtensionContext) {
       })
     }),
   )
+
+  // context.subscriptions.push(
+  //   vscode.commands.registerCommand('RedisInsight.openPage', () => {
+  //     WebviewPanel.getInstance({
+  //       extensionUri: context.extensionUri,
+  //       route: 'view1',
+  //       title: 'RedisInsight',
+  //       viewId: 'ri',
+  //     })
+  //   }),
+  // )
 
   if (!server) {
     try {

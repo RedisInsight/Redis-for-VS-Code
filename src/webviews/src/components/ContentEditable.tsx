@@ -3,7 +3,7 @@ import ReactContentEditable, { Props } from 'react-contenteditable'
 
 const useRefCallback = <T extends any[]>(
   value: ((...args: T) => void) | undefined,
-  deps?: React.DependencyList
+  deps?: React.DependencyList,
 ): ((...args: T) => void) => {
   const ref = React.useRef(value)
 

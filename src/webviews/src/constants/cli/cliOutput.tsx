@@ -18,30 +18,31 @@ export const InitOutputText = (
   emptyOutput: boolean,
   onClick: () => void,
 ) => [
-    <Fragment key={Math.random()}>
-      {emptyOutput && (
-        <span className="color-green" key={Math.random()}>
-          {'Try '}
-          <EuiLink
-            onClick={onClick}
-            className="color-green"
-            style={{ fontSize: 'inherit', fontFamily: 'inherit' }}
-            data-test-subj="cli-workbench-page-btn"
-          >
-            Workbench
-          </EuiLink>
-          , our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.
-        </span>
-      )}
-    </Fragment>,
-    '\n',
-    'Connecting...',
-    '\n',
-    'Pinging Redis server on ',
-    <EuiTextColor color="default" key={Math.random()}>
-      {`${host}:${port}${getDbIndex(dbIndex)}`}
-    </EuiTextColor>,
-  ]
+  <Fragment key={Math.random()}>
+    {emptyOutput && (
+    <span className="color-green" key={Math.random()}>
+      {'Try '}
+      <EuiLink
+        onClick={onClick}
+        className="color-green"
+        style={{ fontSize: 'inherit', fontFamily: 'inherit' }}
+        data-test-subj="cli-workbench-page-btn"
+      >
+        Workbench
+      </EuiLink>
+      , our advanced CLI. Check out our Quick Guides to learn more about Redis
+      capabilities.
+    </span>
+    )}
+  </Fragment>,
+  '\n',
+  'Connecting...',
+  '\n',
+  'Pinging Redis server on ',
+  <EuiTextColor color="default" key={Math.random()}>
+    {`${host}:${port}${getDbIndex(dbIndex)}`}
+  </EuiTextColor>,
+]
 
 export const ConnectionSuccessOutputText = [
   '\n',
@@ -59,12 +60,18 @@ export const cliTexts = {
   WORKBENCH_UNSUPPORTED_COMMANDS: (commandLine: string, commands: string) =>
     commandLine + unsupportedCommandTextWorkbench + commands,
   REPEAT_COUNT_INVALID: 'Invalid repeat command option value',
-  CONNECTION_CLOSED: 'Client connection previously closed. Run the command after the connection is re-created.',
-  UNABLE_TO_DECRYPT: 'Unable to decrypt. Check the system keychain or re-run the command.',
+  CONNECTION_CLOSED:
+    'Client connection previously closed. Run the command after the connection is re-created.',
+  UNABLE_TO_DECRYPT:
+    'Unable to decrypt. Check the system keychain or re-run the command.',
   PSUBSCRIBE_COMMAND: (path: string = '') => (
     <EuiTextColor color="danger" key={Date.now()}>
       {'Use '}
-      <EuiLink {...getRouterLinkProps(path)} color="text" data-test-subj="pubsub-page-btn">
+      <EuiLink
+        {...getRouterLinkProps(path)}
+        color="text"
+        data-test-subj="pubsub-page-btn"
+      >
         Pub/Sub
       </EuiLink>
       {' to see the messages published to all channels in your database.'}
@@ -73,39 +80,42 @@ export const cliTexts = {
   SUBSCRIBE_COMMAND: (path: string = '') => (
     <EuiTextColor color="danger" key={Date.now()}>
       {'Use '}
-      <EuiLink {...getRouterLinkProps(path)} color="text" data-test-subj="pubsub-page-btn">
+      <EuiLink
+        {...getRouterLinkProps(path)}
+        color="text"
+        data-test-subj="pubsub-page-btn"
+      >
         Pub/Sub
       </EuiLink>
       {' tool to subscribe to channels.'}
     </EuiTextColor>
   ),
-  PSUBSCRIBE_COMMAND_CLI: (path: string = '') => (
-    [
-      cliTexts.PSUBSCRIBE_COMMAND(path),
-      '\n',
-    ]
-  ),
-  SUBSCRIBE_COMMAND_CLI: (path: string = '') => (
-    [
-      cliTexts.SUBSCRIBE_COMMAND(path),
-      '\n',
-    ]
-  ),
+  PSUBSCRIBE_COMMAND_CLI: (path: string = '') => [
+    cliTexts.PSUBSCRIBE_COMMAND(path),
+    '\n',
+  ],
+  SUBSCRIBE_COMMAND_CLI: (path: string = '') => [
+    cliTexts.SUBSCRIBE_COMMAND(path),
+    '\n',
+  ],
   MONITOR_COMMAND: (onClick: () => void) => (
     <EuiTextColor color="danger" key={Date.now()}>
       {'Use '}
-      <EuiLink onClick={onClick} className="btnLikeLink" color="text" data-test-subj="monitor-btn">
+      <EuiLink
+        onClick={onClick}
+        className="btnLikeLink"
+        color="text"
+        data-test-subj="monitor-btn"
+      >
         Profiler
       </EuiLink>
       {' tool to see all the requests processed by the server.'}
     </EuiTextColor>
   ),
-  MONITOR_COMMAND_CLI: (onClick: () => void) => (
-    [
-      cliTexts.MONITOR_COMMAND(onClick),
-      '\n',
-    ]
-  ),
+  MONITOR_COMMAND_CLI: (onClick: () => void) => [
+    cliTexts.MONITOR_COMMAND(onClick),
+    '\n',
+  ],
   HELLO3_COMMAND: () => (
     <EuiTextColor color="danger" key={Date.now()}>
       {'RedisInsight does not support '}
@@ -122,19 +132,12 @@ export const cliTexts = {
       {' at the moment, but we are working on it.'}
     </EuiTextColor>
   ),
-  HELLO3_COMMAND_CLI: () => (
-    [
-      cliTexts.HELLO3_COMMAND(),
-      '\n',
-    ]
-  ),
-  CLI_ERROR_MESSAGE: (message: string) => (
-    [
-      '\n',
-      <EuiTextColor color="danger" key={Date.now()}>
-        {message}
-      </EuiTextColor>,
-      '\n\n',
-    ]
-  ),
+  HELLO3_COMMAND_CLI: () => [cliTexts.HELLO3_COMMAND(), '\n'],
+  CLI_ERROR_MESSAGE: (message: string) => [
+    '\n',
+    <EuiTextColor color="danger" key={Date.now()}>
+      {message}
+    </EuiTextColor>,
+    '\n\n',
+  ],
 }

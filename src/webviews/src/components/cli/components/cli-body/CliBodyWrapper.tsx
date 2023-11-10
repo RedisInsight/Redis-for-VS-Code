@@ -9,6 +9,8 @@ import {
   setCliEnteringCommand,
   clearSearchingCommand,
   toggleCli,
+  deleteCliClientAction,
+  resetCliSettings,
 } from 'uiSrc/slices/cli/cli-settings'
 import {
   concatToOutput,
@@ -17,6 +19,7 @@ import {
   sendCliClusterCommandAction,
   processUnsupportedCommand,
   processUnrepeatableNumber,
+  resetOutputLoading,
 } from 'uiSrc/slices/cli/cli-output'
 import {
   cliTexts,
@@ -25,6 +28,7 @@ import {
   CommandPSubscribe,
   CommandSubscribe,
   CommandHello3,
+  CONNECTED_INSTANCE_ID,
   // Pages
 } from 'uiSrc/constants'
 import { getCommandRepeat, isRepeatCountCorrect, sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
@@ -37,8 +41,6 @@ import { checkUnsupportedCommand, clearOutput, cliCommandOutput } from 'uiSrc/ut
 import CliBody from './CliBody'
 
 import styles from './CliBody/styles.module.scss'
-
-const INSTANCE_ID = 'e12bbb1d-eec6-4cee-b8c9-c34eb851fa83'
 
 const CliBodyWrapper = () => {
   const [command, setCommand] = useState('')
@@ -57,8 +59,23 @@ const CliBodyWrapper = () => {
   const { host, port, connectionType } = useSelector(connectedInstanceSelector)
   const { db: currentDbIndex } = useSelector(outputSelector)
 
+  const removeCliClient = () => {
+    cliClientUuid && dispatch(deleteCliClientAction(CONNECTED_INSTANCE_ID, cliClientUuid))
+    dispatch(resetCliSettings())
+    dispatch(resetOutputLoading())
+    sendEventTelemetry({
+      event: TelemetryEvent.CLI_CLOSED,
+      eventData: {
+        databaseId: CONNECTED_INSTANCE_ID,
+      },
+    })
+  }
+
   useEffect(() => {
-    !cliClientUuid && dispatch(createCliClientAction(INSTANCE_ID, handleWorkbenchClick))
+    !cliClientUuid && dispatch(createCliClientAction(CONNECTED_INSTANCE_ID, handleWorkbenchClick))
+    return () => {
+      removeCliClient()
+    }
   }, [])
 
   useEffect(() => {
@@ -80,7 +97,7 @@ const CliBodyWrapper = () => {
     sendEventTelemetry({
       event: TelemetryEvent.CLI_WORKBENCH_LINK_CLICKED,
       eventData: {
-        databaseId: INSTANCE_ID,
+        databaseId: CONNECTED_INSTANCE_ID,
       },
     })
   }
@@ -139,7 +156,7 @@ const CliBodyWrapper = () => {
     sendEventTelemetry({
       event: TelemetryEvent.CLI_COMMAND_SUBMITTED,
       eventData: {
-        databaseId: INSTANCE_ID,
+        databaseId: CONNECTED_INSTANCE_ID,
       },
     })
     if (connectionType !== ConnectionType.Cluster) {

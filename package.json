@@ -52,6 +52,11 @@
         "command": "RedisInsight.openPage",
         "title": "Open RedisInsight",
         "category": "RedisInsight"
+      },
+      {
+        "command": "RedisInsight.cliOpen",
+        "title": "Open RedisInsight CLI",
+        "category": "RedisInsight"
       }
     ]
   },

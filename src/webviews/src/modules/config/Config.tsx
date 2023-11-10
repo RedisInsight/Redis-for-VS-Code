@@ -10,6 +10,7 @@ import {
 import {
   fetchServerInfo,
 } from 'uiSrc/slices/app/info/info.slice'
+import { fetchRedisCommandsInfo } from 'uiSrc/slices/app/commands/redis-commands.slice'
 import { isDifferentConsentsExists } from 'uiSrc/utils'
 import { AppDispatch } from 'uiSrc/store'
 
@@ -19,6 +20,7 @@ export const Config = () => {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     dispatch(fetchServerInfo())
+    dispatch(fetchRedisCommandsInfo())
 
     // TODO: remove after BE will be implemented
     // dispatch(fetchInstancesAction())

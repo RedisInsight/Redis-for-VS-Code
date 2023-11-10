@@ -3,7 +3,7 @@ import {
   CommandArgsType,
   CommandProvider,
   ICommandArg,
-  ICommandArgGenerated
+  ICommandArgGenerated,
 } from 'uiSrc/constants'
 
 enum ArgumentType {
@@ -132,7 +132,7 @@ const generateArgName = (
   provider: string,
   arg: ICommandArg,
   pureName: boolean = false,
-  onlyMandatory: boolean = false
+  onlyMandatory: boolean = false,
 ): string | string[] => {
   try {
     // todo: temporary workaround until all commands providers will be unified
@@ -172,20 +172,20 @@ export const generateArgs = (provider = 'unknown', args: ICommandArg[]): IComman
     args.map((arg) => ({
       ...arg,
       generatedName: generateArgName(provider, arg, true),
-    }))
+    })),
   )
 
 export const generateArgsNames = (
   provider: string = 'unknown',
   args: ICommandArg[],
   pureName: boolean = false,
-  onlyMandatory: boolean = false
+  onlyMandatory: boolean = false,
 ): string[] =>
   reject(
     flatten(
-      args.map((arg) => generateArgName(provider, arg, pureName, onlyMandatory))
+      args.map((arg) => generateArgName(provider, arg, pureName, onlyMandatory)),
     ),
-    isEmpty
+    isEmpty,
   )
 
 export const getDocUrlForCommand = (commandName: string): string => {

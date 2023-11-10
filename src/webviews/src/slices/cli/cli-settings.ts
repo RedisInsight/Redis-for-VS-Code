@@ -192,6 +192,7 @@ export function createCliClientAction(
 ) {
   return async (dispatch: AppDispatch, stateInit: () => RootState) => {
     const state = stateInit()
+    if (state.cli.output.data.length) return
     const { host, port, db } = connectedInstanceSelector(state)
     const { data = [] } = outputSelector?.(state) ?? {}
     dispatch(processCliClient())

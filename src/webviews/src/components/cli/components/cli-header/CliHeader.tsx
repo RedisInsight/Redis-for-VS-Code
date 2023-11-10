@@ -54,8 +54,8 @@ const CliHeader = () => {
     sendEventTelemetry({
       event: TelemetryEvent.CLI_CLOSED,
       eventData: {
-        databaseId: instanceId
-      }
+        databaseId: instanceId,
+      },
     })
     removeCliClient()
     dispatch(resetCliSettings())
@@ -66,8 +66,8 @@ const CliHeader = () => {
     sendEventTelemetry({
       event: TelemetryEvent.CLI_MINIMIZED,
       eventData: {
-        databaseId: instanceId
-      }
+        databaseId: instanceId,
+      },
     })
     dispatch(toggleCli())
   }

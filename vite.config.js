@@ -7,10 +7,7 @@ import path from 'path'
  * @type {import('vite').UserConfig}
  */
 export default defineConfig({
-  plugins: [
-    react(),
-    htmlPlugin(),
-  ],
+  plugins: [react(), htmlPlugin()],
   publicDir: './src/webviews/public',
   resolve: {
     alias: {
