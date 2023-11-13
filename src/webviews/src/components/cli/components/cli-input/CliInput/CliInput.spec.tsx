@@ -1,7 +1,8 @@
 import { cloneDeep } from 'lodash'
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
-import { cleanup, mockedStore, render, screen, fireEvent } from 'uiSrc/utils/test-utils'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { cleanup, mockedStore } from 'testSrc/helpers'
 import CliInput, { Props } from './CliInput'
 
 const mockedProps = mock<Props>()
@@ -38,7 +39,7 @@ describe('CliInput', () => {
   // https://github.com/testing-library/dom-testing-library/pull/235
   it.skip('"onChange" should be called', async () => {
     const command = 'keys *'
-    const setCommandMock = jest.fn()
+    const setCommandMock = vi.fn()
 
     render(<CliInput {...instance(mockedProps)} setCommand={setCommandMock} />)
 
@@ -50,7 +51,7 @@ describe('CliInput', () => {
   })
 
   it('onMouseUp should be called', async () => {
-    const setCommandMock = jest.fn()
+    const setCommandMock = vi.fn()
 
     render(<CliInput {...instance(mockedProps)} setCommand={setCommandMock} />)
 

@@ -46,7 +46,7 @@ module.exports = {
     ],
     'class-methods-use-this': 'off',
     // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
-    // 'react-refresh/only-export-components': ['warn'],
+    'react-refresh/only-export-components': ['warn'],
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
     'import/prefer-default-export': 'off',
@@ -79,7 +79,6 @@ module.exports = {
     'sonarjs/no-duplicate-string': 'off',
     'sonarjs/cognitive-complexity': [1, 20],
     'sonarjs/no-identical-functions': [0, 5],
-    'arrow-parens': 'off',
     'import/order': [
       1,
       {

@@ -2,9 +2,10 @@ import { cloneDeep, last } from 'lodash'
 import React from 'react'
 import { keys } from '@elastic/eui'
 import { instance, mock } from 'ts-mockito'
-import { cleanup, fireEvent, mockedStore, render, screen } from 'uiSrc/utils/test-utils'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { clearOutput, updateCliHistoryStorage } from 'uiSrc/utils/cliHelper'
 import { MOCK_COMMANDS_ARRAY } from 'uiSrc/constants'
+import { cleanup, mockedStore } from 'testSrc/helpers'
 import CliBody, { Props } from './CliBody'
 
 const mockedProps = mock<Props>()
@@ -12,9 +13,6 @@ const mockedProps = mock<Props>()
 let store: typeof mockedStore
 const commandHistory = ['info', 'hello', 'keys *', 'clear']
 const commandsArr = MOCK_COMMANDS_ARRAY
-const redisCommandsPath = 'uiSrc/slices/app/redis-commands'
-const cliOutputPath = 'uiSrc/slices/cli/cli-output'
-const cliCommand = 'cli-command'
 
 beforeEach(() => {
   cleanup()
@@ -22,24 +20,24 @@ beforeEach(() => {
   store.clearActions()
 })
 
-jest.mock(cliOutputPath, () => {
-  const defaultState = jest.requireActual(cliOutputPath).initialState
+vi.mock('uiSrc/slices/cli/cli-output', async () => {
+  const defaultState = await vi.importActual<object>('uiSrc/slices/cli/cli-output')
   return {
-    ...jest.requireActual(cliOutputPath),
-    setOutputInitialState: jest.fn,
-    outputSelector: jest.fn().mockReturnValue({
+    ...vi.importActual<object>('uiSrc/slices/cli/cli-output'),
+    setOutputInitialState: vi.fn,
+    outputSelector: vi.fn().mockReturnValue({
       ...defaultState,
       commandHistory,
     }),
   }
 })
 
-jest.mock(redisCommandsPath, () => {
-  const defaultState = jest.requireActual(redisCommandsPath).initialState
-  const { MOCK_COMMANDS_SPEC, MOCK_COMMANDS_ARRAY } = jest.requireActual('uiSrc/constants')
+vi.mock('uiSrc/slices/app/redis-commands', async () => {
+  const defaultState = await vi.importActual<object>('uiSrc/slices/app/redis-commands')
+  const { MOCK_COMMANDS_SPEC, MOCK_COMMANDS_ARRAY } = await vi.importActual<{ [key:string]:any }>('uiSrc/constants')
   return {
-    ...jest.requireActual(redisCommandsPath),
-    appRedisCommandsSelector: jest.fn().mockReturnValue({
+    ...vi.importActual<object>('uiSrc/slices/app/redis-commands'),
+    appRedisCommandsSelector: vi.fn().mockReturnValue({
       ...defaultState,
       spec: MOCK_COMMANDS_SPEC,
       commandsArray: MOCK_COMMANDS_ARRAY,
@@ -47,10 +45,10 @@ jest.mock(redisCommandsPath, () => {
   }
 })
 
-jest.mock('uiSrc/utils/cliHelper', () => ({
-  ...jest.requireActual('uiSrc/utils/cliHelper'),
-  updateCliHistoryStorage: jest.fn(),
-  clearOutput: jest.fn(),
+vi.mock('uiSrc/utils/cliHelper', () => ({
+  ...vi.importActual<object>('uiSrc/utils/cliHelper'),
+  updateCliHistoryStorage: vi.fn(),
+  clearOutput: vi.fn(),
 }))
 
 describe('CliBody', () => {
@@ -60,7 +58,7 @@ describe('CliBody', () => {
   it('Input should render without error', () => {
     render(<CliBody {...instance(mockedProps)} />)
 
-    const cliInput = screen.queryByTestId(cliCommand)
+    const cliInput = screen.queryByTestId('cli-command')
 
     expect(cliInput).toBeInTheDocument()
   })
@@ -68,15 +66,15 @@ describe('CliBody', () => {
   it('Input should not render with error', () => {
     render(<CliBody {...instance(mockedProps)} error="error" />)
 
-    const cliInput = screen.queryByTestId(cliCommand)
+    const cliInput = screen.queryByTestId('cli-command')
 
     expect(cliInput).toBeNull()
   })
 
   describe('CLI input special commands', () => {
     it('"clear" command should call "setOutputInitialState"', () => {
-      const onSubmitMock = jest.fn()
-      const setCommandMock = jest.fn()
+      const onSubmitMock = vi.fn()
+      const setCommandMock = vi.fn()
 
       const command = 'clear'
 
@@ -86,10 +84,10 @@ describe('CliBody', () => {
           command={command}
           setCommand={setCommandMock}
           onSubmit={onSubmitMock}
-        />
+        />,
       )
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: 'Enter',
       })
 
@@ -104,11 +102,11 @@ describe('CliBody', () => {
   describe('CLI input keyboard cases', () => {
     it('"Enter" keydown should call "onSubmit"', () => {
       const command = 'info'
-      const onSubmitMock = jest.fn()
+      const onSubmitMock = vi.fn()
 
       render(<CliBody {...instance(mockedProps)} command={command} onSubmit={onSubmitMock} />)
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: 'Enter',
       })
 
@@ -117,18 +115,18 @@ describe('CliBody', () => {
     })
 
     it('"Ctrl+l" hot key for Windows OS should call "setOutputInitialState"', () => {
-      const onSubmitMock = jest.fn()
-      const setCommandMock = jest.fn()
+      const onSubmitMock = vi.fn()
+      const setCommandMock = vi.fn()
       render(
         <CliBody
           {...instance(mockedProps)}
           command="clear"
           setCommand={setCommandMock}
           onSubmit={onSubmitMock}
-        />
+        />,
       )
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: 'l',
         ctrlKey: true,
       })
@@ -140,18 +138,18 @@ describe('CliBody', () => {
     })
 
     it('"Command+k" hot key for MacOS should call "setOutputInitialState"', () => {
-      const onSubmitMock = jest.fn()
-      const setCommandMock = jest.fn()
+      const onSubmitMock = vi.fn()
+      const setCommandMock = vi.fn()
       render(
         <CliBody
           {...instance(mockedProps)}
           command="clear"
           setCommand={setCommandMock}
           onSubmit={onSubmitMock}
-        />
+        />,
       )
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: 'k',
         metaKey: true,
       })
@@ -163,27 +161,27 @@ describe('CliBody', () => {
     })
 
     it('"ArrowUp" should call "setCommand" with commands from history', () => {
-      const onSubmitMock = jest.fn()
-      const setCommandMock = jest.fn()
+      const onSubmitMock = vi.fn()
+      const setCommandMock = vi.fn()
       render(
         <CliBody
           {...instance(mockedProps)}
           command="clear"
           setCommand={setCommandMock}
           onSubmit={onSubmitMock}
-        />
+        />,
       )
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: 'ArrowUp',
       })
 
       expect(setCommandMock).toBeCalledWith(commandHistory[0])
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: 'ArrowUp',
       })
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: 'ArrowUp',
       })
 
@@ -193,31 +191,31 @@ describe('CliBody', () => {
     })
 
     it('"ArrowDown" should call "setCommand" with commands from history', () => {
-      const onSubmitMock = jest.fn()
-      const setCommandMock = jest.fn()
+      const onSubmitMock = vi.fn()
+      const setCommandMock = vi.fn()
       render(
         <CliBody
           {...instance(mockedProps)}
           command="clear"
           setCommand={setCommandMock}
           onSubmit={onSubmitMock}
-        />
+        />,
       )
 
       for (let index = 0; index < 3; index++) {
-        fireEvent.keyDown(screen.getByTestId(cliCommand), {
+        fireEvent.keyDown(screen.getByTestId('cli-command'), {
           key: 'ArrowUp',
         })
       }
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: 'ArrowDown',
       })
 
       expect(setCommandMock).toBeCalledWith(commandHistory[2])
 
       for (let index = 0; index < 3; index++) {
-        fireEvent.keyDown(screen.getByTestId(cliCommand), {
+        fireEvent.keyDown(screen.getByTestId('cli-command'), {
           key: 'ArrowDown',
         })
       }
@@ -226,7 +224,7 @@ describe('CliBody', () => {
       expect(setCommandMock).toBeCalledTimes(6)
 
       for (let index = 0; index < 2; index++) {
-        fireEvent.keyDown(screen.getByTestId(cliCommand), {
+        fireEvent.keyDown(screen.getByTestId('cli-command'), {
           key: 'ArrowDown',
         })
       }
@@ -237,18 +235,18 @@ describe('CliBody', () => {
     })
 
     it('"Tab" with command="" should setCommand first command from constants/commands ', () => {
-      const onSubmitMock = jest.fn()
-      const setCommandMock = jest.fn()
+      const onSubmitMock = vi.fn()
+      const setCommandMock = vi.fn()
       render(
         <CliBody
           {...instance(mockedProps)}
           command=""
           setCommand={setCommandMock}
           onSubmit={onSubmitMock}
-        />
+        />,
       )
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: keys.TAB,
       })
 
@@ -260,23 +258,23 @@ describe('CliBody', () => {
     // eslint-disable-next-line max-len
     it('"Tab" with command="g" should setCommand first command starts with "g" from constants/commands ', () => {
       const command = 'g'
-      const onSubmitMock = jest.fn()
-      const setCommandMock = jest.fn()
+      const onSubmitMock = vi.fn()
+      const setCommandMock = vi.fn()
       render(
         <CliBody
           {...instance(mockedProps)}
           command={command}
           setCommand={setCommandMock}
           onSubmit={onSubmitMock}
-        />
+        />,
       )
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: keys.TAB,
       })
 
       expect(setCommandMock).toBeCalledWith(
-        commandsArr.filter((cmd: string) => cmd.startsWith(command.toUpperCase()))[0]
+        commandsArr.filter((cmd: string) => cmd.startsWith(command.toUpperCase()))[0],
       )
 
       expect(onSubmitMock).not.toBeCalled()
@@ -285,33 +283,33 @@ describe('CliBody', () => {
     // eslint-disable-next-line max-len
     it('"Shift+Tab" with command="g" should setCommand last command starts with "g" from constants/commands ', () => {
       const command = 'g'
-      const onSubmitMock = jest.fn()
-      const setCommandMock = jest.fn()
+      const onSubmitMock = vi.fn()
+      const setCommandMock = vi.fn()
       render(
         <CliBody
           {...instance(mockedProps)}
           command={command}
           setCommand={setCommandMock}
           onSubmit={onSubmitMock}
-        />
+        />,
       )
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: keys.TAB,
         shiftKey: true,
       })
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: keys.TAB,
       })
 
-      fireEvent.keyDown(screen.getByTestId(cliCommand), {
+      fireEvent.keyDown(screen.getByTestId('cli-command'), {
         key: keys.TAB,
         shiftKey: true,
       })
 
       expect(setCommandMock).toBeCalledWith(
-        last(commandsArr.filter((cmd: string) => cmd.startsWith(command.toUpperCase())))
+        last(commandsArr.filter((cmd: string) => cmd.startsWith(command.toUpperCase()))),
       )
 
       expect(onSubmitMock).not.toBeCalled()

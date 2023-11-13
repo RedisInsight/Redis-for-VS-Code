@@ -24,10 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
   myStatusBarItem.text = 'RedisInsight' // Use the desired icon from the list
   myStatusBarItem.tooltip = 'Click me for more info'
   myStatusBarItem.command = 'RedisInsight.openPage' // Command to execute on click
-
   // Show the status bar item
   myStatusBarItem.show()
-  // context.subscriptions.push(myStatusBarItem)
 
   context.subscriptions.push(
     myStatusBarItem,
@@ -47,17 +45,6 @@ export function activate(context: vscode.ExtensionContext) {
       })
     }),
   )
-
-  // context.subscriptions.push(
-  //   vscode.commands.registerCommand('RedisInsight.openPage', () => {
-  //     WebviewPanel.getInstance({
-  //       extensionUri: context.extensionUri,
-  //       route: 'view1',
-  //       title: 'RedisInsight',
-  //       viewId: 'ri',
-  //     })
-  //   }),
-  // )
 
   if (!server) {
     try {

@@ -18,14 +18,14 @@
         {
           "id": "ri-sidebar-view",
           "title": "RedisInsight",
-          "icon": "src/media/checklist.svg"
+          "icon": "src/media/redisinsight.svg"
         }
       ],
       "panel": [
         {
           "id": "ri-panel-view",
           "title": "RedisInsight CLI",
-          "icon": "src/media/checklist.svg"
+          "icon": "src/media/redisinsight.svg"
         }
       ]
     },
@@ -35,7 +35,7 @@
           "type": "webview",
           "id": "ri-sidebar",
           "name": "RedisInsight",
-          "icon": "src/media/checklist.svg",
+          "icon": "src/media/redisinsight.svg",
           "contextualTitle": "RedisInsight"
         }
       ],

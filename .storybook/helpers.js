@@ -1,3 +1,4 @@
+/* eslint-disable arrow-parens */
 import { HttpResponse, http, passthrough } from 'msw'
 
 import { BASE_URL } from '../src/webviews/src/constants'
