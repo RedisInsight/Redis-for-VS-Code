@@ -1,11 +1,10 @@
 import React, { Ref, useEffect, useRef, useState } from 'react'
-import { EuiFlexGroup, EuiFlexItem, keys } from '@elastic/eui'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Nullable } from 'uiSrc/interfaces'
 import { scrollIntoView, clearOutput, updateCliHistoryStorage } from 'uiSrc/utils'
 import { isModifiedEvent } from 'uiSrc/services'
-import { ClearCommand } from 'uiSrc/constants'
+import { ClearCommand, CliKeys } from 'uiSrc/constants'
 import { outputSelector } from 'uiSrc/slices/cli/cli-output'
 import { cliSettingsSelector } from 'uiSrc/slices/cli/cli-settings'
 import CliInputWrapper from 'uiSrc/components/cli/components/cli-input'
@@ -152,18 +151,18 @@ const CliBody = (props: Props) => {
 
     const isModifierKey = isModifiedEvent(event)
 
-    if (event.shiftKey && event.key === keys.TAB) return onKeyDownShiftTab(event)
-    if (event.key === keys.TAB) return onKeyDownTab(event, commandLine)
+    if (event.shiftKey && event.key === CliKeys.TAB) return onKeyDownShiftTab(event)
+    if (event.key === CliKeys.TAB) return onKeyDownTab(event, commandLine)
 
     // reset command tab position
     if (!event.shiftKey || (event.shiftKey && event.key !== 'Shift')) {
       setCommandTabPos(commandTabPosInit)
     }
 
-    if (event.key === keys.ENTER) return onKeyDownEnter(commandLine, event)
-    if (event.key === keys.ARROW_UP && !isModifierKey) return onKeyDownArrowUp(event)
-    if (event.key === keys.ARROW_DOWN && !isModifierKey) return onKeyDownArrowDown(event)
-    if (event.key === keys.ESCAPE) return onKeyEsc()
+    if (event.key === CliKeys.ENTER) return onKeyDownEnter(commandLine, event)
+    if (event.key === CliKeys.ARROW_UP && !isModifierKey) return onKeyDownArrowUp(event)
+    if (event.key === CliKeys.ARROW_DOWN && !isModifierKey) return onKeyDownArrowDown(event)
+    if (event.key === CliKeys.ESCAPE) return onKeyEsc()
 
     if ((event.metaKey && event.key === 'k') || (event.ctrlKey && event.key === 'l')) {
       onClearOutput(event)
@@ -224,31 +223,23 @@ const CliBody = (props: Props) => {
       role="textbox"
       tabIndex={0}
     >
-      <EuiFlexGroup
-        justifyContent="spaceBetween"
-        gutterSize="none"
-        responsive={false}
-        direction="row"
-        style={{ height: '100%' }}
-      >
-        <EuiFlexItem grow>
-          <div className={styles.output}>{data}</div>
-          {!error && !(loading || settingsLoading) ? (
-            <span style={{ paddingBottom: 5, paddingTop: 17 }}>
-              <CliInputWrapper
-                command={command}
-                setCommand={setCommand}
-                setInputEl={setInputEl}
-                onKeyDown={onKeyDown}
-                wordsTyped={wordsTyped}
-              />
-            </span>
-          ) : (
-            !error && <span>Executing command...</span>
-          )}
-          <div ref={scrollDivRef} />
-        </EuiFlexItem>
-      </EuiFlexGroup>
+      <section className={styles.outputWrapper}>
+        <div className={styles.output}>{data}</div>
+        {!error && !(loading || settingsLoading) ? (
+          <span style={{ paddingBottom: 5, paddingTop: 17 }}>
+            <CliInputWrapper
+              command={command}
+              setCommand={setCommand}
+              setInputEl={setInputEl}
+              onKeyDown={onKeyDown}
+              wordsTyped={wordsTyped}
+            />
+          </span>
+        ) : (
+          !error && <span>Executing command...</span>
+        )}
+        <div ref={scrollDivRef} />
+      </section>
     </div>
   )
 }

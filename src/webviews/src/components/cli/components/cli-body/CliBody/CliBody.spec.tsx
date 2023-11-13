@@ -1,10 +1,9 @@
 import { cloneDeep, last } from 'lodash'
 import React from 'react'
-import { keys } from '@elastic/eui'
 import { instance, mock } from 'ts-mockito'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { clearOutput, updateCliHistoryStorage } from 'uiSrc/utils/cliHelper'
-import { MOCK_COMMANDS_ARRAY } from 'uiSrc/constants'
+import { MOCK_COMMANDS_ARRAY, CliKeys } from 'uiSrc/constants'
 import { cleanup, mockedStore } from 'testSrc/helpers'
 import CliBody, { Props } from './CliBody'
 
@@ -247,7 +246,7 @@ describe('CliBody', () => {
       )
 
       fireEvent.keyDown(screen.getByTestId('cli-command'), {
-        key: keys.TAB,
+        key: CliKeys.TAB,
       })
 
       expect(setCommandMock).toBeCalledWith(commandsArr[0])
@@ -270,7 +269,7 @@ describe('CliBody', () => {
       )
 
       fireEvent.keyDown(screen.getByTestId('cli-command'), {
-        key: keys.TAB,
+        key: CliKeys.TAB,
       })
 
       expect(setCommandMock).toBeCalledWith(
@@ -295,16 +294,16 @@ describe('CliBody', () => {
       )
 
       fireEvent.keyDown(screen.getByTestId('cli-command'), {
-        key: keys.TAB,
+        key: CliKeys.TAB,
         shiftKey: true,
       })
 
       fireEvent.keyDown(screen.getByTestId('cli-command'), {
-        key: keys.TAB,
+        key: CliKeys.TAB,
       })
 
       fireEvent.keyDown(screen.getByTestId('cli-command'), {
-        key: keys.TAB,
+        key: CliKeys.TAB,
         shiftKey: true,
       })
 

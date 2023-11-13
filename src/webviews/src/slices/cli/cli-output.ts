@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponseHeaders } from 'axios'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { localStorageService } from 'uiSrc/services/storage'
-import { CliOutputFormatterType, cliTexts, ConnectionSuccessOutputText, SelectCommand } from 'uiSrc/constants/cli/cliOutput'
+import { CliOutputFormatterType, cliTexts, ConnectionSuccessOutputText, SelectCommand } from 'uiSrc/constants/cli'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints, StorageItem, CommandMonitor, ApiErrors } from 'uiSrc/constants'
 import {
@@ -274,7 +274,7 @@ function handleRecreateClient(dispatch: AppDispatch, stateInit: () => RootState,
     dispatch(updateCliClientAction(
       cliClientUuid,
       () => dispatch(concatToOutput(ConnectionSuccessOutputText)),
-      (message:string) => dispatch(concatToOutput(
+      (message: string) => dispatch(concatToOutput(
         cliParseTextResponseWithOffset(`${message}`, command, CommandExecutionStatus.Fail),
       )),
     ))

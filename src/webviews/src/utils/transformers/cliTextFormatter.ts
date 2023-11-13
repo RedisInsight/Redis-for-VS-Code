@@ -3,25 +3,6 @@ import {
 } from 'lodash'
 import { bulkReplyCommands } from 'uiSrc/constants'
 
-const formatToText = (reply: any, command: string = ''): string => {
-  let result
-  if (isNull(reply)) {
-    result = '(nil)'
-  } else if (isInteger(reply)) {
-    result = `(integer) ${reply}`
-  } else if (isArray(reply)) {
-    result = formatRedisArrayReply(reply)
-  } else if (isObject(reply)) {
-    result = formatRedisArrayReply(flattenDeep(Object.entries(reply)))
-  } else if (isFormattedCommand(command)) {
-    result = reply
-  } else {
-    result = `"${reply}"`
-  }
-
-  return result
-}
-
 const isFormattedCommand = (commandLine: string = '') => !!bulkReplyCommands?.find((command) =>
   commandLine?.trim().toUpperCase().startsWith(command))
 
@@ -46,4 +27,21 @@ const formatRedisArrayReply = (reply: any | any[], level = 0): string => {
   return result
 }
 
-export default formatToText
+export const formatToText = (reply: any, command: string = ''): string => {
+  let result
+  if (isNull(reply)) {
+    result = '(nil)'
+  } else if (isInteger(reply)) {
+    result = `(integer) ${reply}`
+  } else if (isArray(reply)) {
+    result = formatRedisArrayReply(reply)
+  } else if (isObject(reply)) {
+    result = formatRedisArrayReply(flattenDeep(Object.entries(reply)))
+  } else if (isFormattedCommand(command)) {
+    result = reply
+  } else {
+    result = `"${reply}"`
+  }
+
+  return result
+}

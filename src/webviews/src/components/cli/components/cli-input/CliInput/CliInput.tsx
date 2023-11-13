@@ -1,8 +1,8 @@
 import React from 'react'
 import { ContentEditableEvent } from 'react-contenteditable'
 
-import ContentEditable, { parseContentEditableChangeHtml } from 'uiSrc/components/ContentEditable'
-import { getDbIndex } from 'uiSrc/utils'
+import { ContentEditable } from 'uiSrc/components/ContentEditable'
+import { getDbIndex, parseContentEditableChangeHtml } from 'uiSrc/utils'
 
 import styles from './styles.module.scss'
 

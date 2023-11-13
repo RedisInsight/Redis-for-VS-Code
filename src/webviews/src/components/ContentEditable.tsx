@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactContentEditable, { Props } from 'react-contenteditable'
+import { parsePastedText } from 'uiSrc/utils'
 
 const useRefCallback = <T extends any[]>(
   value: ((...args: T) => void) | undefined,
@@ -16,32 +17,16 @@ const useRefCallback = <T extends any[]>(
   }, [])
 }
 
-// remove line break and encode angular brackets
-export const parsePastedText = (text: string = '') =>
-  text.replace(/\n/gi, '').replace(/</gi, '<').replace(/>/gi, '>')
-
-export const parseContentEditableChangeHtml = (text: string = '') => text.replace(/&nbsp;/gi, ' ')
-
-export const parseMultilineContentEditableChangeHtml = (text: string = '') =>
-  parseContentEditableChangeHtml(text).replace(/<br>/gi, ' ')
-
-export const parseContentEditableHtml = (text: string = '') =>
-  text
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/&lt;/gi, '<')
-    .replace(/&gt;/gi, '>')
-    .replace(/&amp;/gi, '&')
-
 const onPaste = (e: React.ClipboardEvent) => {
   e.preventDefault()
 
-  const clipboardData = e.clipboardData || window.clipboardData || e.originalEvent.clipboardData
+  const clipboardData = e.clipboardData || window.Clipboard || e.originalEvent.clipboardData
   const text = clipboardData.getData('text/plain') as string
 
   document.execCommand('insertText', false, parsePastedText(text))
 }
 
-export default function ContentEditable({
+export function ContentEditable({
   ref,
   onChange,
   onInput,

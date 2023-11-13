@@ -22,7 +22,7 @@ import {
 
 // import { AdditionalRedisModule } from 'apiSrc/modules/database/models/additional.redis.module'
 import { getDbIndex } from 'uiSrc/utils'
-import formatToText from './transformers/cliTextFormatter'
+import { formatToText } from './transformers/cliTextFormatter'
 
 export enum CliPrefix {
   Cli = 'cli',

@@ -1,22 +1,12 @@
-/* @import '@elastic/eui/src/global_styling/mixins/helpers';
-@import '@elastic/eui/src/components/table/mixins';
-@import '@elastic/eui/src/global_styling/index'; */
-
 .container {
   height: 100%;
   width: 100%;
   min-width: 230px;
 }
 
-.main {
-  /* @include euiScrollBar; */
-  
+.main { 
   box-sizing: border-box;
   height: 100%;
   width: 100%;
   position: relative;
-  background-color: var(--browserTableRowEven);
-  border-left: 1px solid var(--euiColorLightShade);
-  border-right: 1px solid var(--euiColorLightShade);
-  border-top: 1px solid var(--euiColorLightShade);
 }
