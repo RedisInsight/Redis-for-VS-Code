@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactContentEditable, { Props } from 'react-contenteditable'
-import { parsePastedText } from 'uiSrc/utils'
+import { parsePastedText } from 'uiSrc/modules/cli/utils/textFormatters'
 
 const useRefCallback = <T extends any[]>(
   value: ((...args: T) => void) | undefined,

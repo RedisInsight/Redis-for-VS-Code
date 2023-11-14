@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { getRouterLinkProps } from 'uiSrc/services'
-import { getDbIndex } from 'uiSrc/utils'
+// import { getDbIndex } from 'uiSrc/utils'
 
 export const InitOutputText = (
-  host: string = '',
-  port: number = 0,
-  dbIndex: number = 0,
+  // host: string = '',
+  // port: number = 0,
+  // dbIndex: number = 0,
   emptyOutput: boolean,
   onClick: () => void,
 ) => [
@@ -33,7 +33,9 @@ export const InitOutputText = (
   '\n',
   'Pinging Redis server on ',
   <span color="default" key={Math.random()}>
-    {`${host}:${port}${getDbIndex(dbIndex)}`}
+    {/* TODO: Remove mock after implementing DB connection: */}
+    redis-12871.c309.us-east-2-1.ec2.cloud.redislabs.com:12871
+    {/* {`${host}:${port}${getDbIndex(dbIndex)}`} */}
   </span>,
 ]
 

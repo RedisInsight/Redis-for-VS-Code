@@ -4,9 +4,9 @@ const isScrollBehaviorSupported = (): boolean =>
   'scrollBehavior' in globalThis.document.documentElement.style
 
 export const scrollIntoView = (el: Nullable<HTMLDivElement>, opts?: ScrollIntoViewOptions) => {
-  if (el && isScrollBehaviorSupported()) {
+  if (el && el?.scrollIntoView && isScrollBehaviorSupported()) {
     el?.scrollIntoView(opts)
-  } else {
+  } else if (el?.scrollIntoView) {
     el?.scrollIntoView(true)
   }
 }

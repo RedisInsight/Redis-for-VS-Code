@@ -8,13 +8,13 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { RootState } from 'uiSrc/store'
 import { initialState as initialStateKeys } from 'uiSrc/modules/keys-tree/slice/keys.slice'
+import { initialState as initialStateCliSettings } from 'uiSrc/modules/cli/slice/cli-settings'
+import { initialState as initialStateCliOutput } from 'uiSrc/modules/cli/slice/cli-output'
 import { initialState as initialStateAppInfo } from 'uiSrc/slices/app/info/info.slice'
 import { initialState as initialStateAppContext } from 'uiSrc/slices/app/context/context.slice'
 import { initialState as initialStateAppRedisCommands } from 'uiSrc/slices/app/commands/redis-commands.slice'
 import { initialState as initialStateInstances } from 'uiSrc/slices/connections/instances/instances.slice'
 import { initialState as initialStateUserSettings } from 'uiSrc/slices/user/user-settings.slice'
-import { initialState as initialStateCliSettings } from 'uiSrc/slices/cli/cli-settings'
-import { initialState as initialStateCliOutput } from 'uiSrc/slices/cli/cli-output'
 import { BASE_URL } from 'uiSrc/constants'
 
 interface Options {
