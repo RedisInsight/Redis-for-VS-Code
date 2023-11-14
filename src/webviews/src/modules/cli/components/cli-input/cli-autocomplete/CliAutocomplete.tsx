@@ -6,6 +6,7 @@ import { ICommandArg } from 'uiSrc/constants'
 import { generateArgsNames } from 'uiSrc/utils'
 import { setMatchedCommand, clearSearchingCommand } from 'uiSrc/modules/cli/slice/cli-settings'
 
+import { AppDispatch } from 'uiSrc/store'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -18,7 +19,7 @@ export interface Props {
 export const CliAutocomplete = (props: Props) => {
   const { commandName = '', provider = '', arguments: args = [], wordsTyped } = props
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
     dispatch(setMatchedCommand(commandName))

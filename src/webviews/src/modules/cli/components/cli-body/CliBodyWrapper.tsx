@@ -38,15 +38,16 @@ import { checkUnsupportedCommand, clearOutput, cliCommandOutput } from 'uiSrc/mo
 // import { showMonitor } from 'uiSrc/slices/cli/monitor'
 // import { SendClusterCommandDto } from 'apiSrc/modules/cli/dto/cli.dto'
 
-import { CliBody } from './CliBody'
+import { AppDispatch } from 'uiSrc/store'
+import { CliBody } from './cli-body'
 
-import styles from './CliBody/styles.module.scss'
+import styles from './cli-body/styles.module.scss'
 
 export const CliBodyWrapper = () => {
   const [command, setCommand] = useState('')
 
   // const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const { data = [] } = useSelector(outputSelector)
   const {
     errorClient: error,
@@ -116,7 +117,9 @@ export const CliBodyWrapper = () => {
 
     // Flow if MONITOR command was executed
     if (checkUnsupportedCommand([CommandMonitor.toLowerCase()], commandLine)) {
-      dispatch(concatToOutput(cliTexts.MONITOR_COMMAND_CLI(() => { dispatch(showMonitor()) })))
+      dispatch(concatToOutput(cliTexts.MONITOR_COMMAND_CLI(() => {
+        // dispatch(showMonitor())
+      })))
       resetCommand()
       return
     }

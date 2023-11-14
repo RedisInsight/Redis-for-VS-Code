@@ -5,9 +5,9 @@ import { getCommandRepeat } from 'uiSrc/utils'
 import { appRedisCommandsSelector } from 'uiSrc/slices/app/commands/redis-commands.slice'
 import { outputSelector } from 'uiSrc/modules/cli/slice/cli-output'
 import { CommandProvider } from 'uiSrc/constants'
-import { CliAutocomplete } from './CliAutocomplete'
+import { CliAutocomplete } from './cli-autocomplete'
 
-import { CliInput } from './CliInput'
+import { CliInput } from './cli-input'
 
 export interface Props {
   command: string

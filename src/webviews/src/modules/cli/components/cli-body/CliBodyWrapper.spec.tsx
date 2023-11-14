@@ -11,7 +11,7 @@ import {
 import { cleanup, mockedStore, render } from 'testSrc/helpers'
 // import { connectedInstanceSelector } from 'uiSrc/slices/connections/instances/instances.slice'
 
-import CliBodyWrapper from './CliBodyWrapper'
+import { CliBodyWrapper } from './CliBodyWrapper'
 
 let store: typeof mockedStore
 beforeEach(() => {

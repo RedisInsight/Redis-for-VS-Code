@@ -1,5 +1,5 @@
 import React from 'react'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, first, map } from 'lodash'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import configureMockStore from 'redux-mock-store'
@@ -63,6 +63,21 @@ export const render = (
   const wrapper = !withRouter ? Wrapper : BrowserRouter
 
   return rtlRender(ui, { wrapper, ...renderOptions })
+}
+
+export const clearStoreActions = (actions: any[]) => {
+  const newActions = map(actions, (action) => {
+    const newAction = { ...action }
+    if (newAction?.payload) {
+      const payload = {
+        ...first<any>(newAction.payload),
+        key: '',
+      } || {}
+      newAction.payload = [payload]
+    }
+    return newAction
+  })
+  return JSON.stringify(newActions)
 }
 
 export const getMWSUrl = (url: string) =>

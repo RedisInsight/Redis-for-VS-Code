@@ -2,7 +2,7 @@
   "editor.formatOnSave": true,
   "css.customData": [".vscode/css_custom_data.json"],
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "[javascript, typescript]": {
+  "[javascript, typescript, typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "eslint.format.enable": true,
@@ -47,9 +47,6 @@
   },
   "cSpell.words": ["githubocto", "tailwindcss", "webviews"],
   "testing.automaticallyOpenPeekView": "never",
-  "[typescript, typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
   "[typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   }

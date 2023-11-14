@@ -1,5 +1,5 @@
 export * from './core'
-export * from './commands'
+export * from './core/commands'
 export * from './instance'
 export * from './telemetry'
 export * from './comparisons'

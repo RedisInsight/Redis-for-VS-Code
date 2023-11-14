@@ -11,6 +11,7 @@ import { cliSettingsSelector } from 'uiSrc/modules/cli/slice/cli-settings'
 import { CliInputWrapper } from 'uiSrc/modules/cli/components/cli-input'
 import { appRedisCommandsSelector } from 'uiSrc/slices/app/commands/redis-commands.slice'
 
+import { AppDispatch } from 'uiSrc/store'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -40,7 +41,7 @@ export const CliBody = (props: Props) => {
 
   const timerClickRef = useRef<NodeJS.Timeout>()
   const scrollDivRef: Ref<HTMLDivElement> = useRef(null)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
     inputEl?.focus()

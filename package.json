@@ -210,8 +210,6 @@
     "whatwg-fetch": "^3.6.19"
   },
   "dependencies": {
-    "@emotion/css": "^11.11.2",
-    "@emotion/react": "^11.11.1",
     "@hediet/node-reload": "^0.7.3",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
@@ -233,7 +231,6 @@
     "is-glob": "^4.0.3",
     "keytar": "^7.9.0",
     "lodash": "^4.17.21",
-    "moment": "^2.29.4",
     "nanoid": "^3.3.6",
     "react": "^18.2.0",
     "react-contenteditable": "^3.3.7",
