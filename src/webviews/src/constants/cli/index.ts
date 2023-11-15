@@ -1,2 +1,2 @@
-export * from './cli-output-components'
-export * from './cli-output-constants'
+export * from './cliOutputComponents'
+export * from './cliOutputConstants'
