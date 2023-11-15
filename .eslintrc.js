@@ -5,7 +5,12 @@ module.exports = {
   env: {
     browser: true,
   },
-  extends: ['airbnb-typescript', 'airbnb/hooks', 'plugin:sonarjs/recommended', 'plugin:storybook/recommended'],
+  extends: [
+    'airbnb-typescript',
+    'airbnb/hooks',
+    'plugin:sonarjs/recommended',
+    'plugin:storybook/recommended',
+  ],
   plugins: ['@typescript-eslint', 'react-refresh'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -18,11 +23,7 @@ module.exports = {
 
   overrides: [
     {
-      files: [
-        '**/*.spec.ts',
-        '**/*.spec.tsx',
-        '**/*.spec.ts',
-      ],
+      files: ['**/*.spec.ts', '**/*.spec.tsx', '**/*.spec.ts'],
       env: {
         jest: true,
       },
@@ -34,7 +35,15 @@ module.exports = {
     radix: 'off',
     semi: ['error', 'never'],
     'no-bitwise': ['error', { allow: ['|'] }],
-    'max-len': ['error', { ignoreComments: true, ignoreStrings: true, ignoreRegExpLiterals: true, code: 120 }],
+    'max-len': [
+      'error',
+      {
+        ignoreComments: true,
+        ignoreStrings: true,
+        ignoreRegExpLiterals: true,
+        code: 120,
+      },
+    ],
     'class-methods-use-this': 'off',
     // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
     'react-refresh/only-export-components': ['warn'],

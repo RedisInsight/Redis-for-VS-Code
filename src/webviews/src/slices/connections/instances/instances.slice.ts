@@ -1,10 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { find, orderBy } from 'lodash'
 import { AxiosError } from 'axios'
+import { apiService, localStorageService } from 'uiSrc/services'
 import { ApiEndpoints, CONNECTED_INSTANCE_ID, ConnectionType, StorageItem } from 'uiSrc/constants'
 import { checkRediStack, getApiErrorMessage, isStatusSuccessful } from 'uiSrc/utils'
 import { AppDispatch, RootState } from 'uiSrc/store'
-import { apiService, localStorageService } from 'uiSrc/services'
 import { Instance, InitialStateInstances } from './interface'
 
 export const initialState: InitialStateInstances = {

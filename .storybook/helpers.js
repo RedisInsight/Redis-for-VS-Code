@@ -5,7 +5,8 @@ import { BASE_URL } from '../src/webviews/src/constants'
 const getMWSUrl = (url) =>
   `${BASE_URL}${url.startsWith('/') ? url.slice(1) : url}`
 
-const getMockMetadata = ({ keys }) => keys.map((name) => ({ type: 'string', name }))
+const getMockMetadata = ({ keys }) =>
+  keys.map((name) => ({ type: 'string', name }))
 
 export const mswHandlers = [
   http.post(

@@ -1,0 +1,24 @@
+.section {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 34px);
+  display: flex;
+}
+
+.title {
+  padding-left: 18px;
+}
+
+.outputWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.output {
+  white-space: pre-wrap;
+}
+
+.input {
+  padding-bottom: 7px;
+}

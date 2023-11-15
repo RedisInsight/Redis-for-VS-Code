@@ -6,4 +6,5 @@ export {
   getMWSUrl,
   initialStateDefault,
   cleanup,
+  clearStoreActions,
 } from './testUtils'

@@ -2,17 +2,14 @@
   "editor.formatOnSave": true,
   "css.customData": [".vscode/css_custom_data.json"],
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "[javascript, typescript]": {
+  "[javascript, typescript, typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "eslint.format.enable": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": [
-    "javascript",
-    "typescript"
-  ],
+  "eslint.validate": ["javascript", "typescript"],
   "files.associations": {
     "*.css": "postcss",
     "*.scss": "postcss"
@@ -46,12 +43,11 @@
     "storybook-static": true,
     "pnpm-lock.yaml": true,
     "**/pnpm-lock.yaml": true,
-    ".storybook/preview-head.html": true,
+    ".storybook/preview-head.html": true
   },
-  "cSpell.words": [
-    "githubocto",
-    "tailwindcss",
-    "webviews"
-  ],
+  "cSpell.words": ["githubocto", "tailwindcss", "webviews"],
   "testing.automaticallyOpenPeekView": "never",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
 }
