@@ -1,3 +1,5 @@
+import * as l10n from '@vscode/l10n'
+
 export const ClearCommand = 'clear'
 export const SelectCommand = 'select'
 
@@ -8,9 +10,9 @@ export enum CliOutputFormatterType {
 
 export const ConnectionSuccessOutputText = [
   '\n',
-  'Connected.',
+  l10n.t('Connected.'),
   '\n',
-  'Ready to execute commands.',
+  l10n.t('Ready to execute commands.'),
   '\n\n',
 ]
 export enum CliKeys {
