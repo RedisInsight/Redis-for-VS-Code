@@ -23,7 +23,7 @@ export const Config = () => {
     dispatch(fetchRedisCommandsInfo())
 
     // TODO: remove after BE will be implemented
-    // dispatch(fetchInstancesAction())
+    // dispatch(fetchDatabasesAction())
 
     // fetch config settings, after that take spec
     dispatch(fetchUserConfigSettings(() => dispatch(fetchUserSettingsSpec())))

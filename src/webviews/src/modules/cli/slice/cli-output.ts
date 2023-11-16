@@ -102,7 +102,7 @@ export function sendCliCommandAction(
     try {
       const state = stateInit()
       cliClientUuid = state?.cli?.settings?.cliClientUuid
-      const { id = '' } = state.connections?.instances?.connectedInstance
+      const { id = '' } = state.connections?.databases?.connectedDatabase
 
       if (command === '') {
         onSuccessAction?.()
@@ -162,7 +162,7 @@ export function sendCliClusterCommandAction(
       const outputFormat = CliOutputFormatterType.Raw
       const state = stateInit()
       cliClientUuid = state?.cli?.settings?.cliClientUuid
-      const { id = '' } = state.connections.instances?.connectedInstance
+      const { id = '' } = state.connections.databases?.connectedDatabase
 
       if (command === '') {
         onSuccessAction?.()

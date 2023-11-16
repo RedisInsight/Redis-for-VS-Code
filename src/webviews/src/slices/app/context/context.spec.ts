@@ -9,7 +9,7 @@ import {
 import reducer, {
   initialState,
   setAppContextInitialState,
-  setAppContextConnectedInstanceId,
+  setAppContextConnectedDatabaseId,
   setKeysTreeSort,
   appContextSelector,
   setKeysTreeNodesOpen,
@@ -38,17 +38,17 @@ describe('slices', () => {
     })
   })
 
-  describe('setAppContextConnectedInstanceId', () => {
+  describe('setAppContextConnectedDatabaseId', () => {
     it('should properly set id', () => {
       // Arrange
-      const contextInstanceId = '12312-3123'
+      const contextDatabaseId = '12312-3123'
       const state = {
         ...initialState,
-        contextInstanceId,
+        contextDatabaseId,
       }
 
       // Act
-      const nextState = reducer(initialState, setAppContextConnectedInstanceId(contextInstanceId))
+      const nextState = reducer(initialState, setAppContextConnectedDatabaseId(contextDatabaseId))
 
       // Assert
       const rootState = Object.assign(initialStateDefault, {

@@ -487,10 +487,10 @@ describe('keys slice', () => {
         )
 
         const state = store.getState() as RootState
-        const instanceId = state.connections.instances.connectedInstance.id
+        const databaseId = state.connections.databases.connectedDatabase.id
         // Assert
         expect(apiServiceMock).toBeCalledWith(
-          `/databases/${instanceId}/keys/get-metadata`,
+          `/databases/${databaseId}/keys/get-metadata`,
           { keys: data.map(({ name }) => (name)), type: undefined },
           { params: { encoding: 'buffer' }, signal: controller.signal },
         )

@@ -9,10 +9,10 @@ const axiosInstance = axios.create({
 
 export const requestInterceptor = (config: AxiosRequestConfig): any => {
   if (config?.headers) {
-    const instanceId = /databases\/([\w-]+)\/?.*/.exec(config.url || '')?.[1]
+    const databaseId = /databases\/([\w-]+)\/?.*/.exec(config.url || '')?.[1]
 
-    if (instanceId) {
-      const dbIndex = sessionStorageService.get(`${StorageItem.dbIndex}${instanceId}`)
+    if (databaseId) {
+      const dbIndex = sessionStorageService.get(`${StorageItem.dbIndex}${databaseId}`)
 
       if (isNumber(dbIndex)) {
         config.headers[CustomHeaders.DbIndex] = dbIndex

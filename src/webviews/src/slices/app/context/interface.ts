@@ -2,7 +2,7 @@ import { SortOrder } from 'uiSrc/constants'
 import { Nullable } from 'uiSrc/interfaces'
 
 export interface StateAppContext {
-  contextInstanceId: string
+  contextDatabaseId: string
   lastPage: string
   dbConfig: {
     treeViewDelimiter: string
@@ -11,10 +11,12 @@ export interface StateAppContext {
   keys: {
     tree: {
       delimiter: string
-      openNodes: {
-        [key: string]: boolean
-      }
+      openNodes: OpenNodes
       selectedLeaf: Nullable<string>
     }
   }
+}
+
+export interface OpenNodes {
+  [key: string]: boolean
 }

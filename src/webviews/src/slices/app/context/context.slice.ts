@@ -2,10 +2,10 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, SortOrder, StorageItem } from 'uiSrc/constants'
 import { RootState } from 'uiSrc/store'
 import { setDBConfigStorageField } from 'uiSrc/services'
-import { StateAppContext } from './interface'
+import { OpenNodes, StateAppContext } from './interface'
 
 export const initialState: StateAppContext = {
-  contextInstanceId: '',
+  contextDatabaseId: '',
   lastPage: '',
   dbConfig: {
     treeViewDelimiter: DEFAULT_DELIMITER,
@@ -25,14 +25,14 @@ const appContextSlice = createSlice({
   name: 'appContext',
   initialState,
   reducers: {
-    // don't need to reset instanceId
+    // don't need to reset databaseId
     setAppContextInitialState: (state) => ({
       ...initialState,
-      contextInstanceId: state.contextInstanceId,
+      contextDatabaseId: state.contextDatabaseId,
     }),
-    // set connected instance
-    setAppContextConnectedInstanceId: (state, { payload }: PayloadAction<string>) => {
-      state.contextInstanceId = payload
+    // set connected database
+    setAppContextConnectedDatabaseId: (state, { payload }: PayloadAction<string>) => {
+      state.contextDatabaseId = payload
     },
     setDbConfig: (state, { payload }) => {
       state.dbConfig.treeViewDelimiter = payload?.treeViewDelimiter ?? DEFAULT_DELIMITER
@@ -40,13 +40,13 @@ const appContextSlice = createSlice({
     },
     setKeysTreeDelimiter: (state, { payload }: PayloadAction<string>) => {
       state.dbConfig.treeViewDelimiter = payload
-      setDBConfigStorageField(state.contextInstanceId, StorageItem.treeViewDelimiter, payload)
+      setDBConfigStorageField(state.contextDatabaseId, StorageItem.treeViewDelimiter, payload)
     },
     setKeysTreeSort: (state, { payload }: PayloadAction<SortOrder>) => {
       state.dbConfig.treeViewSort = payload
-      setDBConfigStorageField(state.contextInstanceId, StorageItem.treeViewSort, payload)
+      setDBConfigStorageField(state.contextDatabaseId, StorageItem.treeViewSort, payload)
     },
-    setKeysTreeNodesOpen: (state, { payload }: PayloadAction<{ [key: string]: boolean }>) => {
+    setKeysTreeNodesOpen: (state, { payload }: PayloadAction<OpenNodes>) => {
       state.keys.tree.openNodes = payload
     },
     resetKeysTree: (state) => {
@@ -59,7 +59,7 @@ const appContextSlice = createSlice({
 // Actions generated from the slice
 export const {
   setAppContextInitialState,
-  setAppContextConnectedInstanceId,
+  setAppContextConnectedDatabaseId,
   setDbConfig,
   setKeysTreeDelimiter,
   resetKeysTree,

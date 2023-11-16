@@ -1,17 +1,9 @@
-// import {
-//   enableHotReload,
-//   hotRequireExportedFn,
-//   registerUpdateReconciler,
-// } from '@hediet/node-reload'
-// import { Disposable } from '@hediet/std/disposable'
 import * as vscode from 'vscode'
-import * as http from 'http'
 import { WebviewPanel } from './Webview'
 import { bootstrap } from './server/app'
 import { WebViewProvider } from './WebViewProvider'
 
 let myStatusBarItem: vscode.StatusBarItem
-let server: http.Server | undefined
 export function activate(context: vscode.ExtensionContext) {
   const sidebarProvider = new WebViewProvider(context.extensionUri, 'tree')
   const panelProvider = new WebViewProvider(context.extensionUri, 'cli')
@@ -46,21 +38,17 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   )
 
-  if (!server) {
-    try {
-      // Start the Express server
-      bootstrap()
-      vscode.window.showInformationMessage(
-        'Server started at http://localhost:3000',
-      )
-    } catch (err) {
-      const error = err as Error
-      console.error({ error })
+  try {
+    // Start the Express server
+    bootstrap()
+    // bootstrap()
+    vscode.window.showInformationMessage(
+      'Server started at http://localhost:3000',
+    )
+  } catch (err) {
+    const error = err as Error
+    console.error({ error })
 
-      vscode.window.showErrorMessage(`Error starting server: ${error.message}`)
-    }
+    vscode.window.showErrorMessage(`Error starting server: ${error.message}`)
   }
-
-  // context.subscriptions.push(
-  //   hotRequireExportedFn(module, Extension, Extension => new Extension())
 }
