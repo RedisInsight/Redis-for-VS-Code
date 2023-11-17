@@ -65,7 +65,7 @@ export const Msw: Story = {
     msw: {
       handlers: [
         http.post(
-          getMWSUrl('databases/:instanceId/keys'),
+          getMWSUrl('databases/:databaseId/keys'),
           () => HttpResponse.json(mockPostKeys),
         ),
       ],
@@ -79,7 +79,7 @@ export const NoKeys: Story = {
     msw: {
       handlers: [
         http.post(
-          getMWSUrl('databases/:instanceId/keys'),
+          getMWSUrl('databases/:databaseId/keys'),
           () => HttpResponse.json(noKeysData),
         ),
       ],

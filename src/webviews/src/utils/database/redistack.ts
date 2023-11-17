@@ -1,7 +1,7 @@
 import { isArray, map, concat, remove, find } from 'lodash'
 import { RedisDefaultModules } from 'uiSrc/constants'
 import { Nullable } from 'uiSrc/interfaces'
-import { Instance } from 'uiSrc/slices/connections/instances/interface'
+import { Database } from 'uiSrc/slices/connections/databases/interface'
 import { isVersionHigherOrEquals } from 'uiSrc/utils'
 
 const REDISTACK_VERSION = '6.2.5'
@@ -70,9 +70,9 @@ const isRediStack = (modules: any[], version?: Nullable<string>): boolean => {
   return false
 }
 
-const checkRediStack = (instances: Instance[]): Instance[] => (instances.map((instance) => ({
-  ...instance,
-  isRediStack: isRediStack(instance.modules, instance.version),
+const checkRediStack = (databases: Database[]): Database[] => (databases.map((database) => ({
+  ...database,
+  isRediStack: isRediStack(database.modules, database.version),
 })))
 
 export { checkRediStack, isRediStack }

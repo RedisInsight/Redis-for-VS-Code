@@ -13,7 +13,7 @@ import { initialState as initialStateCliOutput } from 'uiSrc/modules/cli/slice/c
 import { initialState as initialStateAppInfo } from 'uiSrc/slices/app/info/info.slice'
 import { initialState as initialStateAppContext } from 'uiSrc/slices/app/context/context.slice'
 import { initialState as initialStateAppRedisCommands } from 'uiSrc/slices/app/commands/redis-commands.slice'
-import { initialState as initialStateInstances } from 'uiSrc/slices/connections/instances/instances.slice'
+import { initialState as initialStateDatabases } from 'uiSrc/slices/connections/databases/databases.slice'
 import { initialState as initialStateUserSettings } from 'uiSrc/slices/user/user-settings.slice'
 import { BASE_URL } from 'uiSrc/constants'
 
@@ -31,7 +31,7 @@ export const initialStateDefault: RootState = {
     redisCommands: cloneDeep(initialStateAppRedisCommands),
   },
   connections: {
-    instances: cloneDeep(initialStateInstances),
+    databases: cloneDeep(initialStateDatabases),
   },
   browser: {
     keys: cloneDeep(initialStateKeys),

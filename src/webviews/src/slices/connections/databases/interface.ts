@@ -1,15 +1,15 @@
 import { ConnectionType } from 'uiSrc/constants'
 import { Nullable } from 'uiSrc/interfaces'
 
-export interface InitialStateInstances {
+export interface InitialStateDatabases {
   loading: boolean
   error: string
-  data: Instance[]
-  connectedInstance: Instance
-  freeInstance: Nullable<Instance>
+  data: Database[]
+  connectedDatabase: Database
+  freeDatabase: Nullable<Database>
 }
 
-export interface Instance {
+export interface Database {
   host: string
   port: number
   nameFromProvider?: Nullable<string>

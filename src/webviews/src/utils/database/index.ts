@@ -1,4 +1,4 @@
-import { getUrl } from './getUrlInstance'
+import { getUrl } from './getUrlDatabase'
 
 export * from './redistack'
 

@@ -132,7 +132,7 @@ export function fetchPatternKeysAction(
 
       const { data, status } = await apiService.post<GetKeysWithDetailsResponse[]>(
         getUrl(
-          state.connections.instances?.connectedInstance?.id ?? '',
+          state.connections.databases?.connectedDatabase?.id ?? '',
           ApiEndpoints.KEYS,
         ),
         {
@@ -162,7 +162,7 @@ export function fetchPatternKeysAction(
         sendEventTelemetry({
           event,
           eventData: {
-            databaseId: state.connections.instances?.connectedInstance?.id,
+            databaseId: state.connections.databases?.connectedDatabase?.id,
             keyType: type,
             match: matchValue,
             databaseSize: data[0].total,
@@ -201,7 +201,7 @@ export function fetchMorePatternKeysAction(cursor: string, count: number) {
       const { encoding } = state.app.info
       const { data, status } = await apiService.post(
         getUrl(
-          state.connections.instances?.connectedInstance?.id ?? '',
+          state.connections.databases?.connectedDatabase?.id ?? '',
           ApiEndpoints.KEYS,
         ),
         {
@@ -223,7 +223,7 @@ export function fetchMorePatternKeysAction(cursor: string, count: number) {
         sendEventTelemetry({
           event: TelemetryEvent.TREE_VIEW_KEYS_ADDITIONALLY_SCANNED,
           eventData: {
-            databaseId: state.connections.instances?.connectedInstance?.id,
+            databaseId: state.connections.databases?.connectedDatabase?.id,
             databaseSize: data[0].total,
             numberOfKeysScanned: state.browser.keys.data.scanned + data[0].scanned,
             scanCount: count,
@@ -253,7 +253,7 @@ export function fetchKeysMetadataTree(
       const state = stateInit()
       const { data } = await apiService.post<KeyInfo[]>(
         getUrl(
-          state.connections.instances?.connectedInstance?.id,
+          state.connections.databases?.connectedDatabase?.id,
           ApiEndpoints.KEYS_METADATA,
         ),
         { keys: keys.map(([,nameBuffer]) => nameBuffer), type: filter || undefined },

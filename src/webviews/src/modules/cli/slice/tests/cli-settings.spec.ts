@@ -38,7 +38,7 @@ import {
   clearStoreActions,
 } from 'testSrc/helpers'
 
-export const INSTANCE_ID_MOCK = 'instanceId'
+export const DATABASE_ID_MOCK = 'databaseId'
 
 let mathRandom: SpyInstance<any[]>
 const random = 0.91911
@@ -497,7 +497,7 @@ describe('cliSettings slice', () => {
       apiService.post = vi.fn().mockResolvedValue(responsePayload)
 
       // Act
-      await store.dispatch<any>(createCliClientAction(INSTANCE_ID_MOCK, () => { }))
+      await store.dispatch<any>(createCliClientAction(DATABASE_ID_MOCK, () => { }))
 
       // Assert
       const expectedActions = [
@@ -524,7 +524,7 @@ describe('cliSettings slice', () => {
       apiService.post = vi.fn().mockRejectedValueOnce(responsePayload)
 
       // Act
-      await store.dispatch<any>(createCliClientAction(INSTANCE_ID_MOCK, () => { }))
+      await store.dispatch<any>(createCliClientAction(DATABASE_ID_MOCK, () => { }))
 
       // Assert
       const expectedActions = [

@@ -11,22 +11,22 @@ import {
 
 import reducer, {
   initialState,
-  instancesSelector,
-  loadInstances,
-  loadInstancesSuccess,
-  loadInstancesFailure,
-  fetchInstancesAction,
-} from './instances.slice'
+  databasesSelector,
+  loadDatabases,
+  loadDatabasesSuccess,
+  loadDatabasesFailure,
+  fetchDatabasesAction,
+} from './databases.slice'
 
 let store: typeof mockedStore
-let instances: any[]
+let databases: any[]
 
 beforeEach(() => {
   cleanup()
   store = cloneDeep(mockedStore)
   store.clearActions()
 
-  instances = [
+  databases = [
     {
       id: 'e37cc441-a4f2-402c-8bdb-fc2413cbbaff',
       host: 'localhost',
@@ -83,7 +83,7 @@ beforeEach(() => {
   ]
 })
 
-describe('instances slice', () => {
+describe('databases slice', () => {
   describe('reducer, actions and selectors', () => {
     it('should return the initial state on first run', () => {
       // Arrange
@@ -97,7 +97,7 @@ describe('instances slice', () => {
     })
   })
 
-  describe('loadInstances', () => {
+  describe('loadDatabases', () => {
     it('should properly set loading = true', () => {
       // Arrange
       const state = {
@@ -106,38 +106,38 @@ describe('instances slice', () => {
       }
 
       // Act
-      const nextState = reducer(initialState, loadInstances())
+      const nextState = reducer(initialState, loadDatabases())
 
       // Assert
       const rootState = Object.assign(initialStateDefault, {
         connections: {
-          instances: nextState,
+          databases: nextState,
         },
       })
-      expect(instancesSelector(rootState)).toEqual(state)
+      expect(databasesSelector(rootState)).toEqual(state)
     })
   })
 
-  describe('loadInstancesSuccess', () => {
+  describe('loadDatabasesSuccess', () => {
     it('should properly set the state with fetched data', () => {
       // Arrange
 
       const state = {
         ...initialState,
         loading: false,
-        data: checkRediStack(instances),
+        data: checkRediStack(databases),
       }
 
       // Act
-      const nextState = reducer(initialState, loadInstancesSuccess(instances))
+      const nextState = reducer(initialState, loadDatabasesSuccess(databases))
 
       // Assert
       const rootState = Object.assign(initialStateDefault, {
         connections: {
-          instances: nextState,
+          databases: nextState,
         },
       })
-      expect(instancesSelector(rootState)).toEqual(state)
+      expect(databasesSelector(rootState)).toEqual(state)
     })
 
     it('should properly set the state with empty data', () => {
@@ -151,19 +151,19 @@ describe('instances slice', () => {
       }
 
       // Act
-      const nextState = reducer(initialState, loadInstancesSuccess(data))
+      const nextState = reducer(initialState, loadDatabasesSuccess(data))
 
       // Assert
       const rootState = Object.assign(initialStateDefault, {
         connections: {
-          instances: nextState,
+          databases: nextState,
         },
       })
-      expect(instancesSelector(rootState)).toEqual(state)
+      expect(databasesSelector(rootState)).toEqual(state)
     })
   })
 
-  describe('loadInstancesFailure', () => {
+  describe('loadDatabasesFailure', () => {
     it('should properly set the error', () => {
       // Arrange
       const data = 'some error'
@@ -175,38 +175,38 @@ describe('instances slice', () => {
       }
 
       // Act
-      const nextState = reducer(initialState, loadInstancesFailure(data))
+      const nextState = reducer(initialState, loadDatabasesFailure(data))
 
       // Assert
       const rootState = Object.assign(initialStateDefault, {
         connections: {
-          instances: nextState,
+          databases: nextState,
         },
       })
-      expect(instancesSelector(rootState)).toEqual(state)
+      expect(databasesSelector(rootState)).toEqual(state)
     })
   })
 
   describe('thunks', () => {
-    describe('fetchInstances', () => {
-      it('call both fetchInstances and loadInstancesSuccess when fetch is successed', async () => {
+    describe('fetchDatabases', () => {
+      it('call both fetchDatabases and loadDatabasesSuccess when fetch is successed', async () => {
         // Arrange
-        const responsePayload = { data: instances, status: 200 }
+        const responsePayload = { data: databases, status: 200 }
 
         apiService.get = vi.fn().mockResolvedValue(responsePayload)
 
         // Act
-        await store.dispatch<any>(fetchInstancesAction())
+        await store.dispatch<any>(fetchDatabasesAction())
 
         // Assert
         const expectedActions = [
-          loadInstances(),
-          loadInstancesSuccess(responsePayload.data),
+          loadDatabases(),
+          loadDatabasesSuccess(responsePayload.data),
         ]
         expect(store.getActions()).toEqual(expectedActions)
       })
 
-      it('call both fetchInstances and loadInstancesFailure when fetch is fail', async () => {
+      it('call both fetchDatabases and loadDatabasesFailure when fetch is fail', async () => {
         // Arrange
         const errorMessage = 'Could not connect to aoeu:123, please check the connection details.'
         const responsePayload = {
@@ -219,12 +219,12 @@ describe('instances slice', () => {
         apiService.get = vi.fn().mockRejectedValueOnce(responsePayload)
 
         // Act
-        await store.dispatch<any>(fetchInstancesAction())
+        await store.dispatch<any>(fetchDatabasesAction())
 
         // Assert
         const expectedActions = [
-          loadInstances(),
-          loadInstancesFailure(responsePayload.response.data.message),
+          loadDatabases(),
+          loadDatabasesFailure(responsePayload.response.data.message),
         ]
         expect(store.getActions()).toEqual(expectedActions)
       })

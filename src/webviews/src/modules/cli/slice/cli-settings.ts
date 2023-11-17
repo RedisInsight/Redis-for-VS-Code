@@ -4,7 +4,7 @@ import { AxiosError } from 'axios'
 import { apiService, sessionStorageService } from 'uiSrc/services'
 import { ApiEndpoints, StorageItem, cliTexts, ConnectionSuccessOutputText, InitOutputText } from 'uiSrc/constants'
 import { getApiErrorMessage, getUrl, isStatusSuccessful } from 'uiSrc/utils'
-import { connectedInstanceSelector } from 'uiSrc/slices/connections/instances/instances.slice'
+import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 import { AppDispatch, RootState } from 'uiSrc/store'
 import { StateCliSettings } from 'uiSrc/interfaces'
 import { outputSelector, concatToOutput, setCliDbIndex } from './cli-output'
@@ -185,7 +185,7 @@ export default cliSettingsSlice.reducer
 
 // Asynchronous thunk action
 export function createCliClientAction(
-  instanceId: string,
+  databaseId: string,
   onWorkbenchClick: () => void,
   onSuccessAction?: () => void,
   onFailAction?: (message: string) => void,
@@ -193,21 +193,21 @@ export function createCliClientAction(
   return async (dispatch: AppDispatch, stateInit: () => RootState) => {
     const state = stateInit()
     if (state.cli.output.data.length) return
-    const { host, port, db } = connectedInstanceSelector(state)
+    const { host, port, db } = connectedDatabaseSelector(state)
     const { data = [] } = outputSelector?.(state) ?? {}
     dispatch(processCliClient())
     dispatch(concatToOutput(InitOutputText(host, port, db, !data.length, onWorkbenchClick)))
 
     try {
       const { data, status } = await apiService.post<any>(
-        getUrl(instanceId ?? '', ApiEndpoints.CLI),
+        getUrl(databaseId ?? '', ApiEndpoints.CLI),
       )
 
       if (isStatusSuccessful(status)) {
         sessionStorageService.set(StorageItem.cliClientUuid, data?.uuid)
         dispatch(processCliClientSuccess(data?.uuid))
         dispatch(concatToOutput(ConnectionSuccessOutputText))
-        dispatch(setCliDbIndex(state.connections?.instances?.connectedInstance?.db || 0))
+        dispatch(setCliDbIndex(state.connections?.databases?.connectedDatabase?.db || 0))
 
         onSuccessAction?.()
       }
@@ -232,12 +232,12 @@ export function updateCliClientAction(
     try {
       const state = stateInit()
       const { data, status } = await apiService.patch<any>(
-        getUrl(state.connections.instances.connectedInstance?.id ?? '', ApiEndpoints.CLI, uuid),
+        getUrl(state.connections.databases.connectedDatabase?.id ?? '', ApiEndpoints.CLI, uuid),
       )
 
       if (isStatusSuccessful(status)) {
         dispatch(processCliClientSuccess(data?.uuid))
-        dispatch(setCliDbIndex(state.connections?.instances?.connectedInstance?.db || 0))
+        dispatch(setCliDbIndex(state.connections?.databases?.connectedDatabase?.db || 0))
         onSuccessAction?.()
       }
     } catch (error) {
@@ -250,7 +250,7 @@ export function updateCliClientAction(
 
 // Asynchronous thunk action
 export function deleteCliClientAction(
-  instanceId: string,
+  databaseId: string,
   uuid: string,
   onSuccessAction?: () => void,
   onFailAction?: () => void,
@@ -260,7 +260,7 @@ export function deleteCliClientAction(
 
     try {
       const { status } = await apiService.delete<any>(
-        getUrl(instanceId, ApiEndpoints.CLI, uuid),
+        getUrl(databaseId, ApiEndpoints.CLI, uuid),
       )
 
       if (isStatusSuccessful(status)) {
@@ -281,11 +281,11 @@ export function resetCliSettingsAction(
 ) {
   return async (dispatch: AppDispatch, stateInit: () => RootState) => {
     const state = stateInit()
-    const { contextInstanceId } = state.app.context
+    const { contextDatabaseId } = state.app.context
     const cliClientUuid = sessionStorageService.get(StorageItem.cliClientUuid) ?? ''
 
     dispatch(resetCliSettings())
-    cliClientUuid && dispatch(deleteCliClientAction(contextInstanceId, cliClientUuid, onSuccessAction))
+    cliClientUuid && dispatch(deleteCliClientAction(contextDatabaseId, cliClientUuid, onSuccessAction))
   }
 }
 

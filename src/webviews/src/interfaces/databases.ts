@@ -10,7 +10,7 @@ import {
 //   GetListElementsDto,
 //   GetListElementsResponse,
 // } from 'apiSrc/modules/browser/dto/list.dto'
-// import { Database as DatabaseInstanceResponse } from 'apiSrc/modules/database/models/database'
+// import { Database as DatabaseDatabaseResponse } from 'apiSrc/modules/database/models/database'
 // import { AdditionalRedisModule } from 'apiSrc/modules/database/models/additional.redis.module'
 // import { SearchZSetMembersResponse } from 'apiSrc/modules/browser/dto'
 // import { SentinelMaster } from 'apiSrc/modules/redis-sentinel/models/sentinel-master'
@@ -18,7 +18,7 @@ import {
 // import { CreateSentinelDatabaseResponse } from 'apiSrc/modules/redis-sentinel/dto/create.sentinel.database.response'
 // import { RedisNodeInfoResponse } from 'apiSrc/modules/database/dto/redis-info.dto'
 
-// export interface Instance extends DatabaseInstanceResponse {
+// export interface Database extends DatabaseDatabaseResponse {
 //   host: string
 //   port: number
 //   nameFromProvider?: Nullable<string>
@@ -97,7 +97,7 @@ export interface Endpoints {
   port: number
 }
 
-export interface InstanceRedisCluster {
+export interface DatabaseRedisCluster {
   host: string
   port: number
   uid: number
@@ -105,7 +105,7 @@ export interface InstanceRedisCluster {
   id?: number
   dnsName: string
   address: string
-  status: InstanceRedisClusterStatus
+  status: DatabaseRedisClusterStatus
   modules: RedisDefaultModules[]
   tls: boolean
   options: any
@@ -113,10 +113,10 @@ export interface InstanceRedisCluster {
   uidAdded?: number
   statusAdded?: AddRedisDatabaseStatus
   messageAdded?: string
-  databaseDetails?: InstanceRedisCluster
+  databaseDetails?: DatabaseRedisCluster
 }
 
-export interface InstanceRedisCloud {
+export interface DatabaseRedisCloud {
   accessKey: string
   secretKey: string
   credentials: Nullable<ICredentialsRedisCluster>
@@ -128,7 +128,7 @@ export interface InstanceRedisCloud {
   id?: number
   dnsName: string
   address: string
-  status: InstanceRedisClusterStatus
+  status: DatabaseRedisClusterStatus
   modules: RedisDefaultModules[]
   tls: boolean
   options: any
@@ -142,7 +142,7 @@ export interface InstanceRedisCloud {
   subscriptionIdAdded?: number
   statusAdded?: AddRedisDatabaseStatus
   messageAdded?: string
-  databaseDetails?: InstanceRedisCluster
+  databaseDetails?: DatabaseRedisCluster
   free: boolean,
 }
 
@@ -246,7 +246,7 @@ export enum PersistencePolicy {
   'snapshot-every-12-hours' = 'Redis database backup (RDB) every 12 hours',
 }
 
-export enum InstanceRedisClusterStatus {
+export enum DatabaseRedisClusterStatus {
   Pending = 'pending',
   CreationFailed = 'creation-failed',
   Active = 'active',
@@ -317,20 +317,20 @@ export interface DatabaseConfigInfo {
   cpuUsagePercentage?: Nullable<number>
 }
 
-// export interface InitialStateInstances {
+// export interface InitialStateDatabases {
 //   loading: boolean
 //   error: string
-//   data: Instance[]
+//   data: Database[]
 //   loadingChanging: boolean
 //   errorChanging: string
 //   changedSuccessfully: boolean
 //   deletedSuccessfully: boolean
-//   connectedInstance: Instance
-//   editedInstance: InitialStateEditedInstances
-//   instanceOverview: DatabaseConfigInfo
-//   instanceInfo: RedisNodeInfoResponse
-//   freeInstance: Nullable<Instance>
-//   importInstances: {
+//   connectedDatabase: Database
+//   editedDatabase: InitialStateEditedDatabase
+//   databaseOverview: DatabaseConfigInfo
+//   databaseInfo: RedisNodeInfoResponse
+//   freeDatabase: Nullable<Database>
+//   importDatabases: {
 //     loading: boolean
 //     error: string
 //     data: Nullable<ImportDatabasesData>
@@ -365,24 +365,24 @@ export interface SuccessImportStatusResult {
   status: string
 }
 
-// export interface InitialStateEditedInstances {
+// export interface InitialStateEditedDatabase {
 //   loading: boolean
 //   error: string
-//   data: Nullable<Instance>
+//   data: Nullable<Database>
 // }
 
 export interface InitialStateCluster {
   loading: boolean
-  data: Nullable<InstanceRedisCluster[]>
-  dataAdded: InstanceRedisCluster[]
+  data: Nullable<DatabaseRedisCluster[]>
+  dataAdded: DatabaseRedisCluster[]
   error: string
   credentials: Nullable<ICredentialsRedisCluster>
 }
 
 export interface InitialStateCloud {
   loading: boolean
-  data: Nullable<InstanceRedisCloud[]>
-  dataAdded: InstanceRedisCloud[]
+  data: Nullable<DatabaseRedisCloud[]>
+  dataAdded: DatabaseRedisCloud[]
   error: string
   credentials: Nullable<ICredentialsRedisCloud>
   subscriptions: Nullable<RedisCloudSubscription[]>
@@ -396,7 +396,7 @@ export interface InitialStateCloud {
 
 // export interface InitialStateSentinel {
 //   loading: boolean
-//   instance: Nullable<Instance>
+//   database: Nullable<Database>
 //   data: ModifiedSentinelMaster[]
 //   statuses: CreateSentinelDatabaseResponse[]
 //   error: string
@@ -405,8 +405,8 @@ export interface InitialStateCloud {
 
 export enum LoadedCloud {
   Subscriptions = 'subscriptions',
-  Instances = 'instances',
-  InstancesAdded = 'instancesAdded',
+  Databases = 'databases',
+  DatabasesAdded = 'databasesAdded',
 }
 
 export enum LoadedSentinel {
@@ -416,8 +416,8 @@ export enum LoadedSentinel {
 
 export interface ILoadedCloud {
   [LoadedCloud.Subscriptions]?: boolean
-  [LoadedCloud.Instances]?: boolean
-  [LoadedCloud.InstancesAdded]?: boolean
+  [LoadedCloud.Databases]?: boolean
+  [LoadedCloud.DatabasesAdded]?: boolean
 }
 
 export interface ILoadedSentinel {
@@ -495,7 +495,7 @@ export interface ICredentialsRedisCloud {
   secretKey: Nullable<string>
 }
 
-export enum InstanceType {
+export enum DatabaseType {
   Standalone = 'Redis Database',
   RedisCloudPro = 'Redis Enterprise Cloud',
   RedisEnterpriseCluster = 'Redis Enterprise Cluster',

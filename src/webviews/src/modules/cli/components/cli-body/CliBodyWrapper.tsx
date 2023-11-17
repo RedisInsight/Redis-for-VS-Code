@@ -28,12 +28,12 @@ import {
   CommandPSubscribe,
   CommandSubscribe,
   CommandHello3,
-  CONNECTED_INSTANCE_ID,
+  CONNECTED_DATABASE_ID,
   // Pages
 } from 'uiSrc/constants'
 import { getCommandRepeat, isRepeatCountCorrect, sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { ClusterNodeRole } from 'uiSrc/interfaces'
-import { connectedInstanceSelector } from 'uiSrc/slices/connections/instances/instances.slice'
+import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 import { checkUnsupportedCommand, clearOutput, cliCommandOutput } from 'uiSrc/modules/cli/utils/cliHelper'
 // import { showMonitor } from 'uiSrc/slices/cli/monitor'
 // import { SendClusterCommandDto } from 'apiSrc/modules/cli/dto/cli.dto'
@@ -57,23 +57,23 @@ export const CliBodyWrapper = () => {
     matchedCommand,
     cliClientUuid,
   } = useSelector(cliSettingsSelector)
-  const { host, port, connectionType } = useSelector(connectedInstanceSelector)
+  const { host, port, connectionType } = useSelector(connectedDatabaseSelector)
   const { db: currentDbIndex } = useSelector(outputSelector)
 
   const removeCliClient = () => {
-    cliClientUuid && dispatch(deleteCliClientAction(CONNECTED_INSTANCE_ID, cliClientUuid))
+    cliClientUuid && dispatch(deleteCliClientAction(CONNECTED_DATABASE_ID, cliClientUuid))
     dispatch(resetCliSettings())
     dispatch(resetOutputLoading())
     sendEventTelemetry({
       event: TelemetryEvent.CLI_CLOSED,
       eventData: {
-        databaseId: CONNECTED_INSTANCE_ID,
+        databaseId: CONNECTED_DATABASE_ID,
       },
     })
   }
 
   useEffect(() => {
-    !cliClientUuid && dispatch(createCliClientAction(CONNECTED_INSTANCE_ID, handleWorkbenchClick))
+    !cliClientUuid && dispatch(createCliClientAction(CONNECTED_DATABASE_ID, handleWorkbenchClick))
     return () => {
       removeCliClient()
     }
@@ -98,7 +98,7 @@ export const CliBodyWrapper = () => {
     sendEventTelemetry({
       event: TelemetryEvent.CLI_WORKBENCH_LINK_CLICKED,
       eventData: {
-        databaseId: CONNECTED_INSTANCE_ID,
+        databaseId: CONNECTED_DATABASE_ID,
       },
     })
   }
@@ -159,7 +159,7 @@ export const CliBodyWrapper = () => {
     sendEventTelemetry({
       event: TelemetryEvent.CLI_COMMAND_SUBMITTED,
       eventData: {
-        databaseId: CONNECTED_INSTANCE_ID,
+        databaseId: CONNECTED_DATABASE_ID,
       },
     })
     if (connectionType !== ConnectionType.Cluster) {
