@@ -5,11 +5,12 @@
     "outDir": "dist",
     "sourceMap": true,
     "strict": true,
+    "skipLibCheck": true,
     "rootDir": "src",
     "removeComments": true
   },
   "exclude": [
-    "node_modules",
+    "./node_modules",
     ".vscode-test",
     "test-resources",
     "test-extensions",
