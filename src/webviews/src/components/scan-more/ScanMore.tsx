@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import { isNull } from 'lodash'
+import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 
 import { Nullable } from 'uiSrc/interfaces'
@@ -32,7 +33,7 @@ export const ScanMore: FC<Props> = ({
           className="absolute right-0 z-10"
           onClick={loadMoreItems}
         >
-          Scan more
+          {l10n.t('Scan more')}
         </VSCodeButton>
       )}
   </>

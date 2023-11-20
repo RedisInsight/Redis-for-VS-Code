@@ -7,17 +7,21 @@ import path from 'path'
  * @type {import('vite').UserConfig}
  */
 export default defineConfig({
-  plugins: [react()],
-  publicDir: 'src/webviews/public',
+  plugins: [react(), htmlPlugin()],
+  publicDir: './src/webviews/public',
   resolve: {
     alias: {
       uiSrc: fileURLToPath(new URL('./src/webviews/src', import.meta.url)),
       testSrc: fileURLToPath(new URL('./src/webviews/test', import.meta.url)),
     },
   },
+  server: {
+    port: 8080,
+  },
+  envPrefix: 'RI_',
   build: {
-    outDir: 'dist/webviews',
-    target: 'esnext',
+    outDir: './dist/webviews',
+    target: 'es2020',
     minify: 'esbuild',
     lib: {
       entry: path.resolve(__dirname, './src/webviews/src/index.tsx'),
@@ -28,11 +32,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: undefined,
-        // manualChunks(id) {
-        //   if (id.includes('node_modules')) {
-        //     return id.toString().split('node_modules/')[1].split('/')[0].toString()
-        //   }
-        // },
       },
     },
     watch: {}, // yes, this is correct
@@ -41,7 +40,7 @@ export default defineConfig({
     'process.env': JSON.stringify(process.platform),
   },
 
-  // testing
+  // vitest testing
   test: {
     globals: true,
     environment: 'jsdom',
@@ -54,3 +53,16 @@ export default defineConfig({
     },
   },
 })
+
+// Change default route from root to our index.html
+function htmlPlugin() {
+  return {
+    name: 'deep-index',
+    configureServer(server) {
+      server.middlewares.use((req, _, next) => {
+        req.url = req.url === '/' ? './src/webviews/index.html' : req.url
+        next()
+      })
+    },
+  }
+}

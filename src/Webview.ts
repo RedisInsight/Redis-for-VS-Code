@@ -71,7 +71,10 @@ abstract class Webview {
   webview.cspSource
 } 'self' data:; style-src ${webview.cspSource}; script-src 'nonce-${this._opts.nonce}'; default-src * self blob">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+        <meta
+          http-equiv="Content-Security-Policy"
+          content="style-src 'self' https://*.vscode-cdn.net 'unsafe-inline';"
+        />
 
         <link href="${styleUri}" rel="stylesheet" />
         <script nonce="${this._opts.nonce}">

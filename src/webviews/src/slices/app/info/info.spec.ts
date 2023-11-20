@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
 
-import { DEFAULT_ERROR_MESSAGE } from 'uiSrc/utils'
+import { DEFAULT_ERROR_MESSAGE } from 'uiSrc/constants'
 import {
   cleanup,
   constants,

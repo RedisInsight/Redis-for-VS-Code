@@ -50,3 +50,7 @@ package.json
 *.scss.d.ts
 yarn.lock
 pnpm-lock.yaml
+!.storybook
+
+# E2E tests
+tests

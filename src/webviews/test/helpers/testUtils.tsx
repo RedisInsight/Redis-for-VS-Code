@@ -1,5 +1,5 @@
 import React from 'react'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, first, map } from 'lodash'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import configureMockStore from 'redux-mock-store'
@@ -8,11 +8,14 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { RootState } from 'uiSrc/store'
 import { initialState as initialStateKeys } from 'uiSrc/modules/keys-tree/slice/keys.slice'
+import { initialState as initialStateCliSettings } from 'uiSrc/modules/cli/slice/cli-settings'
+import { initialState as initialStateCliOutput } from 'uiSrc/modules/cli/slice/cli-output'
 import { initialState as initialStateAppInfo } from 'uiSrc/slices/app/info/info.slice'
 import { initialState as initialStateAppContext } from 'uiSrc/slices/app/context/context.slice'
+import { initialState as initialStateAppRedisCommands } from 'uiSrc/slices/app/commands/redis-commands.slice'
 import { initialState as initialStateInstances } from 'uiSrc/slices/connections/instances/instances.slice'
 import { initialState as initialStateUserSettings } from 'uiSrc/slices/user/user-settings.slice'
-import { BASE_URL } from 'uiSrc/services'
+import { BASE_URL } from 'uiSrc/constants'
 
 interface Options {
   initialState?: RootState
@@ -25,6 +28,7 @@ export const initialStateDefault: RootState = {
   app: {
     info: cloneDeep(initialStateAppInfo),
     context: cloneDeep(initialStateAppContext),
+    redisCommands: cloneDeep(initialStateAppRedisCommands),
   },
   connections: {
     instances: cloneDeep(initialStateInstances),
@@ -32,7 +36,10 @@ export const initialStateDefault: RootState = {
   browser: {
     keys: cloneDeep(initialStateKeys),
   },
-
+  cli: {
+    settings: cloneDeep(initialStateCliSettings),
+    output: cloneDeep(initialStateCliOutput),
+  },
   user: {
     settings: cloneDeep(initialStateUserSettings),
   },
@@ -56,6 +63,21 @@ export const render = (
   const wrapper = !withRouter ? Wrapper : BrowserRouter
 
   return rtlRender(ui, { wrapper, ...renderOptions })
+}
+
+export const clearStoreActions = (actions: any[]) => {
+  const newActions = map(actions, (action) => {
+    const newAction = { ...action }
+    if (newAction?.payload) {
+      const payload = {
+        ...first<any>(newAction.payload),
+        key: '',
+      } || {}
+      newAction.payload = [payload]
+    }
+    return newAction
+  })
+  return JSON.stringify(newActions)
 }
 
 export const getMWSUrl = (url: string) =>

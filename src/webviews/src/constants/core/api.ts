@@ -1,3 +1,5 @@
+import { API_PORT, API_PREFIX, BASE_API_URL } from 'uiSrc/constants'
+
 enum ApiEndpoints {
   DATABASES = 'databases',
   DATABASES_IMPORT = 'databases/import',
@@ -138,21 +140,11 @@ enum ApiEndpoints {
   ANALYTICS_SEND_PAGE = 'analytics/send-page',
 }
 
+export const BASE_URL = `${BASE_API_URL}:${API_PORT}/${API_PREFIX}/`
+
 export enum CustomHeaders {
   DbIndex = 'ri-db-index',
   // WindowId = 'x-window-id', // TODO: security windowId
 }
-
-export const DEFAULT_SEARCH_MATCH = '*'
-
-const SCAN_COUNT_DEFAULT_ENV = process.env.SCAN_COUNT_DEFAULT || '500'
-const PIPELINE_COUNT_DEFAULT_ENV = process.env.PIPELINE_COUNT_DEFAULT || '5'
-const SCAN_TREE_COUNT_DEFAULT_ENV = process.env.SCAN_TREE_COUNT_DEFAULT || '10000'
-
-export const SCAN_COUNT_DEFAULT = parseInt(SCAN_COUNT_DEFAULT_ENV, 10)
-export const PIPELINE_COUNT_DEFAULT = parseInt(PIPELINE_COUNT_DEFAULT_ENV, 10)
-export const SCAN_TREE_COUNT_DEFAULT = parseInt(SCAN_TREE_COUNT_DEFAULT_ENV, 10)
-export const SCAN_STREAM_START_DEFAULT = '-'
-export const SCAN_STREAM_END_DEFAULT = '+'
 
 export { ApiEndpoints }

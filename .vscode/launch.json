@@ -5,15 +5,22 @@
 {
   "version": "0.2.0",
   "configurations": [
-    
     {
-      "name": "Run Extension",
+      "name": "Run only Extension",
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "preLaunchTask": "${defaultBuildTask}"
+    },
+    {
+      "name": "Run Dev Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "preLaunchTask": "${defaultBuildTask}",
     }
   ]
 }

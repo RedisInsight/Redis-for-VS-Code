@@ -24,7 +24,6 @@ enum StorageItem {
   keyDetailSizes = 'keyDetailSizes',
   featuresHighlighting = 'featuresHighlighting',
   dbIndex = 'dbIndex_',
-  onboardingStep = 'onboardingStep',
   recommendationsViewed = 'recommendationsViewed',
   showHiddenRecommendations = 'showHiddenRecommendations',
   OAuthJobId = 'OAuthJobId',

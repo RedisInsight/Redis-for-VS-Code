@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
-import { DEFAULT_ERROR_MESSAGE, getApiErrorMessage } from 'uiSrc/utils'
+import { DEFAULT_ERROR_MESSAGE } from 'uiSrc/constants'
+import { getApiErrorMessage } from 'uiSrc/utils'
 
 const error = { response: { data: { message: 'error' } } } as AxiosError
 const errors = { response: { data: { message: ['error1', 'error2'] } } } as AxiosError
