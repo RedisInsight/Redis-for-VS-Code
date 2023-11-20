@@ -13,6 +13,7 @@ test-resources
 
 # Package.json
 package.json
+package-lock.json
 .travis.yml
 *.css.d.ts
 *.sass.d.ts
@@ -20,3 +21,4 @@ package.json
 yarn.lock
 pnpm-lock.yaml
 .eslintrc.js
+*.vsix
