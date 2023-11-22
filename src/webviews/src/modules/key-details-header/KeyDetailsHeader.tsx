@@ -5,6 +5,7 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { VscClose } from 'react-icons/vsc'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { useShallow } from 'zustand/react/shallow'
+import * as l10n from '@vscode/l10n'
 
 // import { AutoRefresh } from 'uiSrc/components'
 import {
@@ -98,7 +99,7 @@ const KeyDetailsHeader = ({
     <div className={`key-details-header ${styles.container}`} data-testid="key-details-header">
       {loading && (
         <div>
-          loading...
+          {l10n.t('loading...')}
         </div>
       )}
       {!loading && (

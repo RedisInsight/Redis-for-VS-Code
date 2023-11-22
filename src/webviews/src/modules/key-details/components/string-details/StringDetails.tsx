@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
+import * as l10n from '@vscode/l10n'
 
 import { useSelector } from 'react-redux'
 import {

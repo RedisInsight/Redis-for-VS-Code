@@ -194,7 +194,7 @@ const StringDetailsValue = (props: Props) => {
                   </div>
                 )
               )
-              : (!isLoading && (<span style={{ fontStyle: 'italic' }}>Empty</span>))}
+              : (!isLoading && (<span style={{ fontStyle: 'italic' }}>{l10n.t('Empty')}</span>))}
           </div>
         )}
         {/* {isEditItem && (

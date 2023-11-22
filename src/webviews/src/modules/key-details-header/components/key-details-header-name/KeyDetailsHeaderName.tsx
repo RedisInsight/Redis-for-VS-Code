@@ -3,6 +3,7 @@ import { isNull } from 'lodash'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useShallow } from 'zustand/react/shallow'
+import * as l10n from '@vscode/l10n'
 
 // import InlineItemEditor from 'uiSrc/components/inline-item-editor/InlineItemEditor'
 import {
@@ -110,7 +111,7 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
         <div className={styles.classNameGridComponent}>
           <div className={styles.flexItemKeyInput}>
             <div
-              title={`Key Name\n${tooltipContent}`}
+              title={`${l10n.t('Key Name')}\n${tooltipContent}`}
               className={styles.toolTipAnchorKey}
             >
               <InlineEditor
@@ -128,7 +129,7 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
         </div>
       )}
       <div className={cx(styles.key, { [styles.hidden]: keyIsEditing })} data-testid="key-name-text">
-        <b className="truncate" title={`Key Name\n${tooltipContent}`}>
+        <b className="truncate" title={`${l10n.t('Key Name')}\n${tooltipContent}`}>
           {replaceSpaces(keyProp?.substring(0, 200))}
         </b>
       </div>

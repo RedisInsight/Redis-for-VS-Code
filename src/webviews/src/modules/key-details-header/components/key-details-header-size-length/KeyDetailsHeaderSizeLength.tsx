@@ -1,6 +1,7 @@
 import React from 'react'
-
 import { useShallow } from 'zustand/react/shallow'
+import * as l10n from '@vscode/l10n'
+
 import { LENGTH_NAMING_BY_TYPE, MIDDLE_SCREEN_RESOLUTION } from 'uiSrc/constants'
 import { formatBytes } from 'uiSrc/utils'
 
@@ -28,8 +29,8 @@ const KeyDetailsHeaderSizeLength = ({
             className={styles.subtitleText}
             data-testid="key-size-text"
           >
-            <div title={`Key Size\n${formatBytes(size, 3)}`}>
-              {width > MIDDLE_SCREEN_RESOLUTION && 'Key Size: '}
+            <div title={`${l10n.t('Key Size')}\n${formatBytes(size, 3)}`}>
+              {width > MIDDLE_SCREEN_RESOLUTION && l10n.t('Key Size: ')}
               {formatBytes(size, 0)}
             </div>
           </div>
@@ -40,7 +41,7 @@ const KeyDetailsHeaderSizeLength = ({
           className={styles.subtitleText}
           data-testid="key-length-text"
         >
-          {LENGTH_NAMING_BY_TYPE[type] ?? 'Length'}
+          {LENGTH_NAMING_BY_TYPE[type] ?? l10n.t('Length')}
           {': '}
           {length ?? '-'}
         </div>
