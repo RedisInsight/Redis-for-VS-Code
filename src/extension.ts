@@ -5,8 +5,8 @@ import { WebViewProvider } from './WebViewProvider'
 
 let myStatusBarItem: vscode.StatusBarItem
 export function activate(context: vscode.ExtensionContext) {
-  const sidebarProvider = new WebViewProvider(context.extensionUri, 'tree', context.subscriptions)
-  const panelProvider = new WebViewProvider(context.extensionUri, 'cli', context.subscriptions)
+  const sidebarProvider = new WebViewProvider('tree', context)
+  const panelProvider = new WebViewProvider('cli', context)
 
   // Create a status bar item with a text and an icon
   myStatusBarItem = vscode.window.createStatusBarItem(

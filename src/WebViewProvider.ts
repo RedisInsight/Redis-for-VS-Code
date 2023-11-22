@@ -7,9 +7,8 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
   _doc?: vscode.TextDocument
 
   constructor(
-    private readonly _extensionUri: vscode.Uri,
     private readonly _route: string,
-    private readonly _subs: any,
+    private readonly _context: vscode.ExtensionContext,
   ) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -19,7 +18,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
       // Allow scripts in the webview
       enableScripts: true,
 
-      localResourceRoots: [this._extensionUri],
+      localResourceRoots: [this._context.extensionUri],
     }
 
     // todo: connection between webviews
@@ -27,7 +26,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
       vscode.commands.executeCommand('RedisInsight.openPage', message)
     },
     undefined,
-    this._subs)
+    this._context.subscriptions)
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview)
   }
@@ -38,10 +37,10 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
 
   private _getHtmlForWebview(webview: vscode.Webview) {
     const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'dist', 'webviews', 'style.css'),
+      vscode.Uri.joinPath(this._context.extensionUri, 'dist', 'webviews', 'style.css'),
     )
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'dist', 'webviews', 'index.mjs'),
+      vscode.Uri.joinPath(this._context.extensionUri, 'dist', 'webviews', 'index.mjs'),
     )
     const viewRoute = this._route
 
