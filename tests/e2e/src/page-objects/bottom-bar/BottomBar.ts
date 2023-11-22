@@ -1,6 +1,6 @@
 import { By } from 'selenium-webdriver'
 import { Workbench, BottomBarPanel } from 'vscode-extension-tester'
-import { CliView } from './Views'
+import { CliView } from './CliView'
 import { AbstractElement } from '../AbstractElement'
 
 export class BottomBar extends AbstractElement {
@@ -18,15 +18,19 @@ export class BottomBar extends AbstractElement {
 
   /**
    * Open the CLI view in the bottom panel
-   * @returns Promise resolving to CLIView object
+   * @returns Promise resolving to CliView object
    */
   async openCliView(): Promise<CliView> {
-    console.log('before opening tab RedisInsight')
     await this.openTab('RedisInsight CLI')
     return new CliView(this).wait()
   }
 
-  private async openTab(title: string) {
+  /**
+   * Open the Tab by name in the bottom panel
+   * @param title The title of tab
+   * @returns Promise resolving when tab opened
+   */
+  async openTab(title: string): Promise<void> {
     await new BottomBarPanel().toggle(true)
     console.log('before finding element')
     const tabContainer = await this.findElement(this.tabContainer)

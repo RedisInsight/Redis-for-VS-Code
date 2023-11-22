@@ -8,7 +8,7 @@ import {
   SideBarView,
   WebView,
 } from 'vscode-extension-tester'
-import { BottomBar } from '../../../page-objects/bottomBar/BottomBar'
+import { BottomBar } from '../../../page-objects/bottom-bar/BottomBar'
 
 describe('CLI', () => {
   let browser: VSBrowser

@@ -22,6 +22,8 @@ export class CliView extends AbstractElement {
 
   /**
    * Switch the underlying webdriver context to the webview iframe.
+   * @param timeout optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @returns Promise resolving when switched to WebView iframe
    */
   async switchToFrame(timeout: number = 5000): Promise<void> {
     const view = await this.getViewToSwitchTo()
