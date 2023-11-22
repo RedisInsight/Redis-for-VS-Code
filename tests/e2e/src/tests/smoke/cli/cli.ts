@@ -1,19 +1,21 @@
-// import { expect } from 'chai';
+import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 
-// import the webdriver and the high level browser wrapper
 import {
   VSBrowser,
   WebDriver,
   ActivityBar,
   SideBarView,
-  // ExtensionsViewSection,
+  WebView,
 } from 'vscode-extension-tester'
+import { BottomBar } from '../../../page-objects/bottomBar/BottomBar'
 
 describe('CLI', () => {
   let browser: VSBrowser
   let driver: WebDriver
   let view: SideBarView | undefined
+  let webView: WebView
+  let bottomBar: BottomBar
 
   // initialize the browser and webdriver
   beforeEach(async () => {
@@ -22,16 +24,31 @@ describe('CLI', () => {
 
     await browser.waitForWorkbench(20_000)
     view = await (
-      await new ActivityBar().getViewControl('Extensions')
+      await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()
   })
 
   afterEach(async () => {
-    await (await new ActivityBar().getViewControl('Extensions'))?.closeView()
+    await webView.switchBack()
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.closeView()
   })
   it('Verify that user can add data via CLI', async function () {
     // to set time out for hole test
     this.timeout(30_000)
-    await driver.sleep(20000)
+
+    webView = new WebView()
+    bottomBar = new BottomBar()
+
+    await view?.getContent().wait()
+    console.log('Bottom bar panel maximized')
+
+    console.log('Bottom bar initialized')
+    const cliView = await bottomBar.openCliView()
+
+    await cliView.switchToFrame()
+
+    await cliView.executeCommand('info')
+    const text = await cliView.getText()
+    expect(text).contain('redis_version:6.2.6')
   })
 })
