@@ -1,0 +1,24 @@
+# Logs
+logs
+*.log
+
+# Dependency directory
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+node_modules
+
+# App packaged
+dist
+test-extensions
+test-resources
+
+# Package.json
+package.json
+package-lock.json
+.travis.yml
+*.css.d.ts
+*.sass.d.ts
+*.scss.d.ts
+yarn.lock
+pnpm-lock.yaml
+.eslintrc.js
+*.vsix

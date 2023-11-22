@@ -51,3 +51,6 @@ package.json
 yarn.lock
 pnpm-lock.yaml
 !.storybook
+
+# E2E tests
+tests

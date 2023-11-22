@@ -1,0 +1,16 @@
+# compiled output
+dist
+node_modules
+.idea
+.vscode-test
+.vscode
+te
+
+# test data
+test-extensions
+test-resources
+
+# E2E tests report
+report
+results
+remote
