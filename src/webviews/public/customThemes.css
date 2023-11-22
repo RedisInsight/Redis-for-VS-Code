@@ -21,12 +21,20 @@ body {
   padding: 0 !important;
 }
 
-html[data-mode='dark'] .sb-preparing-story.sb-wrapper {
-  background-color: #1B1C1D;
+html[data-mode='dark'] {
+  color: #babed8;
+
+  .sb-preparing-story.sb-wrapper {
+    background-color: #1B1C1D;
+  }
 }
 
-html[data-mode='light'] .sb-preparing-story.sb-wrapper {
-  background-color: #fefefe;
+html[data-mode='light']{
+  color: #616161;
+
+  .sb-preparing-story.sb-wrapper {
+    background-color: #fefefe;
+  }
 }
 
 html[data-mode='dark'] {

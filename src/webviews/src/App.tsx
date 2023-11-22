@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react'
+import React, { FC, useEffect } from 'react'
 import { VscFlame } from 'react-icons/vsc'
 import { Link } from 'react-router-dom'
 
@@ -14,9 +14,9 @@ const headers = {
 
 // const vscode = acquireVsCodeApi()
 
-const App: FunctionComponent<AppProps> = () => {
-  const [val, setVal] = useVSCodeState<string>('', 'val')
-  const [keys, setKeys] = useVSCodeState<string[]>([], 'keys')
+const App: FC<AppProps> = () => {
+  const [val, setVal] = useVSCodeState<string>('value', '')
+  const [keys, setKeys] = useVSCodeState<string[]>('keys', [])
 
   useEffect(() => {
     const getUrl = async () => {

@@ -1,1 +1,1 @@
-export * from './KeysTreePage'
+export { KeysTreePage } from './KeysTreePage'

@@ -61,7 +61,7 @@ export const CliBodyWrapper = () => {
   const { db: currentDbIndex } = useSelector(outputSelector)
 
   const removeCliClient = () => {
-    cliClientUuid && dispatch(deleteCliClientAction(CONNECTED_DATABASE_ID, cliClientUuid))
+    cliClientUuid && dispatch(deleteCliClientAction(cliClientUuid))
     dispatch(resetCliSettings())
     dispatch(resetOutputLoading())
     sendEventTelemetry({
@@ -73,7 +73,7 @@ export const CliBodyWrapper = () => {
   }
 
   useEffect(() => {
-    !cliClientUuid && dispatch(createCliClientAction(CONNECTED_DATABASE_ID, handleWorkbenchClick))
+    !cliClientUuid && dispatch(createCliClientAction(handleWorkbenchClick))
     return () => {
       removeCliClient()
     }

@@ -497,7 +497,7 @@ describe('cliSettings slice', () => {
       apiService.post = vi.fn().mockResolvedValue(responsePayload)
 
       // Act
-      await store.dispatch<any>(createCliClientAction(DATABASE_ID_MOCK, () => { }))
+      await store.dispatch<any>(createCliClientAction(() => { }))
 
       // Assert
       const expectedActions = [
@@ -524,7 +524,7 @@ describe('cliSettings slice', () => {
       apiService.post = vi.fn().mockRejectedValueOnce(responsePayload)
 
       // Act
-      await store.dispatch<any>(createCliClientAction(DATABASE_ID_MOCK, () => { }))
+      await store.dispatch<any>(createCliClientAction(() => { }))
 
       // Assert
       const expectedActions = [

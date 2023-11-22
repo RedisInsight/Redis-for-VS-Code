@@ -1,11 +1,6 @@
-interface IVSCodeApi {
-  getState: () => any
-  setState: (newState: any) => any
-  postMessage: (message: any) => void
-}
+import { IVSCodeApi } from 'uiSrc/interfaces'
 
 class VSCodeWrapper {
-  // public readonly vscodeApi: IVSCodeApi = acquireVsCodeApi()
   public readonly vscodeApi: IVSCodeApi = window.acquireVsCodeApi?.()
 
   /**

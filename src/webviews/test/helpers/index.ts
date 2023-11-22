@@ -7,4 +7,8 @@ export {
   initialStateDefault,
   cleanup,
   clearStoreActions,
+  screen,
+  fireEvent,
+  waitRequest,
+  act,
 } from './testUtils'

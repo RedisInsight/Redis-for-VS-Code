@@ -1,3 +1,5 @@
 export { NoKeysMessage } from './no-keys-message'
 export { ScanMore } from './scan-more'
 export { ContentEditable } from './ContentEditable'
+export { InlineEditor } from './inline-editor/InlineEditor'
+export { InputText } from './input-text/InputText'

@@ -5,8 +5,8 @@ import { WebViewProvider } from './WebViewProvider'
 
 let myStatusBarItem: vscode.StatusBarItem
 export function activate(context: vscode.ExtensionContext) {
-  const sidebarProvider = new WebViewProvider(context.extensionUri, 'tree')
-  const panelProvider = new WebViewProvider(context.extensionUri, 'cli')
+  const sidebarProvider = new WebViewProvider(context.extensionUri, 'tree', context.subscriptions)
+  const panelProvider = new WebViewProvider(context.extensionUri, 'cli', context.subscriptions)
 
   // Create a status bar item with a text and an icon
   myStatusBarItem = vscode.window.createStatusBarItem(
@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
   myStatusBarItem.tooltip = 'Click me for more info'
   myStatusBarItem.command = 'RedisInsight.openPage' // Command to execute on click
   // Show the status bar item
-  myStatusBarItem.show()
+  // myStatusBarItem.show()
 
   context.subscriptions.push(
     myStatusBarItem,
@@ -28,12 +28,14 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.commands.executeCommand('ri-panel.focus')
     }),
 
-    vscode.commands.registerCommand('RedisInsight.openPage', () => {
+    vscode.commands.registerCommand('RedisInsight.openPage', (args) => {
       WebviewPanel.getInstance({
         extensionUri: context.extensionUri,
-        route: 'view1',
-        title: 'RedisInsight',
-        viewId: 'ri',
+        route: 'main/key',
+        title: 'RedisInsight key details',
+        viewId: 'ri-key',
+        // todo: connection between webviews
+        message: args,
       })
     }),
   )
@@ -41,10 +43,9 @@ export function activate(context: vscode.ExtensionContext) {
   try {
     // Start the Express server
     bootstrap()
-    // bootstrap()
-    vscode.window.showInformationMessage(
-      'Server started at http://localhost:3000',
-    )
+    // vscode.window.showInformationMessage(
+    //   'Server started at http://localhost:3000',
+    // )
   } catch (err) {
     const error = err as Error
     console.error({ error })

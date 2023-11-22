@@ -13,7 +13,6 @@ module.exports = {
   },
   plugins: [
     require('@githubocto/tailwind-vscode'),
-    require('@tailwindcss/forms'),
     require('@tailwindcss/container-queries'),
   ],
 }

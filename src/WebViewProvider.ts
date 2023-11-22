@@ -9,6 +9,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
   constructor(
     private readonly _extensionUri: vscode.Uri,
     private readonly _route: string,
+    private readonly _subs: any,
   ) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -20,6 +21,13 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
 
       localResourceRoots: [this._extensionUri],
     }
+
+    // todo: connection between webviews
+    webviewView.webview.onDidReceiveMessage((message = {}) => {
+      vscode.commands.executeCommand('RedisInsight.openPage', message)
+    },
+    undefined,
+    this._subs)
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview)
   }

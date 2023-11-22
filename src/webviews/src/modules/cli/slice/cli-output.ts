@@ -102,7 +102,6 @@ export function sendCliCommandAction(
     try {
       const state = stateInit()
       cliClientUuid = state?.cli?.settings?.cliClientUuid
-      const { id = '' } = state.connections?.databases?.connectedDatabase
 
       if (command === '') {
         onSuccessAction?.()
@@ -112,7 +111,7 @@ export function sendCliCommandAction(
       dispatch(sendCliCommand())
 
       const { data: { response, status: dataStatus }, status } = await apiService.post<any>(
-        getUrl(id, ApiEndpoints.CLI, state.cli.settings?.cliClientUuid, ApiEndpoints.SEND_COMMAND),
+        getUrl(ApiEndpoints.CLI, state.cli.settings?.cliClientUuid, ApiEndpoints.SEND_COMMAND),
         { command, outputFormat: CliOutputFormatterType.Raw },
       )
 
@@ -162,7 +161,6 @@ export function sendCliClusterCommandAction(
       const outputFormat = CliOutputFormatterType.Raw
       const state = stateInit()
       cliClientUuid = state?.cli?.settings?.cliClientUuid
-      const { id = '' } = state.connections.databases?.connectedDatabase
 
       if (command === '') {
         onSuccessAction?.()
@@ -178,7 +176,6 @@ export function sendCliClusterCommandAction(
         status,
       } = await apiService.post<any[]>(
         getUrl(
-          id,
           ApiEndpoints.CLI,
           state.cli.settings?.cliClientUuid,
           ApiEndpoints.SEND_CLUSTER_COMMAND,

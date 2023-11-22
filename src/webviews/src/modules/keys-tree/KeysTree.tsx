@@ -9,12 +9,12 @@ import {
   appContextDbConfig,
   setKeysTreeNodesOpen,
 } from 'uiSrc/slices/app/context/context.slice'
-import { Nullable, RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
-import { KeyTypes, ModulesKeyTypes, SCAN_TREE_COUNT_DEFAULT } from 'uiSrc/constants'
-import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
+import { KeyInfo, Nullable, RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
+import { ExecuteCommand, KeyTypes, ModulesKeyTypes, SCAN_TREE_COUNT_DEFAULT, VscodeMessageAction, VscodeState } from 'uiSrc/constants'
+import { TelemetryEvent, executeCommand, sendEventTelemetry } from 'uiSrc/utils'
 import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString } from 'uiSrc/utils/formatters'
-import { AppDispatch } from 'uiSrc/store'
+import { AppDispatch, useVSCodeState } from 'uiSrc/store'
 
 import {
   fetchPatternKeysAction,
@@ -22,7 +22,7 @@ import {
   keysSelector,
   selectedKeyDataSelector,
 } from 'uiSrc/modules'
-import { KeyInfo } from './slice/interface'
+import { vscodeApi } from 'uiSrc/services'
 import { constructKeysToTree } from './utils/constructKeysToTree'
 import VirtualTree from './components/virtual-tree'
 import styles from './styles.module.scss'
@@ -107,8 +107,8 @@ export const KeysTree = () => {
   }
 
   const handleStatusSelected = (name: RedisString) => {
-    // selectKey({ rowData: { name } })
-    console.debug('handleStatusSelected', { name })
+    // todo: connection between webviews
+    vscodeApi.postMessage({ action: VscodeMessageAction.SelectKey, data: name })
   }
 
   const handleDeleteLeaf = (key: RedisResponseBuffer) => {

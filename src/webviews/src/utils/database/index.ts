@@ -1,7 +1,4 @@
-import { getUrl } from './getUrlDatabase'
+export { getUrl } from './getUrlDatabase'
+export { getEncoding } from './getEncoding'
 
 export * from './redistack'
-
-export {
-  getUrl,
-}

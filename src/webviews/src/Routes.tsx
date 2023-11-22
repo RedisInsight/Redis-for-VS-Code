@@ -5,8 +5,13 @@ import {
   useNavigate,
 } from 'react-router-dom'
 
-import App from 'uiSrc/App'
-import { KeysTreePage, CliPage } from 'uiSrc/pages'
+import {
+  KeysTreePage,
+  CliPage,
+  DatabasePage,
+  KeyDetailsPage,
+  NotFoundPage,
+} from 'uiSrc/pages'
 
 const rootEl = document.getElementById('root')
 
@@ -20,7 +25,10 @@ export const AppRoutes = () => {
     <Routes>
       <Route path="tree" element={<KeysTreePage />} />
       <Route path="cli" element={<CliPage />} />
-      <Route path="view1" element={<App />} />
+      <Route path="main" element={<DatabasePage />}>
+        <Route path="key" element={<KeyDetailsPage />} />
+      </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }

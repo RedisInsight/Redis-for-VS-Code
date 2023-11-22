@@ -30,7 +30,7 @@ const mockedDataWithMetadata = {
 }
 
 // vi.mock('uiSrc/services', () => ({
-//   ...vi.requireActual('uiSrc/services'),
+//   ...(await vi.importActual('uiSrc/services'),
 //   useDisposableWebworker: () => ({ result: mockVirtualTreeResult, run: vi.fn() }),
 // }))
 

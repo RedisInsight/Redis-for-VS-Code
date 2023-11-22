@@ -1,4 +1,5 @@
 import { Dispatch, useState } from 'react'
+import { VscodeState } from 'uiSrc/constants'
 import { vscodeApi } from 'uiSrc/services'
 
 /**
@@ -12,8 +13,8 @@ import { vscodeApi } from 'uiSrc/services'
  * @return {*}  {[S, Dispatch<S>]}
  */
 export function useVSCodeState<S>(
+  uniqueStateKey: VscodeState,
   initialState: S | (() => S),
-  uniqueStateKey: any,
 ): [S, Dispatch<S>] {
   const [localState, setLocalState] = useState(
     vscodeApi.getState()[uniqueStateKey] || initialState,

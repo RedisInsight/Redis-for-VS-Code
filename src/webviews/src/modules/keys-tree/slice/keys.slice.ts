@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import axios, { AxiosError, CancelTokenSource } from 'axios'
 
 import { AppDispatch, RootState } from 'uiSrc/store'
-import { Nullable, RedisString } from 'uiSrc/interfaces'
+import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
 import { DEFAULT_SEARCH_MATCH, ApiEndpoints, KeyTypes } from 'uiSrc/constants'
 import {
@@ -13,7 +13,7 @@ import {
   isStatusSuccessful,
   sendEventTelemetry,
 } from 'uiSrc/utils'
-import { GetKeysWithDetailsResponse, KeyInfo, KeysStore, KeysStoreData } from './interface'
+import { GetKeysWithDetailsResponse, KeysStore, KeysStoreData } from './interface'
 import { parseKeysListResponse } from '../utils'
 
 export const initialState: KeysStore = {
@@ -131,10 +131,7 @@ export function fetchPatternKeysAction(
       const { encoding } = state.app.info
 
       const { data, status } = await apiService.post<GetKeysWithDetailsResponse[]>(
-        getUrl(
-          state.connections.databases?.connectedDatabase?.id ?? '',
-          ApiEndpoints.KEYS,
-        ),
+        getUrl(ApiEndpoints.KEYS),
         {
           cursor, count, type, match: match || DEFAULT_SEARCH_MATCH, keysInfo: false,
         },
@@ -200,10 +197,7 @@ export function fetchMorePatternKeysAction(cursor: string, count: number) {
       const { search: match, filter: type } = state.browser.keys
       const { encoding } = state.app.info
       const { data, status } = await apiService.post(
-        getUrl(
-          state.connections.databases?.connectedDatabase?.id ?? '',
-          ApiEndpoints.KEYS,
-        ),
+        getUrl(ApiEndpoints.KEYS),
         {
           cursor, count, type, match: match || DEFAULT_SEARCH_MATCH, keysInfo: false,
         },
@@ -252,10 +246,7 @@ export function fetchKeysMetadataTree(
     try {
       const state = stateInit()
       const { data } = await apiService.post<KeyInfo[]>(
-        getUrl(
-          state.connections.databases?.connectedDatabase?.id,
-          ApiEndpoints.KEYS_METADATA,
-        ),
+        getUrl(ApiEndpoints.KEYS_METADATA),
         { keys: keys.map(([,nameBuffer]) => nameBuffer), type: filter || undefined },
         { params: { encoding: state.app.info.encoding }, signal },
       )
