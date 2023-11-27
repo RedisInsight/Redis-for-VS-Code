@@ -18,6 +18,7 @@
     "jest.config.cjs",
     "api/**",
     "tests",
-    "api/**"
+    "api/**",
+    "dist/**",
   ]
 }
