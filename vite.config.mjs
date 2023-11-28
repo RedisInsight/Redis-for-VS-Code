@@ -8,7 +8,9 @@ import path from 'path'
  * @type {import('vite').UserConfig}
  */
 export default defineConfig({
-  plugins: [react(), htmlPlugin(),
+  plugins: [
+    react(),
+    htmlPlugin(),
     viteStaticCopy({
       targets: [
         {
