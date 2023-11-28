@@ -8,11 +8,8 @@ import { formatLongName } from 'uiSrc/utils'
 import { KeyRowName } from '../key-row-name'
 import { KeyRowType } from '../key-row-type'
 import { TreeData } from '../virtual-tree/interfaces'
+import { PADDING_LEFT, PADDING_LEVEL } from '../../constants'
 import styles from './styles.module.scss'
-
-const MAX_NESTING_LEVEL = 20
-const PADDING_LEVEL = 22
-const PADDING_LEFT = 12
 
 // Node component receives all the data we created in the `treeWalker` +
 // internal openness state (`isOpen`), function to change internal openness
@@ -26,7 +23,7 @@ export const Node = ({
   const {
     isLeaf,
     keyCount,
-    nestingLevel: currentNestingLevel,
+    nestingLevel,
     fullName,
     nameBuffer,
     path,
@@ -41,8 +38,6 @@ export const Node = ({
     updateStatusOpen,
     updateStatusSelected,
   } = data
-
-  const nestingLevel = currentNestingLevel > MAX_NESTING_LEVEL ? MAX_NESTING_LEVEL : currentNestingLevel
 
   useEffect(() => {
     if (!isLeaf || !nameBuffer) {
@@ -60,7 +55,7 @@ export const Node = ({
   }, [isSelected])
 
   const handleClick = () => {
-    if (isLeaf && !isSelected) {
+    if (isLeaf) {
       updateStatusSelected?.(nameBuffer)
     }
 
@@ -132,7 +127,7 @@ export const Node = ({
       onKeyDown={handleKeyDown}
       tabIndex={0}
       onFocus={() => {}}
-      data-testid={`node-item_${fullName}`}
+      data-testid={`node-item_${fullName}${isOpen && !isLeaf ? '--expanded' : ''}`}
     >
       {!isLeaf && <Folder />}
       {isLeaf && <Leaf />}

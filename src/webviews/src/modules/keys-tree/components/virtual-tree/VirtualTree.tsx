@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import AutoSizer from 'react-virtualized-auto-sizer'
+import AutoSizer, { Size } from 'react-virtualized-auto-sizer'
 import { debounce, get, set } from 'lodash'
 import {
   TreeWalker,
@@ -9,15 +9,15 @@ import {
 import { useDispatch } from 'react-redux'
 import cx from 'classnames'
 
-// import { useDisposableWebworker } from 'uiSrc/hooks'
 import { DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, KeyTypes, ModulesKeyTypes, SortOrder } from 'uiSrc/constants'
-
 import { KeyInfo, Nullable, RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
 import { fetchKeysMetadataTree } from 'uiSrc/modules/keys-tree/slice/keys.slice'
 import { bufferToString } from 'uiSrc/utils'
 import { AppDispatch } from 'uiSrc/store'
+import { useDisposableWebworker } from 'uiSrc/hooks'
 import { NodeMeta, TreeData, TreeNode } from './interfaces'
 import { Node } from '../node'
+import { MIN_NODE_WIDTH, PADDING_LEVEL } from '../../constants'
 
 import styles from './styles.module.scss'
 
@@ -61,12 +61,14 @@ const VirtualTree = (props: Props) => {
   } = props
 
   const [rerenderState, rerender] = useState({})
+  const [containerWidth, setContainerWidth] = useState(0)
   const controller = useRef<Nullable<AbortController>>(null)
   const elements = useRef<any>({})
   const nodes = useRef<TreeNode[]>([])
 
-  // const { result, run: runWebworker } = useDisposableWebworker(webworkerFn)
-  const [result, setResult] = useState([])
+  const { result, run: runWebworker } = useDisposableWebworker(webworkerFn)
+  // todo: remove after testing
+  // const [result, setResult] = useState([])
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -93,14 +95,16 @@ const VirtualTree = (props: Props) => {
       nodes.current = []
       elements.current = {}
       rerender({})
-      // runWebworker?.({ items: [], delimiter, sorting })
-      setResult(webworkerFn?.({ items: [], delimiter, sorting }))
+      runWebworker?.({ items: [], delimiter, sorting })
+      // todo: remove after testing
+      // setResult(webworkerFn?.({ items: [], delimiter, sorting }))
       return
     }
 
     setConstructingTree?.(true)
-    // runWebworker?.({ items, delimiter, sorting })
-    setResult(webworkerFn?.({ items, delimiter, sorting }))
+    runWebworker?.({ items, delimiter, sorting })
+    // todo: remove after testing
+    // setResult(webworkerFn?.({ items, delimiter, sorting }))
   }, [items, delimiter])
 
   const handleUpdateSelected = useCallback((name: RedisString) => {
@@ -110,6 +114,10 @@ const VirtualTree = (props: Props) => {
   const handleUpdateOpen = useCallback((fullName: string, value: boolean) => {
     onStatusOpen?.(fullName, value)
   }, [onStatusOpen, nodes])
+
+  const onResize = useCallback((size: Size) => {
+    setContainerWidth(size.width)
+  }, [])
 
   const updateNodeByPath = (path: string, data: any) => {
     const paths = path.replaceAll('.', '.children.')
@@ -140,7 +148,7 @@ const VirtualTree = (props: Props) => {
     ))
   }, [commonFilterType])
 
-  const onSuccessFetchedMetadata = (
+  const onSuccessFetchedMetadata = useCallback((
     loadedItems: any[],
   ) => {
     const items = loadedItems.map(formatItem)
@@ -148,7 +156,7 @@ const VirtualTree = (props: Props) => {
     items.forEach((item) => updateNodeByPath(item.path ?? '', item))
 
     rerender({})
-  }
+  }, [])
 
   const getMetadataDebounced = debounce(() => {
     const entries = Object.entries(elements.current)
@@ -162,6 +170,14 @@ const VirtualTree = (props: Props) => {
     elements.current[path] = nameBuffer
     getMetadataDebounced()
   }, [])
+
+  const getNestingLevel = useCallback((nestingLevel: number) => {
+    const calculatedWidth = (nestingLevel * PADDING_LEVEL) + MIN_NODE_WIDTH
+
+    return calculatedWidth < containerWidth
+      ? nestingLevel
+      : Math.floor((containerWidth - MIN_NODE_WIDTH) / PADDING_LEVEL)
+  }, [containerWidth])
 
   // This helper function constructs the object that will be sent back at the step
   // [2] during the treeWalker function work. Except for the mandatory `data`
@@ -183,7 +199,7 @@ const VirtualTree = (props: Props) => {
       type: node.type,
       fullName: node.fullName,
       shortName: node.nameString.split(delimiter).pop(),
-      nestingLevel,
+      nestingLevel: getNestingLevel(nestingLevel),
       deleting,
       path: node.path,
       getMetadata: getMetadataNode,
@@ -191,8 +207,6 @@ const VirtualTree = (props: Props) => {
       updateStatusSelected: handleUpdateSelected,
       updateStatusOpen: handleUpdateOpen,
       onDelete: onDeleteLeaf,
-      // leafIcon: theme === Theme.Dark ? KeyDarkSVG : KeyLightSVG,
-      leafIcon: '123',
       keyApproximate: node.keyApproximate,
       isSelected: !!node.isLeaf && statusSelected === node?.nameString,
       isOpenByDefault: statusOpen[node.fullName],
@@ -225,11 +239,11 @@ const VirtualTree = (props: Props) => {
         }
       }
     },
-    [statusSelected, statusOpen, rerenderState],
+    [statusSelected, statusOpen, rerenderState, containerWidth],
   )
 
   return (
-    <AutoSizer>
+    <AutoSizer onResize={onResize}>
       {({ height, width }) => (
         <div data-testid="virtual-tree" style={{ position: 'relative' }}>
           { nodes.current.length > 0 && (

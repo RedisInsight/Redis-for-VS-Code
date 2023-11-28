@@ -52,6 +52,14 @@ abstract class Webview {
     const scriptUri = webview.asWebviewUri(this._opts.scriptUri)
     const styleUri = webview.asWebviewUri(this._opts.styleUri)
 
+    const contentSecurity = [
+      `img-src ${webview.cspSource} 'self' data:`,
+      `style-src ${webview.cspSource}`,
+      `script-src 'nonce-${this._opts.nonce}'`,
+      'default-src * self blob:',
+      'worker-src blob:',
+    ]
+
     // Return the HTML with all the relevant content embedded
     // Also sets a Content-Security-Policy that permits all the sources
     // we specified. Note that img-src allows `self` and `data:`,
@@ -67,9 +75,7 @@ abstract class Webview {
         Use a content security policy to only allow loading images from https or from our extension directory,
         and only allow scripts that have a specific nonce.
         -->
-        <meta http-equiv="Content-Security-Policy" content="img-src ${
-  webview.cspSource
-} 'self' data:; style-src ${webview.cspSource}; script-src 'nonce-${this._opts.nonce}'; default-src * self blob">
+        <meta http-equiv="Content-Security-Policy" content="${contentSecurity.join(';')}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta
           http-equiv="Content-Security-Policy"

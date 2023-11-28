@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
+import { persist } from 'zustand/middleware'
 import { commonMiddlewares } from 'uiSrc/store'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService, localStorageService } from 'uiSrc/services'
@@ -24,7 +25,7 @@ export const initialState: SelectedKeyStore = {
 }
 
 export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>()(
-  commonMiddlewares((set) => ({
+  commonMiddlewares(persist((set) => ({
     ...initialState,
     // actions
     resetSelectedKeyStore: () => set(initialState),
@@ -36,7 +37,8 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
     // deleteSelectedKey: () => set({ data: null }),
     // update selected key
     updateSelectedKeyRefreshTime: (lastRefreshTime: number) => set({ lastRefreshTime }),
-  })),
+  }),
+  { name: 'selectedKey' })),
 )
 
 // Asynchronous thunk action
