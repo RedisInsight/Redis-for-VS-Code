@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
+import { persist } from 'zustand/middleware'
 import { commonMiddlewares } from 'uiSrc/store'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
@@ -18,7 +19,7 @@ export const initialState: StringState = {
 }
 
 export const useStringStore = create<StringState & StringActions>()(
-  commonMiddlewares((set) => ({
+  commonMiddlewares(persist((set) => ({
     ...initialState,
     // actions
     resetStringStore: () => set(initialState),
@@ -26,7 +27,8 @@ export const useStringStore = create<StringState & StringActions>()(
     processStringFinal: () => set({ loading: false }),
     processStringSuccess: ({ keyName, value }: any) => set({ data: { key: keyName, value } }),
     setIsStringCompressed: (isCompressed) => set({ isCompressed }),
-  })),
+  }),
+  { name: 'keyString' })),
 )
 
 // async actions
