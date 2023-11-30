@@ -73,9 +73,9 @@ const StringDetailsValue = (props: Props) => {
   const textAreaRef: Ref<HTMLTextAreaElement> = useRef(null)
   const viewValueRef: Ref<HTMLPreElement> = useRef(null)
 
-  useEffect(() => () => {
-    resetStringStore()
-  }, [])
+  // useEffect(() => () => {
+  //   resetStringStore()
+  // }, [])
 
   useEffect(() => {
     if (!initialValue) return
