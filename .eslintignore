@@ -36,7 +36,7 @@ node_modules
 # App packaged
 storybook-static
 dist
-redis-backend
+scripts
 dll
 
 .idea

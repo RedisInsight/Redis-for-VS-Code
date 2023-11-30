@@ -18,7 +18,7 @@
     "jest.config.cjs",
     "api/**",
     "tests",
-    "api/**",
-    "redis-backend/**"
+    "dist/**",
+    "scripts/**"
   ]
 }

@@ -1,12 +1,11 @@
 import * as vscode from 'vscode'
 import { WebviewPanel } from './Webview'
-import { bootstrapBackend, closeBackend } from './server/backend'
+import { startBackend, closeBackend } from './server/bootstrapBackend'
 import { WebViewProvider } from './WebViewProvider'
 
 let myStatusBarItem: vscode.StatusBarItem
 export async function activate(context: vscode.ExtensionContext) {
-  const startBE = process.env.RI_START_BE
-  if (startBE) await bootstrapBackend()
+  await startBackend()
   const sidebarProvider = new WebViewProvider(context.extensionUri, 'tree')
   const panelProvider = new WebViewProvider(context.extensionUri, 'cli')
 

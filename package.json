@@ -70,7 +70,7 @@
     "compile": "tsc -p ./",
     "postinstall": "patch-package",
     "build": "vite build",
-    "build:be": "RI_START_BE=true vite build",
+    "download:backend": "tsc ./scripts/downloadBackend.ts && node ./scripts/downloadBackend.js",
     "dev:sidebar": "RI_DATA_ROUTE=tree vite dev",
     "dev:webview": "RI_DATA_ROUTE=view1 vite dev",
     "l10n:collect": "npx @vscode/l10n-dev export -o ./l10n ./src",

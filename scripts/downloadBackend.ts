@@ -1,77 +1,31 @@
-import * as vscode from 'vscode'
 import * as https from 'https'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as cp from 'child_process'
 import { parse as parseUrl } from 'url'
-import { ChildProcessWithoutNullStreams } from 'child_process'
 
 const cdnPath = process.env.RI_CDN_PATH
-// const backendPath = path.join(__dirname, '..', 'redis-backend', `redis-backend-${process.platform}-${process.arch}`)
-const backendPath = path.join(__dirname, '..', '..', 'redis-backend')
-console.debug(backendPath)
-let PSinst: ChildProcessWithoutNullStreams
+const backendPath = path.join(__dirname, '..', 'dist', 'redis-backend')
 
-export const bootstrapBackend = async () => {
-  await vscode.window.withProgress({
-    location: vscode.ProgressLocation.Notification,
-    cancellable: false,
-    title: 'Starting backend',
-  }, async (progress) => {
-    if (fs.existsSync(backendPath)) {
-      progress.report({ increment: 80, message: ' found RedisInsight backend, starting...' })
-    } else {
-      progress.report({ increment: 10, message: ' downloading and unpacking, it will takes some time (~15 min) - please be patient...' })
-      try {
-        const redisInsightArchivePath = await downloadRedisBackendArchive(process.platform, backendPath)
-        if (fs.existsSync(redisInsightArchivePath)) {
-          unzipRedisServer(redisInsightArchivePath, backendPath)
-          // Remove archive for non-windows platforms
-          if (process.platform !== 'win32') fs.unlinkSync(redisInsightArchivePath)
-        }
-      } catch (err) {
-        vscode.window.showErrorMessage('Failed to download RedisInsight backend')
-        progress.report({ increment: 100, message: ' failed' })
-        fs.rmdir(backendPath, () => { })
-        throw Error('Failed to download and unzip Redis backend')
+const downloadBackend = async () => {
+  if (fs.existsSync(backendPath)) {
+    console.debug('Backend folder already exists')
+  } else {
+    console.debug('Downloading and unpacking, it will takes some time (~15 min) - please be patient...')
+    try {
+      const redisInsightArchivePath = await downloadRedisBackendArchive(process.platform, backendPath)
+      if (fs.existsSync(redisInsightArchivePath)) {
+        unzipRedisServer(redisInsightArchivePath, backendPath)
+        // Remove archive for non-windows platforms
+        if (process.platform !== 'win32') fs.unlinkSync(redisInsightArchivePath)
+        console.debug('Done!')
       }
-      progress.report({ increment: 80, message: ' starting...' })
+    } catch (err) {
+      console.debug('Failed to download RedisInsight backend')
+      fs.rmdir(backendPath, () => { })
+      throw Error('Failed to download and unzip Redis backend')
     }
-    await startingBackend()
-  })
-}
-
-export function closeBackend() {
-  console.debug('Closing backend...')
-  PSinst?.kill()
-}
-
-async function startingBackend(): Promise<any> {
-  return new Promise((resolve) => {
-    const backendSrcPath = path.join(backendPath, 'src/main.js')
-    if (process.platform === 'win32') {
-      PSinst = cp.spawn('powershell.exe', [
-        '-NoProfile',
-        '-ExecutionPolicy', 'Bypass',
-        '-NonInteractive',
-        '-NoLogo',
-        '-Command',
-        `$env:BUILD_TYPE="DOCKER_ON_PREMISE";node ${backendSrcPath}`,
-      ])
-    } else {
-      PSinst = cp.spawn(
-        'node', [path.resolve(backendPath, 'src/main.js')],
-        { env: { BUILD_TYPE: 'DOCKER_ON_PREMISE', PATH: process.env.PATH } },
-      )
-    }
-    PSinst.stdout.on('data', (data: Buffer) => {
-      const infoData = data.toString()
-      console.debug(infoData)
-      if (infoData.includes('application successfully started')) {
-        resolve('')
-      }
-    })
-  })
+  }
 }
 
 function ensureFolderExists(loc: string) {
@@ -88,7 +42,7 @@ function getDownloadUrl(): string {
   // Download is temporary available only for non-windows platforms
   if (process.platform !== 'win32') {
     return `${cdnPath}/RedisInsight-v2-web-${process.platform}.${process.arch}.tar.gz`
-  } return path.join(__dirname, '..', '..', 'backend_dist', 'redis-backend-win32-x64.zip')
+  } return path.join(__dirname, '..', 'backend_dist', 'redis-backend-win32-x64.zip')
 }
 
 async function downloadRedisBackendArchive(
@@ -157,3 +111,5 @@ function unzipRedisServer(redisInsideArchivePath: string, extractDir: string) {
     cp.spawnSync('yarn', ['--cwd', extractDir, 'install'])
   }
 }
+
+downloadBackend()

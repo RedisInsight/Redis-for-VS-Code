@@ -5,17 +5,18 @@ Temporary repository to work on the VS Code extension
 ### yarn is required
 1. `npm i -g yarn`
 2. `yarn install`
-3. In the `.env` file change value of `RI_INSTANCE_ID` to your database id from launched RedisInsight BE
-4. Click on the VSCode sidebar `Run and Debug` icon
-5. Chose one of the options in the select control and click on the green play icon. Options:  
+3. Download backend for your platform using `yarn download:backend`
+4. In the `.env` file change value of `RI_INSTANCE_ID` to your database id from launched RedisInsight BE
+5. Click on the VSCode sidebar `Run and Debug` icon
+6. Chose one of the options in the select control and click on the green play icon. Options:  
   a. `Run Dev Extension` - start 2 background dev tasks and the debug vscode instance with extension  
   b. `Run only Extension` - start only the debug vscode instance with extension  
-  c. `Download Backend And Run Dev Extension` - download backen, start 2 background dev tasks and debug vscode instance with extension 
-6. In the opened Visual studio code instance, click the RedisInsight icon in the sidebar  
+7. In the opened Visual studio code instance, click the RedisInsight icon in the sidebar  
 
 
 
 ### Scripts:  
+`download:backend` - download backend for current platform   
 `dev:sidebar` - run web server with sidebar router  
 `dev:webview` - run web server with main webview router  
 `l10n:collect` - auto find all new strings and add them to `./l10n/bundle.l10n.json`  
