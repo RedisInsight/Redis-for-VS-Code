@@ -7,6 +7,8 @@ import {
   ActivityBar,
   SideBarView,
   WebView,
+  WebviewView,
+  By,
 } from 'vscode-extension-tester'
 import { BottomBar } from '../../../page-objects/bottom-bar/BottomBar'
 
@@ -46,6 +48,14 @@ describe('CLI', () => {
     const cliView = await bottomBar.openCliView()
 
     await cliView.switchToFrame()
+
+    // try webviewView to switch to 2nd iframe
+    // const webviewView = new WebviewView()
+    // await webviewView.switchToFrame(5_000)
+    // console.log('Switched to viewView 2nd iframe')
+    // await webviewView.findWebElement(
+    //   By.xpath('//div[@data-testid="panel-view-page"]'),
+    // )
 
     await cliView.executeCommand('info')
     const text = await cliView.getText()

@@ -7,7 +7,8 @@ import { AbstractElement } from '../AbstractElement'
  */
 export class CliView extends AbstractElement {
   activeFrame = By.xpath('//iframe[@id="active-frame"]')
-  cliFrame = By.xpath(`//iframe[@id='active-frame' and not(@title='Graph')]`)
+  // cliFrame = By.xpath(`//iframe[@id='active-frame' and not(@title='Graph')]`)
+  cliFrame = By.xpath('//iframe[contains(@title, "RedisInsight CLI")]')
   cliPanel = By.xpath(`//*[@data-testid='panel-view-page']`)
   cliCommand = By.xpath('//span[@data-testid="cli-command"]/parent::span')
   iframeBody = By.xpath('//*[@class="vscode-dark"]')
@@ -35,14 +36,18 @@ export class CliView extends AbstractElement {
     await this.getDriver().switchTo().frame(view)
     console.log('Switched to 1st iframe')
 
-    await this.getDriver().wait(until.elementLocated(this.cliFrame), timeout)
-    const frame = await this.findElement(this.cliFrame)
-    console.log('WebElement content:', await frame.getAttribute('outerHTML'))
-    await this.getDriver().switchTo().frame(frame)
+    // await this.getDriver().wait(until.elementLocated(this.cliFrame), timeout)
+
+    await this.getDriver().switchTo().frame(0)
     console.log('Switched to 2nd iframe')
 
+    // const frame = await view.findElement(this.cliFrame)
+    // console.log('WebElement content:', await frame.getAttribute('outerHTML'))
+
     await this.getDriver().wait(until.elementLocated(this.iframeBody), timeout)
-    await this.getDriver().wait(until.elementLocated(this.cliCommand), timeout)
+    const frame = await this.getDriver().findElement(this.iframeBody)
+    console.log('WebElement content:', await frame.getAttribute('outerHTML'))
+    await this.getDriver().wait(until.elementLocated(this.cliPanel), timeout)
     console.log('Element inside iframe found')
   }
 
