@@ -1,6 +1,5 @@
-import { defineConfig, normalizePath } from 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 import { fileURLToPath, URL } from 'node:url'
 import path from 'path'
 
@@ -8,23 +7,7 @@ import path from 'path'
  * @type {import('vite').UserConfig}
  */
 export default defineConfig({
-  plugins: [
-    react(),
-    htmlPlugin(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: normalizePath(
-            path.resolve(
-              __dirname,
-              './backend_dist/redis-backend-win32-x64.zip',
-            ),
-          ),
-          dest: normalizePath(path.resolve(__dirname, './dist/server')),
-        },
-      ],
-    }),
-  ],
+  plugins: [react(), htmlPlugin()],
   publicDir: './src/webviews/public',
   resolve: {
     alias: {

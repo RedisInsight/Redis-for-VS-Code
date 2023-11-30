@@ -10,6 +10,7 @@ Temporary repository to work on the VS Code extension
 5. Chose one of the options in the select control and click on the green play icon. Options:  
   a. `Run Dev Extension` - start 2 background dev tasks and the debug vscode instance with extension  
   b. `Run only Extension` - start only the debug vscode instance with extension  
+  c. `Download Backend And Run Dev Extension` - download backen, start 2 background dev tasks and debug vscode instance with extension 
 6. In the opened Visual studio code instance, click the RedisInsight icon in the sidebar  
 
 

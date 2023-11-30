@@ -6,8 +6,10 @@ import * as cp from 'child_process'
 import { parse as parseUrl } from 'url'
 import { ChildProcessWithoutNullStreams } from 'child_process'
 
-const cdnPath = 'https://download.redisinsight.redis.com/latest/redisstack'
-const backendPath = path.join(__dirname, `redis-backend-${process.platform}-${process.arch}`)
+const cdnPath = process.env.RI_CDN_PATH
+// const backendPath = path.join(__dirname, '..', 'redis-backend', `redis-backend-${process.platform}-${process.arch}`)
+const backendPath = path.join(__dirname, '..', '..', 'redis-backend')
+console.debug(backendPath)
 let PSinst: ChildProcessWithoutNullStreams
 
 export const bootstrapBackend = async () => {
@@ -40,8 +42,7 @@ export const bootstrapBackend = async () => {
 }
 
 export function closeBackend() {
-  // eslint-disable-next-line no-console
-  console.log('Closing backend...')
+  console.debug('Closing backend...')
   PSinst?.kill()
 }
 
@@ -65,8 +66,7 @@ async function startingBackend(): Promise<any> {
     }
     PSinst.stdout.on('data', (data: Buffer) => {
       const infoData = data.toString()
-      // eslint-disable-next-line no-console
-      console.log(infoData)
+      console.debug(infoData)
       if (infoData.includes('application successfully started')) {
         resolve('')
       }
@@ -88,7 +88,7 @@ function getDownloadUrl(): string {
   // Download is temporary available only for non-windows platforms
   if (process.platform !== 'win32') {
     return `${cdnPath}/RedisInsight-v2-web-${process.platform}.${process.arch}.tar.gz`
-  } return path.join(__dirname, 'redis-backend-win32-x64.zip')
+  } return path.join(__dirname, '..', '..', 'backend_dist', 'redis-backend-win32-x64.zip')
 }
 
 async function downloadRedisBackendArchive(
