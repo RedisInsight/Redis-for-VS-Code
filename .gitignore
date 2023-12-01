@@ -39,7 +39,6 @@ storybook-static
 release
 dist
 distWeb
-redis-backend
 dll
 vendor
 licenses
