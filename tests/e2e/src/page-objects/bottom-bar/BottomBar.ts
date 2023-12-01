@@ -8,13 +8,13 @@ export class BottomBar extends AbstractElement {
     super(By.id('workbench.parts.panel'))
   }
   tabContainer = By.className('composite title has-composite-bar')
+  actions = By.className('title-actions')
+  globalActions = By.className('title-actions')
+  closeAction = By.className('codicon-panel-close')
+  action = (label: string) => By.xpath(`.//a[starts-with(@title, '${label}')]`)
   tab = (title: string) => By.xpath(`.//li[starts-with(@title, '${title}')]`)
   label = (title: string) =>
     By.xpath(`.//a[starts-with(@aria-label, '${title}')]`)
-  actions = By.className('title-actions')
-  globalActions = By.className('title-actions')
-  action = (label: string) => By.xpath(`.//a[starts-with(@title, '${label}')]`)
-  closeAction = By.className('codicon-panel-close')
 
   /**
    * Open the CLI view in the bottom panel
