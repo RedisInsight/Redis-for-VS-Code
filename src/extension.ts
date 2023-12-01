@@ -1,10 +1,11 @@
 import * as vscode from 'vscode'
 import { WebviewPanel } from './Webview'
-import { bootstrap } from './server/app'
+import { startBackend, closeBackend } from './server/bootstrapBackend'
 import { WebViewProvider } from './WebViewProvider'
 
 let myStatusBarItem: vscode.StatusBarItem
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+  await startBackend()
   const sidebarProvider = new WebViewProvider(context.extensionUri, 'tree')
   const panelProvider = new WebViewProvider(context.extensionUri, 'cli')
 
@@ -37,18 +38,8 @@ export function activate(context: vscode.ExtensionContext) {
       })
     }),
   )
+}
 
-  try {
-    // Start the Express server
-    bootstrap()
-    // bootstrap()
-    vscode.window.showInformationMessage(
-      'Server started at http://localhost:3000',
-    )
-  } catch (err) {
-    const error = err as Error
-    console.error({ error })
-
-    vscode.window.showErrorMessage(`Error starting server: ${error.message}`)
-  }
+export function deactivate() {
+  closeBackend()
 }

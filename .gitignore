@@ -43,6 +43,7 @@ dll
 vendor
 licenses
 out
+scripts/downloadBackend.js
 *.vsix
 
 
