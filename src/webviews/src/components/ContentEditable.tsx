@@ -17,13 +17,18 @@ const useRefCallback = <T extends any[]>(
   }, [])
 }
 
-const onPaste = (e: React.ClipboardEvent) => {
+const onPaste = async (e: React.ClipboardEvent) => {
   e.preventDefault()
-
-  const clipboardData = e.clipboardData || window.Clipboard || e.originalEvent.clipboardData
+  const clipboardData = e.clipboardData || window.Clipboard
   const text = clipboardData.getData('text/plain') as string
 
-  document.execCommand('insertText', false, parsePastedText(text))
+  const selection = window.getSelection()
+  const range = selection?.getRangeAt(0)
+  range?.deleteContents()
+  range?.insertNode(document.createTextNode(parsePastedText(text)))
+  range?.collapse(false)
+  selection?.removeAllRanges()
+  selection?.addRange(range as Range)
 }
 
 export function ContentEditable({
