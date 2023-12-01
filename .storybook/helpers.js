@@ -10,7 +10,7 @@ const getMockMetadata = ({ keys }) =>
 
 export const mswHandlers = [
   http.post(
-    getMWSUrl('databases/:instanceId/keys/get-metadata'),
+    getMWSUrl('databases/:databaseId/keys/get-metadata'),
     async ({ request }) =>
       HttpResponse.json(getMockMetadata(await request.json())),
   ),

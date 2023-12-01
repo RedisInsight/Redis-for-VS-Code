@@ -16,8 +16,13 @@ import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString } from 'uiSrc/utils/formatters'
 import { AppDispatch } from 'uiSrc/store'
 
+import {
+  fetchPatternKeysAction,
+  keysDataSelector,
+  keysSelector,
+  selectedKeyDataSelector,
+} from 'uiSrc/modules'
 import { KeyInfo } from './slice/interface'
-import { fetchPatternKeysAction, keysDataSelector, keysSelector, selectedKeyDataSelector } from './slice/keys.slice'
 import { constructKeysToTree } from './utils/constructKeysToTree'
 import VirtualTree from './components/virtual-tree'
 import styles from './styles.module.scss'
@@ -27,7 +32,7 @@ const parseKeyNames = (keys: KeyInfo[] = []) =>
     ({ ...item, nameString: item.nameString ?? bufferToString(item.name) }))
 
 export const KeysTree = () => {
-  const { instanceId } = useParams<{ instanceId: string }>()
+  const { databaseId } = useParams<{ databaseId: string }>()
   const { loading } = useSelector(keysSelector)
   const keysState = useSelector(keysDataSelector)
   const { openNodes } = useSelector(appContextKeysTree)
@@ -118,7 +123,7 @@ export const KeysTree = () => {
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_DELETE_CLICKED,
       eventData: {
-        databaseId: instanceId,
+        databaseId,
         keyType: type,
         source: 'keyList',
       },

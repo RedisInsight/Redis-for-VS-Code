@@ -1,6 +1,6 @@
 enum StorageItem {
-  instancesCount = 'instancesCount',
-  instancesSorting = 'instancesSorting',
+  databasesCount = 'databasesCount',
+  databasesSorting = 'databasesSorting',
   theme = 'theme',
   browserViewType = 'browserViewType',
   browserSearchMode = 'browserSearchMode',

@@ -1,6 +1,6 @@
 export * from './core'
 export * from './core/commands'
-export * from './instance'
+export * from './database'
 export * from './telemetry'
 export * from './comparisons'
 export * from './formatters'

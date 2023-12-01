@@ -4,7 +4,7 @@ import keysReducer from 'uiSrc/modules/keys-tree/slice/keys.slice'
 import userSettingsReducer from 'uiSrc/slices/user/user-settings.slice'
 import appInfoReducer from 'uiSrc/slices/app/info/info.slice'
 import appRedisCommandsReducer from 'uiSrc/slices/app/commands/redis-commands.slice'
-import instancesReducer from 'uiSrc/slices/connections/instances/instances.slice'
+import databasesReducer from 'uiSrc/slices/connections/databases/databases.slice'
 import appContextReducer from 'uiSrc/slices/app/context/context.slice'
 import cliSettingsReducer from 'uiSrc/modules/cli/slice/cli-settings'
 import outputReducer from 'uiSrc/modules/cli/slice/cli-output'
@@ -18,7 +18,7 @@ export const rootReducers = {
     redisCommands: appRedisCommandsReducer,
   }),
   connections: combineReducers({
-    instances: instancesReducer,
+    databases: databasesReducer,
   }),
   browser: combineReducers({
     keys: keysReducer,

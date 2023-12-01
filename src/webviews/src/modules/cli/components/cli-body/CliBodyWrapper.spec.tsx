@@ -9,7 +9,7 @@ import {
   // sendCliClusterCommandAction,
 } from 'uiSrc/modules/cli/slice/cli-output'
 import { cleanup, mockedStore, render } from 'testSrc/helpers'
-// import { connectedInstanceSelector } from 'uiSrc/slices/connections/instances/instances.slice'
+// import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 
 import { CliBodyWrapper } from './CliBodyWrapper'
 
@@ -28,9 +28,9 @@ vi.mock('uiSrc/services', () => ({
   },
 }))
 
-vi.mock('uiSrc/slices/instances/instances', () => ({
-  ...vi.importActual<object>('uiSrc/slices/instances/instances'),
-  connectedInstanceSelector: vi.fn().mockReturnValue({
+vi.mock('uiSrc/slices/databases/databases.slice', () => ({
+  ...vi.importActual<object>('uiSrc/slices/databases/databases.slice'),
+  connectedDatabaseSelector: vi.fn().mockReturnValue({
     id: '123',
     connectionType: 'STANDALONE',
     db: 0,
@@ -98,7 +98,7 @@ describe('CliBodyWrapper', () => {
   })
 
   // it('"onSubmit" for Cluster connection should call "sendCliClusterCommandAction"', () => {
-  //   (connectedInstanceSelector as Mock).mockImplementation(() => ({
+  //   (connectedDatabaseSelector as Mock).mockImplementation(() => ({
   //     id: '123',
   //     connectionType: 'CLUSTER',
   //     db: 0,

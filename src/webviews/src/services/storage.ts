@@ -49,25 +49,25 @@ class StorageService {
 export const localStorageService = new StorageService(localStorage)
 export const sessionStorageService = new StorageService(sessionStorage)
 
-export const getDBConfigStorageField = (instanceId: string, field: string = '') => {
+export const getDBConfigStorageField = (databaseId: string, field: string = '') => {
   try {
-    return localStorageService.get(StorageItem.dbConfig + instanceId)?.[field]
+    return localStorageService.get(StorageItem.dbConfig + databaseId)?.[field]
   } catch (e) {
     return null
   }
 }
 
-export const setDBConfigStorageField = (instanceId: string, field: string = '', value?: any) => {
+export const setDBConfigStorageField = (databaseId: string, field: string = '', value?: any) => {
   try {
-    const config = localStorageService.get(StorageItem.dbConfig + instanceId) || {}
+    const config = localStorageService.get(StorageItem.dbConfig + databaseId) || {}
 
     if (value === undefined) {
       delete config[field]
-      localStorageService.set(StorageItem.dbConfig + instanceId, config)
+      localStorageService.set(StorageItem.dbConfig + databaseId, config)
       return
     }
 
-    localStorageService.set(StorageItem.dbConfig + instanceId, {
+    localStorageService.set(StorageItem.dbConfig + databaseId, {
       ...config,
       [field]: value,
     })
