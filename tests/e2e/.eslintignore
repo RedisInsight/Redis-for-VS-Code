@@ -10,6 +10,7 @@ node_modules
 dist
 test-extensions
 test-resources
+vscodey**
 
 # Package.json
 package.json
