@@ -36,6 +36,7 @@ node_modules
 # App packaged
 storybook-static
 dist
+backend_dist
 scripts
 dll
 

@@ -16,7 +16,7 @@ export async function startBackend(): Promise<any> {
       console.debug('Can\'t find backend folder')
       resolve('')
     } else {
-      vscode.window.showErrorMessage('Staring RedisInsight backend...')
+      vscode.window.showInformationMessage('Staring RedisInsight backend...')
       if (process.platform === 'win32') {
         PSinst = cp.spawn('powershell.exe', [
           '-NoProfile',
