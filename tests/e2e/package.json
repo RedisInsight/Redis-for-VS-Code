@@ -10,8 +10,9 @@
     "test": "npm run compile && npm run install:extension && extest run-tests dist/tests/**/*.js --code_settings settings.json -r . --extensions_dir ./test-extensions"
   },
   "devDependencies": {
-    "@types/clone-deep": "^4.0.4",
     "@types/chai": "^4.3.6",
+    "@types/chance": "^1.1.6",
+    "@types/clone-deep": "^4.0.4",
     "@types/fs-extra": "^11.0.4",
     "@types/mocha": "^10.0.2",
     "@types/node": "18.15.0",
@@ -19,6 +20,7 @@
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "chai": "^4.3.10",
+    "chance": "1.1.8",
     "eslint": "^7.5.0",
     "mocha": "^10.2.0",
     "typescript": "^5.1.3",

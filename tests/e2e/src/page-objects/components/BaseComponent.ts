@@ -4,7 +4,7 @@ import { VSBrowser } from 'vscode-extension-tester'
 /**
  * Default wrapper for webelement
  */
-export abstract class AbstractElement extends WebElement {
+export class BaseComponent extends WebElement {
   protected static driver: WebDriver
 
   /**
@@ -13,17 +13,17 @@ export abstract class AbstractElement extends WebElement {
    * this will be used to narrow down the search for the underlying DOM element
    */
   constructor(base: Locator | WebElement) {
-    if (!AbstractElement.driver) {
-      AbstractElement.driver = VSBrowser.instance.driver
+    if (!BaseComponent.driver) {
+      BaseComponent.driver = VSBrowser.instance.driver
     }
-    let item: WebElement = AbstractElement.driver.findElement(By.css('html'))
+    let item: WebElement = BaseComponent.driver.findElement(By.css('html'))
 
     if (base instanceof WebElement) {
-      super(AbstractElement.driver, base.getId())
+      super(BaseComponent.driver, base.getId())
     } else {
       let toFind = item.findElement(base)
       let id = toFind.getId()
-      super(AbstractElement.driver, id)
+      super(BaseComponent.driver, id)
     }
   }
 
@@ -35,5 +35,18 @@ export abstract class AbstractElement extends WebElement {
   async wait(timeout: number = 5000): Promise<this> {
     await this.getDriver().wait(until.elementIsVisible(this), timeout)
     return this
+  }
+
+  /**
+   * Wait for the element to be found by locator and return it
+   * @param locator Webdriver locator to search by
+   * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @returns WebElement
+   */
+  async getElement(
+    locator: Locator,
+    timeout: number = 5000,
+  ): Promise<WebElement> {
+    return await this.getDriver().wait(until.elementLocated(locator), timeout)
   }
 }
