@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { BottomBarPanel, VSBrowser } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import { BottomBar } from '../../../page-objects/components/bottom-bar/BottomBar'
 import { WebView } from '../../../page-objects/components/WebView'
 import { CliViewPanel } from '../../../page-objects/components/bottom-bar/CliViewPanel'
@@ -12,14 +12,12 @@ describe('CLI', () => {
   let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
-  let panel: BottomBarPanel
   let keyName = Common.generateWord(20)
 
   beforeEach(async () => {
     browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
-    panel = new BottomBarPanel()
 
     await browser.waitForWorkbench(20_000)
     cliViewPanel = await bottomBar.openCliViewPanel()
@@ -27,7 +25,7 @@ describe('CLI', () => {
   })
   afterEach(async () => {
     await webView.switchBack()
-    await panel.openTerminalView()
+    await bottomBar.openTerminalView()
   })
   it('Verify that user can send command via CLI', async function () {
     keyName = Common.generateWord(10)

@@ -1,7 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-
-import { BottomBarPanel, VSBrowser } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import { BottomBar } from '../../../page-objects/components/bottom-bar/BottomBar'
 import { WebView } from '../../../page-objects/components/WebView'
 import { CliViewPanel } from '../../../page-objects/components/bottom-bar/CliViewPanel'
@@ -13,14 +12,12 @@ describe('CLI regression', () => {
   let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
-  let panel: BottomBarPanel
   let keyName = Common.generateWord(20)
 
   beforeEach(async () => {
     browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
-    panel = new BottomBarPanel()
 
     await browser.waitForWorkbench(20_000)
     cliViewPanel = await bottomBar.openCliViewPanel()
@@ -28,7 +25,7 @@ describe('CLI regression', () => {
   })
   afterEach(async () => {
     await webView.switchBack()
-    await panel.openTerminalView()
+    await bottomBar.openTerminalView()
     // await KeyAPIRequests.deleteKeyByNameApi(
     //   keyName,
     //   Config.ossStandaloneConfig.databaseName,
