@@ -1,41 +1,30 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 
-import {
-  BottomBarPanel,
-  VSBrowser,
-  WebDriver,
-  until,
-} from 'vscode-extension-tester'
+import { BottomBarPanel, VSBrowser } from 'vscode-extension-tester'
 import { BottomBar } from '../../../page-objects/components/bottom-bar/BottomBar'
 import { WebView } from '../../../page-objects/components/WebView'
-import { CliView } from '../../../page-objects/components/bottom-bar/CliView'
-import { Input } from '../../../page-objects/components/inputs/Input'
+import { CliViewPanel } from '../../../page-objects/components/bottom-bar/CliViewPanel'
+import { InputActions } from '../../../helpers/common-actions/input-actions/InputActions'
 import { Common } from '../../../helpers/Common'
-// import { KeyAPIRequests } from '../../../helpers/api/KeyApi'
-// import { Config } from '../../../helpers/Conf'
 
 describe('CLI regression', () => {
   let browser: VSBrowser
-  let driver: WebDriver
   let webView: WebView
   let bottomBar: BottomBar
-  let cliView: CliView
+  let cliViewPanel: CliViewPanel
   let panel: BottomBarPanel
-  let input: Input
   let keyName = Common.generateWord(20)
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    driver = browser.driver
     bottomBar = new BottomBar()
     webView = new WebView()
     panel = new BottomBarPanel()
-    input = new Input()
 
     await browser.waitForWorkbench(20_000)
-    cliView = await bottomBar.openCliView()
-    await webView.switchToFrame(WebView.webViewFrame)
+    cliViewPanel = await bottomBar.openCliViewPanel()
+    await webView.switchToFrame(CliViewPanel.cliFrame)
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -51,13 +40,9 @@ describe('CLI regression', () => {
     const repeats = 10
 
     // Run CLI command with repeats
-    await cliView.executeCommand(`${repeats} ${command}`)
-    await driver.wait(
-      until.elementLocated(cliView.cliOutputResponseSuccess),
-      5000,
-    )
-    const count = (await driver.findElements(cliView.cliOutputResponseSuccess))
-      .length
+    await cliViewPanel.executeCommand(`${repeats} ${command}`)
+    await cliViewPanel.getElement(cliViewPanel.cliOutputResponseSuccess)
+    const count = await cliViewPanel.getCliResponsesCount()
 
     expect(count).eql(repeats, `CLI not contains ${repeats} results`)
   })
@@ -69,9 +54,9 @@ describe('CLI regression', () => {
 
     // Add Json key with json object
     // await browserPage.addJsonKey(keyName, jsonValue, keyTTL)
-    await cliView.executeCommand(command)
+    await cliViewPanel.executeCommand(command)
     // Verify result
-    const text = await cliView.getCliLastCommandResponse()
+    const text = await cliViewPanel.getCliLastCommandResponse()
     expect(text).contain(
       jsonValueCli,
       'The user can not see JSON object with escaped quotes',
@@ -81,21 +66,18 @@ describe('CLI regression', () => {
     const cliCommands = ['get test', 'acl help', 'client list']
 
     for (const command of cliCommands) {
-      await cliView.executeCommand(command)
+      await cliViewPanel.executeCommand(command)
     }
 
-    const inputField = await driver.wait(
-      until.elementLocated(cliView.cliCommand),
-      5000,
-    )
+    const inputField = await cliViewPanel.getElement(cliViewPanel.cliCommand)
     for (let i = cliCommands.length - 1; i >= 0; i--) {
-      await input.pressKey(inputField, 'up')
-      expect(await cliView.getCommandText()).eql(cliCommands[i])
+      await InputActions.pressKey(inputField, 'up')
+      expect(await cliViewPanel.getCommandText()).eql(cliCommands[i])
     }
     for (let i = 0; i < cliCommands.length; i++) {
       console.log(`NExt Iteration ` + i)
-      expect(await cliView.getCommandText()).eql(cliCommands[i])
-      await input.pressKey(inputField, 'down')
+      expect(await cliViewPanel.getCommandText()).eql(cliCommands[i])
+      await InputActions.pressKey(inputField, 'down')
     }
   })
 })

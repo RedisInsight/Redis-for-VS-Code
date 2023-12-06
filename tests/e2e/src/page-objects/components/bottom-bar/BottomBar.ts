@@ -1,15 +1,17 @@
 import { By } from 'selenium-webdriver'
-import { Workbench, BottomBarPanel } from 'vscode-extension-tester'
-import { CliView } from './CliView'
-import { BaseComponent } from '../BaseComponent'
+import {
+  Workbench,
+  BottomBarPanel,
+  Locator,
+  WebElement,
+  until,
+} from 'vscode-extension-tester'
+import { CliViewPanel } from './CliViewPanel'
 
 /**
  * VSCode bottom bar
  */
-export class BottomBar extends BaseComponent {
-  constructor() {
-    super(By.id('workbench.parts.panel'))
-  }
+export class BottomBar extends BottomBarPanel {
   tabContainer = By.className('composite title has-composite-bar')
   actions = By.className('title-actions')
   globalActions = By.className('title-actions')
@@ -20,12 +22,25 @@ export class BottomBar extends BaseComponent {
     By.xpath(`.//a[starts-with(@aria-label, '${title}')]`)
 
   /**
+   * Wait for the element to be found by locator and return it
+   * @param locator Webdriver locator to search by
+   * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @returns WebElement
+   */
+  async getElement(
+    locator: Locator,
+    timeout: number = 5000,
+  ): Promise<WebElement> {
+    return await this.getDriver().wait(until.elementLocated(locator), timeout)
+  }
+
+  /**
    * Open the CLI view in the bottom panel
    * @returns Promise resolving to CliView object
    */
-  async openCliView(): Promise<CliView> {
-    await this.openTab('RedisInsight CLI')
-    return new CliView().wait()
+  async openCliViewPanel(): Promise<CliViewPanel> {
+    await this.openBottomTab('RedisInsight CLI')
+    return new CliViewPanel().wait()
   }
 
   /**
@@ -33,7 +48,7 @@ export class BottomBar extends BaseComponent {
    * @param title The title of tab
    * @returns Promise resolving when tab opened
    */
-  async openTab(title: string): Promise<void> {
+  async openBottomTab(title: string): Promise<void> {
     await new BottomBarPanel().toggle(true)
     const tabContainer = await this.getElement(this.tabContainer)
     try {

@@ -3,13 +3,13 @@ import { Key, VSBrowser, WebDriver, WebElement } from 'vscode-extension-tester'
 /**
  * Input fields
  */
-export class Input {
+export class InputActions {
   protected driver: WebDriver
   constructor() {
     this.driver = VSBrowser.instance.driver
   }
 
-  keyMap: { [key: string]: string } = {
+  static keyMap: { [key: string]: string } = {
     enter: Key.ENTER,
     tab: Key.TAB,
     up: Key.UP,
@@ -21,8 +21,8 @@ export class Input {
    * @param element input element where to pass key
    * @param key keyboard key to press
    */
-  async pressKey(element: WebElement, key: string): Promise<void> {
-    const keyToSend = this.keyMap[key.toLowerCase()] || key
+  static async pressKey(element: WebElement, key: string): Promise<void> {
+    const keyToSend = InputActions.keyMap[key.toLowerCase()] || key
     await element.sendKeys(keyToSend)
   }
 }

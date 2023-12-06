@@ -1,48 +1,39 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 
-import {
-  BottomBarPanel,
-  VSBrowser,
-  WebDriver,
-  until,
-} from 'vscode-extension-tester'
+import { BottomBarPanel, VSBrowser } from 'vscode-extension-tester'
 import { BottomBar } from '../../../page-objects/components/bottom-bar/BottomBar'
 import { WebView } from '../../../page-objects/components/WebView'
-import { CliView } from '../../../page-objects/components/bottom-bar/CliView'
-import { Input } from '../../../page-objects/components/inputs/Input'
+import { CliViewPanel } from '../../../page-objects/components/bottom-bar/CliViewPanel'
+import { InputActions } from '../../../helpers/common-actions/input-actions/InputActions'
 
 describe('CLI critical', () => {
   let browser: VSBrowser
-  let driver: WebDriver
   let webView: WebView
   let bottomBar: BottomBar
-  let cliView: CliView
+  let cliViewPanel: CliViewPanel
   let panel: BottomBarPanel
-  let input: Input
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    driver = browser.driver
     bottomBar = new BottomBar()
     webView = new WebView()
     panel = new BottomBarPanel()
-    input = new Input()
 
     await browser.waitForWorkbench(20_000)
-    cliView = await bottomBar.openCliView()
-    await webView.switchToFrame(WebView.webViewFrame)
+    cliViewPanel = await bottomBar.openCliViewPanel()
+    await webView.switchToFrame(CliViewPanel.cliFrame)
   })
   afterEach(async () => {
     await webView.switchBack()
     await panel.openTerminalView()
   })
   it('Verify that Redis returns error if command is not correct when user works with CLI', async function () {
-    await cliView.executeCommand('SET key')
-    let cliOutput = await cliView.getCliLastCommandResponse()
+    await cliViewPanel.executeCommand('SET key')
+    let cliOutput = await cliViewPanel.getCliLastCommandResponse()
     expect(cliOutput).contain("ERR wrong number of arguments for 'set' command")
-    await cliView.executeCommand('lorem')
-    cliOutput = await cliView.getCliLastCommandResponse()
+    await cliViewPanel.executeCommand('lorem')
+    cliOutput = await cliViewPanel.getCliLastCommandResponse()
     expect(cliOutput).contain(
       'ERR unknown command `lorem`, with args beginning with: ',
     )
@@ -52,25 +43,22 @@ describe('CLI critical', () => {
     const commandStartsWith = 'I'
     const maxAutocompleteExecutios = 100
 
-    await cliView.typeCommand(commandStartsWith)
+    await cliViewPanel.typeCommand(commandStartsWith)
     // Press tab while we won't find 'INFO' command
     // Avoid endless cycle
-    const inputField = await driver.wait(
-      until.elementLocated(cliView.cliCommand),
-      5000,
-    )
+    const inputField = await cliViewPanel.getElement(cliViewPanel.cliCommand)
     let operationsCount = 0
     while (
-      (await cliView.getCommandText()) !== commandToAutoComplete &&
+      (await cliViewPanel.getCommandText()) !== commandToAutoComplete &&
       operationsCount < maxAutocompleteExecutios
     ) {
-      await input.pressKey(inputField, 'tab')
+      await InputActions.pressKey(inputField, 'tab')
       ++operationsCount
     }
 
-    await input.pressKey(inputField, 'enter')
+    await InputActions.pressKey(inputField, 'enter')
 
-    const text = await cliView.getCliLastCommandResponse()
+    const text = await cliViewPanel.getCliLastCommandResponse()
     expect(text).contain('redis_version:6.2.6')
   })
   it('Verify that when user enters in CLI RediSearch/JSON commands (FT.CREATE, FT.DROPINDEX/JSON.GET, JSON.DEL), he can see hints with arguments', async function () {
@@ -84,17 +72,17 @@ describe('CLI critical', () => {
     const commandHint = 'key [META] [BLOB]'
     const command = 'ai.modelget'
 
-    await cliView.typeCommand(command)
+    await cliViewPanel.typeCommand(command)
     // Verify that user can type AI command in CLI and see agruments in hints from RedisAI commands.json
-    expect(await cliView.getAutocompleteText()).eql(
+    expect(await cliViewPanel.getAutocompleteText()).eql(
       commandHint,
       `The hints with arguments for command ${command} not shown`,
     )
 
     // Enter commands and check hints with arguments
     for (const command of commands) {
-      await cliView.typeCommand(command)
-      expect(await cliView.getAutocompleteText()).eql(
+      await cliViewPanel.typeCommand(command)
+      expect(await cliViewPanel.getAutocompleteText()).eql(
         commandHints[commands.indexOf(command)],
         `The hints with arguments for command ${command} not shown`,
       )

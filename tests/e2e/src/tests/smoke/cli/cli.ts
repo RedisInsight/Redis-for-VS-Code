@@ -1,31 +1,29 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-
-import { BottomBarPanel, VSBrowser, WebDriver } from 'vscode-extension-tester'
+import { BottomBarPanel, VSBrowser } from 'vscode-extension-tester'
 import { BottomBar } from '../../../page-objects/components/bottom-bar/BottomBar'
 import { WebView } from '../../../page-objects/components/WebView'
-import { CliView } from '../../../page-objects/components/bottom-bar/CliView'
+import { CliViewPanel } from '../../../page-objects/components/bottom-bar/CliViewPanel'
 import { Common } from '../../../helpers/Common'
+import { CommonDriverExtension } from '../../../helpers/CommonDriverExtension'
 
 describe('CLI', () => {
   let browser: VSBrowser
-  let driver: WebDriver
   let webView: WebView
   let bottomBar: BottomBar
-  let cliView: CliView
+  let cliViewPanel: CliViewPanel
   let panel: BottomBarPanel
   let keyName = Common.generateWord(20)
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    driver = browser.driver
     bottomBar = new BottomBar()
     webView = new WebView()
     panel = new BottomBarPanel()
 
     await browser.waitForWorkbench(20_000)
-    cliView = await bottomBar.openCliView()
-    await webView.switchToFrame(WebView.webViewFrame)
+    cliViewPanel = await bottomBar.openCliViewPanel()
+    await webView.switchToFrame(CliViewPanel.cliFrame)
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -33,21 +31,21 @@ describe('CLI', () => {
   })
   it('Verify that user can send command via CLI', async function () {
     keyName = Common.generateWord(10)
-    await cliView.executeCommand('info')
-    const text = await cliView.getCliLastCommandResponse()
+    await cliViewPanel.executeCommand('info')
+    const text = await cliViewPanel.getCliLastCommandResponse()
     expect(text).contain('redis_version:6.2.6')
   })
   // Update once treeView class added
   it.skip('Verify that user can add data via CLI', async function () {
-    await cliView.executeCommand(
+    await cliViewPanel.executeCommand(
       `SADD ${keyName} "chinese" "japanese" "german"`,
     )
     // Search key and find created key in Tree view
   })
   it('Verify that user can use blocking command', async function () {
-    await cliView.executeCommand('blpop newKey 10000')
-    await driver.sleep(2000)
-    const text = await cliView.getCliText()
+    await cliViewPanel.executeCommand('blpop newKey 10000')
+    await CommonDriverExtension.driverSleep(2000)
+    const text = await cliViewPanel.getCliText()
     expect(text).contain('Executing command...')
   })
 })

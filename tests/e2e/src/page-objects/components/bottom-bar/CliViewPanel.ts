@@ -1,15 +1,11 @@
 import { By, until } from 'selenium-webdriver'
 import { Key } from 'vscode-extension-tester'
 import { BaseComponent } from '../BaseComponent'
-import { WebView } from '../WebView'
 
 /**
  * CLI view on the bottom panel
  */
-export class CliView extends BaseComponent {
-  constructor() {
-    super(WebView.webViewFrame)
-  }
+export class CliViewPanel extends BaseComponent {
   cliPanel = By.xpath(`//*[@data-testid='panel-view-page']`)
   cliCommand = By.xpath('//span[@data-testid="cli-command"]')
   cliCommandWrapper = By.xpath('//span[@data-testid="cli-command-wrapper"]')
@@ -21,6 +17,21 @@ export class CliView extends BaseComponent {
     '//span[@data-testid="cli-command-autocomplete"]',
   )
   workbenchBtn = By.xpath(`//*[@data-test-subj='cli-workbench-page-btn']`)
+  static cliFrame = By.xpath(
+    `//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]`,
+  )
+
+  constructor() {
+    super(CliViewPanel.cliFrame)
+  }
+
+  /**
+   * Get Cli responses count
+   * @returns Promise resolving to number of Cli responses
+   */
+  async getCliResponsesCount(): Promise<number> {
+    return (await this.findElements(this.cliOutputResponseSuccess)).length
+  }
 
   /**
    * Type command in the CLI without sending it
