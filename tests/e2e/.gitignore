@@ -5,6 +5,7 @@ node_modules
 .vscode-test
 .vscode
 te
+vscodey**
 
 # test data
 test-extensions
