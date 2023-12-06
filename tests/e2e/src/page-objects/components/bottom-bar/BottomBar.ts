@@ -49,7 +49,7 @@ export class BottomBar extends BottomBarPanel {
    * @returns Promise resolving when tab opened
    */
   async openBottomTab(title: string): Promise<void> {
-    await new BottomBarPanel().toggle(true)
+    await this.toggle(true)
     const tabContainer = await this.getElement(this.tabContainer)
     try {
       const tabs = await tabContainer.findElements(this.tab(title))

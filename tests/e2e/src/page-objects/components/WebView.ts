@@ -6,16 +6,13 @@ import { VSBrowser, WebDriver } from 'vscode-extension-tester'
  */
 export class WebView {
   protected driver: WebDriver
+  private handle: string | undefined
+
   iframeBody = By.xpath('//*[@class="vscode-dark"]')
 
   constructor() {
     this.driver = VSBrowser.instance.driver
   }
-
-  /**
-   * Cannot use static element, since this class is unnamed.
-   */
-  private handle: string | undefined
 
   /**
    * Search for an element inside the webview iframe.
