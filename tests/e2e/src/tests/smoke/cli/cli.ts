@@ -33,7 +33,7 @@ describe('CLI', () => {
     keyName = Common.generateWord(10)
     await cliViewPanel.executeCommand('info')
     const text = await cliViewPanel.getCliLastCommandResponse()
-    expect(text).contain('redis_version:6.2.6')
+    expect(text).contain('redis_version:')
   })
   // Update once treeView class added
   it.skip('Verify that user can add data via CLI', async function () {

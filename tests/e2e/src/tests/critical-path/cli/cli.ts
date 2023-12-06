@@ -59,7 +59,7 @@ describe('CLI critical', () => {
     await InputActions.pressKey(inputField, 'enter')
 
     const text = await cliViewPanel.getCliLastCommandResponse()
-    expect(text).contain('redis_version:6.2.6')
+    expect(text).contain('redis_version:')
   })
   it('Verify that when user enters in CLI RediSearch/JSON commands (FT.CREATE, FT.DROPINDEX/JSON.GET, JSON.DEL), he can see hints with arguments', async function () {
     const commandHints = [

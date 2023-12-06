@@ -30,7 +30,8 @@ export class CliViewPanel extends BaseComponent {
    * @returns Promise resolving to number of Cli responses
    */
   async getCliResponsesCount(): Promise<number> {
-    return (await this.findElements(this.cliOutputResponseSuccess)).length
+    return (await this.getDriver().findElements(this.cliOutputResponseSuccess))
+      .length
   }
 
   /**
