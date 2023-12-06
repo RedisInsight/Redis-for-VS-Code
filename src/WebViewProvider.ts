@@ -7,8 +7,8 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
   _doc?: vscode.TextDocument
 
   constructor(
-    private readonly _extensionUri: vscode.Uri,
     private readonly _route: string,
+    private readonly _context: vscode.ExtensionContext,
   ) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -18,8 +18,15 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
       // Allow scripts in the webview
       enableScripts: true,
 
-      localResourceRoots: [this._extensionUri],
+      localResourceRoots: [this._context.extensionUri],
     }
+
+    // todo: connection between webviews
+    webviewView.webview.onDidReceiveMessage((message = {}) => {
+      vscode.commands.executeCommand('RedisInsight.openPage', message)
+    },
+    undefined,
+    this._context.subscriptions)
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview)
   }
@@ -30,15 +37,23 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
 
   private _getHtmlForWebview(webview: vscode.Webview) {
     const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'dist', 'webviews', 'style.css'),
+      vscode.Uri.joinPath(this._context.extensionUri, 'dist', 'webviews', 'style.css'),
     )
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'dist', 'webviews', 'index.mjs'),
+      vscode.Uri.joinPath(this._context.extensionUri, 'dist', 'webviews', 'index.mjs'),
     )
     const viewRoute = this._route
 
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce()
+
+    const contentSecurity = [
+      `img-src ${webview.cspSource} 'self' data:`,
+      `style-src ${webview.cspSource}`,
+      `script-src 'nonce-${nonce}'`,
+      'default-src * self blob:',
+      'worker-src blob:',
+    ]
 
     return `<!DOCTYPE html>
       <html lang="en">
@@ -49,8 +64,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
           Use a content security policy to only allow loading images from https or from our extension directory,
           and only allow scripts that have a specific nonce.
         -->
-        <meta http-equiv="Content-Security-Policy" content="img-src https: data:;
-        style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonce}'; default-src * self blob">
+        <meta http-equiv="Content-Security-Policy" content="${contentSecurity.join(';')}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta
           http-equiv="Content-Security-Policy"

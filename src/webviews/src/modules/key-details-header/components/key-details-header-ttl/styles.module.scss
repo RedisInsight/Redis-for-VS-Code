@@ -1,0 +1,51 @@
+.container {
+  /* @apply w-max h-max; */
+}
+
+.keyFlexGroup {
+  @apply flex flex-col;
+}
+
+.subtitleText {
+  @apply pr-2;
+}
+
+.controlsKey {
+  right: 25px;
+}
+
+
+
+.cancelEditBtn:hover {
+  /* color: var(--euiColorColorDanger) !important; */
+}
+
+.applyEditBtn:hover {
+  /* color: var(--euiColorSecondary) !important; */
+}
+
+.ttlGridComponent {
+  @apply flex flex-row items-center h-full;
+  line-height: 28px;
+}
+
+.ttlInput {
+  min-width: 106px;
+  font-size: 13px !important;
+  &.editing {
+    width: 124px;
+  }
+}
+
+.ttlGridComponent,
+.classNameGridComponent {
+  position: relative;
+}
+
+.hidden {
+  display: none;
+}
+
+.ttlTextValue {
+  padding-left: 11px;
+}

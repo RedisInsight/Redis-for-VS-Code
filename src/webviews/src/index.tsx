@@ -5,9 +5,10 @@ import {
 } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
-import { store } from 'uiSrc/store'
+import { fetchKeyInfo, store, useSelectedKeyStore } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from './Routes'
+import { VscodeMessageAction } from './constants'
 
 import '../vscode.css'
 
@@ -22,14 +23,20 @@ const root = createRoot(container!)
 //   workspace = root.getAttribute('data-workspace') || ''
 // }
 
-window.addEventListener('message', (e) => {
-  // Here's where you'd do stuff with the message
-  // Maybe stick it into state management or something?
-  const message = e.data
-  console.debug(message)
-})
-
 const rootEl = document.getElementById('root')
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('message', handleMessage)
+
+  function handleMessage(event:any) {
+    const message = event.data
+
+    if (message.action === VscodeMessageAction.SelectKey) {
+      const { data } = message
+      fetchKeyInfo(data)
+    }
+  }
+})
 
 root.render(
   <React.StrictMode>

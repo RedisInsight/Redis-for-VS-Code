@@ -1,6 +1,6 @@
 import { omit, forEach, isNull } from 'lodash'
+import { KeyInfo } from 'uiSrc/interfaces'
 import {
-  KeyInfo,
   GetKeysWithDetailsResponse,
   GetKeysWithDetailsShardResponse,
   KeysStoreData,

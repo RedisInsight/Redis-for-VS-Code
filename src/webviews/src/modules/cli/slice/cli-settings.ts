@@ -185,7 +185,6 @@ export default cliSettingsSlice.reducer
 
 // Asynchronous thunk action
 export function createCliClientAction(
-  databaseId: string,
   onWorkbenchClick: () => void,
   onSuccessAction?: () => void,
   onFailAction?: (message: string) => void,
@@ -200,7 +199,7 @@ export function createCliClientAction(
 
     try {
       const { data, status } = await apiService.post<any>(
-        getUrl(databaseId ?? '', ApiEndpoints.CLI),
+        getUrl(ApiEndpoints.CLI),
       )
 
       if (isStatusSuccessful(status)) {
@@ -232,7 +231,7 @@ export function updateCliClientAction(
     try {
       const state = stateInit()
       const { data, status } = await apiService.patch<any>(
-        getUrl(state.connections.databases.connectedDatabase?.id ?? '', ApiEndpoints.CLI, uuid),
+        getUrl(ApiEndpoints.CLI, uuid),
       )
 
       if (isStatusSuccessful(status)) {
@@ -250,7 +249,6 @@ export function updateCliClientAction(
 
 // Asynchronous thunk action
 export function deleteCliClientAction(
-  databaseId: string,
   uuid: string,
   onSuccessAction?: () => void,
   onFailAction?: () => void,
@@ -260,7 +258,7 @@ export function deleteCliClientAction(
 
     try {
       const { status } = await apiService.delete<any>(
-        getUrl(databaseId, ApiEndpoints.CLI, uuid),
+        getUrl(ApiEndpoints.CLI, uuid),
       )
 
       if (isStatusSuccessful(status)) {
@@ -279,13 +277,11 @@ export function deleteCliClientAction(
 export function resetCliSettingsAction(
   onSuccessAction?: () => void,
 ) {
-  return async (dispatch: AppDispatch, stateInit: () => RootState) => {
-    const state = stateInit()
-    const { contextDatabaseId } = state.app.context
+  return async (dispatch: AppDispatch) => {
     const cliClientUuid = sessionStorageService.get(StorageItem.cliClientUuid) ?? ''
 
     dispatch(resetCliSettings())
-    cliClientUuid && dispatch(deleteCliClientAction(contextDatabaseId, cliClientUuid, onSuccessAction))
+    cliClientUuid && dispatch(deleteCliClientAction(cliClientUuid, onSuccessAction))
   }
 }
 

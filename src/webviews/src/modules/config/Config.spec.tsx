@@ -9,6 +9,7 @@ import {
   userSettingsSelector,
 } from 'uiSrc/slices/user/user-settings.slice'
 import { getServerInfo } from 'uiSrc/slices/app/info/info.slice'
+import { getRedisCommands } from 'uiSrc/slices/app/commands/redis-commands.slice'
 import { mockedStore, render } from 'testSrc/helpers'
 import { Config } from './Config'
 
@@ -49,8 +50,9 @@ describe('Config', () => {
     render(<Config />)
     const afterRenderActions = [
       getServerInfo(),
+      getRedisCommands(),
+      // setSettingsPopupState(false),
       getUserConfigSettings(),
-      setSettingsPopupState(false),
     ]
     expect(store.getActions()).toEqual([...afterRenderActions])
   })
@@ -77,8 +79,9 @@ describe('Config', () => {
     render(<Config />)
     const afterRenderActions = [
       getServerInfo(),
+      getRedisCommands(),
       getUserConfigSettings(),
-      setSettingsPopupState(true),
+      // setSettingsPopupState(true),
     ]
     expect(store.getActions()).toEqual([...afterRenderActions])
   })

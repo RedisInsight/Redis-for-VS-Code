@@ -19,3 +19,5 @@ export enum KeyValueCompressor {
   Brotli = 'Brotli',
   PHPGZCompress = 'PHPGZCompress',
 }
+
+export const DEFAULT_VIEW_FORMAT = KeyValueFormat.Unicode

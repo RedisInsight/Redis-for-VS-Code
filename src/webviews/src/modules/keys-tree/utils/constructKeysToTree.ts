@@ -1,5 +1,5 @@
 import { SortOrder } from 'uiSrc/constants'
-import { KeyInfo } from '../slice/interface'
+import { KeyInfo } from 'uiSrc/interfaces'
 
 interface Props {
   items: KeyInfo[]

@@ -1,1 +1,1 @@
-export * from './CliPage'
+export { CliPage } from './CliPage'

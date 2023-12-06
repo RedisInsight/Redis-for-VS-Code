@@ -1,2 +1,5 @@
-export * from './KeysTreePage'
-export * from './CliPage'
+export { KeysTreePage } from './KeysTreePage'
+export { CliPage } from './CliPage'
+export { DatabasePage } from './DatabasePage'
+export { KeyDetailsPage } from './KeyDetailsPage'
+export { NotFoundPage } from './NotFoundPage'

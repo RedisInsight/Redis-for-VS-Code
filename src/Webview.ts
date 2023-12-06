@@ -52,6 +52,14 @@ abstract class Webview {
     const scriptUri = webview.asWebviewUri(this._opts.scriptUri)
     const styleUri = webview.asWebviewUri(this._opts.styleUri)
 
+    const contentSecurity = [
+      `img-src ${webview.cspSource} 'self' data:`,
+      `style-src ${webview.cspSource}`,
+      `script-src 'nonce-${this._opts.nonce}'`,
+      'default-src * self blob:',
+      'worker-src blob:',
+    ]
+
     // Return the HTML with all the relevant content embedded
     // Also sets a Content-Security-Policy that permits all the sources
     // we specified. Note that img-src allows `self` and `data:`,
@@ -67,9 +75,7 @@ abstract class Webview {
         Use a content security policy to only allow loading images from https or from our extension directory,
         and only allow scripts that have a specific nonce.
         -->
-        <meta http-equiv="Content-Security-Policy" content="img-src ${
-  webview.cspSource
-} 'self' data:; style-src ${webview.cspSource}; script-src 'nonce-${this._opts.nonce}'; default-src * self blob">
+        <meta http-equiv="Content-Security-Policy" content="${contentSecurity.join(';')}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta
           http-equiv="Content-Security-Policy"
@@ -102,7 +108,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
 
   // Singleton
   public static getInstance(
-    opts: WebviewOptions & { column?: vscode.ViewColumn },
+    opts: WebviewOptions & { column?: vscode.ViewColumn } & { message?: object },
   ): WebviewPanel {
     const options = {
       column: vscode.window.activeTextEditor
@@ -115,6 +121,11 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
     if (instance) {
       // If we already have an instance, use it to show the panel
       instance.panel.reveal(options.column)
+
+      // todo: connection between webviews
+      if (opts.message) {
+        instance.panel.webview.postMessage(opts.message)
+      }
     } else {
       // Otherwise, create an instance
       instance = new WebviewPanel(options)
@@ -125,7 +136,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
   }
 
   private constructor(
-    opts: WebviewOptions & { column?: vscode.ViewColumn },
+    opts: WebviewOptions & { column?: vscode.ViewColumn } & { message?: object },
   ) {
     // Create the webview panel
     super(opts)
@@ -141,6 +152,11 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
     // Listen for when the panel is disposed
     // This happens when the user closes the panel or when the panel is closed programmatically
     this.panel.onDidDispose(() => this.dispose(), null, this._disposables)
+
+    // todo: connection between webviews
+    if (opts.message) {
+      this.panel.webview.postMessage(opts.message)
+    }
 
     // Update the content based on view changes
     // this.panel.onDidChangeViewState(

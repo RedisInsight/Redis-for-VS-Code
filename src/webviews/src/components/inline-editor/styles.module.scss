@@ -1,0 +1,75 @@
+.container {
+  @apply w-full flex flex-row items-center;
+
+
+  &:hover .controls{
+    @apply flex;
+  }
+}
+
+.field {
+  min-width: 72px;
+  max-width: 100% !important;
+  height: 33px !important;
+}
+
+.controls {
+  @apply h-full hidden;
+  z-index: 3;
+
+  .tooltip,
+  .declineBtn,
+  .popoverWrapper {
+    width: 50% !important;
+    height: 100% !important;
+  }
+}
+
+.applyBtn {
+  @apply flex items-center w-full h-full bg-vscode-button-background min-h-[28px];
+  border-radius: 0 !important;
+}
+
+.declineBtn:hover {
+  /* color: var(--euiColorColorDanger) !important; */
+}
+
+.applyBtn:hover:not([class*="isDisabled"]) {
+  /* color: var(--euiColorPrimary) !important; */
+}
+
+.popoverPanel:global(.euiPanel--paddingMedium) {
+  width: 296px !important;
+  padding: 24px 30px !important;
+  /* border: 1px solid var(--euiColorPrimary) !important; */
+  /* background-color: var(--browserTableRowEven) !important; */
+
+  :global(.euiPopover__panelArrow:after) {
+    /* border-left-color: var(--browserTableRowEven) !important; */
+  }
+  :global(.euiPopover__panelArrow:before) {
+    /* border-left-color: var(--euiColorPrimary) !important; */
+  }
+}
+
+.popover {
+  word-wrap: break-word;
+
+  h4 b {
+    font-size: 14px !important;
+    /* color: var(--htmlColor) !important; */
+  }
+}
+.approveText {
+  font-size: 13px !important;
+  letter-spacing: -0.13px;
+}
+
+.popoverFooter {
+  @apply flex justify-end mt-3;
+
+  .saveBtn {
+    height: 36px !important;
+    width: 86px !important;
+  }
+}

@@ -10,7 +10,7 @@ html, body, #root {
 body {
   padding: 0 !important;
 }
-
+/* 
 @layer components {
   input[type='radio'],
   input[type='checkbox'] {
@@ -55,7 +55,7 @@ body {
       @apply bg-vscode-inputOption-activeBackground;
     }
   }
-}
+} */
 
 .table-loading:before {
   position: absolute;

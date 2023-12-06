@@ -1,0 +1,1 @@
+export { DatabasePage } from './DatabasePage'

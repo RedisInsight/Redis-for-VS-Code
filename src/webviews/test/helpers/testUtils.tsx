@@ -3,7 +3,7 @@ import { cloneDeep, first, map } from 'lodash'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import configureMockStore from 'redux-mock-store'
-import { RenderResult, render as rtlRender } from '@testing-library/react'
+import { RenderResult, render as rtlRender, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { RootState } from 'uiSrc/store'
@@ -49,7 +49,12 @@ export const initialStateDefault: RootState = {
 export const mockStore = configureMockStore([thunk])
 export const mockedStore = mockStore(initialStateDefault)
 
-export { cleanup } from '@testing-library/react'
+export {
+  cleanup,
+  screen,
+  fireEvent,
+  act,
+} from '@testing-library/react'
 
 // insert mocked store to the render Component
 export const render = (
@@ -78,6 +83,10 @@ export const clearStoreActions = (actions: any[]) => {
     return newAction
   })
   return JSON.stringify(newActions)
+}
+
+export const waitRequest = async () => {
+  await waitFor(() => {}, { timeout: 0 })
 }
 
 export const getMWSUrl = (url: string) =>
