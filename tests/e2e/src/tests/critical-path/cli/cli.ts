@@ -1,10 +1,12 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import { VSBrowser } from 'vscode-extension-tester'
-import { BottomBar } from '../../../page-objects/components/bottom-bar/BottomBar'
-import { WebView } from '../../../page-objects/components/WebView'
-import { CliViewPanel } from '../../../page-objects/components/bottom-bar/CliViewPanel'
-import { InputActions } from '../../../helpers/common-actions/input-actions/InputActions'
+import {
+  BottomBar,
+  WebView,
+  CliViewPanel,
+} from '@e2eSrc/page-objects/components'
+import { InputActions } from '@e2eSrc/helpers/common-actions'
 
 describe('CLI critical', () => {
   let browser: VSBrowser

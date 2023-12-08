@@ -1,14 +1,16 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import { VSBrowser } from 'vscode-extension-tester'
-import { BottomBar } from '../../../page-objects/components/bottom-bar/BottomBar'
-import { WebView } from '../../../page-objects/components/WebView'
-import { CliViewPanel } from '../../../page-objects/components/bottom-bar/CliViewPanel'
-import { InputActions } from '../../../helpers/common-actions/input-actions/InputActions'
-import { Common } from '../../../helpers/Common'
-import { KeyAPIRequests } from '../../../helpers/api/KeyApi'
-import { Config } from '../../../helpers/Conf'
-import { JsonKeyParameters } from '../../../helpers/types/types'
+import {
+  BottomBar,
+  WebView,
+  CliViewPanel,
+} from '@e2eSrc/page-objects/components'
+import { InputActions } from '@e2eSrc/helpers/common-actions'
+import { Common } from '@e2eSrc/helpers/Common'
+import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { Config } from '@e2eSrc/helpers/Conf'
+import { JsonKeyParameters } from '@e2eSrc/helpers/types/types'
 
 describe('CLI regression', () => {
   let browser: VSBrowser

@@ -2,12 +2,12 @@
   "scripts": {
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
-    "compile": "tsc -p tsconfig.json",
+    "compile": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
     "install:vs-code": "extest get-vscode",
     "install:chrome-driver": "extest get-chromedriver",
-    "install:deps": "npm run install:vs-code && npm run install:chrome-driver",
+    "install:deps": "yarn run install:vs-code && yarn run install:chrome-driver",
     "install:extension": "extest install-vsix -f redisinsight-vsc-plugin-0.0.1.vsix -e ./test-extensions",
-    "test": "npm run compile && npm run install:extension && extest run-tests dist/tests/**/*.js --code_settings settings.json -r . --extensions_dir ./test-extensions"
+    "test": "yarn run compile && yarn run install:extension && extest run-tests dist/tests/**/*.js --code_settings settings.json -r . --extensions_dir ./test-extensions"
   },
   "devDependencies": {
     "@types/chai": "^4.3.6",
@@ -23,6 +23,7 @@
     "chance": "1.1.8",
     "eslint": "^7.5.0",
     "mocha": "^10.2.0",
+    "tsc-alias": "^1.8.8",
     "typescript": "^5.1.3",
     "vscode-extension-tester": "^6.0.0"
   },

@@ -47,6 +47,23 @@ export class BaseComponent extends WebElement {
     locator: Locator,
     timeout: number = 5000,
   ): Promise<WebElement> {
-    return await this.getDriver().wait(until.elementLocated(locator), timeout)
+    return this.getDriver().wait(until.elementLocated(locator), timeout)
+  }
+
+  /**
+   * Is the element displayed
+   * @param locator locator to check
+   */
+  async isElementDisplayed(locator: Locator): Promise<boolean> {
+    try {
+      const elements = await this.getDriver().findElements(locator)
+      if (elements.length > 0) {
+        return await elements[0].isDisplayed()
+      } else {
+        return false
+      }
+    } catch (error) {
+      return false
+    }
   }
 }

@@ -7,7 +7,11 @@
     "strict": true,
     "skipLibCheck": true,
     "rootDir": "src",
-    "removeComments": true
+    "removeComments": true,
+    "baseUrl": "./",
+    "paths": {
+      "@e2eSrc/*": ["src/*"]
+    }
   },
   "exclude": [
     "./node_modules",
@@ -15,5 +19,5 @@
     "test-resources",
     "test-extensions",
     "**/node_modules"
-  ]
+  ],
 }
