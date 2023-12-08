@@ -8,6 +8,9 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { InputActions } from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
+import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { Config } from '@e2eSrc/helpers/Conf'
+import { JsonKeyParameters } from '../../../helpers/types/types'
 
 describe('CLI regression', () => {
   let browser: VSBrowser
@@ -28,10 +31,10 @@ describe('CLI regression', () => {
   afterEach(async () => {
     await webView.switchBack()
     await bottomBar.openTerminalView()
-    // await KeyAPIRequests.deleteKeyByNameApi(
-    //   keyName,
-    //   Config.ossStandaloneConfig.databaseName,
-    // )
+    await KeyAPIRequests.deleteKeyIfExistsApi(
+      keyName,
+      Config.ossStandaloneConfig.databaseName,
+    )
   })
   it('Verify that user can repeat commands by entering a number of repeats before the Redis command in CLI', async function () {
     keyName = Common.generateWord(20)
@@ -45,14 +48,21 @@ describe('CLI regression', () => {
 
     expect(count).eql(repeats, `CLI not contains ${repeats} results`)
   })
-  // Update after adding treeView class or updating api methods for keys creation
-  it.skip('Verify that user can run command json.get and see JSON object with escaped quotes (" instead of ")', async function () {
+  it('Verify that user can run command json.get and see JSON object with escaped quotes (" instead of ")', async function () {
     keyName = Common.generateWord(20)
     const jsonValueCli = '"{\\"name\\":\\"xyz\\"}"'
+    const jsonValue = '{"name":"xyz"}'
     const command = `JSON.GET ${keyName}`
+    const jsonKeyParameters: JsonKeyParameters = {
+      keyName: keyName,
+      data: jsonValue,
+    }
 
     // Add Json key with json object
-    // await browserPage.addJsonKey(keyName, jsonValue, keyTTL)
+    await KeyAPIRequests.addJsonKeyApi(
+      jsonKeyParameters,
+      Config.ossStandaloneConfig,
+    )
     await cliViewPanel.executeCommand(command)
     // Verify result
     const text = await cliViewPanel.getCliLastCommandResponse()
@@ -74,7 +84,6 @@ describe('CLI regression', () => {
       expect(await cliViewPanel.getCommandText()).eql(cliCommands[i])
     }
     for (let i = 0; i < cliCommands.length; i++) {
-      console.log(`NExt Iteration ` + i)
       expect(await cliViewPanel.getCommandText()).eql(cliCommands[i])
       await InputActions.pressKey(inputField, 'down')
     }
