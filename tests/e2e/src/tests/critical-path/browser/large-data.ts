@@ -5,6 +5,7 @@ import {
   BottomBar,
   WebView,
   KeyDetailsView,
+  KeyTreeView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
@@ -16,6 +17,7 @@ describe('Cases with large data', () => {
   let webView: WebView
   let bottomBar: BottomBar
   let keyDetailsView: KeyDetailsView
+  let keyTreeView: KeyTreeView
   let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
@@ -23,6 +25,7 @@ describe('Cases with large data', () => {
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new KeyDetailsView()
+    keyTreeView = new KeyTreeView()
 
     await browser.waitForWorkbench(20_000)
   })
@@ -49,8 +52,10 @@ describe('Cases with large data', () => {
       await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()
 
-    //TODO open the key stringKeyParameters.keyName
-    await CommonDriverExtension.driverSleep()
+    await webView.switchToFrame(KeyTreeView.treeFrame)
+    await keyTreeView.openKeyDetailsByKeyName(stringKeyParameters.keyName)
+    await webView.switchBack()
+
     await webView.switchToFrame(KeyDetailsView.keyFrame)
     expect(
       await keyDetailsView.isElementDisplayed(
@@ -58,8 +63,10 @@ describe('Cases with large data', () => {
       ),
     ).false
 
-    // TODO open the key bigStringKeyParameters.keyName
-    await CommonDriverExtension.driverSleep()
+    await webView.switchToFrame(KeyTreeView.treeFrame)
+    await keyTreeView.openKeyDetailsByKeyName(bigStringKeyParameters.keyName)
+    await webView.switchBack()
+
     expect(
       await keyDetailsView.isElementDisplayed(
         keyDetailsView.loadAllStringValue,

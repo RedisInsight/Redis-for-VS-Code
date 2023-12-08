@@ -6,6 +6,7 @@ import {
   WebView,
   CliViewPanel,
   KeyDetailsView,
+  KeyTreeView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
@@ -26,6 +27,7 @@ describe('TTL values in Keys Table', () => {
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
   let keyDetailsView: KeyDetailsView
+  let keyTreeView: KeyTreeView
   let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
@@ -33,6 +35,7 @@ describe('TTL values in Keys Table', () => {
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new KeyDetailsView()
+    keyTreeView = new KeyTreeView()
 
     await browser.waitForWorkbench(20_000)
   })
@@ -84,17 +87,19 @@ describe('TTL values in Keys Table', () => {
     sideBarView = await (
       await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()
-    await CommonDriverExtension.driverSleep()
-    await webView.switchToFrame(KeyDetailsView.keyFrame)
+
     // Check that Keys has correct TTL value in keys table
     for (let i = 0; i < keysData.length; i++) {
-      //TODO open the key here by keysData[i].keyName
-      //TODO can be verified after the all key will be displayed
-      await CommonDriverExtension.driverSleep()
+      await webView.switchToFrame(KeyTreeView.treeFrame)
+      await keyTreeView.openKeyDetailsByKeyName(keysData[i].keyName)
+      await webView.switchBack()
+
+      await webView.switchToFrame(KeyDetailsView.keyFrame)
       await expect(await keyDetailsView.getKeyTtl()).contains(
         ttlValues[i],
         `TTL value in keys table is not ${ttlValues[i]}`,
       )
+      await webView.switchBack()
     }
   })
 })
