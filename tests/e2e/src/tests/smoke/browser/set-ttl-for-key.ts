@@ -52,7 +52,6 @@ describe('Set TTL for Key', () => {
       await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()
 
-    //TODO click on string
     await webView.switchToFrame(KeyTreeView.treeFrame)
     await keyTreeView.openKeyDetailsByKeyName(keyName)
     await webView.switchBack()

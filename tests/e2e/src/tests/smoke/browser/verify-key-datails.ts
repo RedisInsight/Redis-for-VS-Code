@@ -6,6 +6,7 @@ import {
   WebView,
   CliViewPanel,
   KeyDetailsView,
+  KeyTreeView,
 } from '@e2eSrc/page-objects/components'
 import { InputActions } from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
@@ -17,6 +18,7 @@ describe('Key Details verifications', () => {
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
   let keyDetailsView: KeyDetailsView
+  let keyTreeView: KeyTreeView
   let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
@@ -24,6 +26,7 @@ describe('Key Details verifications', () => {
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new KeyDetailsView()
+    keyTreeView = new KeyTreeView()
 
     await browser.waitForWorkbench(20_000)
   })
@@ -51,8 +54,9 @@ describe('Key Details verifications', () => {
       await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()
 
-    //TODO click on string
-    await CommonDriverExtension.driverSleep()
+    await webView.switchToFrame(KeyTreeView.treeFrame)
+    await keyTreeView.openKeyDetailsByKeyName(keyName)
+    await webView.switchBack()
 
     await webView.switchToFrame(KeyDetailsView.keyFrame)
 
