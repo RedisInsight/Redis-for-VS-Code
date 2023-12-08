@@ -10,7 +10,7 @@ import { InputActions } from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
-import { JsonKeyParameters } from '../../../helpers/types/types'
+import { JsonKeyParameters } from '@e2eSrc/helpers/types/types'
 
 describe('CLI regression', () => {
   let browser: VSBrowser
