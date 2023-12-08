@@ -197,7 +197,6 @@ export class DatabaseAPIRequests {
    */
   async deleteAllDatabasesApi(): Promise<void> {
     const allDatabases = await this.getAllDatabases()
-    console.log(`common db count is "${allDatabases}"`)
     if (allDatabases.length > 0) {
       const databaseIds: string[] = []
       for (let i = 0; i < allDatabases.length; i++) {

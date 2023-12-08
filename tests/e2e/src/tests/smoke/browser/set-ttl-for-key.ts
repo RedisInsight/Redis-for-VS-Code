@@ -54,7 +54,6 @@ describe('Set TTL for Key', () => {
 
     //TODO click on string
     await webView.switchToFrame(KeyTreeView.treeFrame)
-    console.log('saaaaaaaaaaaaaaaaaa')
     await keyTreeView.openKeyDetailsByKeyName(keyName)
     await webView.switchBack()
 
