@@ -1,11 +1,11 @@
-import { WebElement, WebDriver, until, Locator, By } from 'selenium-webdriver';
-import { VSBrowser } from 'vscode-extension-tester';
+import { WebElement, WebDriver, until, Locator, By } from 'selenium-webdriver'
+import { VSBrowser } from 'vscode-extension-tester'
 
 /**
  * Default wrapper for webelement
  */
 export class BaseComponent extends WebElement {
-  protected static driver: WebDriver;
+  protected static driver: WebDriver
 
   /**
    * Constructs a new element from a Locator or an existing WebElement
@@ -14,16 +14,16 @@ export class BaseComponent extends WebElement {
    */
   constructor(base: Locator | WebElement) {
     if (!BaseComponent.driver) {
-      BaseComponent.driver = VSBrowser.instance.driver;
+      BaseComponent.driver = VSBrowser.instance.driver
     }
-    let item: WebElement = BaseComponent.driver.findElement(By.css('html'));
+    let item: WebElement = BaseComponent.driver.findElement(By.css('html'))
 
     if (base instanceof WebElement) {
-      super(BaseComponent.driver, base.getId());
+      super(BaseComponent.driver, base.getId())
     } else {
-      let toFind = item.findElement(base);
-      let id = toFind.getId();
-      super(BaseComponent.driver, id);
+      let toFind = item.findElement(base)
+      let id = toFind.getId()
+      super(BaseComponent.driver, id)
     }
   }
 
@@ -33,8 +33,8 @@ export class BaseComponent extends WebElement {
    * @returns Self reference
    */
   async wait(timeout: number = 5000): Promise<this> {
-    await this.getDriver().wait(until.elementIsVisible(this), timeout);
-    return this;
+    await this.getDriver().wait(until.elementIsVisible(this), timeout)
+    return this
   }
 
   /**
@@ -47,7 +47,7 @@ export class BaseComponent extends WebElement {
     locator: Locator,
     timeout: number = 5000,
   ): Promise<WebElement> {
-    return this.getDriver().wait(until.elementLocated(locator), timeout);
+    return this.getDriver().wait(until.elementLocated(locator), timeout)
   }
 
   /**
@@ -56,14 +56,14 @@ export class BaseComponent extends WebElement {
    */
   async isElementDisplayed(locator: Locator): Promise<boolean> {
     try {
-      const elements = await this.getDriver().findElements(locator);
+      const elements = await this.getDriver().findElements(locator)
       if (elements.length > 0) {
-        return await elements[0].isDisplayed();
+        return await elements[0].isDisplayed()
       } else {
-        return false;
+        return false
       }
     } catch (error) {
-      return false;
+      return false
     }
   }
 }
