@@ -6,3 +6,4 @@ export const CONNECTED_DATABASE_ID = import.meta.env.RI_INSTANCE_ID || ''
 
 // browser
 export const SCAN_TREE_COUNT_DEFAULT = import.meta.env.RI_SCAN_TREE_COUNT || 10_000
+export const SCAN_COUNT_DEFAULT = import.meta.env.RI_SCAN_COUNT_DEFAULT || 500

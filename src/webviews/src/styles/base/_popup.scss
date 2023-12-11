@@ -1,0 +1,10 @@
+.popup-content {
+  @apply bg-vscode-tab-activeBackground break-words p-4 border-vscode-focusBorder;
+  border: 1px solid var(--vscode-focusBorder);
+
+  .popup-arrow {
+    @apply text-vscode-focusBorder #{!important};
+  }
+}
+
+

@@ -3,7 +3,6 @@ import { Buffer } from 'buffer'
 import { KeyValueFormat } from 'uiSrc/constants'
 import {
   Nullable,
-  RedisResponseBuffer,
   RedisResponseBufferType,
   RedisString,
   UintArray,
@@ -12,8 +11,8 @@ import {
 const decoder = new TextDecoder('utf-8')
 const encoder = new TextEncoder()
 
-const isEqualBuffers = (a?: Nullable<RedisResponseBuffer>, b?: Nullable<RedisResponseBuffer>) =>
-  a?.data?.join(',') === b?.data?.join(',')
+const isEqualBuffers = (a?: Nullable<RedisString>, b?: Nullable<RedisString>) =>
+  (isString(a) || isString(b) ? false : a?.data?.join(',') === b?.data?.join(','))
 
 // eslint-disable-next-line no-control-regex
 const IS_NON_PRINTABLE_ASCII_CHARACTER = /[^ -~\u0007\b\t\n\r]/
@@ -23,10 +22,14 @@ const decimalToHexString = (d: number, padding = 2) => {
   return '0'.repeat(padding).substring(0, padding - hex.length) + hex
 }
 
-const bufferToHex = (reply: RedisResponseBuffer): string => {
+const bufferToHex = (reply: RedisString): string => {
   let result = ''
 
-  reply.data.forEach((byte: number) => {
+  if (isString(reply)) {
+    return reply
+  }
+
+  reply.data?.forEach((byte: number) => {
     // eslint-disable-next-line
     result += ('0' + (byte & 0xFF).toString(16)).slice(-2)
   })
@@ -34,16 +37,21 @@ const bufferToHex = (reply: RedisResponseBuffer): string => {
   return result
 }
 
-const bufferToBinary = (reply: RedisResponseBuffer): string =>
-  Array.from(reply.data).reduce((str, byte) => str + byte.toString(2).padStart(8, '0'), '')
+const bufferToBinary = (reply: RedisString): string => (
+  isString(reply)
+    ? reply
+    : Array.from(reply.data).reduce((str, byte) => str + byte.toString(2).padStart(8, '0'), ''))
 
 const binaryToBuffer = (reply: string) => {
   const data: number[] = reply.match(/.{1,8}/g)?.map((v) => parseInt(v, 2)) || []
   return anyToBuffer(data)
 }
 
-const bufferToASCII = (reply: RedisResponseBuffer): string => {
+const bufferToASCII = (reply: RedisString): string => {
   let result = ''
+  if (isString(reply)) {
+    return reply
+  }
   reply.data.forEach((byte: number) => {
     const char = decoder.decode(new Uint8Array([byte]))
     if (IS_NON_PRINTABLE_ASCII_CHARACTER.test(char)) {
@@ -79,8 +87,8 @@ const bufferToASCII = (reply: RedisResponseBuffer): string => {
   return result
 }
 
-const anyToBuffer = (reply: UintArray): RedisResponseBuffer =>
-  ({ data: reply, type: RedisResponseBufferType.Buffer }) as RedisResponseBuffer
+const anyToBuffer = (reply: UintArray): RedisString =>
+  ({ data: reply, type: RedisResponseBufferType.Buffer }) as RedisString
 
 const ASCIIToBuffer = (strInit: string) => {
   let result = ''
@@ -104,16 +112,17 @@ const ASCIIToBuffer = (strInit: string) => {
   return anyToBuffer(Array.from(Buffer.from(result, 'hex')))
 }
 
-const bufferToUint8Array = (reply: RedisResponseBuffer): Uint8Array => new Uint8Array(reply.data)
-const bufferToUTF8 = (reply: RedisResponseBuffer): string => decoder.decode(bufferToUint8Array(reply))
+const bufferToUint8Array = (reply: RedisString): Uint8Array =>
+  new Uint8Array(isString(reply) ? [] : reply?.data)
+const bufferToUTF8 = (reply: RedisString): string => decoder.decode(bufferToUint8Array(reply))
 
 const UintArrayToString = (reply: UintArray): string => decoder.decode(new Uint8Array(reply))
 
-const UTF8ToBuffer = (reply: string): RedisResponseBuffer => anyToBuffer(encoder.encode(reply))
+const UTF8ToBuffer = (reply: string): RedisString => anyToBuffer(encoder.encode(reply))
 const UTF8ToArray = (reply: string): any => anyToBuffer(Array.from(encoder.encode(reply)))
 
 // common formatters
-const stringToBuffer = (data: string, formatResult: KeyValueFormat = KeyValueFormat.Unicode): RedisResponseBuffer => {
+const stringToBuffer = (data: string, formatResult: KeyValueFormat = KeyValueFormat.Unicode): RedisString => {
   switch (formatResult) {
     case KeyValueFormat.Unicode: {
       return UTF8ToBuffer(data)
@@ -127,14 +136,14 @@ const stringToBuffer = (data: string, formatResult: KeyValueFormat = KeyValueFor
   }
 }
 
-const hexToBuffer = (data: string): RedisResponseBuffer => {
+const hexToBuffer = (data: string): RedisString => {
   let string = data
   const result = []
   while (string.length >= 2) {
     result.push(parseInt(string.substring(0, 2), 16))
     string = string.substring(2, string.length)
   }
-  return { type: RedisResponseBufferType.Buffer, data: result } as RedisResponseBuffer
+  return { type: RedisResponseBufferType.Buffer, data: result } as RedisString
 }
 
 const bufferToString = (data: RedisString = '', formatResult: KeyValueFormat = KeyValueFormat.Unicode): string => {

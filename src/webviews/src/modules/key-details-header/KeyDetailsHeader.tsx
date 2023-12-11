@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { isUndefined } from 'lodash'
 import { useSelector } from 'react-redux'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { VscClose } from 'react-icons/vsc'
+import { VscClose, VscDebugRestart } from 'react-icons/vsc'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
@@ -13,7 +13,7 @@ import {
   ModulesKeyTypes,
 } from 'uiSrc/constants'
 import { RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
-import { editKeyTTL, useSelectedKeyStore } from 'uiSrc/store'
+import { editKeyTTL, fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { TelemetryEvent, bufferToString, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
 import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 // import { KeyDetailsHeaderFormatter } from './components/key-details-header-formatter'
@@ -48,9 +48,10 @@ const KeyDetailsHeader = ({
   const { type = KeyTypes.String, name: keyBuffer, nameString: keyProp, length } = data ?? {}
   const { id: databaseId } = useSelector(connectedDatabaseSelector)
 
-  // const handleRefreshKey = () => {
-  //   dispatch(refreshKey(keyBuffer!, type))
-  // }
+  const handleRefreshKey = () => {
+    fetchKeyInfo(keyBuffer!)
+    // dispatch(refreshKey(keyBuffer!, type))
+  }
 
   const handleEditTTL = (key: RedisResponseBuffer, ttl: number) => {
     editKeyTTL(key, ttl, onEditKeyyTTLSuccess)
@@ -97,21 +98,21 @@ const KeyDetailsHeader = ({
 
   return (
     <div className={`key-details-header ${styles.container}`} data-testid="key-details-header">
-      {loading && (
+      {/* {loading && (
         <div>
           {l10n.t('loading...')}
         </div>
-      )}
-      {!loading && (
-        <AutoSizer disableHeight>
-          {({ width = 0 }) => (
-            <div style={{ width }}>
-              <div className={styles.keyFlexGroup}>
-                <div>
-                  {getGroupTypeDisplay(type)}
-                </div>
-                <KeyDetailsHeaderName onEditKey={handleEditKey} />
-                {/* <div className={styles.closeBtnContainer} title="Close">
+      )} */}
+      {/* {!loading && ( */}
+      <AutoSizer disableHeight>
+        {({ width = 0 }) => (
+          <div style={{ width }}>
+            <div className={styles.keyFlexGroup}>
+              <div>
+                {getGroupTypeDisplay(type)}
+              </div>
+              <KeyDetailsHeaderName onEditKey={handleEditKey} />
+              {/* <div className={styles.closeBtnContainer} title="Close">
                   <VSCodeButton
                     aria-label="Close key"
                     className={styles.closeBtn}
@@ -123,13 +124,24 @@ const KeyDetailsHeader = ({
                     />
                   </VSCodeButton>
                 </div> */}
-              </div>
-              <div className={styles.groupSecondLine}>
-                <KeyDetailsHeaderSizeLength width={width} />
-                <KeyDetailsHeaderTTL onEditTTL={handleEditTTL} />
-                <div>
-                  <div className={styles.subtitleActionBtns}>
-                    {/* <AutoRefresh
+            </div>
+            <div className={styles.groupSecondLine}>
+              <KeyDetailsHeaderSizeLength width={width} />
+              <KeyDetailsHeaderTTL onEditTTL={handleEditTTL} />
+              <div className="flex ml-auto">
+                <div className={styles.subtitleActionBtns}>
+                  <VSCodeButton
+                    appearance="icon"
+                    disabled={loading}
+                    className={styles.actionBtn}
+                    onClick={handleRefreshKey}
+                    aria-label="refresh key"
+                      // title={tooltipContent}
+                    data-testid="refresh-key-btn"
+                  >
+                    <VscDebugRestart />
+                  </VSCodeButton>
+                  {/* <AutoRefresh
                       postfix={type}
                       loading={loading}
                       lastRefreshTime={lastRefreshTime}
@@ -140,18 +152,18 @@ const KeyDetailsHeader = ({
                       onChangeAutoRefreshRate={handleChangeAutoRefreshRate}
                       testid="refresh-key-btn"
                     /> */}
-                    {/* {Object.values(KeyTypes).includes(keyType as KeyTypes) && (
+                  {/* {Object.values(KeyTypes).includes(keyType as KeyTypes) && (
                       <KeyDetailsHeaderFormatter width={width} />
                     )}
                     {!isUndefined(Actions) && <Actions width={width} />}
                     <KeyDetailsHeaderDelete onDelete={handleDeleteKey} /> */}
-                  </div>
                 </div>
               </div>
             </div>
-          )}
-        </AutoSizer>
-      )}
+          </div>
+        )}
+      </AutoSizer>
+      {/* )} */}
     </div>
   )
 }

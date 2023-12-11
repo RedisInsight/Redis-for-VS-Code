@@ -5,7 +5,7 @@ import { Nullable } from 'uiSrc/interfaces'
 import { scrollIntoView } from 'uiSrc/utils'
 import { clearOutput, updateCliHistoryStorage } from 'uiSrc/modules/cli/utils/cliHelper'
 import { isModifiedEvent } from 'uiSrc/services'
-import { ClearCommand, CliKeys } from 'uiSrc/constants'
+import { ClearCommand, Keys } from 'uiSrc/constants'
 import { outputSelector } from 'uiSrc/modules/cli/slice/cli-output'
 import { cliSettingsSelector } from 'uiSrc/modules/cli/slice/cli-settings'
 import { CliInputWrapper } from 'uiSrc/modules/cli/components/cli-input'
@@ -153,18 +153,18 @@ export const CliBody = (props: Props) => {
 
     const isModifierKey = isModifiedEvent(event)
 
-    if (event.shiftKey && event.key === CliKeys.TAB) return onKeyDownShiftTab(event)
-    if (event.key === CliKeys.TAB) return onKeyDownTab(event, commandLine)
+    if (event.shiftKey && event.key.toLowerCase() === Keys.TAB) return onKeyDownShiftTab(event)
+    if (event.key.toLowerCase() === Keys.TAB) return onKeyDownTab(event, commandLine)
 
     // reset command tab position
-    if (!event.shiftKey || (event.shiftKey && event.key !== 'Shift')) {
+    if (!event.shiftKey || (event.shiftKey && event.key.toLowerCase() !== Keys.SHIFT)) {
       setCommandTabPos(commandTabPosInit)
     }
 
-    if (event.key === CliKeys.ENTER) return onKeyDownEnter(commandLine, event)
-    if (event.key === CliKeys.ARROW_UP && !isModifierKey) return onKeyDownArrowUp(event)
-    if (event.key === CliKeys.ARROW_DOWN && !isModifierKey) return onKeyDownArrowDown(event)
-    if (event.key === CliKeys.ESCAPE) return onKeyEsc()
+    if (event.key.toLowerCase() === Keys.ENTER) return onKeyDownEnter(commandLine, event)
+    if (event.key.toLowerCase() === Keys.ARROW_UP && !isModifierKey) return onKeyDownArrowUp(event)
+    if (event.key.toLowerCase() === Keys.ARROW_DOWN && !isModifierKey) return onKeyDownArrowDown(event)
+    if (event.key.toLowerCase() === Keys.ESCAPE) return onKeyEsc()
 
     if ((event.metaKey && event.key === 'k') || (event.ctrlKey && event.key === 'l')) {
       onClearOutput(event)

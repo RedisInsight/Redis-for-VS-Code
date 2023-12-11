@@ -7,9 +7,10 @@ import { Provider } from 'react-redux'
 
 import { fetchKeyInfo, store, useSelectedKeyStore } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
-import { AppRoutes } from './Routes'
-import { VscodeMessageAction } from './constants'
+import { AppRoutes } from 'uiSrc/Routes'
+import { VscodeMessageAction } from 'uiSrc/constants'
 
+import 'uiSrc/styles/main.scss'
 import '../vscode.css'
 
 // TODO: Type the incoming config data
@@ -23,7 +24,7 @@ const root = createRoot(container!)
 //   workspace = root.getAttribute('data-workspace') || ''
 // }
 
-const rootEl = document.getElementById('root')
+// const rootEl = document.getElementById('root')
 
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('message', handleMessage)
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Router initialEntries={[rootEl?.dataset.route || '']} initialIndex={0}>
+      <Router initialEntries={[container?.dataset.route || '']} initialIndex={0}>
         <Config />
         <AppRoutes />
       </Router>

@@ -1,13 +1,9 @@
-$borderWidth: 1px;
-$cornerRadiusRound: 2px;
 $inputHeight: 28px;
 $inputMinWidth: 100px;
 
 .input {
-  @apply bg-vscode-input-background text-vscode-input-foreground border-vscode-input-border focus:border-vscode-inputOption-activeBorder outline-none px-[6px];
+  @apply bg-vscode-input-background text-vscode-input-foreground border-vscode-input-border focus:border-vscode-inputOption-activeBorder w-full px-[6px] outline-none border-solid border rounded-none;
 
-  /* border-width: 1px; */
-  border-radius: $cornerRadiusRound;
-  height: $inputHeight !important;
+  border-color: transparent;
   min-width: $inputMinWidth;
 }

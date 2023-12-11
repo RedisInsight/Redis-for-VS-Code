@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash'
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
 import { screen, fireEvent } from '@testing-library/react'
-import { CliKeys } from 'uiSrc/constants'
+import { Keys } from 'uiSrc/constants'
 import { render, cleanup, mockedStore } from 'testSrc/helpers'
 import { CliBody, Props } from './CliBody'
 
@@ -201,7 +201,7 @@ describe('CliBody', () => {
       )
 
       fireEvent.keyDown(screen.getByTestId('cli-command'), {
-        key: CliKeys.TAB,
+        key: Keys.TAB,
       })
 
       expect(onSubmitMock).not.toBeCalled()
@@ -222,7 +222,7 @@ describe('CliBody', () => {
       )
 
       fireEvent.keyDown(screen.getByTestId('cli-command'), {
-        key: CliKeys.TAB,
+        key: Keys.TAB,
       })
 
       expect(onSubmitMock).not.toBeCalled()
@@ -243,16 +243,16 @@ describe('CliBody', () => {
       )
 
       fireEvent.keyDown(screen.getByTestId('cli-command'), {
-        key: CliKeys.TAB,
+        key: Keys.TAB,
         shiftKey: true,
       })
 
       fireEvent.keyDown(screen.getByTestId('cli-command'), {
-        key: CliKeys.TAB,
+        key: Keys.TAB,
       })
 
       fireEvent.keyDown(screen.getByTestId('cli-command'), {
-        key: CliKeys.TAB,
+        key: Keys.TAB,
         shiftKey: true,
       })
 

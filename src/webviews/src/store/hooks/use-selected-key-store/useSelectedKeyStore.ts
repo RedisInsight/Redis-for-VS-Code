@@ -6,13 +6,18 @@ import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService, localStorageService } from 'uiSrc/services'
 import {
   ApiEndpoints,
+  DEFAULT_SEARCH_MATCH,
   DEFAULT_VIEW_FORMAT,
   KeyTypes,
+  SCAN_COUNT_DEFAULT,
   STRING_MAX_LENGTH,
+  SortOrder,
   StorageItem,
 } from 'uiSrc/constants'
 import { bufferToString, getEncoding, getUrl, isStatusSuccessful } from 'uiSrc/utils'
 import { fetchString } from 'uiSrc/modules'
+import { fetchHashFields } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
+import { fetchZSetMembers } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
 import { SelectedKeyActions, SelectedKeyStore } from './interface'
 
 export const initialState: SelectedKeyStore = {
@@ -42,7 +47,7 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
 )
 
 // Asynchronous thunk action
-export const fetchKeyInfo = (key: RedisString) => {
+export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true) => {
   useSelectedKeyStore.setState(async (state) => {
     state.processSelectedKey()
     try {
@@ -56,7 +61,9 @@ export const fetchKeyInfo = (key: RedisString) => {
         state.processSelectedKeySuccess(data)
         state.updateSelectedKeyRefreshTime(Date.now())
 
-        fetchKeyValueByType(key, data.type)
+        if (fetchKeyValue) {
+          fetchKeyValueByType(key, data.type)
+        }
       }
     } catch (_err) {
       const error = _err as AxiosError
@@ -107,16 +114,14 @@ export const fetchKeyValueByType = (key: RedisString, type?: KeyTypes) => {
       end: STRING_MAX_LENGTH,
     })
   }
-  // if (type === KeyTypes.Hash) {
-  //   dispatch<any>(fetchHashFields(key, 0, SCAN_COUNT_DEFAULT, '*', resetData))
-  // }
+  if (type === KeyTypes.Hash) {
+    fetchHashFields(key, 0, SCAN_COUNT_DEFAULT, DEFAULT_SEARCH_MATCH)
+  }
+  if (type === KeyTypes.ZSet) {
+    fetchZSetMembers(key, 0, SCAN_COUNT_DEFAULT, SortOrder.ASC, DEFAULT_SEARCH_MATCH)
+  }
   // if (type === KeyTypes.List) {
   //   dispatch<any>(fetchListElements(key, 0, SCAN_COUNT_DEFAULT, resetData))
-  // }
-  // if (type === KeyTypes.ZSet) {
-  //   dispatch<any>(
-  //     fetchZSetMembers(key, 0, SCAN_COUNT_DEFAULT, SortOrder.ASC, resetData),
-  //   )
   // }
   // if (type === KeyTypes.Set) {
   //   dispatch<any>(fetchSetMembers(key, 0, SCAN_COUNT_DEFAULT, '*', resetData))

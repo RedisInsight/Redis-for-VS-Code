@@ -8,4 +8,6 @@ export enum VscodeState {
 
 export enum VscodeMessageAction {
   SelectKey = 'SelectKey',
+  InformationMessage = 'InformationMessage',
+  ErrorMessage = 'ErrorMessage',
 }

@@ -1,0 +1,15 @@
+.popover {
+  max-width: 564px !important;
+}
+
+.appendInfo {
+  @apply flex mt-4;
+
+  > div {
+    font-size: 12px !important;
+  }
+}
+
+.popoverFooter {
+  @apply flex justify-end mt-3;
+}

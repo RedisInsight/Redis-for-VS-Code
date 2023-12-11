@@ -10,7 +10,7 @@ html, body, #root {
 body {
   padding: 0 !important;
 }
-/* 
+/*
 @layer components {
   input[type='radio'],
   input[type='checkbox'] {
@@ -56,6 +56,14 @@ body {
     }
   }
 } */
+
+@layer components {
+  .key-details-edit {
+    width: calc(100% + 80px);
+    margin-right: -100px;
+    z-index: 2;
+  }
+}
 
 .table-loading:before {
   position: absolute;

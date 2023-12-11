@@ -9,6 +9,6 @@ export {
   clearStoreActions,
   screen,
   fireEvent,
-  waitRequest,
+  waitForStack,
   act,
 } from './testUtils'

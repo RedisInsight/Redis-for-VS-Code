@@ -19,3 +19,11 @@ export interface KeyInfo extends GetKeyInfoResponse {
   nameString?: string
   path?: string
 }
+
+export interface KeyDto {
+  keyName: RedisString
+}
+
+export interface KeyResponse {
+  keyName: RedisString
+}
