@@ -41,7 +41,7 @@ module.exports = {
         ignoreComments: true,
         ignoreStrings: true,
         ignoreRegExpLiterals: true,
-        code: 120,
+        code: 140,
       },
     ],
     'class-methods-use-this': 'off',
