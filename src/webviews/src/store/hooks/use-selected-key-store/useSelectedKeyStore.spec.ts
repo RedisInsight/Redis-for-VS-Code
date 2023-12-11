@@ -47,7 +47,7 @@ describe('useSelectedKeyStore', () => {
 })
 
 describe('async', () => {
-  it.only('fetchKeyInfo', async () => {
+  it('fetchKeyInfo', async () => {
     const expectedData = {
       ...constants.KEY_INFO,
       nameString: constants.KEY_NAME_STRING_1,
@@ -59,7 +59,7 @@ describe('async', () => {
     expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
     expect(useSelectedKeyStore.getState().loading).toEqual(false)
   })
-  it.only('editKeyTTL', async () => {
+  it('editKeyTTL', async () => {
     const expectedData = {
       ...constants.KEY_INFO,
       ttl: constants.KEY_TTL_2,
