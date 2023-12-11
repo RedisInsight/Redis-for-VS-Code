@@ -51,6 +51,19 @@ export class BaseComponent extends WebElement {
   }
 
   /**
+   * Wait for the elements to be found by locator and return them
+   * @param locator Webdriver locator to search by
+   * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @returns WebElements
+   */
+  async getElements(
+    locator: Locator,
+    timeout: number = 5000,
+  ): Promise<WebElement[]> {
+    return this.getDriver().wait(until.elementsLocated(locator), timeout)
+  }
+
+  /**
    * Is the element displayed
    * @param locator locator to check
    */

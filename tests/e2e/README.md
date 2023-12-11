@@ -3,10 +3,10 @@
 ### Before run tests run next commands
 
 ```bash
-npm install
-npm run install:deps
-npm run install:chrome-driver
-npm run install:vs-code
+yarn install
+yarn install:deps
+yarn install:chrome-driver
+yarn install:vs-code
 ```
 
 
@@ -15,5 +15,5 @@ npm run install:vs-code
 - to run tests in Chrome browser run
 
 ```bash
-npm run test
+yarn test
 ```

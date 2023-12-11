@@ -3,7 +3,7 @@ import { BaseComponent } from '../BaseComponent'
 import { InputActions } from '@e2eSrc/helpers/common-actions'
 
 /**
- * key details view
+ * Key details view
  */
 export class KeyDetailsView extends BaseComponent {
   // frame locator
