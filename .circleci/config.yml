@@ -2,25 +2,35 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/configuration-reference/#jobs
+aliases:
+  ui-deps-cache-key: &uiDepsCacheKey
+    key: ui-deps-{{ checksum "yarn.lock" }}
+
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/configuration-reference/#executor-job
+  unit-tests-ui:
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/configuration-reference/#steps
+      - image: cimg/node:18.15.0
     steps:
       - checkout
+      - restore_cache:
+          <<: *uiDepsCacheKey
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: Install dependencies
+          command: |
+            yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+      - run:
+          name: Unit tests UI
+          command: |
+            yarn test:cov --ci --silent
+      - save_cache:
+          <<: *uiDepsCacheKey
+          paths:
+            - ~/.cache/yarn
+
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  frontend-tests:
     jobs:
-      - say-hello
+      - unit-tests-ui
