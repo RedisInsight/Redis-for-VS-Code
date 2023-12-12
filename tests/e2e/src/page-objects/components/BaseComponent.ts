@@ -82,6 +82,7 @@ export class BaseComponent extends WebElement {
 
   /**
    * Get text from element
+   * @param locator locator to check
    * @returns Promise resolving to element text
    */
   async getElementText(locator: Locator): Promise<string> {
