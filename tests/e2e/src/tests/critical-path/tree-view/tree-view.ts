@@ -36,7 +36,7 @@ describe('Tree view verifications', () => {
   it.skip('Verify that user can see message "No keys to display." when there are no keys in the database', async function () {
     const message = 'Keys are the foundation of Redis.'
 
-    expect(await keyTreeView.getTreeViewText()).eql(
+    expect(await keyTreeView.getElementText(keyTreeView.treeViewPage)).eql(
       message,
       'Tree view no keys message not shown',
     )

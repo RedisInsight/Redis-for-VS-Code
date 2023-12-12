@@ -79,4 +79,12 @@ export class BaseComponent extends WebElement {
       return false
     }
   }
+
+  /**
+   * Get text from element
+   * @returns Promise resolving to element text
+   */
+  async getElementText(locator: Locator): Promise<string> {
+    return await (await this.getElement(locator)).getText()
+  }
 }

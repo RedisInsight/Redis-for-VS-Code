@@ -44,14 +44,6 @@ export class KeyTreeView extends BaseComponent {
   }
 
   /**
-   * Get tree view panel text
-   * @returns Promise resolving to tree view panel text
-   */
-  async getTreeViewText(): Promise<string> {
-    return await (await this.getElement(this.treeViewPage)).getText()
-  }
-
-  /**
    * Open tree folder with multiple level
    * @param names folder names with sequence of subfolder
    */
