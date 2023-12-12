@@ -46,14 +46,4 @@ export class InputActions {
       await InputActions.driver.sleep(delay)
     }
   }
-
-  /**
-   * get field value
-   * @returns Promise resolving to string
-   */
-  static async getFieldValue(base: Locator): Promise<string> {
-    InputActions.initializeDriver()
-    const element = await InputActions.driver.wait(until.elementLocated(base))
-    return await element.getText()
-  }
 }

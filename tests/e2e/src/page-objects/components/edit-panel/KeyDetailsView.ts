@@ -31,7 +31,7 @@ export class KeyDetailsView extends BaseComponent {
    * get key size
    */
   async getKeySize(): Promise<number> {
-    const keySizeText = await InputActions.getFieldValue(this.keySize)
+    const keySizeText = await this.getElementText(this.keySize)
     const regex = /Key Size: (\d+)/
     const match = keySizeText.match(regex)
     return match ? parseInt(match[1], 10) : NaN
@@ -41,7 +41,7 @@ export class KeyDetailsView extends BaseComponent {
    * get key length
    */
   async getKeyLength(): Promise<number> {
-    const keyLengthText = await InputActions.getFieldValue(this.keyLength)
+    const keyLengthText = await this.getElementText(this.keyLength)
     const regex = /Length: (\d+)/
     const match = keyLengthText.match(regex)
     return match ? parseInt(match[1], 10) : NaN
