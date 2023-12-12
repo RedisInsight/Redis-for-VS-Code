@@ -10,13 +10,15 @@ export class CommonAPIRequests {
    * @param resourcePath URI path segment
    */
   static async sendGetRequest(resourcePath: string): Promise<any> {
-    let requestEndpoint: any
+    try {
+      const response = await request(endpoint)
+        .get(resourcePath)
+        .set('Accept', jsonType)
 
-    requestEndpoint = request(endpoint)
-      .get(resourcePath)
-      .set('Accept', jsonType)
-
-    return requestEndpoint
+      return response
+    } catch (error) {
+      throw new Error(`Failed to send GET request: ${error}`)
+    }
   }
 
   /**

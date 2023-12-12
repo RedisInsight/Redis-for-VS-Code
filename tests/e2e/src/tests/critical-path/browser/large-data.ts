@@ -75,7 +75,8 @@ describe('Cases with large data', () => {
 
     await ButtonsActions.clickElement(keyDetailsView.loadAllStringValue)
     await expect(
-      (await InputActions.getFieldValue(keyDetailsView.keyStringValue)).length,
+      (await keyDetailsView.getElementText(keyDetailsView.keyStringValue))
+        .length,
     ).eql(
       bigStringKeyParameters.value.length,
       'String key > 5000 value is not fully loaded after clicking Load All',

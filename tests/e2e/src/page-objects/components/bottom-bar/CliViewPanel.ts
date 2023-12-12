@@ -79,6 +79,16 @@ export class CliViewPanel extends BaseComponent {
   }
 
   /**
+   * Send commands in Cli
+   * @param commands The commands to send
+   */
+  async sendCommandsInCli(commands: string[]): Promise<void> {
+    for (const command of commands) {
+      await this.executeCommand(command)
+    }
+  }
+
+  /**
    * Get number of commands run in current CLI instance
    * @returns Promise resolving to number of commands in CLI
    */
