@@ -38,13 +38,15 @@ describe('useZSetStore', () => {
   })
   it('processZSetSuccess', () => {
     // Arrange
+    const match = '123'
     const initialState = { ...initialStateInit, loading: true } // Custom initial state
     useZSetStore.setState((state) => ({ ...state, ...initialState }))
 
     const { processZSetSuccess } = useZSetStore.getState()
     // Act
-    processZSetSuccess(constants.ZSET_DATA)
+    processZSetSuccess(constants.ZSET_DATA, match)
     // Assert
+    expect(useZSetStore.getState().data.match).toEqual(match)
     expect(useZSetStore.getState().data.keyName).toEqual(constants.KEY_NAME_3)
     expect(useZSetStore.getState().data.total).toEqual(constants.KEY_LENGTH_3)
     expect(useZSetStore.getState().data.members?.[0]?.name).toEqual(constants.KEY_3_MEMBER)

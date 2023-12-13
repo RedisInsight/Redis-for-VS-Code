@@ -41,10 +41,11 @@ export const useHashStore = create<HashState & HashActions>()(
     resetHashStore: () => set(initialState),
     processHash: () => set({ loading: true }),
     processHashFinal: () => set({ loading: false }),
-    processHashSuccess: (data) => set({ data }),
-    processHashMoreSuccess: ({ fields, ...rest }) => set((state) => ({
+    processHashSuccess: (data, match) => set({ data: { ...data, match } }),
+    processHashMoreSuccess: ({ fields, ...rest }, match) => set((state) => ({
       data: {
         ...rest,
+        match,
         fields: state.data.fields.concat(fields),
       },
     })),
@@ -72,10 +73,11 @@ export const fetchHashFields = (
   key: RedisString,
   cursor: number,
   count: number,
-  match: string,
+  matchInit?: string,
   onSuccess?: (data: GetHashFieldsResponse) => void,
 ) => useHashStore.setState(async (state) => {
   state.processHash()
+  const match = matchInit || state.data.match
 
   try {
     const { data, status } = await apiService.post<GetHashFieldsResponse>(
@@ -90,7 +92,7 @@ export const fetchHashFields = (
     )
 
     if (isStatusSuccessful(status)) {
-      state.processHashSuccess(data)
+      state.processHashSuccess(data, match)
       useSelectedKeyStore.getState().updateSelectedKeyRefreshTime(Date.now())
       onSuccess?.(data)
     }
@@ -125,7 +127,7 @@ export const fetchHashMoreFields = (
     )
 
     if (isStatusSuccessful(status)) {
-      state.processHashMoreSuccess(data)
+      state.processHashMoreSuccess(data, match)
       onSuccess?.(data)
     }
   } catch (_err) {

@@ -38,13 +38,15 @@ describe('useHashStore', () => {
   })
   it('processHashSuccess', () => {
     // Arrange
+    const match = '123'
     const initialState = { ...initialStateInit, loading: true } // Custom initial state
     useHashStore.setState((state) => ({ ...state, ...initialState }))
 
     const { processHashSuccess } = useHashStore.getState()
     // Act
-    processHashSuccess(constants.HASH_DATA)
+    processHashSuccess(constants.HASH_DATA, match)
     // Assert
+    expect(useHashStore.getState().data.match).toEqual(match)
     expect(useHashStore.getState().data.keyName).toEqual(constants.KEY_NAME_2)
     expect(useHashStore.getState().data.total).toEqual(constants.KEY_LENGTH_2)
     expect(useHashStore.getState().data.fields?.[0]?.field).toEqual(constants.KEY_2_FIELD)
