@@ -16,7 +16,6 @@ export interface HashActions {
   processHashMoreSuccess: (data: GetHashFieldsResponse) => void
   removeFields: (data: RedisString[]) => void
   updateFields: (data: AddFieldsToHashDto) => void
-  // updateStringValueAction: (key: RedisString, data: RedisString, onSuccess?: () => void) => void
 }
 
 export interface HashField {

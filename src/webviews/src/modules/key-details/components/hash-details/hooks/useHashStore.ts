@@ -169,7 +169,7 @@ export const deleteHashFields = (
         // todo: connection between webviews
         // dispatch(deleteSelectedKeySuccess())
         // dispatch(deleteKeyFromList(key))
-        // dispatch(addMessageNotification(successMessages.DELETED_KEY(key)))
+        showInformationMessage(successMessages.DELETED_KEY(key!).title)
       }
     }
   } catch (_err) {

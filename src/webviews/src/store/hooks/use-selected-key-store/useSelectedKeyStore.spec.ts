@@ -4,7 +4,7 @@ import { waitForStack } from 'testSrc/helpers/testUtils'
 import { useSelectedKeyStore, initialState as initialStateInit, fetchKeyInfo, editKeyTTL } from './useSelectedKeyStore'
 
 beforeEach(() => {
-  useSelectedKeyStore.setState((initialStateInit))
+  useSelectedKeyStore.setState(initialStateInit)
 })
 
 describe('useSelectedKeyStore', () => {

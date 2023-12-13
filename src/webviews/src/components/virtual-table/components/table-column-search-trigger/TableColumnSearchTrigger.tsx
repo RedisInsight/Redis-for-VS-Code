@@ -101,7 +101,10 @@ const TableColumnSearchTrigger = (props: Props) => {
         />
         <VSCodeButton
           appearance="icon"
-          onClick={() => setValue('')}
+          onClick={() => {
+            setValue('')
+            inputEl.current?.focus()
+          }}
           aria-label={`Decline search ${fieldName}`}
           data-testid="decline-search-button"
           className={styles.declineBtn}
