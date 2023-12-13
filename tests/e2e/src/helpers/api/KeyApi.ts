@@ -24,7 +24,7 @@ export class KeyAPIRequests {
    * @param keyParameters The key parameters
    * @param databaseParameters The database parameters
    */
-  async addHashKeyApi(
+  static async addHashKeyApi(
     keyParameters: HashKeyParameters,
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {
@@ -55,7 +55,7 @@ export class KeyAPIRequests {
    * @param keyParameters The key parameters
    * @param databaseParameters The database parameters
    */
-  async addStreamKeyApi(
+  static async addStreamKeyApi(
     keyParameters: StreamKeyParameters,
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {
@@ -87,7 +87,7 @@ export class KeyAPIRequests {
    * @param keyParameters The key parameters
    * @param databaseParameters The database parameters
    */
-  async addSetKeyApi(
+  static async addSetKeyApi(
     keyParameters: SetKeyParameters,
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {
@@ -116,7 +116,7 @@ export class KeyAPIRequests {
    * @param keyParameters The key parameters
    * @param databaseParameters The database parameters
    */
-  async addSortedSetKeyApi(
+  static async addSortedSetKeyApi(
     keyParameters: SortedSetKeyParameters,
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {
@@ -146,7 +146,7 @@ export class KeyAPIRequests {
    * @param keyParameters The key parameters
    * @param databaseParameters The database parameters
    */
-  async addListKeyApi(
+  static async addListKeyApi(
     keyParameters: ListKeyParameters,
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {

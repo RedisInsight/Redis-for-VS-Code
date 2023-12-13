@@ -62,14 +62,14 @@ describe('Key Details verifications', () => {
 
     await CommonDriverExtension.driverSleep()
 
-    const keyType = await InputActions.getFieldValue(keyDetailsView.keyType)
-    const enteredKeyName = await InputActions.getFieldValue(
+    const keyType = await keyDetailsView.getElementText(keyDetailsView.keyType)
+    const enteredKeyName = await keyDetailsView.getElementText(
       keyDetailsView.keyName,
     )
     const keySize = await keyDetailsView.getKeySize()
     const keyLength = await keyDetailsView.getKeyLength()
     const keyTtl = Number(await keyDetailsView.getKeyTtl())
-    const keyValue = await InputActions.getFieldValue(
+    const keyValue = await keyDetailsView.getElementText(
       keyDetailsView.keyStringValue,
     )
 
