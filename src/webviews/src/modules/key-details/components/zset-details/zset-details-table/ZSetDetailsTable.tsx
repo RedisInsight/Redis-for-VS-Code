@@ -158,6 +158,13 @@ const ZSetDetailsTable = (props: Props) => {
   }
 
   const handleEditMember = (name: RedisString, editing: boolean) => {
+    sendEventTelemetry({
+      event: TelemetryEvent.TREE_VIEW_KEY_VALUE_EDITED,
+      eventData: {
+        databaseId,
+        keyType: KeyTypes.ZSet,
+      },
+    })
     const newMemberState = members.map((item) => {
       if (isEqualBuffers(item.name, name)) {
         return { ...item, editing }

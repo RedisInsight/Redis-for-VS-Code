@@ -89,7 +89,6 @@ const HashDetailsTable = (props: Props) => {
     key: state.data?.name,
   })))
 
-  // const { nextCursor, loading, loadedFields, updateLoading, total } = useHashStore(useShallow((state) => ({
   const { nextCursor, loading, loadedFields, updateLoading, total } = useHashStore((state) => ({
     loading: state.loading,
     nextCursor: state.data.nextCursor,
@@ -193,6 +192,13 @@ const HashDetailsTable = (props: Props) => {
   }
 
   const onHashEditedSuccess = (fieldName: RedisString = '') => {
+    sendEventTelemetry({
+      event: TelemetryEvent.TREE_VIEW_KEY_VALUE_EDITED,
+      eventData: {
+        databaseId,
+        keyType: KeyTypes.Hash,
+      },
+    })
     handleEditField(fieldName, false)
   }
 
