@@ -87,10 +87,11 @@ const ZSetDetailsTable = (props: Props) => {
     key: state.data?.name,
   })))
 
-  const { loading, searching, loadedMembers, updateLoading, total } = useZSetStore(useShallow((state) => ({
+  const { loading, searching, loadedMembers, updateLoading, total, nextCursor } = useZSetStore(useShallow((state) => ({
     loading: state.loading,
     searching: state.searching,
     total: state.data.total,
+    nextCursor: state.data.nextCursor,
     loadedMembers: state.data.members || [],
     updateLoading: state.updateValue.loading,
   })))
@@ -402,13 +403,15 @@ const ZSetDetailsTable = (props: Props) => {
   }
 
   const loadMoreItems = ({ startIndex, stopIndex }: any) => {
-    fetchZSetMoreMembers(
-      key!,
-      startIndex,
-      stopIndex - startIndex + 1,
-      sortedColumnOrder,
-      match || DEFAULT_SEARCH_MATCH,
-    )
+    if (nextCursor || (members.length !== total && match === DEFAULT_SEARCH_MATCH)) {
+      fetchZSetMoreMembers(
+        key!,
+        startIndex,
+        nextCursor || stopIndex - startIndex + 1,
+        sortedColumnOrder,
+        match || DEFAULT_SEARCH_MATCH,
+      )
+    }
     // if (!searching) {
     //   fetchZSetMoreMembers(
     //     key!,

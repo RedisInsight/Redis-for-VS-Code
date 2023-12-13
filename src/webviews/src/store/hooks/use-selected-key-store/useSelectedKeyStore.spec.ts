@@ -1,7 +1,13 @@
 import { apiService } from 'uiSrc/services'
 import { constants } from 'testSrc/helpers'
 import { waitForStack } from 'testSrc/helpers/testUtils'
-import { useSelectedKeyStore, initialState as initialStateInit, fetchKeyInfo, editKeyTTL } from './useSelectedKeyStore'
+import {
+  useSelectedKeyStore,
+  initialState as initialStateInit,
+  fetchKeyInfo,
+  editKeyTTL,
+  refreshKeyInfo,
+} from './useSelectedKeyStore'
 
 beforeEach(() => {
   useSelectedKeyStore.setState(initialStateInit)
@@ -44,6 +50,28 @@ describe('useSelectedKeyStore', () => {
 
     expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
   })
+  it('refreshSelectedKey', () => {
+    // Arrange
+    const { refreshSelectedKey } = useSelectedKeyStore.getState()
+    // Act
+    refreshSelectedKey()
+    // Assert
+    expect(useSelectedKeyStore.getState().refreshing).toEqual(true)
+    expect(useSelectedKeyStore.getState().loading).toEqual(false)
+  })
+
+  it('refreshSelectedKeyFinal', () => {
+    // Arrange
+    const initialState = { ...initialStateInit, refreshing: true } // Custom initial state
+    useSelectedKeyStore.setState((state) => ({ ...state, ...initialState }))
+
+    const { refreshSelectedKeyFinal } = useSelectedKeyStore.getState()
+    // Act
+    refreshSelectedKeyFinal()
+    // Assert
+    expect(useSelectedKeyStore.getState().refreshing).toEqual(false)
+    expect(useSelectedKeyStore.getState().loading).toEqual(false)
+  })
 })
 
 describe('async', () => {
@@ -58,6 +86,18 @@ describe('async', () => {
 
     expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
     expect(useSelectedKeyStore.getState().loading).toEqual(false)
+  })
+  it('refreshKeyInfo', async () => {
+    const expectedData = {
+      ...constants.KEY_INFO,
+      nameString: constants.KEY_NAME_STRING_1,
+    }
+
+    refreshKeyInfo(constants.KEY_NAME_1)
+    await waitForStack()
+
+    expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
+    expect(useSelectedKeyStore.getState().refreshing).toEqual(false)
   })
   it('editKeyTTL', async () => {
     const expectedData = {

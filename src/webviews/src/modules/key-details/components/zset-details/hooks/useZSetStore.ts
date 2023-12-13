@@ -42,10 +42,11 @@ export const useZSetStore = create<ZSetState & ZSetActions>()(
     resetZSetStore: () => set(initialState),
     processZSet: () => set({ loading: true }),
     processZSetFinal: () => set({ loading: false }),
-    processZSetSuccess: (data) => set({ data }),
-    processZSetMoreSuccess: ({ members, ...rest }) => set((state) => ({
+    processZSetSuccess: (data, match) => set({ data: { ...data, match } }),
+    processZSetMoreSuccess: ({ members, ...rest }, match) => set((state) => ({
       data: {
         ...rest,
+        match,
         members: state.data.members.concat(members),
       },
     })),
@@ -74,10 +75,11 @@ export const fetchZSetMembers = (
   offset: number,
   count: number,
   sortOrder: SortOrder,
-  match: string,
+  matchInit?: string,
   onSuccess?: (data: GetZSetMembersResponse) => void,
 ) => useZSetStore.setState(async (state) => {
   state.processZSet()
+  const match = matchInit || state.data.match
 
   try {
     const { data, status } = await apiService.post<GetZSetMembersResponse>(
@@ -94,7 +96,7 @@ export const fetchZSetMembers = (
     )
 
     if (isStatusSuccessful(status)) {
-      state.processZSetSuccess(data)
+      state.processZSetSuccess(data, match)
       useSelectedKeyStore.getState().updateSelectedKeyRefreshTime(Date.now())
       onSuccess?.(data)
     }
@@ -122,7 +124,8 @@ export const fetchZSetMoreMembers = (
       getUrl(match === DEFAULT_SEARCH_MATCH ? ApiEndpoints.ZSET_GET_MEMBERS : ApiEndpoints.ZSET_MEMBERS_SEARCH),
       {
         keyName: key,
-        offset,
+        offset: match === DEFAULT_SEARCH_MATCH ? offset : undefined,
+        cursor: match !== DEFAULT_SEARCH_MATCH ? offset : undefined,
         count,
         sortOrder,
         match,
@@ -131,7 +134,7 @@ export const fetchZSetMoreMembers = (
     )
 
     if (isStatusSuccessful(status)) {
-      state.processZSetMoreSuccess(data)
+      state.processZSetMoreSuccess(data, match)
       onSuccess?.(data)
     }
   } catch (_err) {

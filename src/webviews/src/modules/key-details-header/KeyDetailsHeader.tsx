@@ -13,7 +13,7 @@ import {
   ModulesKeyTypes,
 } from 'uiSrc/constants'
 import { RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
-import { editKeyTTL, fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
+import { editKeyTTL, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { TelemetryEvent, bufferToString, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
 import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 // import { KeyDetailsHeaderFormatter } from './components/key-details-header-formatter'
@@ -49,7 +49,7 @@ const KeyDetailsHeader = ({
   const { id: databaseId } = useSelector(connectedDatabaseSelector)
 
   const handleRefreshKey = () => {
-    fetchKeyInfo(keyBuffer!)
+    refreshKeyInfo(keyBuffer!)
     // dispatch(refreshKey(keyBuffer!, type))
   }
 

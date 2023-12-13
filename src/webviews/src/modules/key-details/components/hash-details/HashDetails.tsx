@@ -3,6 +3,7 @@ import cx from 'classnames'
 
 import { KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
+import { useSelectedKeyStore } from 'uiSrc/store'
 import { HashDetailsTable } from './hash-details-table'
 // import { AddHashFields } from './add-hash-fields'
 import { AddItemsAction } from '../key-details-actions'
@@ -18,6 +19,8 @@ const HashDetails = (props: Props) => {
   const { onRemoveKey, onOpenAddItemPanel, onCloseAddItemPanel } = props
 
   const [isAddItemPanelOpen, setIsAddItemPanelOpen] = useState<boolean>(false)
+
+  const loading = useSelectedKeyStore((state) => state.loading)
 
   const openAddItemPanel = () => {
     setIsAddItemPanelOpen(true)
@@ -42,9 +45,11 @@ const HashDetails = (props: Props) => {
         Actions={Actions}
       />
       <div className="key-details-body" key="key-details-body">
-        <div className="flex flex-1 h-full">
-          <HashDetailsTable isFooterOpen={isAddItemPanelOpen} onRemoveKey={onRemoveKey} />
-        </div>
+        {!loading && (
+          <div className="flex flex-1 h-full">
+            <HashDetailsTable isFooterOpen={isAddItemPanelOpen} onRemoveKey={onRemoveKey} />
+          </div>
+        )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
             {/* <AddHashFields onCancel={closeAddItemPanel} /> */}

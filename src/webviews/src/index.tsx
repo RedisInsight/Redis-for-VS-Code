@@ -5,12 +5,15 @@ import {
 } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
-import { fetchKeyInfo, store, useSelectedKeyStore } from 'uiSrc/store'
+import { fetchKeyInfo, resetZustand, store, useSelectedKeyStore } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
+import { RedisString } from 'uiSrc/interfaces'
+import { isEqualBuffers } from 'uiSrc/utils'
 import { VscodeMessageAction } from 'uiSrc/constants'
 
 import 'uiSrc/styles/main.scss'
+
 import '../vscode.css'
 
 // TODO: Type the incoming config data
@@ -33,7 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = event.data
 
     if (message.action === VscodeMessageAction.SelectKey) {
-      const { data } = message
+      const { data } = message as { data: RedisString }
+      const prevKey = useSelectedKeyStore.getState().data?.name
+
+      if (isEqualBuffers(data, prevKey)) {
+        return
+      }
+      resetZustand()
       fetchKeyInfo(data)
     }
   }

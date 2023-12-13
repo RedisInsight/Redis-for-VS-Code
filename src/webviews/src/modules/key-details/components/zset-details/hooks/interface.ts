@@ -13,8 +13,8 @@ export interface ZSetActions {
   resetZSetStore: () => void
   processZSet: () => void
   processZSetFinal: () => void
-  processZSetSuccess: (data: GetZSetMembersResponse) => void
-  processZSetMoreSuccess: (data: GetZSetMembersResponse) => void
+  processZSetSuccess: (data: GetZSetMembersResponse, match: string) => void
+  processZSetMoreSuccess: (data: GetZSetMembersResponse, match: string) => void
   removeMembers: (data: RedisString[]) => void
   updateMembers: (data: AddMembersToZSetDto) => void
 }
@@ -36,7 +36,7 @@ export interface GetZSetMembersResponse extends ZSetScanResponse {
 
 export interface ModifiedGetZSetMembersResponse extends GetZSetMembersResponse {
   key?: RedisString
-  match?: string
+  match: string
 }
 
 export interface ZSetDataState extends ModifiedGetZSetMembersResponse {

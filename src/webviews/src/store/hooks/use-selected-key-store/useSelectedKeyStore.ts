@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { persist } from 'zustand/middleware'
-import { commonMiddlewares } from 'uiSrc/store'
+import { devtools, persist } from 'zustand/middleware'
+import { immer } from 'zustand/middleware/immer'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService, localStorageService } from 'uiSrc/services'
 import {
@@ -30,7 +30,7 @@ export const initialState: SelectedKeyStore = {
 }
 
 export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>()(
-  commonMiddlewares(persist((set) => ({
+  immer(devtools(persist((set) => ({
     ...initialState,
     // actions
     resetSelectedKeyStore: () => set(initialState),
@@ -38,12 +38,14 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
     processSelectedKeyFinal: () => set({ loading: false }),
     processSelectedKeySuccess: (data: KeyInfo) =>
       set({ data: { ...data, nameString: bufferToString(data.name) } }),
+    refreshSelectedKey: () => set({ refreshing: true }),
+    refreshSelectedKeyFinal: () => set({ refreshing: false }),
     // delete selected key
     // deleteSelectedKey: () => set({ data: null }),
     // update selected key
     updateSelectedKeyRefreshTime: (lastRefreshTime: number) => set({ lastRefreshTime }),
   }),
-  { name: 'selectedKey' })),
+  { name: 'selectedKey' }))),
 )
 
 // Asynchronous thunk action
@@ -70,6 +72,31 @@ export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true) => {
       console.debug({ error })
     } finally {
       state.processSelectedKeyFinal()
+    }
+  })
+}
+
+export const refreshKeyInfo = (key: RedisString) => {
+  useSelectedKeyStore.setState(async (state) => {
+    state.refreshSelectedKey()
+    try {
+      const { data, status } = await apiService.post<KeyInfo>(
+        getUrl(ApiEndpoints.KEY_INFO),
+        { keyName: key },
+        { params: { encoding: getEncoding() } },
+      )
+
+      if (isStatusSuccessful(status)) {
+        state.processSelectedKeySuccess(data)
+        state.updateSelectedKeyRefreshTime(Date.now())
+
+        fetchKeyValueByType(key, data.type)
+      }
+    } catch (_err) {
+      const error = _err as AxiosError
+      console.debug({ error })
+    } finally {
+      state.refreshSelectedKeyFinal()
     }
   })
 }
@@ -115,10 +142,10 @@ export const fetchKeyValueByType = (key: RedisString, type?: KeyTypes) => {
     })
   }
   if (type === KeyTypes.Hash) {
-    fetchHashFields(key, 0, SCAN_COUNT_DEFAULT, DEFAULT_SEARCH_MATCH)
+    fetchHashFields(key, 0, SCAN_COUNT_DEFAULT)
   }
   if (type === KeyTypes.ZSet) {
-    fetchZSetMembers(key, 0, SCAN_COUNT_DEFAULT, SortOrder.ASC, DEFAULT_SEARCH_MATCH)
+    fetchZSetMembers(key, 0, SCAN_COUNT_DEFAULT, SortOrder.ASC)
   }
   // if (type === KeyTypes.List) {
   //   dispatch<any>(fetchListElements(key, 0, SCAN_COUNT_DEFAULT, resetData))
