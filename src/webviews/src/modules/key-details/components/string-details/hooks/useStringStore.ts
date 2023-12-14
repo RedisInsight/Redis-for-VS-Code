@@ -5,7 +5,7 @@ import { immer } from 'zustand/middleware/immer'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints } from 'uiSrc/constants'
-import { getEncoding, getUrl, isStatusSuccessful } from 'uiSrc/utils'
+import { getApiErrorMessage, getEncoding, getUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { StringActions, StringState } from './interface'
 
 export const initialState: StringState = {
@@ -48,7 +48,8 @@ export const fetchString = (key?: RedisString, args: IFetchKeyArgs = {}) =>
       }
     } catch (_err) {
       const error = _err as AxiosError
-      console.debug({ error })
+      const errorMessage = getApiErrorMessage(error)
+      showErrorMessage(errorMessage)
     } finally {
       state.processStringFinal()
     }

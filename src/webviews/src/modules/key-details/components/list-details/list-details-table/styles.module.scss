@@ -1,0 +1,30 @@
+.container {
+  @apply flex flex-1 flex-grow p-4;
+
+  .textAreaControls {
+    width: 28px;
+  }
+
+  .textareaContainer {
+    margin: -9px -6px -7px -14px !important;
+  }
+
+  .textArea {
+    @apply overflow-hidden break-words bg-vscode-input-background outline-0 focus:outline-0;
+    z-index: 4;
+    padding-top: 14px;
+    padding-left: 16px;
+    padding-bottom: 36px !important;
+    min-width: 100% !important;
+    min-height: 43px;
+    resize: none;
+
+    &:focus {
+      background-image: none !important;
+    }
+
+    &.areaWarning {
+      @apply border-error;
+    }
+  }
+}

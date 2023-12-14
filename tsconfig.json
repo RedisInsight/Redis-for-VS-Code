@@ -15,7 +15,6 @@
     "node_modules",
     ".vscode-test",
     "src/webviews",
-    "jest.config.cjs",
     "api/**",
     "tests",
     "dist/**",

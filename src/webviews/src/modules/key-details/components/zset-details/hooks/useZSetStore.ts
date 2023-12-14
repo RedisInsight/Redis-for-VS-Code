@@ -102,7 +102,8 @@ export const fetchZSetMembers = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
   } finally {
     state.processZSetFinal()
   }
@@ -139,7 +140,8 @@ export const fetchZSetMoreMembers = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
   } finally {
     state.processZSetFinal()
   }
@@ -183,7 +185,8 @@ export const deleteZSetMembers = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
   } finally {
     state.processZSetFinal()
   }
@@ -210,7 +213,8 @@ export const updateZSetMembersAction = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
     onFail?.()
   } finally {
     state.processZSetFinal()

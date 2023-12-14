@@ -2,11 +2,11 @@ import { create } from 'zustand'
 import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
+import { isNull } from 'lodash'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService, localStorageService } from 'uiSrc/services'
 import {
   ApiEndpoints,
-  DEFAULT_SEARCH_MATCH,
   DEFAULT_VIEW_FORMAT,
   KeyTypes,
   SCAN_COUNT_DEFAULT,
@@ -18,6 +18,11 @@ import { bufferToString, getEncoding, getUrl, isStatusSuccessful } from 'uiSrc/u
 import { fetchString } from 'uiSrc/modules'
 import { fetchHashFields } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
 import { fetchZSetMembers } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
+import {
+  fetchListElements,
+  fetchSearchingListElement,
+  useListStore,
+} from 'uiSrc/modules/key-details/components/list-details/hooks/useListStore'
 import { SelectedKeyActions, SelectedKeyStore } from './interface'
 
 export const initialState: SelectedKeyStore = {
@@ -147,9 +152,14 @@ export const fetchKeyValueByType = (key: RedisString, type?: KeyTypes) => {
   if (type === KeyTypes.ZSet) {
     fetchZSetMembers(key, 0, SCAN_COUNT_DEFAULT, SortOrder.ASC)
   }
-  // if (type === KeyTypes.List) {
-  //   dispatch<any>(fetchListElements(key, 0, SCAN_COUNT_DEFAULT, resetData))
-  // }
+  if (type === KeyTypes.List) {
+    const index = useListStore.getState().data.searchedIndex
+    if (!isNull(index)) {
+      fetchSearchingListElement(key, index)
+    } else {
+      fetchListElements(key, 0, SCAN_COUNT_DEFAULT)
+    }
+  }
   // if (type === KeyTypes.Set) {
   //   dispatch<any>(fetchSetMembers(key, 0, SCAN_COUNT_DEFAULT, '*', resetData))
   // }

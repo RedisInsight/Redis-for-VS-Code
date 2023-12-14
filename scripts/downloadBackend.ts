@@ -14,7 +14,7 @@ const downloadBackend = async () => {
     console.debug('Backend folder already exists, deleting...')
     fs.rmSync(backendPath, { recursive: true, force: true });
   }
-  console.debug('Downloading and unpacking, it will takes some time (~15 min) - please be patient...')
+  console.debug('Downloading and unpacking, it will takes some time - please be patient...')
   try {
     const redisInsightArchivePath = await downloadRedisBackendArchive(process.platform, backendPath)
     if (fs.existsSync(redisInsightArchivePath)) {

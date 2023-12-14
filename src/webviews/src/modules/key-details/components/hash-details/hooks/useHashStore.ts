@@ -11,6 +11,7 @@ import { apiService } from 'uiSrc/services'
 import { ApiEndpoints, DEFAULT_SEARCH_MATCH, successMessages } from 'uiSrc/constants'
 import {
   bufferToString,
+  getApiErrorMessage,
   getEncoding,
   getUrl,
   isEqualBuffers,
@@ -98,7 +99,8 @@ export const fetchHashFields = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
   } finally {
     state.processHashFinal()
   }
@@ -132,7 +134,8 @@ export const fetchHashMoreFields = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
   } finally {
     state.processHashFinal()
   }
@@ -176,7 +179,8 @@ export const deleteHashFields = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
   } finally {
     state.processHashFinal()
   }
@@ -203,7 +207,8 @@ export const updateHashFieldsAction = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
     onFail?.()
   } finally {
     state.processHashFinal()

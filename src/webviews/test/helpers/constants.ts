@@ -75,6 +75,26 @@ export const constants = {
   get ZSET_DATA() {
     return ZSET_DATA
   },
+
+  // key 4 list
+  KEY_NAME_LIST_4: 'key4',
+  KEY_NAME_4: UTF8ToArray('key4'),
+  KEY_TYPE_4: KeyTypes.List,
+  KEY_TTL_4: -1,
+  KEY_LENGTH_4: 5,
+  KEY_SIZE_4: 10_000,
+  KEY_4_INDEX: 0,
+  KEY_4_INDEX_2: 1,
+  KEY_4_ELEMENT: UTF8ToArray('element'),
+  KEY_4_ELEMENT_2: UTF8ToArray('element2'),
+
+  get LIST_DATA_RESPONSE() {
+    return LIST_DATA_RESPONSE
+  },
+
+  get LIST_DATA() {
+    return LIST_DATA
+  },
 }
 
 const KEY_INFO: KeyInfo = {
@@ -99,4 +119,20 @@ const HASH_DATA = {
   total: constants.KEY_LENGTH_2,
   nextCursor: 0,
   match: DEFAULT_SEARCH_MATCH,
+}
+
+const LIST_DATA_RESPONSE = {
+  keyName: constants.KEY_NAME_4,
+  elements: [constants.KEY_4_ELEMENT, constants.KEY_4_ELEMENT_2],
+  total: constants.KEY_LENGTH_4,
+  nextCursor: 0,
+}
+
+const LIST_DATA = {
+  ...LIST_DATA_RESPONSE,
+  searchedIndex: null,
+  elements: [
+    { element: constants.KEY_4_ELEMENT, index: constants.KEY_4_INDEX },
+    { element: constants.KEY_4_ELEMENT_2, index: constants.KEY_4_INDEX_2 },
+  ],
 }
