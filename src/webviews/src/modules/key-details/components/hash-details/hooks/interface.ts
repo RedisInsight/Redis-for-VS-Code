@@ -12,8 +12,8 @@ export interface HashActions {
   resetHashStore: () => void
   processHash: () => void
   processHashFinal: () => void
-  processHashSuccess: (data: GetHashFieldsResponse) => void
-  processHashMoreSuccess: (data: GetHashFieldsResponse) => void
+  processHashSuccess: (data: GetHashFieldsResponse, match: string) => void
+  processHashMoreSuccess: (data: GetHashFieldsResponse, match: string) => void
   removeFields: (data: RedisString[]) => void
   updateFields: (data: AddFieldsToHashDto) => void
 }
@@ -34,7 +34,7 @@ export interface GetHashFieldsResponse extends HashScanResponse {
 
 export interface ModifiedGetHashMembersResponse extends GetHashFieldsResponse {
   key?: RedisString
-  match?: string
+  match: string
 }
 
 export interface HashDataState extends ModifiedGetHashMembersResponse {

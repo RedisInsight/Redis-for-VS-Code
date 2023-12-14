@@ -1,4 +1,4 @@
-import { KeyTypes } from 'uiSrc/constants'
+import { DEFAULT_SEARCH_MATCH, KeyTypes } from 'uiSrc/constants'
 import { KeyInfo } from 'uiSrc/interfaces'
 import { UTF8ToArray } from 'uiSrc/utils'
 
@@ -90,6 +90,7 @@ const ZSET_DATA = {
   members: [{ name: constants.KEY_3_MEMBER, score: constants.KEY_3_SCORE }],
   total: constants.KEY_LENGTH_3,
   nextCursor: 0,
+  match: DEFAULT_SEARCH_MATCH,
 }
 
 const HASH_DATA = {
@@ -97,4 +98,5 @@ const HASH_DATA = {
   fields: [{ field: constants.KEY_2_FIELD, value: constants.KEY_2_VALUE }],
   total: constants.KEY_LENGTH_2,
   nextCursor: 0,
+  match: DEFAULT_SEARCH_MATCH,
 }
