@@ -413,7 +413,7 @@ const ZSetDetailsTable = (props: Props) => {
   }
 
   const loadMoreItems = ({ startIndex, stopIndex }: any) => {
-    if (nextCursor || (members.length !== total && match === DEFAULT_SEARCH_MATCH)) {
+    if (nextCursor || members.length !== total) {
       fetchZSetMoreMembers(
         key!,
         startIndex,

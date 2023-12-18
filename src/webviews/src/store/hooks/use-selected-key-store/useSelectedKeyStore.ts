@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
-import { isNull } from 'lodash'
+import { isNull, isUndefined } from 'lodash'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService, localStorageService } from 'uiSrc/services'
 import {
@@ -154,7 +154,7 @@ export const fetchKeyValueByType = (key: RedisString, type?: KeyTypes) => {
   }
   if (type === KeyTypes.List) {
     const index = useListStore.getState().data.searchedIndex
-    if (!isNull(index)) {
+    if (!(isNull(index) || isUndefined(index))) {
       fetchSearchingListElement(key, index)
     } else {
       fetchListElements(key, 0, SCAN_COUNT_DEFAULT)
