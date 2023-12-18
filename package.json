@@ -64,6 +64,7 @@
     "@microsoft/fast-element": "^1.12.0",
     "@microsoft/fast-foundation": "^2.49.0",
     "@microsoft/fast-react-wrapper": "^0.3.18",
+    "strip-ansi": "^6.0.1",
     "jackspeak": "2.1.1"
   },
   "scripts": {
