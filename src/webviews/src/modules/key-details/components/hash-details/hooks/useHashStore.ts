@@ -5,7 +5,7 @@ import * as l10n from '@vscode/l10n'
 import { immer } from 'zustand/middleware/immer'
 import { find, map, remove } from 'lodash'
 
-import { fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
+import { fetchKeyInfo, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints, DEFAULT_SEARCH_MATCH, successMessages } from 'uiSrc/constants'
@@ -203,7 +203,7 @@ export const updateHashFieldsAction = (
     if (isStatusSuccessful(status)) {
       state.updateFields(data)
       onSuccess?.()
-      fetchKeyInfo(data.keyName, false)
+      refreshKeyInfo(data.keyName)
     }
   } catch (_err) {
     const error = _err as AxiosError

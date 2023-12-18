@@ -158,6 +158,13 @@ const ListDetailsTable = (props: Props) => {
   }
 
   const onElementEditedSuccess = (elementIndex = 0) => {
+    sendEventTelemetry({
+      event: TelemetryEvent.TREE_VIEW_KEY_VALUE_EDITED,
+      eventData: {
+        databaseId,
+        keyType: KeyTypes.List,
+      },
+    })
     handleEditElement(elementIndex, false)
   }
 
@@ -165,6 +172,7 @@ const ListDetailsTable = (props: Props) => {
     formattedLastIndexRef.current = 0
     const indexColumn = search.find((column) => column.id === 'index')
     const onSuccess = () => {
+      resetExpandedCache()
       sendEventTelemetry({
         event: TelemetryEvent.TREE_VIEW_KEY_VALUE_FILTERED,
         eventData: {
@@ -219,6 +227,13 @@ const ListDetailsTable = (props: Props) => {
       type: KeyTypes.List,
       sizes,
     }))
+  }
+
+  const resetExpandedCache = () => {
+    setTimeout(() => {
+      setExpandedRows([])
+      cellCache.clearAll()
+    }, 0)
   }
 
   const columns: ITableColumn[] = [

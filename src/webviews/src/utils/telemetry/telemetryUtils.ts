@@ -8,7 +8,7 @@ import { ITelemetrySendEvent, MatchType } from './interfaces'
 
 export const sendEventTelemetry = async ({ event, eventData = {} }: ITelemetrySendEvent) => {
   try {
-    const isAnalyticsGranted = checkIsAnalyticsGranted()
+    const isAnalyticsGranted = checkIsAnalyticsGranted() || import.meta.env.DEV
     if (!isAnalyticsGranted) {
       return
     }

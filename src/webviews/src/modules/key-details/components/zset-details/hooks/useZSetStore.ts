@@ -5,12 +5,13 @@ import * as l10n from '@vscode/l10n'
 import { immer } from 'zustand/middleware/immer'
 import { find, map, remove } from 'lodash'
 
-import { fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
+import { fetchKeyInfo, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints, DEFAULT_SEARCH_MATCH, SortOrder, successMessages } from 'uiSrc/constants'
 import {
   bufferToString,
+  getApiErrorMessage,
   getEncoding,
   getUrl,
   isEqualBuffers,
@@ -40,6 +41,7 @@ export const useZSetStore = create<ZSetState & ZSetActions>()(
     ...initialState,
     // actions
     resetZSetStore: () => set(initialState),
+    resetZSetMembersStore: () => set((state) => ({ data: { ...state.data, members: [] } })),
     processZSet: () => set({ loading: true }),
     processZSetFinal: () => set({ loading: false }),
     processZSetSuccess: (data, match) => set({ data: { ...data, match } }),
@@ -209,7 +211,7 @@ export const updateZSetMembersAction = (
     if (isStatusSuccessful(status)) {
       onSuccess?.()
       state.updateMembers(data)
-      fetchKeyInfo(data.keyName, false)
+      refreshKeyInfo(data.keyName)
     }
   } catch (_err) {
     const error = _err as AxiosError

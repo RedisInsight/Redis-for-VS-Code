@@ -217,6 +217,7 @@ const HashDetailsTable = (props: Props) => {
     if (fieldColumn) {
       const { value: match } = fieldColumn
       const onSuccess = (data: GetHashFieldsResponse) => {
+        resetExpandedCache()
         const matchValue = getMatchType(match)
         sendEventTelemetry({
           event: TelemetryEvent.TREE_VIEW_KEY_VALUE_FILTERED,
@@ -231,6 +232,13 @@ const HashDetailsTable = (props: Props) => {
       setMatch(match)
       fetchHashFields(key!, 0, SCAN_COUNT_DEFAULT, match || DEFAULT_SEARCH_MATCH, onSuccess)
     }
+  }
+
+  const resetExpandedCache = () => {
+    setTimeout(() => {
+      setExpandedRows([])
+      cellCache.clearAll()
+    }, 0)
   }
 
   const handleRowToggleViewClick = (expanded: boolean, rowIndex: number) => {
@@ -498,7 +506,6 @@ const HashDetailsTable = (props: Props) => {
             width: getColumnWidth(i, width, arr),
           }))}
           footerHeight={0}
-          overscanRowCount={10}
           loadMoreItems={loadMoreItems}
           loading={loading}
           items={fields}
