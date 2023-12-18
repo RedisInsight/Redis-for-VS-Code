@@ -8,6 +8,7 @@ import { parse as parseUrl } from 'url'
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 const cdnPath = process.env.RI_CDN_PATH
 const backendPath = path.join(__dirname, '..', 'dist', 'redis-backend')
+const tempWindowsDistPath = process.env.RI_TEMP_WINDOWS_DIST_PATH as string
 
 const downloadBackend = async () => {
   if (fs.existsSync(backendPath)) {
@@ -45,7 +46,7 @@ function getDownloadUrl(): string {
   // Download is temporary available only for non-windows platforms
   if (process.platform !== 'win32') {
     return `${cdnPath}/RedisInsight-web-${process.platform}.${process.arch}.tar.gz`
-  } return 'https://download-test.redisinsight.redis.com/vsc-extension/redis-backend-win32-x64.zip'
+  } return tempWindowsDistPath
 }
 
 async function downloadRedisBackendArchive(
