@@ -159,7 +159,7 @@
     "@vscode/l10n-dev": "^0.0.29",
     "autoprefixer": "^10.4.16",
     "esbuild": "^0.19.5",
-    "eslint": "^8.56.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-typescript": "^12.0.0",
     "eslint-import-resolver-webpack": "0.13.0",
