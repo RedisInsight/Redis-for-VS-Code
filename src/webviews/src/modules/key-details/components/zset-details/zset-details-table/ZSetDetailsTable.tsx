@@ -87,13 +87,14 @@ const ZSetDetailsTable = (props: Props) => {
     key: state.data?.name,
   })))
 
-  const { loading, searching, loadedMembers, updateLoading, total, nextCursor } = useZSetStore(useShallow((state) => ({
+  const { loading, searching, loadedMembers, updateLoading, total, nextCursor, resetMembers } = useZSetStore(useShallow((state) => ({
     loading: state.loading,
     searching: state.searching,
     total: state.data.total,
     nextCursor: state.data.nextCursor,
     loadedMembers: state.data.members || [],
     updateLoading: state.updateValue.loading,
+    resetMembers: state.resetZSetMembersStore,
   })))
   const { [KeyTypes.ZSet]: ZSetSizes } = useSelector(appContextBrowserKeyDetails)
 
@@ -207,6 +208,7 @@ const ZSetDetailsTable = (props: Props) => {
 
     const { value: match } = fieldColumn
     const onSuccess = (data: ZSetScanResponse) => {
+      resetExpandedCache()
       if (match === '') {
         return
       }
@@ -398,8 +400,16 @@ const ZSetDetailsTable = (props: Props) => {
   const onChangeSorting = (column: any, order: SortOrder) => {
     setSortedColumnName(column)
     setSortedColumnOrder(order)
+    resetMembers()
 
-    fetchZSetMembers(key!, 0, SCAN_COUNT_DEFAULT, order, match || DEFAULT_SEARCH_MATCH)
+    fetchZSetMembers(key!, 0, SCAN_COUNT_DEFAULT, order, match || DEFAULT_SEARCH_MATCH, resetExpandedCache)
+  }
+
+  const resetExpandedCache = () => {
+    setTimeout(() => {
+      setExpandedRows([])
+      cellCache.clearAll()
+    }, 0)
   }
 
   const loadMoreItems = ({ startIndex, stopIndex }: any) => {

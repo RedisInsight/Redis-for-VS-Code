@@ -11,6 +11,7 @@ export interface ZSetState {
 
 export interface ZSetActions {
   resetZSetStore: () => void
+  resetZSetMembersStore: () => void
   processZSet: () => void
   processZSetFinal: () => void
   processZSetSuccess: (data: GetZSetMembersResponse, match: string) => void

@@ -3,7 +3,7 @@ import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
-import { fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
+import { refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints } from 'uiSrc/constants'
@@ -189,7 +189,7 @@ export const updateListElementsAction = (
     if (isStatusSuccessful(status)) {
       state.updateElementInList(data)
       onSuccess?.()
-      fetchKeyInfo(data.keyName, false)
+      refreshKeyInfo(data.keyName, false)
     }
   } catch (_err) {
     const error = _err as AxiosError
