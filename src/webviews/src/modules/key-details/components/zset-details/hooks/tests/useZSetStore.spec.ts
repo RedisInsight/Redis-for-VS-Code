@@ -52,6 +52,17 @@ describe('useZSetStore', () => {
     expect(useZSetStore.getState().data.members?.[0]?.name).toEqual(constants.KEY_3_MEMBER)
     expect(useZSetStore.getState().data.members?.[0]?.score).toEqual(constants.KEY_3_SCORE)
   })
+
+  it('resetZSetMembersStore', () => {
+    // Arrange
+    useZSetStore.setState(({ ...initialStateInit, data: constants.ZSET_DATA}))
+
+    const { resetZSetMembersStore } = useZSetStore.getState()
+    // Act
+    resetZSetMembersStore()
+    // Assert
+    expect(useZSetStore.getState().data.members.length).toEqual(0)
+  })
 })
 
 describe('async', () => {
