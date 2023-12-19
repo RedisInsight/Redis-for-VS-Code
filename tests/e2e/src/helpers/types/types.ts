@@ -222,3 +222,16 @@ export type JsonKeyParameters = {
 export type Result<T, E> =
   | { success: true; value: T }
   | { success: false; error: E }
+
+export type AddKeyArguments = {
+  keysCount?: number
+  fieldsCount?: number
+  elementsCount?: number
+  membersCount?: number
+  keyName?: string
+  keyNameStartWith?: string
+  fieldStartWith?: string
+  fieldValueStartWith?: string
+  elementStartWith?: string
+  memberStartWith?: string
+}
