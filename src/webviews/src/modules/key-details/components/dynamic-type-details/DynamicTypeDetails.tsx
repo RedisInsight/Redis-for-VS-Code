@@ -4,6 +4,9 @@ import { KeyDetailsHeaderProps } from 'uiSrc/modules'
 // import ModulesTypeDetails from '../modules-type-details/ModulesTypeDetails'
 // import UnsupportedTypeDetails from '../unsupported-type-details/UnsupportedTypeDetails'
 import { StringDetails } from '../string-details'
+import { HashDetails } from '../hash-details'
+import { ZSetDetails } from '../zset-details'
+import { ListDetails } from '../list-details'
 // import { RejsonDetailsWrapper } from '../rejson-details'
 // import { ZSetDetails } from '../zset-details'
 // import { SetDetails } from '../set-details'
@@ -20,11 +23,11 @@ const DynamicTypeDetails = (props: Props) => {
   const { keyType: selectedKeyType } = props
 
   const TypeDetails: any = {
-    // [KeyTypes.ZSet]: <ZSetDetails {...props} />,
-    // [KeyTypes.Set]: <SetDetails {...props} />,
+    [KeyTypes.ZSet]: <ZSetDetails {...props} />,
     [KeyTypes.String]: <StringDetails {...props} />,
-    // [KeyTypes.Hash]: <HashDetails {...props} />,
-    // [KeyTypes.List]: <ListDetails {...props} />,
+    [KeyTypes.Hash]: <HashDetails {...props} />,
+    [KeyTypes.List]: <ListDetails {...props} />,
+    // [KeyTypes.Set]: <SetDetails {...props} />,
     // [KeyTypes.ReJSON]: <RejsonDetailsWrapper {...props} />,
     // [KeyTypes.Stream]: <StreamDetails {...props} />,
   }

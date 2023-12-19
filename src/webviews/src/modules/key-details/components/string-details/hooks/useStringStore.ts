@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { persist } from 'zustand/middleware'
-import { commonMiddlewares } from 'uiSrc/store'
+import { devtools, persist } from 'zustand/middleware'
+import { immer } from 'zustand/middleware/immer'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints } from 'uiSrc/constants'
-import { getEncoding, getUrl, isStatusSuccessful } from 'uiSrc/utils'
+import { getApiErrorMessage, getEncoding, getUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { StringActions, StringState } from './interface'
 
 export const initialState: StringState = {
@@ -19,7 +19,7 @@ export const initialState: StringState = {
 }
 
 export const useStringStore = create<StringState & StringActions>()(
-  commonMiddlewares(persist((set) => ({
+  immer(devtools(persist((set) => ({
     ...initialState,
     // actions
     resetStringStore: () => set(initialState),
@@ -28,7 +28,7 @@ export const useStringStore = create<StringState & StringActions>()(
     processStringSuccess: ({ keyName, value }: any) => set({ data: { key: keyName, value } }),
     setIsStringCompressed: (isCompressed) => set({ isCompressed }),
   }),
-  { name: 'keyString' })),
+  { name: 'keyString' }))),
 )
 
 // async actions
@@ -48,7 +48,8 @@ export const fetchString = (key?: RedisString, args: IFetchKeyArgs = {}) =>
       }
     } catch (_err) {
       const error = _err as AxiosError
-      console.debug({ error })
+      const errorMessage = getApiErrorMessage(error)
+      showErrorMessage(errorMessage)
     } finally {
       state.processStringFinal()
     }

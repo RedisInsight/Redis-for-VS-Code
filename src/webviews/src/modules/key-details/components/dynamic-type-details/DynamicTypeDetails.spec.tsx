@@ -8,10 +8,10 @@ const mockedProps = mock<Props>()
 
 const DynamicTypeDetailsTypeTests: any[] = [
   [KeyTypes.String, 'string-details'],
-  // [KeyTypes.Hash, 'hash-details'],
-  // [KeyTypes.ZSet, 'zset-details'],
+  [KeyTypes.Hash, 'hash-details'],
+  [KeyTypes.ZSet, 'zset-details'],
+  [KeyTypes.List, 'list-details'],
   // [KeyTypes.Set, 'set-details'],
-  // [KeyTypes.List, 'list-details'],
   // [KeyTypes.Stream, 'stream-details'],
   // [KeyTypes.ReJSON, 'json-details'],
   // [ModulesKeyTypes.Graph, 'modules-type-details'],

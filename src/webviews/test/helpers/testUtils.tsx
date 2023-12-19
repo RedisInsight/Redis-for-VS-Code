@@ -85,8 +85,8 @@ export const clearStoreActions = (actions: any[]) => {
   return JSON.stringify(newActions)
 }
 
-export const waitRequest = async () => {
-  await waitFor(() => {}, { timeout: 0 })
+export const waitForStack = async (timeout = 0) => {
+  await waitFor(() => {}, { timeout })
 }
 
 export const getMWSUrl = (url: string) =>

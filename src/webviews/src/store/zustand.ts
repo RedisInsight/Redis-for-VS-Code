@@ -1,11 +1,11 @@
-import { StateCreator } from 'zustand'
-import { devtools } from 'zustand/middleware'
-import { immer } from 'zustand/middleware/immer'
+import { useStringStore } from 'uiSrc/modules'
+import { useHashStore } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
+import { useZSetStore } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
+import { useSelectedKeyStore } from './hooks/use-selected-key-store/useSelectedKeyStore'
 
-type CommonMeddlewares = <T>(
-  f: StateCreator<T, [], [['zustand/persist', T]]>,
-  name?: string,
-) => StateCreator<T, [], [['zustand/immer', never], ['zustand/devtools', never], ['zustand/persist', T]]>
-
-export const commonMiddlewares: CommonMeddlewares = (f) =>
-  immer(devtools(f))
+export const resetZustand = () => {
+  useSelectedKeyStore.getState().resetSelectedKeyStore()
+  useStringStore.getState().resetStringStore()
+  useHashStore.getState().resetHashStore()
+  useZSetStore.getState().resetZSetStore()
+}

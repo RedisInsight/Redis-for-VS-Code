@@ -1,6 +1,5 @@
 .container {
-  @apply w-full flex flex-row items-center;
-
+  @apply w-full h-full flex flex-row flex-grow items-stretch bg-vscode-input-background;
 
   &:hover .controls{
     @apply flex;
@@ -8,17 +7,29 @@
 }
 
 .field {
+  @apply bg-vscode-input-background;
   min-width: 72px;
   max-width: 100% !important;
-  height: 33px !important;
+  height: 100% !important;
+
+  &:focus {
+    outline: none !important;
+  }
 }
 
 .controls {
-  @apply h-full hidden;
+  @apply hidden;
   z-index: 3;
 
+  &Bottom {
+    @apply items-end pb-3;
+  }
+
+  &Center {
+    @apply items-center;
+  }
+
   .tooltip,
-  .declineBtn,
   .popoverWrapper {
     width: 50% !important;
     height: 100% !important;
@@ -30,13 +41,10 @@
   border-radius: 0 !important;
 }
 
-.declineBtn:hover {
-  /* color: var(--euiColorColorDanger) !important; */
+.declineBtn {
+  @apply flex -ml-[22px];
 }
 
-.applyBtn:hover:not([class*="isDisabled"]) {
-  /* color: var(--euiColorPrimary) !important; */
-}
 
 .popoverPanel:global(.euiPanel--paddingMedium) {
   width: 296px !important;

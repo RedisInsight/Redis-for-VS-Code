@@ -1,11 +1,23 @@
 import { apiService } from 'uiSrc/services'
+import * as modules from 'uiSrc/modules'
 import { constants } from 'testSrc/helpers'
-import { waitRequest } from 'testSrc/helpers/testUtils'
-import { KEY_INFO } from 'testSrc/handlers/browser'
-import { useSelectedKeyStore, initialState as initialStateInit, fetchKeyInfo, editKeyTTL } from './useSelectedKeyStore'
+import { waitForStack } from 'testSrc/helpers/testUtils'
+import {
+  useSelectedKeyStore,
+  initialState as initialStateInit,
+  fetchKeyInfo,
+  editKeyTTL,
+  refreshKeyInfo,
+} from './useSelectedKeyStore'
+
+vi.spyOn(modules, 'fetchString')
 
 beforeEach(() => {
-  useSelectedKeyStore.setState((initialStateInit))
+  useSelectedKeyStore.setState(initialStateInit)
+})
+
+afterEach(() => {
+  vi.clearAllMocks()
 })
 
 describe('useSelectedKeyStore', () => {
@@ -36,43 +48,99 @@ describe('useSelectedKeyStore', () => {
 
     const { processSelectedKeySuccess } = useSelectedKeyStore.getState()
     // Act
-    processSelectedKeySuccess(KEY_INFO)
+    processSelectedKeySuccess(constants.KEY_INFO)
     // Assert
     const expectedData = {
-      ...KEY_INFO,
+      ...constants.KEY_INFO,
       nameString: constants.KEY_NAME_STRING_1,
     }
 
     expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
+  })
+  it('refreshSelectedKey', () => {
+    // Arrange
+    const { refreshSelectedKey } = useSelectedKeyStore.getState()
+    // Act
+    refreshSelectedKey()
+    // Assert
+    expect(useSelectedKeyStore.getState().refreshing).toEqual(true)
+    expect(useSelectedKeyStore.getState().loading).toEqual(false)
+  })
+
+  it('refreshSelectedKeyFinal', () => {
+    // Arrange
+    const initialState = { ...initialStateInit, refreshing: true } // Custom initial state
+    useSelectedKeyStore.setState((state) => ({ ...state, ...initialState }))
+
+    const { refreshSelectedKeyFinal } = useSelectedKeyStore.getState()
+    // Act
+    refreshSelectedKeyFinal()
+    // Assert
+    expect(useSelectedKeyStore.getState().refreshing).toEqual(false)
+    expect(useSelectedKeyStore.getState().loading).toEqual(false)
   })
 })
 
 describe('async', () => {
-  it.only('fetchKeyInfo', async () => {
+  it('fetchKeyInfo', async () => {
     const expectedData = {
-      ...KEY_INFO,
+      ...constants.KEY_INFO,
       nameString: constants.KEY_NAME_STRING_1,
     }
 
     fetchKeyInfo(constants.KEY_NAME_1)
-    await waitRequest()
+    await waitForStack()
 
     expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
     expect(useSelectedKeyStore.getState().loading).toEqual(false)
   })
-  it.only('editKeyTTL', async () => {
+
+  it('refreshKeyInfo should not call fetchKeyInfo', async () => {
+    const responsePayload = { data: constants.KEY_INFO, status: 200 }
+    apiService.post = vi.fn().mockResolvedValue(responsePayload)
+
+    refreshKeyInfo(constants.KEY_NAME_1, false)
+    await waitForStack()
+
+    expect(modules.fetchString).not.toBeCalled()
+  })
+
+  it('refreshKeyInfo should call fetchKeyInfo', async () => {
+    const responsePayload = { data: constants.KEY_INFO, status: 200 }
+    apiService.post = vi.fn().mockResolvedValue(responsePayload)
+
+    refreshKeyInfo(constants.KEY_NAME_1, true)
+    await waitForStack()
+
+    expect(modules.fetchString).toBeCalledTimes(1)
+  })
+
+  it('refreshKeyInfo', async () => {
     const expectedData = {
-      ...KEY_INFO,
+      ...constants.KEY_INFO,
+      nameString: constants.KEY_NAME_STRING_1,
+    }
+
+    refreshKeyInfo(constants.KEY_NAME_1)
+    await waitForStack()
+
+    expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
+    expect(useSelectedKeyStore.getState().refreshing).toEqual(false)
+  })
+
+  it('editKeyTTL', async () => {
+    const expectedData = {
+      ...constants.KEY_INFO,
       ttl: constants.KEY_TTL_2,
       nameString: constants.KEY_NAME_STRING_1,
     }
 
-    const responsePayload = { data: { ...KEY_INFO, ttl: constants.KEY_TTL_2 }, status: 200 }
+    const responsePayload = { data: { ...constants.KEY_INFO, ttl: constants.KEY_TTL_2 }, status: 200 }
     apiService.post = vi.fn().mockResolvedValue(responsePayload)
 
     editKeyTTL(constants.KEY_NAME_1, constants.KEY_TTL_2)
 
-    await waitRequest()
+    await waitForStack()
 
     expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
     expect(useSelectedKeyStore.getState().loading).toEqual(false)

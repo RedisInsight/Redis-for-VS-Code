@@ -4,11 +4,10 @@ import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
-  KeyDetailsView,
+  StringKeyDetailsView,
   KeyTreeView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { StringKeyParameters } from '@e2eSrc/helpers/keys'
 import { ButtonsActions, InputActions } from '@e2eSrc/helpers/common-actions'
 
@@ -16,7 +15,7 @@ describe('Cases with large data', () => {
   let browser: VSBrowser
   let webView: WebView
   let bottomBar: BottomBar
-  let keyDetailsView: KeyDetailsView
+  let keyDetailsView: StringKeyDetailsView
   let keyTreeView: KeyTreeView
   let sideBarView: SideBarView | undefined
 
@@ -24,7 +23,7 @@ describe('Cases with large data', () => {
     browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
-    keyDetailsView = new KeyDetailsView()
+    keyDetailsView = new StringKeyDetailsView()
     keyTreeView = new KeyTreeView()
 
     await browser.waitForWorkbench(20_000)
@@ -56,7 +55,7 @@ describe('Cases with large data', () => {
     await keyTreeView.openKeyDetailsByKeyName(stringKeyParameters.keyName)
     await webView.switchBack()
 
-    await webView.switchToFrame(KeyDetailsView.keyFrame)
+    await webView.switchToFrame(StringKeyDetailsView.keyFrame)
     expect(
       await keyDetailsView.isElementDisplayed(
         keyDetailsView.loadAllStringValue,

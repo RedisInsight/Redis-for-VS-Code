@@ -5,7 +5,7 @@ import {
   BottomBar,
   WebView,
   CliViewPanel,
-  KeyDetailsView,
+  StringKeyDetailsView,
   KeyTreeView,
 } from '@e2eSrc/page-objects/components'
 import { InputActions } from '@e2eSrc/helpers/common-actions'
@@ -17,7 +17,7 @@ describe('Key Details verifications', () => {
   let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
-  let keyDetailsView: KeyDetailsView
+  let keyDetailsView: StringKeyDetailsView
   let keyTreeView: KeyTreeView
   let sideBarView: SideBarView | undefined
 
@@ -25,7 +25,7 @@ describe('Key Details verifications', () => {
     browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
-    keyDetailsView = new KeyDetailsView()
+    keyDetailsView = new StringKeyDetailsView()
     keyTreeView = new KeyTreeView()
 
     await browser.waitForWorkbench(20_000)
@@ -58,7 +58,7 @@ describe('Key Details verifications', () => {
     await keyTreeView.openKeyDetailsByKeyName(keyName)
     await webView.switchBack()
 
-    await webView.switchToFrame(KeyDetailsView.keyFrame)
+    await webView.switchToFrame(StringKeyDetailsView.keyFrame)
 
     await CommonDriverExtension.driverSleep()
 

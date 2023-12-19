@@ -1,6 +1,5 @@
 import { By } from 'selenium-webdriver'
 import { BaseComponent } from '../BaseComponent'
-import { InputActions } from '@e2eSrc/helpers/common-actions'
 
 /**
  * Key details view
@@ -18,10 +17,6 @@ export class KeyDetailsView extends BaseComponent {
   keyName = By.xpath(`//div[@data-testid='key-name-text']/b`)
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
   keyLength = By.xpath(`//div[@data-testid='key-length-text']`)
-  keyStringValue = By.xpath(`//div[@data-testid='string-value']`)
-
-  //String button locator
-  loadAllStringValue = By.xpath(`//*[@data-testid='load-all-value-btn']`)
 
   constructor() {
     super(KeyDetailsView.keyFrame)

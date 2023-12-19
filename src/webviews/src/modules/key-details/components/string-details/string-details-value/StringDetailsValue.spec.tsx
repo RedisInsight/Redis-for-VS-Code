@@ -6,7 +6,6 @@ import { TelemetryEvent, bufferToString, sendEventTelemetry } from 'uiSrc/utils'
 import { downloadFile } from 'uiSrc/utils/dom/downloadFile'
 import { useSelectedKeyStore } from 'uiSrc/store'
 import { render, screen, fireEvent, act, constants } from 'testSrc/helpers'
-import { KEY_INFO } from 'testSrc/handlers/browser'
 import { StringDetailsValue, Props } from './StringDetailsValue'
 import { useStringStore, initialState as initialStateInit } from '../hooks/useStringStore'
 import * as stringConstants from '../constants/string'
@@ -56,9 +55,9 @@ vi.mock('uiSrc/utils', async () => ({
   sendEventTelemetry: vi.fn(),
 }))
 
-const initialStringState = { keyName: constants.KEY_NAME_1, value: constants.KEY_VALUE_1 }
+const initialStringState = { keyName: constants.KEY_NAME_1, value: constants.KEY_1_VALUE }
 beforeEach(() => {
-  useSelectedKeyStore.setState((state) => ({ ...state, data: KEY_INFO }))
+  useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
   useStringStore.setState((state) => ({ ...state, ...initialStringState }))
 })
 

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { getNonce } from './utils'
+import { getNonce, handleMessage } from './utils'
 
 export class WebViewProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView
@@ -22,11 +22,11 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
     }
 
     // todo: connection between webviews
-    webviewView.webview.onDidReceiveMessage((message = {}) => {
-      vscode.commands.executeCommand('RedisInsight.openPage', message)
-    },
-    undefined,
-    this._context.subscriptions)
+    webviewView.webview.onDidReceiveMessage(
+      handleMessage,
+      undefined,
+      this._context.subscriptions,
+    )
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview)
   }

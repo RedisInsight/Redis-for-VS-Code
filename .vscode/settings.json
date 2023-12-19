@@ -43,9 +43,14 @@
     "storybook-static": true,
     "pnpm-lock.yaml": true,
     "**/pnpm-lock.yaml": true,
-    "src/webviews/public/customThemes.css": true,
+    // "src/webviews/public/customThemes.css": true,
     ".storybook/preview-head.html": true
   },
-  "cSpell.words": ["githubocto", "tailwindcss", "webviews"],
+  "cSpell.words": [
+    "githubocto",
+    "tailwindcss",
+    "webviews",
+    "zustand"
+  ],
   "testing.automaticallyOpenPeekView": "never"
 }

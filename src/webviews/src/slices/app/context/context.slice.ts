@@ -1,7 +1,8 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, SortOrder, StorageItem } from 'uiSrc/constants'
+import { DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, KeyTypes, SortOrder, StorageItem } from 'uiSrc/constants'
 import { RootState } from 'uiSrc/store'
-import { setDBConfigStorageField } from 'uiSrc/services'
+import { localStorageService, setDBConfigStorageField } from 'uiSrc/services'
+import { RelativeWidthSizes } from 'uiSrc/components/virtual-table/interfaces'
 import { OpenNodes, StateAppContext } from './interface'
 
 export const initialState: StateAppContext = {
@@ -16,6 +17,13 @@ export const initialState: StateAppContext = {
       delimiter: DEFAULT_DELIMITER,
       openNodes: {},
       selectedLeaf: null,
+    },
+  },
+  browser: {
+    keyDetailsSizes: {
+      [KeyTypes.Hash]: localStorageService?.get(StorageItem.keyDetailSizes)?.hash ?? null,
+      [KeyTypes.List]: localStorageService?.get(StorageItem.keyDetailSizes)?.list ?? null,
+      [KeyTypes.ZSet]: localStorageService?.get(StorageItem.keyDetailSizes)?.zset ?? null,
     },
   },
 }
@@ -53,6 +61,13 @@ const appContextSlice = createSlice({
       state.keys.tree.selectedLeaf = null
       state.keys.tree.openNodes = {}
     },
+    updateKeyDetailsSizes: (
+      state,
+      { payload: { type, sizes } }: PayloadAction<{ type: KeyTypes, sizes: RelativeWidthSizes }>,
+    ) => {
+      state.browser.keyDetailsSizes[type] = sizes
+      localStorageService?.set(StorageItem.keyDetailSizes, state.browser.keyDetailsSizes)
+    },
   },
 })
 
@@ -65,6 +80,7 @@ export const {
   resetKeysTree,
   setKeysTreeSort,
   setKeysTreeNodesOpen,
+  updateKeyDetailsSizes,
 } = appContextSlice.actions
 
 // Selectors
@@ -76,6 +92,8 @@ export const appContextKeys = (state: RootState) =>
   state.app.context.keys
 export const appContextKeysTree = (state: RootState) =>
   state.app.context.keys.tree
+export const appContextBrowserKeyDetails = (state: RootState) =>
+  state.app.context.browser.keyDetailsSizes
 
 // The reducer
 export default appContextSlice.reducer

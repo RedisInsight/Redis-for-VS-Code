@@ -1,14 +1,20 @@
 import React, { FC, InputHTMLAttributes } from 'react'
 import cx from 'classnames'
+import { omit } from 'lodash'
 
 import styles from './styles.module.scss'
 
-export const InputText: FC<InputHTMLAttributes<HTMLInputElement>> = (props) => {
-  const { className } = props
+export interface Props extends InputHTMLAttributes<HTMLInputElement> {
+  inputRef?: React.Ref<HTMLInputElement>;
+}
+
+export const InputText: FC<Props> = (props) => {
+  const { className, inputRef } = props
   return (
     <input
-      {...props}
+      {...omit(props, 'inputRef')}
       type="text"
+      ref={inputRef}
       className={cx(styles.input, className)}
     />
   )
