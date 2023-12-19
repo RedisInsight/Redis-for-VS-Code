@@ -68,7 +68,15 @@ describe('Hash Key fields verification', () => {
     await webView.switchToFrame(HashKeyDetailsView.keyFrame)
 
 
-    const commands = [keyFieldValue, 'hashField*', '*11111', 'hash*11111']
+    const commands = ['hashField*', '*11111', 'hash*11111']
+    await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
+    // Check the search result
+    let result = await (
+      await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
+    )[0].getText()
+    expect(result).contains(keyFieldValue)
+    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
+
     for (const c of commands) {
       await keyDetailsView.searchByTheValueInKeyDetails(c)
       // Check the search result
