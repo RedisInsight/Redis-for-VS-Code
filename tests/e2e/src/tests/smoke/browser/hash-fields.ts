@@ -18,6 +18,8 @@ import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
 
+let KeyName: string
+
 describe('Hash Key fields verification', () => {
   let browser: VSBrowser
   let webView: WebView
@@ -39,15 +41,19 @@ describe('Hash Key fields verification', () => {
   })
   afterEach(async () => {
     await webView.switchBack()
+    await KeyAPIRequests.deleteKeyByNameApi(
+      KeyName,
+      Config.ossStandaloneConfig.databaseName,
+    )
   })
   it('Verify that user can search by full field name in Hash', async function () {
-    const keyName = Common.generateWord(10)
+    KeyName = Common.generateWord(10)
     const keyFieldValue = 'hashField11111'
     const keyValue = 'hashValue11111!'
     const deleteMessage = 'Key has been deleted'
 
     const hashKeyParameters: HashKeyParameters = {
-      keyName: keyName,
+      keyName: KeyName,
       fields: [
         {
           field: keyFieldValue,
@@ -64,7 +70,7 @@ describe('Hash Key fields verification', () => {
     )?.openView()
 
     await webView.switchToFrame(KeyTreeView.treeFrame)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
+    await keyTreeView.openKeyDetailsByKeyName(KeyName)
     await webView.switchBack()
 
     await webView.switchToFrame(HashKeyDetailsView.keyFrame)
@@ -87,10 +93,5 @@ describe('Hash Key fields verification', () => {
     // get the message
     const message = await notification.getMessage()
     expect(message).eqls(deleteMessage)
-
-    await KeyAPIRequests.deleteKeyByNameApi(
-      keyName,
-      Config.ossStandaloneConfig.databaseName,
-    )
   })
 })

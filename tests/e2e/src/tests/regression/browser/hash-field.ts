@@ -14,6 +14,8 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 
+let KeyName: string
+
 describe('Hash Key fields verification', () => {
   let browser: VSBrowser
   let webView: WebView
@@ -33,13 +35,18 @@ describe('Hash Key fields verification', () => {
   })
   afterEach(async () => {
     await webView.switchBack()
+
+    await KeyAPIRequests.deleteKeyByNameApi(
+      KeyName,
+      Config.ossStandaloneConfig.databaseName,
+    )
   })
   it('Verify that user can search per exact field name in Hash in DB with 1 million of fields', async function () {
-    const keyName = Common.generateWord(10)
+    KeyName = Common.generateWord(10)
     const keyFieldValue = 'field'
     const keyValue = 'value!'
     const hashKeyParameters: HashKeyParameters = {
-      keyName: keyName,
+      keyName: KeyName,
       fields: [
         {
           field: keyFieldValue,
@@ -49,14 +56,14 @@ describe('Hash Key fields verification', () => {
     }
     const keyToAddParameters = {
       fieldsCount: 20000,
-      keyName,
+      KeyName,
       fieldStartWith: 'hashField',
       fieldValueStartWith: 'hashValue',
     }
 
     const keyToAddParameters2 = {
       fieldsCount: 1,
-      keyName,
+      KeyName,
       fieldStartWith: 'hastToSearch',
       fieldValueStartWith: 'hashValue',
     }
@@ -66,14 +73,14 @@ describe('Hash Key fields verification', () => {
       Config.ossStandaloneConfig.databaseName,
     )
 
-    // Add 1000000 fields to the hash key
+    // Add 20000 fields to the hash key
     await KeyAPIRequests.populateHashWithFields(
       Config.ossStandaloneConfig.host,
       Config.ossStandaloneConfig.port,
       keyToAddParameters,
     )
 
-    // Add 1000000 fields to the hash key
+    // Add 1 fields to the hash key
     await KeyAPIRequests.populateHashWithFields(
       Config.ossStandaloneConfig.host,
       Config.ossStandaloneConfig.port,
@@ -85,7 +92,7 @@ describe('Hash Key fields verification', () => {
     )?.openView()
 
     await webView.switchToFrame(KeyTreeView.treeFrame)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
+    await keyTreeView.openKeyDetailsByKeyName(KeyName)
     await webView.switchBack()
 
     await webView.switchToFrame(HashKeyDetailsView.keyFrame)
@@ -98,10 +105,5 @@ describe('Hash Key fields verification', () => {
     )[0].getText()
     expect(result).contains(keyToAddParameters2.fieldStartWith)
     await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
-
-    await KeyAPIRequests.deleteKeyByNameApi(
-      keyName,
-      Config.ossStandaloneConfig.databaseName,
-    )
   })
 })

@@ -1,69 +1,33 @@
 import { By } from 'selenium-webdriver'
-import { KeyDetailsView } from '@e2eSrc/page-objects/components'
-import { ButtonsActions, InputActions } from '@e2eSrc/helpers/common-actions'
-import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
+import { DoubleColumnKeyDetailsView } from '@e2eSrc/page-objects/components/edit-panel/DoubleColumnKeyDetailsView'
 
 /**
  * Hash Key details view
  */
-export class HashKeyDetailsView extends KeyDetailsView {
-  searchButtonInKeyDetails = By.xpath(
-    `//vscode-button[@data-testid='search-button']`,
-  )
-  clearSearchInput = By.xpath(`//*[@data-testid='decline-search-button']`)
-  searchInput = By.xpath(`//*[@data-testid='search']`)
-  hashFieldsList = By.xpath(
-    `//*[contains(@data-testid, 'hash-field-') and not(contains(@data-testid,'value'))]/div`,
-  )
-  hashValuesList = By.xpath(
-    `//*[contains(@data-testid, 'hash-field-value-')]/div`,
-  )
+export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
   hashFieldValueEditor = By.xpath(`//*[@data-testid = 'hash-value-editor']`)
-  applyButton = By.xpath(
-    '//*[@data-testid="virtual-table-container"]//*[@data-testid="apply-btn"]',
-  )
 
-  trashMask = '//*[@data-testid="remove-hash-button-$name-icon"]'
-  removeMask = '//*[@data-testid="remove-hash-button-$name"]'
-  editHashButtonMask = '//*[@data-testid="edit-hash-button-$name"]'
-
-  /**
-   * Search by the value in the key details
-   * @param value The value of the search parameter
-   */
-  async searchByTheValueInKeyDetails(value: string): Promise<void> {
-    if (!(await this.isElementDisplayed(this.searchInput))) {
-      await ButtonsActions.clickAndWaitForElement(
-        this.searchButtonInKeyDetails,
-        this.searchInput,
-      )
-    }
-    const inputField = await this.getElement(this.searchInput)
-    await inputField.sendKeys(value)
-    await InputActions.pressKey(inputField, 'enter')
-    await CommonDriverExtension.driverSleep(1000)
-  }
+  trashIcon = (name: string): By =>
+    By.xpath(`//*[@data-testid="remove-hash-button-${name}-icon"]`)
+  removeButton = (name: string): By =>
+    By.xpath(`//*[@data-testid="remove-hash-button-${name}"]`)
+  editHashButton = (name: string): By =>
+    By.xpath(`//*[@data-testid="edit-hash-button-${name}"]`)
 
   /**
-   * Open key details of the key by name
+   * Remove row by field
    * @param name The field value
    */
   async removeRowByField(name: string): Promise<void> {
-    const rowInTheListLocator = By.xpath(
-      this.trashMask.replace(/\$name/g, name),
-    )
-    const element = await this.getElement(rowInTheListLocator)
-    await element.click()
+    await super.removeRowByField(name, this.trashIcon)
   }
 
   /**
-   * Open key details of the key by name
+   * Click on remove button by field
    * @param name The field value
    */
   async clickRemoveRowButtonByField(name: string): Promise<void> {
-    const removeLocator = By.xpath(this.removeMask.replace(/\$name/g, name))
-    const element = await this.getElement(removeLocator)
-    await element.click()
+    await super.clickRemoveRowButtonByField(name, this.removeButton)
   }
 
   /**
@@ -72,14 +36,11 @@ export class HashKeyDetailsView extends KeyDetailsView {
    * @param name The field value
    */
   async editHashKeyValue(value: string, name: string): Promise<void> {
-    const editLocator = By.xpath(
-      this.editHashButtonMask.replace(/\$name/g, name),
+    await super.editHashKeyValue(
+      value,
+      name,
+      this.hashFieldValueEditor,
+      this.editHashButton,
     )
-    const element = await this.getElement(editLocator)
-    await element.click()
-    const editElement = await this.getElement(this.hashFieldValueEditor)
-    await editElement.clear()
-    await editElement.sendKeys(value)
-    await ButtonsActions.clickElement(this.applyButton)
   }
 }

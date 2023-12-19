@@ -235,16 +235,3 @@ export type AddKeyArguments = {
   elementStartWith?: string
   memberStartWith?: string
 }
-
-export type AddKeyArguments = {
-  keysCount?: number
-  fieldsCount?: number
-  elementsCount?: number
-  membersCount?: number
-  keyName?: string
-  keyNameStartWith?: string
-  fieldStartWith?: string
-  fieldValueStartWith?: string
-  elementStartWith?: string
-  memberStartWith?: string
-}

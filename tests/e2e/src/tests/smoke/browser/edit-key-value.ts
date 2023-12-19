@@ -18,6 +18,8 @@ import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
 
+let KeyName: string
+
 const keyValueBefore = 'ValueBeforeEdit!'
 const keyValueAfter = 'ValueAfterEdit!'
 
@@ -42,13 +44,17 @@ describe('Edit Key values verification', () => {
   })
   afterEach(async () => {
     await webView.switchBack()
+    await KeyAPIRequests.deleteKeyByNameApi(
+      KeyName,
+      Config.ossStandaloneConfig.databaseName,
+    )
   })
   it('Verify that user can edit Hash Key field', async function () {
     const fieldName = 'test'
-    let keyName = Common.generateWord(10)
+    KeyName = Common.generateWord(10)
 
     const hashKeyParameters: HashKeyParameters = {
-      keyName: keyName,
+      keyName: KeyName,
       fields: [
         {
           field: fieldName,
@@ -65,7 +71,7 @@ describe('Edit Key values verification', () => {
     )?.openView()
 
     await webView.switchToFrame(KeyTreeView.treeFrame)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
+    await keyTreeView.openKeyDetailsByKeyName(KeyName)
     await webView.switchBack()
 
     await webView.switchToFrame(HashKeyDetailsView.keyFrame)
@@ -74,10 +80,5 @@ describe('Edit Key values verification', () => {
       await keyDetailsView.getElements(keyDetailsView.hashValuesList)
     )[0].getText()
     expect(resultValue).eqls(keyValueAfter)
-
-    await KeyAPIRequests.deleteKeyByNameApi(
-      keyName,
-      Config.ossStandaloneConfig.databaseName,
-    )
   })
 })
