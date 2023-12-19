@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
-import { get, isNull, isString } from 'lodash'
+import { get, isNull, isString, isUndefined } from 'lodash'
 import { CellMeasurerCache } from 'react-virtualized'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { useShallow } from 'zustand/react/shallow'
@@ -399,7 +399,7 @@ const ListDetailsTable = (props: Props) => {
   ]
 
   const loadMoreItems = ({ startIndex, stopIndex }: any) => {
-    if (isNull(searchedIndex)) {
+    if (isNull(searchedIndex) || isUndefined(searchedIndex)) {
       fetchListMoreElements(key!, startIndex, stopIndex - startIndex + 1)
     }
   }

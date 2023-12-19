@@ -187,8 +187,8 @@ export const updateListElementsAction = (
     )
 
     if (isStatusSuccessful(status)) {
-      state.updateElementInList(data)
       onSuccess?.()
+      state.updateElementInList(data)
       refreshKeyInfo(data.keyName, false)
     }
   } catch (_err) {

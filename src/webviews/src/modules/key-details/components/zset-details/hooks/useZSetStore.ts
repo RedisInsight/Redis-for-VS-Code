@@ -211,7 +211,7 @@ export const updateZSetMembersAction = (
     if (isStatusSuccessful(status)) {
       onSuccess?.()
       state.updateMembers(data)
-      refreshKeyInfo(data.keyName)
+      refreshKeyInfo(data.keyName, false)
     }
   } catch (_err) {
     const error = _err as AxiosError

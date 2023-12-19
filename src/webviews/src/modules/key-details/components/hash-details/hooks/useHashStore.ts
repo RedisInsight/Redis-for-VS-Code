@@ -203,7 +203,7 @@ export const updateHashFieldsAction = (
     if (isStatusSuccessful(status)) {
       state.updateFields(data)
       onSuccess?.()
-      refreshKeyInfo(data.keyName)
+      refreshKeyInfo(data.keyName, false)
     }
   } catch (_err) {
     const error = _err as AxiosError
