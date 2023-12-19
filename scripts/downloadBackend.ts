@@ -2,31 +2,35 @@ import * as https from 'https'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as cp from 'child_process'
+import * as dotenv from 'dotenv'
 import { parse as parseUrl } from 'url'
 
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 const cdnPath = process.env.RI_CDN_PATH
 const backendPath = path.join(__dirname, '..', 'dist', 'redis-backend')
+const tempWindowsDistPath = process.env.RI_TEMP_WINDOWS_DIST_PATH as string
 
 const downloadBackend = async () => {
   if (fs.existsSync(backendPath)) {
-    console.debug('Backend folder already exists')
-  } else {
-    console.debug('Downloading and unpacking, it will takes some time (~15 min) - please be patient...')
-    try {
-      const redisInsightArchivePath = await downloadRedisBackendArchive(process.platform, backendPath)
-      if (fs.existsSync(redisInsightArchivePath)) {
-        unzipRedisServer(redisInsightArchivePath, backendPath)
-        // Remove archive for non-windows platforms
-        if (process.platform !== 'win32') fs.unlinkSync(redisInsightArchivePath)
-        console.debug('Done!')
-      }
-    } catch (err) {
-      console.debug('Failed to download RedisInsight backend')
-      fs.rmdir(backendPath, () => { })
-      throw Error('Failed to download and unzip Redis backend')
+    console.debug('Backend folder already exists, deleting...')
+    fs.rmSync(backendPath, { recursive: true, force: true });
+  }
+  console.debug('Downloading and unpacking, it will takes some time (~15 min) - please be patient...')
+  try {
+    const redisInsightArchivePath = await downloadRedisBackendArchive(process.platform, backendPath)
+    if (fs.existsSync(redisInsightArchivePath)) {
+      unzipRedisServer(redisInsightArchivePath, backendPath)
+      // Remove archive for non-windows platforms
+      if (process.platform !== 'win32') fs.unlinkSync(redisInsightArchivePath)
+      console.debug('Done!')
     }
+  } catch (err) {
+    console.debug('Failed to download RedisInsight backend')
+    fs.rmdir(backendPath, () => { })
+    throw Error('Failed to download and unzip Redis backend')
   }
 }
+
 
 function ensureFolderExists(loc: string) {
   if (!fs.existsSync(loc)) {
@@ -41,8 +45,8 @@ function ensureFolderExists(loc: string) {
 function getDownloadUrl(): string {
   // Download is temporary available only for non-windows platforms
   if (process.platform !== 'win32') {
-    return `${cdnPath}/RedisInsight-v2-web-${process.platform}.${process.arch}.tar.gz`
-  } return path.join(__dirname, '..', 'backend_dist', 'redis-backend-win32-x64.zip')
+    return `${cdnPath}/RedisInsight-web-${process.platform}.${process.arch}.tar.gz`
+  } return tempWindowsDistPath
 }
 
 async function downloadRedisBackendArchive(
@@ -54,36 +58,32 @@ async function downloadRedisBackendArchive(
 
   return new Promise((resolve, reject) => {
     const requestOptions: https.RequestOptions = parseUrl(downloadUrl)
+    https.get(requestOptions, (res) => {
+      if (res.statusCode !== 200) {
+        reject(new Error('Failed to get RedisInsight backend archive location'))
+      }
 
-    // Windows archive is located inside of the app, no need to download 
-    if (process.platform !== 'win32') {
-      https.get(requestOptions, (res) => {
-        if (res.statusCode !== 200) {
-          reject(new Error('Failed to get RedisInsight backend archive location'))
-        }
-
-        // Expected that windows distribution package will be zipped
-        if (downloadUrl.endsWith('.zip')) {
-          const archivePath = path.resolve(destDir, `redisinsight-backend-${platform}.zip`)
-          const outStream = fs.createWriteStream(archivePath)
-          outStream.on('close', () => {
-            resolve(archivePath)
-          })
-          https.get(downloadUrl, (res) => {
-            res.pipe(outStream)
-          })
-        } else { // Other non-windows distribution packages
-          const zipPath = path.resolve(destDir, `redisinsight-backend-${platform}.tar.gz`)
-          const outStream = fs.createWriteStream(zipPath)
-          https.get(downloadUrl, (res) => {
-            res.pipe(outStream)
-          })
-          outStream.on('close', () => {
-            resolve(zipPath)
-          })
-        }
-      })
-    } else resolve(downloadUrl)
+      // Expected that windows distribution package will be zipped
+      if (downloadUrl.endsWith('.zip')) {
+        const archivePath = path.resolve(destDir, `redisinsight-backend-${platform}.zip`)
+        const outStream = fs.createWriteStream(archivePath)
+        outStream.on('close', () => {
+          resolve(archivePath)
+        })
+        https.get(downloadUrl, (res) => {
+          res.pipe(outStream)
+        })
+      } else { // Other non-windows distribution packages
+        const zipPath = path.resolve(destDir, `redisinsight-backend-${platform}.tar.gz`)
+        const outStream = fs.createWriteStream(zipPath)
+        https.get(downloadUrl, (res) => {
+          res.pipe(outStream)
+        })
+        outStream.on('close', () => {
+          resolve(zipPath)
+        })
+      }
+    })
   })
 }
 

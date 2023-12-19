@@ -23,23 +23,28 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
 
     // todo: connection between webviews
 
-    webviewView.webview.onDidReceiveMessage(({ action, data }: { action: string, data: string }) => {
-      switch (action) {
-        case 'SelectKey':
-          vscode.commands.executeCommand('RedisInsight.openPage', { action, data })
-          break
-        case 'OpenCli':
-          vscode.commands.executeCommand('RedisInsight.cliOpen', action)
-          break
-        case 'AddKey':
-          vscode.commands.executeCommand('RedisInsight.addKeyOpen', action)
-          break
-        default:
-          break
-      }
-    },
+    webviewView.webview.onDidReceiveMessage(
+      ({ action, data }: { action: string; data: string }) => {
+        switch (action) {
+          case 'SelectKey':
+            vscode.commands.executeCommand('RedisInsight.openPage', {
+              action,
+              data,
+            })
+            break
+          case 'OpenCli':
+            vscode.commands.executeCommand('RedisInsight.cliOpen', action)
+            break
+          case 'AddKey':
+            vscode.commands.executeCommand('RedisInsight.addKeyOpen', action)
+            break
+          default:
+            break
+        }
+      },
       undefined,
-      this._context.subscriptions)
+      this._context.subscriptions,
+    )
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview)
   }
@@ -50,10 +55,20 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
 
   private _getHtmlForWebview(webview: vscode.Webview) {
     const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._context.extensionUri, 'dist', 'webviews', 'style.css'),
+      vscode.Uri.joinPath(
+        this._context.extensionUri,
+        'dist',
+        'webviews',
+        'style.css',
+      ),
     )
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._context.extensionUri, 'dist', 'webviews', 'index.mjs'),
+      vscode.Uri.joinPath(
+        this._context.extensionUri,
+        'dist',
+        'webviews',
+        'index.mjs',
+      ),
     )
     const viewRoute = this._route
 
