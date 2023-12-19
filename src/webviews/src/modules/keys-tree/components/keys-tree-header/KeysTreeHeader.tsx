@@ -6,7 +6,7 @@ import { SCAN_TREE_COUNT_DEFAULT } from 'uiSrc/constants'
 import { fetchMorePatternKeysAction, keysDataSelector, keysSelector } from 'uiSrc/modules/keys-tree'
 import { AppDispatch } from 'uiSrc/store'
 
-export interface Props {}
+export interface Props { }
 
 export const KeysTreeHeader = () => {
   const { loading } = useSelector(keysSelector)
@@ -19,12 +19,14 @@ export const KeysTreeHeader = () => {
   }
 
   return (
-    <ScanMore
-      loading={loading}
-      totalItemsCount={total}
-      scanned={scanned}
-      loadMoreItems={loadMoreItems}
-      nextCursor={nextCursor}
-    />
+    <>
+      <ScanMore
+        loading={loading}
+        totalItemsCount={total}
+        scanned={scanned}
+        loadMoreItems={loadMoreItems}
+        nextCursor={nextCursor}
+      />
+    </>
   )
 }

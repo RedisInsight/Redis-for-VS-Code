@@ -47,5 +47,8 @@
     ".storybook/preview-head.html": true
   },
   "cSpell.words": ["githubocto", "tailwindcss", "webviews"],
-  "testing.automaticallyOpenPeekView": "never"
+  "testing.automaticallyOpenPeekView": "never",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
 }

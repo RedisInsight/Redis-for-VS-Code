@@ -11,7 +11,7 @@ import cx from 'classnames'
 
 import { DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, KeyTypes, ModulesKeyTypes, SortOrder } from 'uiSrc/constants'
 import { KeyInfo, Nullable, RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
-import { fetchKeysMetadataTree } from 'uiSrc/modules/keys-tree/slice/keys.slice'
+import { fetchKeysMetadataTree } from 'uiSrc/slices/browser/keys.slice'
 import { bufferToString } from 'uiSrc/utils'
 import { AppDispatch } from 'uiSrc/store'
 import { useDisposableWebworker } from 'uiSrc/hooks'
@@ -246,7 +246,7 @@ const VirtualTree = (props: Props) => {
     <AutoSizer onResize={onResize}>
       {({ height, width }) => (
         <div data-testid="virtual-tree" style={{ position: 'relative' }}>
-          { nodes.current.length > 0 && (
+          {nodes.current.length > 0 && (
             <>
               <Tree
                 async
@@ -260,7 +260,7 @@ const VirtualTree = (props: Props) => {
               </Tree>
             </>
           )}
-          { nodes.current.length === 0 && loading && (
+          {nodes.current.length === 0 && loading && (
             <div className={styles.loadingContainer} style={{ width: width || 0, height: height || 0 }} data-testid="virtual-tree-spinner">
               <div className={styles.loadingBody}>
                 {/* <EuiLoadingSpinner size="xl" className={styles.loadingSpinner} />

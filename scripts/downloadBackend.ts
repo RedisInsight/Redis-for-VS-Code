@@ -55,7 +55,7 @@ async function downloadRedisBackendArchive(
   return new Promise((resolve, reject) => {
     const requestOptions: https.RequestOptions = parseUrl(downloadUrl)
 
-    // --- Current windows archive located inside of the app, no need to download --- //
+    // Windows archive is located inside of the app, no need to download 
     if (process.platform !== 'win32') {
       https.get(requestOptions, (res) => {
         if (res.statusCode !== 200) {

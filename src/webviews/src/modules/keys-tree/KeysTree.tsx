@@ -14,7 +14,7 @@ import { ExecuteCommand, KeyTypes, ModulesKeyTypes, SCAN_TREE_COUNT_DEFAULT, Vsc
 import { TelemetryEvent, executeCommand, sendEventTelemetry } from 'uiSrc/utils'
 import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString } from 'uiSrc/utils/formatters'
-import { AppDispatch, useVSCodeState } from 'uiSrc/store'
+import { AppDispatch } from 'uiSrc/store'
 
 import {
   fetchPatternKeysAction,
@@ -91,7 +91,7 @@ export const KeysTree = () => {
     openSelectedKey(selectedKeyName)
   }
 
-  const handleStatusOpen = (name: string, value:boolean) => {
+  const handleStatusOpen = (name: string, value: boolean) => {
     setStatusOpen((prevState) => {
       const newState = { ...prevState }
       // add or remove opened node
@@ -132,11 +132,11 @@ export const KeysTree = () => {
 
   if (keysState.keys?.length === 0) {
     if (loading || !firstDataLoaded) {
-      return <div className="m-auto">{l10n.t('loading...')}</div>
+      return <div className="px-8">{l10n.t('loading...')}</div>
     }
 
     return (
-      <div className="m-auto">
+      <div className="px-8">
         <NoKeysMessage
           total={keysState.total}
         />
@@ -150,11 +150,11 @@ export const KeysTree = () => {
         items={items}
         delimiter={delimiter}
         sorting={sorting}
-          // deleting={deleting}
+        // deleting={deleting}
         statusSelected={selectedKeyName}
         statusOpen={statusOpen}
         loading={loading || constructingTree}
-          // commonFilterType={commonFilterType}
+        // commonFilterType={commonFilterType}
         commonFilterType={null}
         setConstructingTree={setConstructingTree}
         webworkerFn={constructKeysToTree}

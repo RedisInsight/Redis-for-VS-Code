@@ -2,9 +2,9 @@ import * as vscode from 'vscode'
 import { nanoid } from 'nanoid'
 
 type WebviewOptions = {
-  extensionUri: vscode.Uri
-  route: string
-  title: string
+  extensionUri?: vscode.Uri
+  route?: string
+  title?: string
   viewId: string
   scriptUri?: vscode.Uri
   styleUri?: vscode.Uri
@@ -13,22 +13,22 @@ type WebviewOptions = {
 }
 
 abstract class Webview {
-  protected readonly _opts: Required<WebviewOptions>
+  protected readonly _opts: WebviewOptions
 
   public constructor(options: WebviewOptions) {
     // fill out the internal configuration with defaults
     this._opts = {
       scriptUri: vscode.Uri.joinPath(
-        options.extensionUri,
+        options?.extensionUri as vscode.Uri,
         // 'dist/webviews/index.es.js'
         'dist/webviews/index.mjs',
       ),
       styleUri: vscode.Uri.joinPath(
-        options.extensionUri,
+        options.extensionUri as vscode.Uri,
         'dist/webviews/style.css',
       ),
       nonce: nanoid(),
-      handleMessage: () => {},
+      handleMessage: () => { },
       ...options,
     }
   }
@@ -39,18 +39,18 @@ abstract class Webview {
       enableScripts: true,
 
       // And restrict the webview to only loading content from our extension's `dist` directory.
-      localResourceRoots: [vscode.Uri.joinPath(this._opts.extensionUri, 'dist')],
+      localResourceRoots: [vscode.Uri.joinPath(this._opts.extensionUri as vscode.Uri, 'dist')],
     }
   }
 
   protected handleMessage(message: any): void {
-    this._opts.handleMessage(message)
+    this._opts?.handleMessage?.(message)
   }
 
   protected _getContent(webview: vscode.Webview) {
     // Prepare webview URIs
-    const scriptUri = webview.asWebviewUri(this._opts.scriptUri)
-    const styleUri = webview.asWebviewUri(this._opts.styleUri)
+    const scriptUri = webview.asWebviewUri(this._opts.scriptUri as vscode.Uri)
+    const styleUri = webview.asWebviewUri(this._opts.styleUri as vscode.Uri)
 
     const contentSecurity = [
       `img-src ${webview.cspSource} 'self' data:`,
@@ -141,8 +141,8 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
     // Create the webview panel
     super(opts)
     this.panel = vscode.window.createWebviewPanel(
-      opts.route,
-      opts.title,
+      opts.route || '/',
+      opts.title || '',
       opts.column || vscode.ViewColumn.One,
       this.getWebviewOptions(),
     )
@@ -181,7 +181,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
   // in addition to the webview content.
   public update() {
     console.debug('Updating! ', this._opts.viewId)
-    this.panel.title = this._opts.title
+    this.panel.title = this._opts.title || ''
     this.panel.webview.html = this._getContent(this.panel.webview)
   }
 

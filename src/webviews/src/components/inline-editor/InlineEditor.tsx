@@ -7,18 +7,17 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { capitalize } from 'lodash'
 import cx from 'classnames'
+import * as l10n from '@vscode/l10n'
 import { useDetectClickOutside } from 'react-detect-click-outside'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
-import { VscCheck } from 'react-icons/vsc'
+import { VscCheck, VscError } from 'react-icons/vsc'
+import Popup from 'reactjs-popup'
+import { capitalize } from 'lodash'
 
 import { VSCodeToolkitEvent } from 'uiSrc/interfaces'
 import { InputText } from 'uiSrc/components'
 import styles from './styles.module.scss'
-
-type Positions = 'top' | 'bottom' | 'left' | 'right' | 'inside'
-type Design = 'default' | 'separate'
 
 export interface Props {
   onDecline?: (event?: MouseEvent) => void
@@ -27,8 +26,6 @@ export interface Props {
   fieldName?: string
   initialValue?: string
   placeholder?: string
-  controlsPosition?: Positions
-  controlsDesign?: Design
   maxLength?: number
   expandable?: boolean
   isActive?: boolean
@@ -42,7 +39,10 @@ export interface Props {
   declineOnUnmount?: boolean
   viewChildrenMode?: boolean
   autoComplete?: string
+  autoSelect?: boolean
+  autoFocus?: boolean
   controlsClassName?: string
+  controlsPosition?: 'center' | 'bottom'
   disabledTooltipText?: { title: string, text: string }
   preventOutsideClick?: boolean
   disableFocusTrap?: boolean
@@ -54,8 +54,6 @@ const InlineEditor = memo((props: Props) => {
   const {
     initialValue = '',
     placeholder = '',
-    controlsPosition = 'bottom',
-    controlsDesign = 'default',
     onDecline,
     onApply,
     onChange,
@@ -65,12 +63,15 @@ const InlineEditor = memo((props: Props) => {
     expandable,
     isLoading,
     isInvalid,
+    autoSelect,
+    autoFocus,
     disableEmpty,
     disableByValidation,
     validation,
     declineOnUnmount = true,
     viewChildrenMode,
     isDisabled,
+    controlsPosition = 'center',
     autoComplete = 'off',
     controlsClassName,
     disabledTooltipText,
@@ -82,6 +83,7 @@ const InlineEditor = memo((props: Props) => {
   } = props
 
   const containerEl: Ref<HTMLDivElement> = useRef(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState<string>(initialValue)
   const [isError, setIsError] = useState<boolean>(false)
   const [isActive, setIsActive] = useState(isActiveProp)
@@ -106,12 +108,13 @@ const InlineEditor = memo((props: Props) => {
     setValue(initialValue)
   }, [initialValue])
 
-  useEffect(() =>
-    // componentWillUnmount
-    () => {
+  useEffect(() => {
+    autoFocus && inputRef?.current?.focus()
+    autoSelect && inputRef?.current?.select()
+    return () => {
       declineOnUnmount && onDecline?.()
-    },
-  [])
+    }
+  }, [])
 
   const handleInputValue: VSCodeToolkitEvent = (e) => {
     const target = e?.target as HTMLInputElement
@@ -120,18 +123,18 @@ const InlineEditor = memo((props: Props) => {
 
     if (validation) {
       newValue = validation(newValue)
+      setValue(newValue)
     }
     if (disableByValidation) {
       setIsError(disableByValidation(newValue))
     }
 
-    // setValue(newValue)
     onChange?.(newValue)
   }
 
   const handleApplyClick = (event: MouseEvent | KeyboardEvent) => {
     if (approveByValidation && !approveByValidation?.(value)) {
-      // setIsShowApprovePopover(true)
+      setIsShowApprovePopover(true)
     } else {
       handleFormSubmit(event)
     }
@@ -141,18 +144,24 @@ const InlineEditor = memo((props: Props) => {
     setIsActive(true)
   }
 
-  const handleOnEsc = (event: KeyboardEvent) => {
-    if (event.code.toLowerCase() === 'escape' || event.keyCode === 27) {
-      event.stopPropagation()
-      setIsActive(false)
-      onDecline?.()
-    }
-  }
+  // const handleOnEsc = (event: KeyboardEvent) => {
+  //   if (event.code.toLowerCase() === 'escape' || event.keyCode === 27) {
+  //     event.stopPropagation()
+  //     setIsActive(false)
+  //     onDecline?.()
+  //   }
+  // }
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.code.toLowerCase() === 'enter' || event.keyCode === 13) {
       event.stopPropagation()
       handleApplyClick(event)
+    }
+
+    if (event.code.toLowerCase() === 'escape' || event.keyCode === 27) {
+      event.stopPropagation()
+      setIsActive(false)
+      onDecline?.()
     }
   }
 
@@ -184,18 +193,9 @@ const InlineEditor = memo((props: Props) => {
     <>
       {viewChildrenMode
         ? children : (
-      // <EuiOutsideClickDetector onOutsideClick={handleClickOutside}>
           <div ref={containerEl} className={styles.container}>
-            {/* <EuiWindowEvent event="keydown" handler={handleOnEsc} /> */}
-            {/* <EuiFocusTrap disabled={disableFocusTrap}> */}
-            {/* <EuiForm
-                  component="form"
-                  className="relative"
-                  onSubmit={handleFormSubmit}
-                > */}
-            <div ref={outsideClickRef}>
+            <div ref={outsideClickRef} className="flex-1">
               {children || (
-              <>
                 <InputText
                   type="text"
                   name={fieldName}
@@ -207,94 +207,79 @@ const InlineEditor = memo((props: Props) => {
                   onFocus={handleFocus}
                   onInput={handleInputValue}
                   onKeyDown={handleKeyDown}
-                    // onBlur={handleBlur}
-                    // isLoading={isLoading}
-                      // isInvalid={isInvalid}
+                  inputRef={inputRef}
                   data-testid="inline-item-editor"
                 />
-                {/* <VSCodeTextField
-                    name={fieldName}
-                    id={fieldName}
-                    className={styles.field}
-                    maxlength={maxLength}
-                    placeholder={placeholder}
-                    value={value}
-                    onInput={handleInputValue}
-                    onChange={handleChangeValue}
-                    onblur={handleBlur}
-                    // isLoading={isLoading}
-                      // isInvalid={isInvalid}
-                    data-testid="inline-item-editor"
-                  /> */}
-                {/* {expandable && (
-                    <p className={styles.keyHiddenText}>{value}</p>
-                  )} */}
-              </>
               )}
             </div>
             <div
               className={cx(
                 'InlineEditor__controls',
                 styles.controls,
-                styles[`controls${capitalize(controlsPosition)}`],
-                styles[`controls${capitalize(controlsDesign)}`],
                 controlsClassName,
                 { flex: isActive },
               )}
             >
-              {/* <EuiButtonIcon
-                      iconType="cross"
-                      color="primary"
-                      aria-label="Cancel editing"
-                      className={cx(styles.btn, styles.declineBtn)}
-                      onClick={onDecline}
-                      isDisabled={isLoading}
-                      data-testid="cancel-btn"
-                    /> */}
-              {!approveByValidation && ApplyBtn}
-              {/* {approveByValidation && (
-                      <EuiPopover
-                        anchorPosition="leftCenter"
-                        isOpen={isShowApprovePopover}
-                        closePopover={() => setIsShowApprovePopover(false)}
-                        anchorClassName={styles.popoverAnchor}
-                        panelClassName={cx(styles.popoverPanel)}
-                        className={styles.popoverWrapper}
-                        button={ApplyBtn}
-                      >
-                        <div className={styles.popover} data-testid="approve-popover">
-                          <EuiText size="m">
-                            {!!approveText?.title && (
-                            <h4>
-                              <b>{approveText?.title}</b>
-                            </h4>
-                            )}
-                            <EuiText size="s" color="subdued" className={styles.approveText}>
-                              {approveText?.text}
-                            </EuiText>
-                          </EuiText>
-                          <div className={styles.popoverFooter}>
-                            <EuiButton
-                              fill
-                              color="warning"
-                              aria-label="Save"
-                              className={cx(styles.btn, styles.saveBtn)}
-                              isDisabled={isDisabledApply()}
-                              onClick={handleFormSubmit}
-                              data-testid="save-btn"
-                            >
-                              Save
-                            </EuiButton>
-                          </div>
-                        </div>
+              <VSCodeButton
+                appearance="icon"
+                aria-label="Cancel editing"
+                className={cx(
+                  styles.btn,
+                  styles.declineBtn,
+                  styles[`controls${capitalize(controlsPosition)}`],
+                )}
+                onClick={(event) => {
+                  setIsActive(false)
+                  onDecline?.(event)
+                }}
+                disabled={isLoading}
+                data-testid="cancel-btn"
+              >
+                <VscError />
+              </VSCodeButton>
 
-                      </EuiPopover>
-                    )} */}
+              {!approveByValidation && ApplyBtn}
+              {approveByValidation && (
+              <Popup
+                closeOnEscape
+                closeOnDocumentClick
+                repositionOnResize
+                position="left center"
+                onClose={() => setIsShowApprovePopover(false)}
+                    // onOpen={() => {
+                    //   showPopover(item)
+                    //   handleButtonClick?.()
+                    // }}
+                trigger={ApplyBtn}
+              >
+                <div className={styles.popover} data-testid="approve-popover">
+                  <div>
+                    {!!approveText?.title && (
+                    <h4>
+                      <b>{approveText?.title}</b>
+                    </h4>
+                    )}
+                    <div className={styles.approveText}>
+                      {approveText?.text}
+                    </div>
+                  </div>
+                  <div className={styles.popoverFooter}>
+                    <VSCodeButton
+                      appearance="primary"
+                      disabled={isDisabledApply()}
+                      data-testid="save-btn"
+                      className={cx(styles.btn, styles.saveBtn)}
+                      onClick={handleFormSubmit}
+                    >
+                      {l10n.t('Save')}
+                    </VSCodeButton>
+                  </div>
+                </div>
+
+              </Popup>
+              )}
             </div>
-            {/* </EuiForm> */}
-            {/* </EuiFocusTrap> */}
           </div>
-      // </EuiOutsideClickDetector>
         )}
     </>
   )

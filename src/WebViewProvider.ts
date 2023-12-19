@@ -9,7 +9,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
   constructor(
     private readonly _route: string,
     private readonly _context: vscode.ExtensionContext,
-  ) {}
+  ) { }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView
@@ -22,11 +22,24 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
     }
 
     // todo: connection between webviews
-    webviewView.webview.onDidReceiveMessage((message = {}) => {
-      vscode.commands.executeCommand('RedisInsight.openPage', message)
+
+    webviewView.webview.onDidReceiveMessage(({ action, data }: { action: string, data: string }) => {
+      switch (action) {
+        case 'SelectKey':
+          vscode.commands.executeCommand('RedisInsight.openPage', { action, data })
+          break
+        case 'OpenCli':
+          vscode.commands.executeCommand('RedisInsight.cliOpen', action)
+          break
+        case 'AddKey':
+          vscode.commands.executeCommand('RedisInsight.addKeyOpen', action)
+          break
+        default:
+          break
+      }
     },
-    undefined,
-    this._context.subscriptions)
+      undefined,
+      this._context.subscriptions)
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview)
   }

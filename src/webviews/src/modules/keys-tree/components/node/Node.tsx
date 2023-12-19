@@ -8,7 +8,6 @@ import { formatLongName } from 'uiSrc/utils'
 import { KeyRowName } from '../key-row-name'
 import { KeyRowType } from '../key-row-type'
 import { TreeData } from '../virtual-tree/interfaces'
-import { PADDING_LEFT, PADDING_LEVEL } from '../../constants'
 import styles from './styles.module.scss'
 
 // Node component receives all the data we created in the `treeWalker` +
@@ -104,19 +103,20 @@ export const Node = ({
 
   const NestingLevels = (): ReactNode => {
     if (!nestingLevel) {
-      return null
+      return <div className={styles.nestingLevel} />
     }
     const levels = Array.from({ length: nestingLevel })
-    return levels.map((_, i) => {
-      const left = ((nestingLevel - i) || 1) * PADDING_LEVEL - 2
-      return (
-        <div
-          key={left}
-          className={cx(styles.nestingLevel)}
-          style={{ left }}
-        />
-      )
-    })
+    return (
+      <>
+        <div className={styles.nestingLevel} />
+        {levels.map(() => (
+          <div
+            key={Math.random()}
+            className={styles.nestingLevel}
+          />
+        ))}
+      </>
+    )
   }
 
   const Node = (
@@ -126,7 +126,7 @@ export const Node = ({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
-      onFocus={() => {}}
+      onFocus={() => { }}
       data-testid={`node-item_${fullName}${isOpen && !isLeaf ? '--expanded' : ''}`}
     >
       {!isLeaf && <Folder />}
@@ -138,12 +138,11 @@ export const Node = ({
     <div
       style={{
         ...style,
-        paddingLeft: (nestingLevel * PADDING_LEVEL) + PADDING_LEFT,
       }}
       className={cx(
         styles.nodeContainer, {
-          [styles.nodeSelected]: isSelected && isLeaf,
-        },
+        [styles.nodeSelected]: isSelected && isLeaf,
+      },
       )}
     >
       <NestingLevels />

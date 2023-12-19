@@ -1,0 +1,28 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .inputField {
+    height: 36px;
+    &::part(root) {
+      height: 36px;
+      border-radius: 0;
+    }
+    &::part(listbox) {
+      top: 36px;
+      border-radius: 0;
+      max-height: 360px;
+    }
+
+    .inputField__option {
+      padding: 8px;
+    }
+  }
+
+  .halfWidth {
+    width: calc(50% - 6px);
+  }
+}

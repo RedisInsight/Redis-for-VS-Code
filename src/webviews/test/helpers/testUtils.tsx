@@ -7,7 +7,7 @@ import { RenderResult, render as rtlRender, waitFor } from '@testing-library/rea
 import { BrowserRouter } from 'react-router-dom'
 
 import { RootState } from 'uiSrc/store'
-import { initialState as initialStateKeys } from 'uiSrc/modules/keys-tree/slice/keys.slice'
+import { initialState as initialStateKeys } from 'uiSrc/slices/browser/keys.slice'
 import { initialState as initialStateCliSettings } from 'uiSrc/modules/cli/slice/cli-settings'
 import { initialState as initialStateCliOutput } from 'uiSrc/modules/cli/slice/cli-output'
 import { initialState as initialStateAppInfo } from 'uiSrc/slices/app/info/info.slice'

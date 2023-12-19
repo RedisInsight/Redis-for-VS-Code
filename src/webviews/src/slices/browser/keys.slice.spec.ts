@@ -17,9 +17,9 @@ import reducer, {
   fetchPatternKeysAction,
   fetchMorePatternKeysAction,
   fetchKeysMetadataTree,
-} from '../keys.slice'
-import { parseKeysListResponse } from '../../utils'
-import { KeysStoreData } from '../interface'
+} from './keys.slice'
+import { KeysStoreData } from './interface'
+import { parseKeysListResponse } from '../../modules/keys-tree/utils'
 
 let store: typeof mockedStore
 let dateNow: SpyInstance<[], number>
@@ -442,7 +442,7 @@ describe('keys slice', () => {
 
     describe('fetchKeysMetadataTree', () => {
       it('success to fetch keys metadata', async () => {
-      // Arrange
+        // Arrange
         const data = [
           {
             name: stringToBuffer('key1'),

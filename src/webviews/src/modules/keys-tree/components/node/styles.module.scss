@@ -1,5 +1,6 @@
 .nodeContainer {
   border-left: 3px solid transparent;
+  padding-left: 12px;
 
   &:hover {
     background-color: var(--vscode-merge-commonHeaderBackground);
@@ -71,8 +72,11 @@
 }
 
 .nestingLevel {
-  @apply w-1 absolute h-max min-h-max opacity-50;
+  @apply w-1 h-max min-h-max opacity-50;
 
   height: 22px;
+  float: left;
   border-left: 1px solid var(--vscode-foreground);
+  margin-left: 8px;
+  padding-right: 8px;
 }

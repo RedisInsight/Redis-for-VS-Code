@@ -1,5 +1,5 @@
 import { KeyTypes, KeyValueCompressor } from 'uiSrc/constants'
-import { KeyInfo, Nullable } from 'uiSrc/interfaces'
+import { KeyInfo, Nullable, RedisResponseBuffer } from 'uiSrc/interfaces'
 
 export interface KeysStore {
   loading: boolean
@@ -17,6 +17,10 @@ export interface KeysStore {
     data: Nullable<KeyInfo>
     length?: number
     compressor: Nullable<KeyValueCompressor>
+  },
+  addKey: {
+    loading: boolean
+    error: string
   }
 }
 
@@ -41,6 +45,12 @@ export interface GetKeysWithDetailsResponse {
   maxResults?: number
 }
 
-export interface GetKeysWithDetailsShardResponse extends GetKeysWithDetailsResponse{
+export interface GetKeysWithDetailsShardResponse extends GetKeysWithDetailsResponse {
   id?: string
+}
+
+export interface SetStringWithExpire {
+  keyName: RedisResponseBuffer
+  value: RedisResponseBuffer
+  expire?: number
 }

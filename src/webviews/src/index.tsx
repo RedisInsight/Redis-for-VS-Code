@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
-import { fetchKeyInfo, store, useSelectedKeyStore } from 'uiSrc/store'
+import { fetchKeyInfo, store } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from './Routes'
 import { VscodeMessageAction } from './constants'
@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleMessage(event:any) {
     const message = event.data
-
     if (message.action === VscodeMessageAction.SelectKey) {
       const { data } = message
       fetchKeyInfo(data)

@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { WebviewPanel } from './Webview'
 import { startBackend, closeBackend } from './server/bootstrapBackend'
 import { WebViewProvider } from './WebViewProvider'
+import { handleMessage } from './utils'
 
 let myStatusBarItem: vscode.StatusBarItem
 export async function activate(context: vscode.ExtensionContext) {
@@ -33,11 +34,32 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         extensionUri: context.extensionUri,
         route: 'main/key',
-        title: 'RedisInsight key details',
+        title: 'RedisInsight - Key details',
         viewId: 'ri-key',
         // todo: connection between webviews
         message: args,
       })
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.addKeyOpen', (args) => {
+      WebviewPanel.getInstance({
+        extensionUri: context.extensionUri,
+        route: 'main/add_key',
+        title: 'RedisInsight - Add new key',
+        viewId: 'ri-add-key',
+        handleMessage: (message) => handleMessage(message),
+        message: args,
+      })
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.addKeyClose', () => {
+      WebviewPanel.getInstance({ viewId: 'ri-add-key' }).dispose()
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.addKeyCloseAndRefresh', () => {
+      vscode.commands.executeCommand('ri-sidebar.toggleVisibility')
+      vscode.commands.executeCommand('ri-sidebar.toggleVisibility')
+      WebviewPanel.getInstance({ viewId: 'ri-add-key' }).dispose()
     }),
   )
 }
