@@ -6,6 +6,7 @@ import { KeyDetailsHeaderProps } from 'uiSrc/modules'
 import { StringDetails } from '../string-details'
 import { HashDetails } from '../hash-details'
 import { ZSetDetails } from '../zset-details'
+import { ListDetails } from '../list-details'
 // import { RejsonDetailsWrapper } from '../rejson-details'
 // import { ZSetDetails } from '../zset-details'
 // import { SetDetails } from '../set-details'
@@ -25,8 +26,8 @@ const DynamicTypeDetails = (props: Props) => {
     [KeyTypes.ZSet]: <ZSetDetails {...props} />,
     [KeyTypes.String]: <StringDetails {...props} />,
     [KeyTypes.Hash]: <HashDetails {...props} />,
+    [KeyTypes.List]: <ListDetails {...props} />,
     // [KeyTypes.Set]: <SetDetails {...props} />,
-    // [KeyTypes.List]: <ListDetails {...props} />,
     // [KeyTypes.ReJSON]: <RejsonDetailsWrapper {...props} />,
     // [KeyTypes.Stream]: <StreamDetails {...props} />,
   }

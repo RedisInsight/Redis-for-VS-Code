@@ -5,12 +5,13 @@ import * as l10n from '@vscode/l10n'
 import { immer } from 'zustand/middleware/immer'
 import { find, map, remove } from 'lodash'
 
-import { fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
+import { fetchKeyInfo, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints, DEFAULT_SEARCH_MATCH, successMessages } from 'uiSrc/constants'
 import {
   bufferToString,
+  getApiErrorMessage,
   getEncoding,
   getUrl,
   isEqualBuffers,
@@ -98,7 +99,8 @@ export const fetchHashFields = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
   } finally {
     state.processHashFinal()
   }
@@ -132,7 +134,8 @@ export const fetchHashMoreFields = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
   } finally {
     state.processHashFinal()
   }
@@ -176,7 +179,8 @@ export const deleteHashFields = (
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
   } finally {
     state.processHashFinal()
   }
@@ -199,11 +203,12 @@ export const updateHashFieldsAction = (
     if (isStatusSuccessful(status)) {
       state.updateFields(data)
       onSuccess?.()
-      fetchKeyInfo(data.keyName, false)
+      refreshKeyInfo(data.keyName, false)
     }
   } catch (_err) {
     const error = _err as AxiosError
-    showErrorMessage(error.message)
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
     onFail?.()
   } finally {
     state.processHashFinal()

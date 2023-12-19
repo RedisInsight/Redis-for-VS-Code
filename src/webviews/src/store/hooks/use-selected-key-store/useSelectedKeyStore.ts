@@ -2,11 +2,11 @@ import { create } from 'zustand'
 import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
+import { isNull, isUndefined } from 'lodash'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService, localStorageService } from 'uiSrc/services'
 import {
   ApiEndpoints,
-  DEFAULT_SEARCH_MATCH,
   DEFAULT_VIEW_FORMAT,
   KeyTypes,
   SCAN_COUNT_DEFAULT,
@@ -18,6 +18,11 @@ import { bufferToString, getEncoding, getUrl, isStatusSuccessful } from 'uiSrc/u
 import { fetchString } from 'uiSrc/modules'
 import { fetchHashFields } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
 import { fetchZSetMembers } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
+import {
+  fetchListElements,
+  fetchSearchingListElement,
+  useListStore,
+} from 'uiSrc/modules/key-details/components/list-details/hooks/useListStore'
 import { SelectedKeyActions, SelectedKeyStore } from './interface'
 
 export const initialState: SelectedKeyStore = {
@@ -76,7 +81,7 @@ export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true) => {
   })
 }
 
-export const refreshKeyInfo = (key: RedisString) => {
+export const refreshKeyInfo = (key: RedisString, fetchKeyValue = true) => {
   useSelectedKeyStore.setState(async (state) => {
     state.refreshSelectedKey()
     try {
@@ -90,7 +95,9 @@ export const refreshKeyInfo = (key: RedisString) => {
         state.processSelectedKeySuccess(data)
         state.updateSelectedKeyRefreshTime(Date.now())
 
-        fetchKeyValueByType(key, data.type)
+        if (fetchKeyValue) {
+          fetchKeyValueByType(key, data.type)
+        }
       }
     } catch (_err) {
       const error = _err as AxiosError
@@ -147,9 +154,14 @@ export const fetchKeyValueByType = (key: RedisString, type?: KeyTypes) => {
   if (type === KeyTypes.ZSet) {
     fetchZSetMembers(key, 0, SCAN_COUNT_DEFAULT, SortOrder.ASC)
   }
-  // if (type === KeyTypes.List) {
-  //   dispatch<any>(fetchListElements(key, 0, SCAN_COUNT_DEFAULT, resetData))
-  // }
+  if (type === KeyTypes.List) {
+    const index = useListStore.getState().data.searchedIndex || null
+    if (!isNull(index)) {
+      fetchSearchingListElement(key, index)
+    } else {
+      fetchListElements(key, 0, SCAN_COUNT_DEFAULT)
+    }
+  }
   // if (type === KeyTypes.Set) {
   //   dispatch<any>(fetchSetMembers(key, 0, SCAN_COUNT_DEFAULT, '*', resetData))
   // }
