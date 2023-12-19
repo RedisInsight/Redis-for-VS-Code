@@ -81,7 +81,7 @@ export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true) => {
   })
 }
 
-export const refreshKeyInfo = (key: RedisString) => {
+export const refreshKeyInfo = (key: RedisString, fetchKeyValue = true) => {
   useSelectedKeyStore.setState(async (state) => {
     state.refreshSelectedKey()
     try {
@@ -95,7 +95,9 @@ export const refreshKeyInfo = (key: RedisString) => {
         state.processSelectedKeySuccess(data)
         state.updateSelectedKeyRefreshTime(Date.now())
 
-        fetchKeyValueByType(key, data.type)
+        if (fetchKeyValue) {
+          fetchKeyValueByType(key, data.type)
+        }
       }
     } catch (_err) {
       const error = _err as AxiosError
@@ -153,8 +155,8 @@ export const fetchKeyValueByType = (key: RedisString, type?: KeyTypes) => {
     fetchZSetMembers(key, 0, SCAN_COUNT_DEFAULT, SortOrder.ASC)
   }
   if (type === KeyTypes.List) {
-    const index = useListStore.getState().data.searchedIndex
-    if (!(isNull(index) || isUndefined(index))) {
+    const index = useListStore.getState().data.searchedIndex || null
+    if (!isNull(index)) {
       fetchSearchingListElement(key, index)
     } else {
       fetchListElements(key, 0, SCAN_COUNT_DEFAULT)

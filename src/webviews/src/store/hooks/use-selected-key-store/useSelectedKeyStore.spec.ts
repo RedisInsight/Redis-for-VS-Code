@@ -1,4 +1,5 @@
 import { apiService } from 'uiSrc/services'
+import * as modules from 'uiSrc/modules'
 import { constants } from 'testSrc/helpers'
 import { waitForStack } from 'testSrc/helpers/testUtils'
 import {
@@ -9,8 +10,14 @@ import {
   refreshKeyInfo,
 } from './useSelectedKeyStore'
 
+vi.spyOn(modules, 'fetchString')
+
 beforeEach(() => {
   useSelectedKeyStore.setState(initialStateInit)
+})
+
+afterEach(() => {
+  vi.clearAllMocks()
 })
 
 describe('useSelectedKeyStore', () => {
@@ -87,6 +94,27 @@ describe('async', () => {
     expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
     expect(useSelectedKeyStore.getState().loading).toEqual(false)
   })
+
+  it('refreshKeyInfo should not call fetchKeyInfo', async () => {
+    const responsePayload = { data: constants.KEY_INFO, status: 200 }
+    apiService.post = vi.fn().mockResolvedValue(responsePayload)
+
+    refreshKeyInfo(constants.KEY_NAME_1, false)
+    await waitForStack()
+
+    expect(modules.fetchString).not.toBeCalled()
+  })
+
+  it('refreshKeyInfo should call fetchKeyInfo', async () => {
+    const responsePayload = { data: constants.KEY_INFO, status: 200 }
+    apiService.post = vi.fn().mockResolvedValue(responsePayload)
+
+    refreshKeyInfo(constants.KEY_NAME_1, true)
+    await waitForStack()
+
+    expect(modules.fetchString).toBeCalledTimes(1)
+  })
+
   it('refreshKeyInfo', async () => {
     const expectedData = {
       ...constants.KEY_INFO,
@@ -99,6 +127,7 @@ describe('async', () => {
     expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
     expect(useSelectedKeyStore.getState().refreshing).toEqual(false)
   })
+
   it('editKeyTTL', async () => {
     const expectedData = {
       ...constants.KEY_INFO,
