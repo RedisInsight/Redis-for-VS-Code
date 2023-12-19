@@ -12,6 +12,7 @@ import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
+import { forEach } from 'lodash'
 
 let KeyName: string
 
@@ -65,36 +66,17 @@ describe('Hash Key fields verification', () => {
     await webView.switchBack()
 
     await webView.switchToFrame(HashKeyDetailsView.keyFrame)
-    await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
-    // Check the search result
-    let result = await (
-      await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
-    )[0].getText()
-    expect(result).contains(keyFieldValue)
-    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
 
-    await keyDetailsView.searchByTheValueInKeyDetails('hashField*')
-    // Check the search result
-    result = await (
-      await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
-    )[0].getText()
-    expect(result).eqls(keyFieldValue)
-    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
 
-    await keyDetailsView.searchByTheValueInKeyDetails('*11111')
-    // Check the search result
-    result = await (
-      await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
-    )[0].getText()
-    expect(result).eqls(keyFieldValue)
-    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
-
-    await keyDetailsView.searchByTheValueInKeyDetails('hash*11111')
-    // Check the search result
-    result = await (
-      await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
-    )[0].getText()
-    expect(result).eqls(keyFieldValue)
-    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
+    const commands = [keyFieldValue, 'hashField*', '*11111', 'hash*11111']
+    for (const c of commands) {
+      await keyDetailsView.searchByTheValueInKeyDetails(c)
+      // Check the search result
+      let result = await (
+        await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
+      )[0].getText()
+      expect(result).eqls(keyFieldValue)
+      await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
+    }
   })
 })

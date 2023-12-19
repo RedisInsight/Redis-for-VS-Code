@@ -6,6 +6,12 @@ import { DoubleColumnKeyDetailsView } from '@e2eSrc/page-objects/components/edit
  */
 export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
   hashFieldValueEditor = By.xpath(`//*[@data-testid = 'hash-value-editor']`)
+  hashFieldsList = By.xpath(
+    `//*[contains(@data-testid, 'hash-field-') and not(contains(@data-testid,'value'))]/div`,
+  )
+  hashValuesList = By.xpath(
+    `//*[contains(@data-testid, 'hash-field-value-')]/div`,
+  )
 
   trashIcon = (name: string): By =>
     By.xpath(`//*[@data-testid="remove-hash-button-${name}-icon"]`)
