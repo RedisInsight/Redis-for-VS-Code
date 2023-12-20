@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
-import { KeyTypes, SCAN_TREE_COUNT_DEFAULT } from 'uiSrc/constants'
+import { KeyTypes } from 'uiSrc/constants'
 // import HelpTexts from 'uiSrc/constants/help-texts'
 import {
   addKeyStateSelector,
@@ -13,7 +13,6 @@ import {
   Maybe,
 } from 'uiSrc/interfaces'
 import { vscodeApi } from 'uiSrc/services'
-import { fetchPatternKeysAction } from 'uiSrc/modules'
 import { AppDispatch } from 'uiSrc/store'
 import AddKeyCommonFields from './components/AddKeyCommonFields/AddKeyCommonFields'
 
@@ -53,15 +52,7 @@ export const AddKey = () => {
   }
 
   const closeAddKeyPanel = (isCancelled?: boolean) => {
-    dispatch(fetchPatternKeysAction(
-      '0',
-      SCAN_TREE_COUNT_DEFAULT,
-      {},
-      () => vscodeApi.postMessage({ action: isCancelled ? 'CloseAddKey' : 'CloseAddRefreshKey' }),
-    ))
-    // dispatch(fetchPatternKeysAction('0', SCAN_TREE_COUNT_DEFAULT))
-    // dispatch(fetchPatternKeysAction('0', SCAN_TREE_COUNT_DEFAULT))
-    // setTimeout(() => vscodeApi.postMessage({ action: 'CloseAddKey' }), 0)
+    vscodeApi.postMessage({ action: isCancelled ? 'CloseAddKey' : 'CloseAddRefreshKey' })
   }
 
   const defaultFields = {

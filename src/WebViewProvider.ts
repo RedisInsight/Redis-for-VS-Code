@@ -2,17 +2,16 @@ import * as vscode from 'vscode'
 import { getNonce } from './utils'
 
 export class WebViewProvider implements vscode.WebviewViewProvider {
-  _view?: vscode.WebviewView
-
   _doc?: vscode.TextDocument
 
   constructor(
     private readonly _route: string,
     private readonly _context: vscode.ExtensionContext,
+    public view?: vscode.WebviewView,
   ) { }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
-    this._view = webviewView
+    this.view = webviewView
 
     webviewView.webview.options = {
       // Allow scripts in the webview
@@ -20,7 +19,6 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
 
       localResourceRoots: [this._context.extensionUri],
     }
-
     // todo: connection between webviews
 
     webviewView.webview.onDidReceiveMessage(
@@ -50,7 +48,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
   }
 
   public revive(panel: vscode.WebviewView) {
-    this._view = panel
+    this.view = panel
   }
 
   private _getHtmlForWebview(webview: vscode.Webview) {

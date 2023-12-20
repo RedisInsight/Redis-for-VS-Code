@@ -57,8 +57,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('RedisInsight.addKeyCloseAndRefresh', () => {
-      vscode.commands.executeCommand('ri-sidebar.toggleVisibility')
-      vscode.commands.executeCommand('ri-sidebar.toggleVisibility')
+      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
       WebviewPanel.getInstance({ viewId: 'ri-add-key' }).dispose()
     }),
   )

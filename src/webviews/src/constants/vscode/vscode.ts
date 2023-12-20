@@ -12,4 +12,5 @@ export enum VscodeMessageAction {
   ErrorMessage = 'ErrorMessage',
   SelectKey = 'SelectKey',
   OpenCli = 'OpenCli',
+  RefreshTree = 'RefreshTree',
 }

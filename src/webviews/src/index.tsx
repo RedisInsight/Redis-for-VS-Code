@@ -6,9 +6,9 @@ import {
 import { Provider } from 'react-redux'
 
 import { fetchKeyInfo, store } from 'uiSrc/store'
-import { Config } from 'uiSrc/modules'
+import { fetchPatternKeysAction, Config } from 'uiSrc/modules'
 import { AppRoutes } from './Routes'
-import { VscodeMessageAction } from './constants'
+import { VscodeMessageAction, SCAN_TREE_COUNT_DEFAULT } from './constants'
 
 import '../vscode.css'
 
@@ -30,9 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleMessage(event:any) {
     const message = event.data
-    if (message.action === VscodeMessageAction.SelectKey) {
-      const { data } = message
-      fetchKeyInfo(data)
+
+    switch (message.action) {
+      case VscodeMessageAction.SelectKey:
+        const { data } = message
+        fetchKeyInfo(data)
+        break
+      case VscodeMessageAction.RefreshTree:
+        store.dispatch(fetchPatternKeysAction('0', SCAN_TREE_COUNT_DEFAULT))
+        break
+      default:
+        break
     }
   }
 })
