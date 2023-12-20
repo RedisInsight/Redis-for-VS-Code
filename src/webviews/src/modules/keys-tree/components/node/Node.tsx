@@ -136,9 +136,7 @@ export const Node = ({
 
   return (
     <div
-      style={{
-        ...style,
-      }}
+      style={{ ...style }}
       className={cx(
         styles.nodeContainer, {
           [styles.nodeSelected]: isSelected && isLeaf,

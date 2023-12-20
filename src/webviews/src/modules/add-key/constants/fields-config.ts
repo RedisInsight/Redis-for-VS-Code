@@ -1,3 +1,5 @@
+import * as l10n from '@vscode/l10n'
+
 interface IFormField {
   id?: string
   name: string
@@ -15,14 +17,14 @@ export const AddCommonFieldsFormConfig: IAddCommonFieldsFormConfig = {
   keyName: {
     name: 'keyName',
     isRequire: true,
-    label: 'Key Name*',
-    placeholder: 'Enter Key Name',
+    label: l10n.t('Key Name*'),
+    placeholder: l10n.t('Enter Key Name'),
   },
   keyTTL: {
     name: 'keyTTL',
     isRequire: false,
-    label: 'TTL',
-    placeholder: 'No limit',
+    label: l10n.t('TTL'),
+    placeholder: l10n.t('No limit'),
   },
 }
 
@@ -35,14 +37,14 @@ export const AddHashFormConfig: IAddHashFormConfig = {
   fieldName: {
     name: 'fieldName',
     isRequire: false,
-    label: 'Field',
-    placeholder: 'Enter Field',
+    label: l10n.t('Field'),
+    placeholder: l10n.t('Enter Field'),
   },
   fieldValue: {
     name: 'fieldValue',
     isRequire: false,
-    label: 'Value',
-    placeholder: 'Enter Value',
+    label: l10n.t('Value'),
+    placeholder: l10n.t('Enter Value'),
   },
 }
 
@@ -55,14 +57,14 @@ export const AddZsetFormConfig: IAddZsetFormConfig = {
   score: {
     name: 'score',
     isRequire: true,
-    label: 'Score*',
-    placeholder: 'Enter Score*',
+    label: l10n.t('Score*'),
+    placeholder: l10n.t('Enter Score*'),
   },
   member: {
     name: 'member',
     isRequire: false,
-    label: 'Member',
-    placeholder: 'Enter Member',
+    label: l10n.t('Member'),
+    placeholder: l10n.t('Enter Member'),
   },
 }
 
@@ -74,8 +76,8 @@ export const AddSetFormConfig: IAddSetFormConfig = {
   member: {
     name: 'member',
     isRequire: false,
-    label: 'Member',
-    placeholder: 'Enter Member',
+    label: l10n.t('Member'),
+    placeholder: l10n.t('Enter Member'),
   },
 }
 
@@ -87,8 +89,8 @@ export const AddStringFormConfig: IAddStringFormConfig = {
   value: {
     name: 'value',
     isRequire: false,
-    label: 'Value',
-    placeholder: 'Enter Value',
+    label: l10n.t('Value'),
+    placeholder: l10n.t('Enter Value'),
   },
 }
 
@@ -101,14 +103,14 @@ export const AddListFormConfig: IAddListFormConfig = {
   element: {
     name: 'element',
     isRequire: false,
-    label: 'Element',
-    placeholder: 'Enter Element',
+    label: l10n.t('Element'),
+    placeholder: l10n.t('Enter Element'),
   },
   count: {
     name: 'count',
     isRequire: true,
-    label: 'Count',
-    placeholder: 'Enter Count',
+    label: l10n.t('Count'),
+    placeholder: l10n.t('Enter Count'),
   },
 }
 
@@ -120,8 +122,8 @@ export const AddJSONFormConfig: IAddJSONFormConfig = {
   value: {
     name: 'value',
     isRequire: false,
-    label: 'Value*',
-    placeholder: 'Enter JSON',
+    label: l10n.t('Value*'),
+    placeholder: l10n.t('Enter JSON'),
   },
 }
 
@@ -136,21 +138,21 @@ export const AddStreamFormConfig: IAddStreamFormConfig = {
     id: 'entryId',
     name: 'Entry ID',
     isRequire: true,
-    label: 'Entry ID*',
-    placeholder: 'Enter Entry ID',
+    label: l10n.t('Entry ID*'),
+    placeholder: l10n.t('Enter Entry ID'),
   },
   name: {
     id: 'name',
     name: 'Field Name',
     isRequire: false,
-    label: 'Field',
-    placeholder: 'Enter Field',
+    label: l10n.t('Field'),
+    placeholder: l10n.t('Enter Field'),
   },
   value: {
     id: 'value',
     name: 'Field Value',
     isRequire: false,
-    label: 'Value',
-    placeholder: 'Enter Value',
+    label: l10n.t('Value'),
+    placeholder: l10n.t('Enter Value'),
   },
 }

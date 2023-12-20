@@ -6,8 +6,6 @@ import AddKeyString, { Props } from './AddKeyString'
 const mockedProps = mock<Props>()
 
 vi.mock('../AddKeyFooter/AddKeyFooter', () => ({
-  __esModule: true,
-  namedExport: vi.fn(),
   default: vi.fn(),
 }))
 

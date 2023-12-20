@@ -48,7 +48,7 @@ const AddKeyString = (props: Props) => {
     }
     if (keyTTL !== undefined) {
       data.expire = keyTTL
-    } ''
+    }
     dispatch(addStringKey(data, onCancel))
   }
 
@@ -56,7 +56,7 @@ const AddKeyString = (props: Props) => {
     const keyValid = keyName.length > 0
     const valueValid = value.length > 0
     const invalidFieldsCount = Number(!keyValid) + Number(!valueValid)
-    const invalidFieldsString = `${!keyValid ? 'Key Name' : ''}${invalidFieldsCount === 2 ? ',' : ''}${!valueValid ? ' Key Value' : ''}`
+    const invalidFieldsString = `${!keyValid ? l10n.t('Key Name') : ''}${invalidFieldsCount === 2 ? ',' : ''}${!valueValid ? l10n.t('Key Value') : ''}`
     if (!keyValid || !valueValid) {
       return `${l10n.t('Enter a value for required fields')} (${invalidFieldsCount}):\n${invalidFieldsString}`
     } return ''

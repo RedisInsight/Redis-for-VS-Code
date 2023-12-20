@@ -17,6 +17,10 @@
       max-height: 360px;
     }
 
+    &:focus {
+      outline-color: var(--vscode-focusBorder);
+    }
+
     .inputField__option {
       padding: 8px;
     }

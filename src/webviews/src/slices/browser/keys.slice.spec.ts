@@ -4,6 +4,8 @@ import { SpyInstance } from 'vitest'
 import { stringToBuffer } from 'uiSrc/utils'
 import { apiService } from 'uiSrc/services'
 import { RootState } from 'uiSrc/store'
+import { SetStringWithExpire } from 'uiSrc/slices/browser/interface'
+import { KeyTypes } from 'uiSrc/constants'
 import { constants, initialStateDefault, mockedStore } from 'testSrc/helpers'
 import reducer, {
   initialState,
@@ -17,6 +19,11 @@ import reducer, {
   fetchPatternKeysAction,
   fetchMorePatternKeysAction,
   fetchKeysMetadataTree,
+  addKeyIntoList,
+  addStringKey,
+  updateKeyList,
+  addKey,
+  addKeySuccess,
 } from './keys.slice'
 import { KeysStoreData } from './interface'
 import { parseKeysListResponse } from '../../modules/keys-tree/utils'
@@ -496,6 +503,45 @@ describe('keys slice', () => {
         )
 
         expect(onSuccessMock).toBeCalledWith(data)
+      })
+    })
+
+    describe('addStringKey', () => {
+      it('success to add key', async () => {
+        // Arrange
+        const data: SetStringWithExpire = {
+          keyName: 'keyName',
+          value: 'string',
+        }
+        const responsePayload = { data, status: 200 }
+
+        apiService.post = vi.fn().mockResolvedValue(responsePayload)
+
+        // Act
+        await store.dispatch<any>(addStringKey(data, vi.fn()))
+
+        // Assert
+        const expectedActions = [
+          addKey(),
+          addKeySuccess(),
+          updateKeyList({ keyName: data.keyName, keyType: 'string' }),
+        ]
+        expect(store.getActions()).toEqual(expectedActions)
+      })
+    })
+
+    describe('addKeyIntoList', () => {
+      it('updateKeyList should be called', async () => {
+        // Act
+        await store.dispatch<any>(
+          addKeyIntoList({ key: 'key', keyType: KeyTypes.Hash }),
+        )
+
+        // Assert
+        const expectedActions = [
+          updateKeyList({ keyName: 'key', keyType: 'hash' }),
+        ]
+        expect(store.getActions()).toEqual(expectedActions)
       })
     })
   })

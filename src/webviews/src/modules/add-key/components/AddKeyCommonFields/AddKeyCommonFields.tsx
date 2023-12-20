@@ -3,12 +3,13 @@ import { toNumber } from 'lodash'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 
-import { VSCodeDropdown, VSCodeOption, VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
+import { VSCodeDropdown, VSCodeOption } from '@vscode/webview-ui-toolkit/react'
 import { validateTTLNumberForAddKey } from 'uiSrc/utils'
 import {
   AddCommonFieldsFormConfig as config,
 } from 'uiSrc/constants'
 import { Maybe } from 'uiSrc/interfaces'
+import { InputText } from 'uiSrc/components'
 
 import styles from './styles.module.scss'
 
@@ -67,18 +68,17 @@ const AddKeyCommonFields = (props: Props) => {
           </VSCodeOption>
         ))}
       </VSCodeDropdown>
-      <VSCodeTextField
+      <InputText
         className={cx(styles.inputField, styles.halfWidth, 'grow')}
         name={config.keyTTL.name}
         id={config.keyTTL.name}
-        maxlength={200}
         placeholder={l10n.t('TTL: No limit')}
         value={`${keyTTL ?? ''}`}
         onChange={handleTTLChange}
         disabled={loading}
         data-testid="ttl-input"
       />
-      <VSCodeTextField
+      <InputText
         className={cx(styles.inputField, 'w-full')}
         name={config.keyName.name}
         id={config.keyName.name}

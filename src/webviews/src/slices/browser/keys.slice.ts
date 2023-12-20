@@ -338,7 +338,7 @@ function addTypedKey(
         { params: { encoding } },
       )
       if (isStatusSuccessful(status)) {
-        if (onSuccessAction) {
+        if (onSuccessAction?.()) {
           onSuccessAction()
         }
         dispatch(addKeySuccess())
@@ -362,7 +362,7 @@ export function addKeyIntoList({ key, keyType }: { key: RedisString, keyType: Ke
     const state = stateInit()
     const { filter, search } = state.browser.keys
 
-    if (search && search !== '*') {
+    if (search && search !== DEFAULT_SEARCH_MATCH) {
       return null
     }
 
