@@ -4,7 +4,7 @@ import * as l10n from '@vscode/l10n'
 
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { stringToBuffer } from 'uiSrc/utils'
-import { Maybe } from 'uiSrc/interfaces'
+import { Maybe, RedisResponseBuffer } from 'uiSrc/interfaces'
 
 import { addKeyStateSelector, addStringKey } from 'uiSrc/slices/browser/keys.slice'
 
@@ -43,12 +43,12 @@ const AddKeyString = (props: Props) => {
 
   const submitData = (): void => {
     const data: SetStringWithExpire = {
-      keyName: stringToBuffer(keyName),
-      value: stringToBuffer(value),
+      keyName: stringToBuffer(keyName) as RedisResponseBuffer,
+      value: stringToBuffer(value) as RedisResponseBuffer,
     }
     if (keyTTL !== undefined) {
       data.expire = keyTTL
-    }''
+    } ''
     dispatch(addStringKey(data, onCancel))
   }
 
@@ -93,10 +93,10 @@ const AddKeyString = (props: Props) => {
               {l10n.t('Cancel')}
             </VSCodeButton>
             <VSCodeButton
-              className=".btn-add"
               onClick={submitData}
               disabled={!isFormValid || loading}
               title={getTooltip()}
+              data-testid="btn-add"
             >
               {l10n.t('Add Key')}
             </VSCodeButton>

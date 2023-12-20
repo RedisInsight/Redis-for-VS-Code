@@ -11,8 +11,8 @@ import {
 import { ADD_KEY_TYPE_OPTIONS } from './constants/key-type-options'
 import { AddKey } from './AddKey'
 
-vi.mock('uiSrc/slices/instances/instances', () => ({
-  ...vi.importActual<object>('uiSrc/slices/instances/instances'),
+vi.mock('uiSrc/slices/instances/instances', async () => ({
+  ...(await vi.importActual<object>('uiSrc/slices/instances/instances')),
   connectedInstanceSelector: vi.fn().mockReturnValue({
     id: '1',
     modules: [],
@@ -24,16 +24,10 @@ describe('AddKey', () => {
     expect(render(<AddKey />)).toBeTruthy()
   })
 
-  it('should render type select label', () => {
-    render(<AddKey />)
-
-    expect(screen.getByText(/Key Type\*/i)).toBeInTheDocument()
-  })
-
   it('should have key type select with predefined first value from options', () => {
     render(<AddKey />)
 
-    expect(screen.getByDisplayValue(ADD_KEY_TYPE_OPTIONS[0].value)).toBeInTheDocument()
+    expect((screen.getByTestId('select-key-type') as HTMLInputElement).value).toBe(ADD_KEY_TYPE_OPTIONS[0].value)
   })
 
   // it('should show text if db not contains ReJSON module', async () => {

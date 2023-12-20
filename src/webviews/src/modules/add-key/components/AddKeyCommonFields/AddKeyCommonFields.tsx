@@ -26,7 +26,7 @@ export interface Props {
 const AddKeyCommonFields = (props: Props) => {
   const {
     typeSelected,
-    onChangeType = () => {},
+    onChangeType = () => { },
     options,
     loading,
     keyName,
@@ -76,7 +76,7 @@ const AddKeyCommonFields = (props: Props) => {
         value={`${keyTTL ?? ''}`}
         onChange={handleTTLChange}
         disabled={loading}
-        data-testid="ttl"
+        data-testid="ttl-input"
       />
       <VSCodeTextField
         className={cx(styles.inputField, 'w-full')}
@@ -87,7 +87,7 @@ const AddKeyCommonFields = (props: Props) => {
         onChange={(e: any) =>
           setKeyName(e.target.value)}
         disabled={loading}
-        data-testid="key"
+        data-testid="key-input"
       />
     </div>
   )

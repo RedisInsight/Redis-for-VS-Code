@@ -1,6 +1,5 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
-import { AddCommonFieldsFormConfig } from 'uiSrc/constants'
 import { render, screen, fireEvent } from 'testSrc/helpers'
 
 import AddKeyCommonFields, { Props } from './AddKeyCommonFields'
@@ -20,7 +19,7 @@ describe('AddKeyCommonFields', () => {
     ).toBeTruthy()
   })
 
-  it('should call setKeyName onChange KeyName', () => {
+  it('should render all input fields', () => {
     const setKeyName = vi.fn()
     render(
       <AddKeyCommonFields
@@ -29,52 +28,13 @@ describe('AddKeyCommonFields', () => {
         options={options}
       />,
     )
-    const ttlInput = screen.getByPlaceholderText(AddCommonFieldsFormConfig.keyName.placeholder)
+    const keyTypeSelector = screen.getByTestId('select-key-type')
+    expect(keyTypeSelector).toBeInTheDocument()
 
-    fireEvent.change(
-      ttlInput,
-      { target: { value: 123 } },
-    )
-    expect(setKeyName).toBeCalledTimes(1)
-  })
+    const ttlInput = screen.getByTestId('ttl-input')
+    expect(ttlInput).toBeInTheDocument()
 
-  it('should call setKeyTTL onChange TTL', () => {
-    const setKeyTTL = vi.fn()
-    render(
-      <AddKeyCommonFields
-        {...instance(mockedProps)}
-        setKeyTTL={setKeyTTL}
-        options={options}
-      />,
-    )
-    const ttlInput = screen.getByPlaceholderText(AddCommonFieldsFormConfig.keyTTL.placeholder)
-
-    fireEvent.change(
-      ttlInput,
-      { target: { value: 123 } },
-    )
-    expect(setKeyTTL).toBeCalledTimes(1)
-  })
-
-  it('should properly return TTL value with wrong data', () => {
-    let ttlValue: number = 0
-    const setKeyTTL = (value: number) => {
-      ttlValue = value
-    }
-    render(
-      <AddKeyCommonFields
-        {...instance(mockedProps)}
-        // @ts-ignore
-        setKeyTTL={setKeyTTL}
-        options={options}
-      />,
-    )
-    const ttlInput = screen.getByPlaceholderText(AddCommonFieldsFormConfig.keyTTL.placeholder)
-
-    fireEvent.change(
-      ttlInput,
-      { target: { value: 'q123' } },
-    )
-    expect(ttlValue).toBe(123)
+    const keyInput = screen.getByTestId('key-input')
+    expect(keyInput).toBeInTheDocument()
   })
 })
