@@ -24,6 +24,7 @@ import reducer, {
   updateKeyList,
   addKey,
   addKeySuccess,
+  resetAddKey,
 } from './keys.slice'
 import { KeysStoreData } from './interface'
 import { parseKeysListResponse } from '../../modules/keys-tree/utils'
@@ -542,6 +543,29 @@ describe('keys slice', () => {
           updateKeyList({ keyName: 'key', keyType: 'hash' }),
         ]
         expect(store.getActions()).toEqual(expectedActions)
+      })
+    })
+
+    describe('resetAddKey', () => {
+      it('should properly reset the state', () => {
+        // Arrange
+        const state = {
+          ...initialState,
+          addKey: {
+            ...initialState.addKey,
+            loading: false,
+            error: '',
+          },
+        }
+
+        // Act
+        const nextState = reducer(initialState, resetAddKey())
+
+        // Assert
+        const rootState = Object.assign(initialStateDefault, {
+          browser: { keys: nextState },
+        })
+        expect(keysSelector(rootState)).toEqual(state)
       })
     })
   })

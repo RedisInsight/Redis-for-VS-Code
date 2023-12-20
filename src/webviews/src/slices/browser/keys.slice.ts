@@ -102,18 +102,10 @@ const keysSlice = createSlice({
 
     // Add Key
     addKey: (state) => {
-      state.addKey = {
-        ...state.addKey,
-        loading: true,
-        error: '',
-      }
+      state.addKey.loading = true
     },
     addKeySuccess: (state) => {
-      state.addKey = {
-        ...state.addKey,
-        loading: false,
-        error: '',
-      }
+      state.addKey.loading = false
     },
     updateKeyList: (state, { payload }) => {
       state.data?.keys.unshift({ name: payload.keyName })
@@ -125,11 +117,8 @@ const keysSlice = createSlice({
       }
     },
     addKeyFailure: (state, { payload }) => {
-      state.addKey = {
-        ...state.addKey,
-        loading: false,
-        error: payload,
-      }
+      state.addKey.loading = false
+      state.addKey.error = payload
     },
     resetAddKey: (state) => {
       state.addKey = cloneDeep(initialState.addKey)
