@@ -1,5 +1,5 @@
 import { KeyTypes, KeyValueCompressor } from 'uiSrc/constants'
-import { KeyInfo, Nullable, RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
+import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 
 export interface KeysStore {
   loading: boolean
