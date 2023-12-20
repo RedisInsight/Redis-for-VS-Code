@@ -43,9 +43,10 @@
     "storybook-static": true,
     "pnpm-lock.yaml": true,
     "**/pnpm-lock.yaml": true,
-    "src/webviews/public/customThemes.css": true,
+    // "src/webviews/public/customThemes.css": true,
     ".storybook/preview-head.html": true
   },
+<<<<<<< HEAD
   "cSpell.words": ["githubocto", "tailwindcss", "webviews"],
   "testing.automaticallyOpenPeekView": "never",
   "[typescriptreact]": {
@@ -54,4 +55,13 @@
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   }
+=======
+  "cSpell.words": [
+    "githubocto",
+    "tailwindcss",
+    "webviews",
+    "zustand"
+  ],
+  "testing.automaticallyOpenPeekView": "never"
+>>>>>>> 8e5148d3f4783995696441f63566a79328a84517
 }

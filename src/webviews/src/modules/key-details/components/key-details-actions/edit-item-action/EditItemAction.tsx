@@ -15,7 +15,6 @@ const EditItemAction = ({ title, isEditable, tooltipContent = '', onEditItem }: 
     <VSCodeButton
       appearance="icon"
       disabled={!isEditable}
-      data-testid="scan-more"
       className="absolute right-0 z-10"
       onClick={onEditItem}
       aria-label={title}

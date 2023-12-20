@@ -43,10 +43,6 @@ beforeEach(() => {
 // }))
 
 describe('KeyDetailsHeader', () => {
-  global.navigator.clipboard = {
-    writeText: vi.fn(),
-  }
-
   it('should render', () => {
     expect(render(<KeyDetailsHeader {...mockedProps} />)).toBeTruthy()
   })

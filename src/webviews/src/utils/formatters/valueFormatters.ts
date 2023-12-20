@@ -9,7 +9,7 @@
 
 // import JSONViewer from 'uiSrc/components/json-viewer/JSONViewer'
 import { KeyValueFormat } from 'uiSrc/constants'
-import { Maybe, RedisResponseBuffer } from 'uiSrc/interfaces'
+import { Maybe, RedisString } from 'uiSrc/interfaces'
 import {
   // anyToBuffer,
   bufferToASCII,
@@ -53,17 +53,17 @@ const isNonUnicodeFormatter = (format: KeyValueFormat, isValid: boolean) => {
   ].includes(format)
 }
 
-const bufferToUnicode = (reply: RedisResponseBuffer): string =>
+const bufferToUnicode = (reply: RedisString): string =>
   bufferToUTF8(reply)
 
 // const bufferToJSON = (
-//   reply: RedisResponseBuffer,
+//   reply: RedisString,
 //   props: FormattingProps,
 // ): { value: JSX.Element | string, isValid: boolean } =>
 //   JSONViewer({ value: bufferToUTF8(reply), ...props })
 
 const formattingBuffer = (
-  reply: RedisResponseBuffer,
+  reply: RedisString,
   format: KeyValueFormat,
   props?: FormattingProps,
 ): { value: JSX.Element | string, isValid: boolean } => {
@@ -134,8 +134,8 @@ const formattingBuffer = (
 
 const bufferToSerializedFormat = (
   format: KeyValueFormat,
-  value: RedisResponseBuffer = stringToBuffer(''),
-  // space?: number,
+  value: RedisString = stringToBuffer(''),
+  space?: number,
 ): string => {
   switch (format) {
     case KeyValueFormat.ASCII: return bufferToASCII(value)
@@ -164,7 +164,7 @@ const bufferToSerializedFormat = (
   }
 }
 
-const stringToSerializedBufferFormat = (format: KeyValueFormat, value: string): RedisResponseBuffer => {
+const stringToSerializedBufferFormat = (format: KeyValueFormat, value: string): RedisString => {
   switch (format) {
     case KeyValueFormat.HEX: {
       if ((value.match(/([0-9]|[a-f])/gim) || []).length === value.length && (value.length % 2 === 0)) {

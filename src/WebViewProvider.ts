@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { getNonce } from './utils'
+import { getNonce, handleMessage } from './utils'
 
 export class WebViewProvider implements vscode.WebviewViewProvider {
   _doc?: vscode.TextDocument
@@ -20,26 +20,8 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._context.extensionUri],
     }
     // todo: connection between webviews
-
     webviewView.webview.onDidReceiveMessage(
-      ({ action, data }: { action: string; data: string }) => {
-        switch (action) {
-          case 'SelectKey':
-            vscode.commands.executeCommand('RedisInsight.openPage', {
-              action,
-              data,
-            })
-            break
-          case 'OpenCli':
-            vscode.commands.executeCommand('RedisInsight.cliOpen', action)
-            break
-          case 'AddKey':
-            vscode.commands.executeCommand('RedisInsight.addKeyOpen', action)
-            break
-          default:
-            break
-        }
-      },
+      handleMessage,
       undefined,
       this._context.subscriptions,
     )

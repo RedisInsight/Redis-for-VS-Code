@@ -8,7 +8,7 @@ class VSCodeWrapper {
    * @param message
    */
   public postMessage(message: any): void {
-    this.vscodeApi.postMessage(message)
+    this.vscodeApi?.postMessage(message)
   }
 
   /**

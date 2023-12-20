@@ -5,6 +5,10 @@ module.exports = {
   content: ['./src/webviews/**/*.{js,jsx,ts,tsx,css}'],
   darkMode: ['class', '[data-mode="dark"]'], // or 'media' or 'class'
   theme: {
+    colors: {
+      error: 'var(--vscode-inputValidation-errorBackground)',
+      primary: 'var(--vscode-button-background)',
+    },
     extend: {
     },
   },

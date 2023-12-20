@@ -15,6 +15,8 @@ export interface SelectedKeyActions {
   processSelectedKey: () => void
   processSelectedKeyFinal: () => void
   processSelectedKeySuccess: (data: KeyInfo) => void
+  refreshSelectedKey: () => void
+  refreshSelectedKeyFinal: () => void
 
   // delete selected key
   // deleteSelectedKey: () => void

@@ -34,14 +34,13 @@ export const rootReducers = {
 
 export const rootReducer = combineReducers(rootReducers)
 
-const store = configureStore({
+export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
   devTools: process.env.NODE_ENV !== 'production',
 })
 
 export default store
-export { store }
 
 export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = typeof store.dispatch

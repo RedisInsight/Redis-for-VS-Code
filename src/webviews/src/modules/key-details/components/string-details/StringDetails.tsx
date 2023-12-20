@@ -28,14 +28,14 @@ const StringDetails = (props: Props) => {
 
   const { id: databaseId } = useSelector(connectedDatabaseSelector)
 
-  const { keyValue, loading, isStringCompressed, resetStringStore } = useStringStore(useShallow((state) => ({
-    loading: state.loading,
+  const { keyValue, isStringCompressed, resetStringStore } = useStringStore(useShallow((state) => ({
     keyValue: state.data.value,
     isStringCompressed: state.isCompressed,
     resetStringStore: state.resetStringStore,
   })))
 
-  const { viewFormat, length } = useSelectedKeyStore(useShallow((state) => ({
+  const { viewFormat, loading, length } = useSelectedKeyStore(useShallow((state) => ({
+    loading: state.loading,
     viewFormat: state.viewFormat,
     length: state.data?.length,
   })))
@@ -105,18 +105,18 @@ const StringDetails = (props: Props) => {
         Actions={Actions}
       />
       <div className="key-details-body" key="key-details-body">
-        {/* {!loading && ( */}
-        <div className="flex flex-col h-full">
-          <StringDetailsValue
-            isEditItem={editItem}
-            setIsEdit={(isEdit: boolean) => setEditItem(isEdit)}
-            onRefresh={handleRefreshKey}
-            onUpdated={handleUpdated}
-            onDownloaded={handleDownloaded}
-            onLoadAll={handleLoadAll}
-          />
-        </div>
-        {/* )} */}
+        {!loading && (
+          <div className="flex flex-col h-full">
+            <StringDetailsValue
+              isEditItem={editItem}
+              setIsEdit={(isEdit: boolean) => setEditItem(isEdit)}
+              onRefresh={handleRefreshKey}
+              onUpdated={handleUpdated}
+              onDownloaded={handleDownloaded}
+              onLoadAll={handleLoadAll}
+            />
+          </div>
+        )}
       </div>
     </div>
   )

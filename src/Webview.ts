@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { nanoid } from 'nanoid'
+import { handleMessage } from './utils'
 
 type WebviewOptions = {
   extensionUri?: vscode.Uri
@@ -28,7 +29,7 @@ abstract class Webview {
         'dist/webviews/style.css',
       ),
       nonce: nanoid(),
-      handleMessage: () => { },
+      handleMessage,
       ...options,
     }
   }
@@ -207,32 +208,4 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
 //     console.log('deserialized state: ', state)
 //     webviewPanel
 //   }
-
 // }
-
-export class RedisInsightSidebar
-  extends Webview
-  implements vscode.WebviewViewProvider {
-  private _webview?: vscode.WebviewView
-
-  public resolveWebviewView(
-    webviewView: vscode.WebviewView,
-    // _context: vscode.WebviewViewResolveContext<unknown>,
-    // _token: vscode.CancellationToken
-  ): void | Thenable<void> {
-    // Create the webviewView and configure it
-    this._webview = webviewView
-    this._webview.webview.options = this.getWebviewOptions()
-    // Set the initial html
-    this.update()
-    // Handle messages from the webview
-    this._webview.webview.onDidReceiveMessage(this.handleMessage, this)
-  }
-
-  // WebviewView updates are just "write the html to the view"
-  update(): void {
-    if (this._webview) {
-      this._webview.webview.html = this._getContent(this._webview.webview)
-    }
-  }
-}

@@ -14,12 +14,12 @@ import { DynamicTypeDetails } from './components/dynamic-type-details'
 import styles from './styles.module.scss'
 
 export interface Props {
-  onCloseKey: () => void
-  onEditKey: (key: RedisString, newKey: RedisString) => void
-  onRemoveKey: () => void
-  keyProp: RedisString | null
-  totalKeys: number
-  keysLastRefreshTime: Nullable<number>
+  keyProp: Nullable<RedisString>
+  // onCloseKey: () => void
+  // onEditKey: (key: RedisString, newKey: RedisString) => void
+  // onRemoveKey: () => void
+  // totalKeys: number
+  // keysLastRefreshTime: Nullable<number>
 }
 
 const KeyDetails = (props: Props) => {
@@ -37,14 +37,14 @@ const KeyDetails = (props: Props) => {
   const isKeySelected = !isNull(data)
   const { type: keyType = KeyTypes.String, name: keyName, length: keyLength } = data ?? { }
 
-  // useEffect(() => {
-  //   if (keyProp === null) {
-  //     return
-  //   }
-  //   // Restore key details from context in future
-  //   // (selectedKey.data?.name !== keyProp)
-  //   fetchKeyInfo(keyProp)
-  // }, [keyProp])
+  useEffect(() => {
+    if (keyProp === null) {
+      return
+    }
+    // Restore key details from context in future
+    // (selectedKey.data?.name !== keyProp)
+    fetchKeyInfo(keyProp)
+  }, [])
 
   useEffect(() => {
     if (!isUndefined(keyName)) {
