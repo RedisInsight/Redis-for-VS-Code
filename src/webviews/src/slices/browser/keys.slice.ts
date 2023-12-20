@@ -338,9 +338,7 @@ function addTypedKey(
         { params: { encoding } },
       )
       if (isStatusSuccessful(status)) {
-        if (onSuccessAction?.()) {
-          onSuccessAction()
-        }
+        onSuccessAction?.()
         dispatch(addKeySuccess())
         dispatch<any>(addKeyIntoList({ key: data.keyName, keyType }))
         showInformationMessage(successMessages.ADDED_NEW_KEY(data.keyName).title)
