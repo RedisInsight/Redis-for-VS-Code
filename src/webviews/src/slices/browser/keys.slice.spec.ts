@@ -546,6 +546,30 @@ describe('keys slice', () => {
       })
     })
 
+    describe('updateKeyList', () => {
+      it('should properly set the state after successfully added key', () => {
+        // Arrange
+        const state = {
+          ...initialState,
+          data: {
+            ...initialState.data,
+            keys: [{ name: 'name' }],
+            scanned: 1,
+            total: 1,
+          },
+        }
+
+        // Act
+        const nextState = reducer(initialState, updateKeyList({ keyName: 'name', keyType: 'hash' }))
+
+        // Assert
+        const rootState = Object.assign(initialStateDefault, {
+          browser: { keys: nextState },
+        })
+        expect(keysSelector(rootState)).toEqual(state)
+      })
+    })
+
     describe('resetAddKey', () => {
       it('should properly reset the state', () => {
         // Arrange
