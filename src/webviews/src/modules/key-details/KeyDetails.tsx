@@ -4,11 +4,12 @@ import cx from 'classnames'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useSelector } from 'react-redux'
-import { KeyTypes } from 'uiSrc/constants'
+import { KeyTypes, VscodeMessageAction } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
+import { vscodeApi } from 'uiSrc/services'
 import { DynamicTypeDetails } from './components/dynamic-type-details'
 
 import styles from './styles.module.scss'
@@ -79,6 +80,10 @@ const KeyDetails = (props: Props) => {
     })
   }
 
+  const onRemoveKey = () => {
+    vscodeApi.postMessage({ action: VscodeMessageAction.CloseKeyAndRefresh })
+  }
+
   return (
     <div className={styles.container}>
       <div className={cx(styles.content, { [styles.contentActive]: data || loading })}>
@@ -94,6 +99,7 @@ const KeyDetails = (props: Props) => {
         {/* {(!isKeySelected || !loading) && ( */}
         <DynamicTypeDetails
           {...props}
+          onRemoveKey={onRemoveKey}
           keyType={keyType}
           onOpenAddItemPanel={onOpenAddItemPanel}
           onCloseAddItemPanel={onCloseAddItemPanel}

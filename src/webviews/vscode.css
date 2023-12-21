@@ -57,6 +57,14 @@ body {
   }
 } */
 
+h4 {
+  @apply normal-case pb-2;
+}
+
+vscode-button::part(control) {
+  outline-width: 0;
+}
+
 @layer components {
   .key-details-edit {
     width: calc(100% + 80px);
