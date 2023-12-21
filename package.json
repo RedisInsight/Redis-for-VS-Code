@@ -43,7 +43,12 @@
         {
           "type": "webview",
           "id": "ri-panel",
-          "name": "RedisInsight CLI"
+          "name": "CLI"
+        },
+        {
+          "type": "tree",
+          "id": "ri-sub-panel",
+          "name": "Recent connections"
         }
       ]
     },
@@ -57,8 +62,34 @@
         "command": "RedisInsight.cliOpen",
         "title": "Open RedisInsight CLI",
         "category": "RedisInsight"
+      },
+      {
+        "command": "RedisInsight.addCli",
+        "title": "Add CLI",
+        "icon": "$(add)"
+      },
+      {
+        "command": "RedisInsight.deleteCli",
+        "title": "Close CLI",
+        "icon": "$(trash)"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "RedisInsight.addCli",
+          "group": "navigation",
+          "when": "view == ri-panel"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "RedisInsight.deleteCli",
+          "when": "view == ri-sub-panel",
+          "group": "inline"
+        }
+      ]
+    }
   },
   "resolutions": {
     "@microsoft/fast-element": "^1.12.0",
