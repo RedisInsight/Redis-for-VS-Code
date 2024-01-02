@@ -2,14 +2,12 @@ import * as vscode from 'vscode'
 import { WebviewPanel } from './Webview'
 import { startBackend, closeBackend } from './server/bootstrapBackend'
 import { WebViewProvider } from './WebViewProvider'
-import { CliListViewProvider } from './CliListViewProvider'
 
 let myStatusBarItem: vscode.StatusBarItem
 export async function activate(context: vscode.ExtensionContext) {
   await startBackend()
   const sidebarProvider = new WebViewProvider('tree', context)
   const panelProvider = new WebViewProvider('cli', context)
-  const cliListViewProvider = new CliListViewProvider()
 
   // Create a status bar item with a text and an icon
   myStatusBarItem = vscode.window.createStatusBarItem(
@@ -25,20 +23,14 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     myStatusBarItem,
     vscode.window.registerWebviewViewProvider('ri-sidebar', sidebarProvider),
-    vscode.window.registerWebviewViewProvider('ri-panel', panelProvider),
-    vscode.window.registerTreeDataProvider('ri-sub-panel', cliListViewProvider),
+    vscode.window.registerWebviewViewProvider('ri-panel', panelProvider, { webviewOptions: { retainContextWhenHidden: true } }),
 
     vscode.commands.registerCommand('RedisInsight.cliOpen', () => {
       vscode.commands.executeCommand('ri-panel.focus')
-      vscode.commands.executeCommand('ri-sub-panel.focus')
     }),
 
     vscode.commands.registerCommand('RedisInsight.addCli', () => {
-      vscode.commands.executeCommand('ri-sub-panel.toggleVisibility')
-    }),
-
-    vscode.commands.registerCommand('RedisInsight.deleteCli', () => {
-      vscode.commands.executeCommand('ri-sub-panel.toggleVisibility')
+      panelProvider.view?.webview.postMessage({ action: 'AddCli' })
     }),
 
     vscode.commands.registerCommand('RedisInsight.openPage', (args) => {

@@ -44,11 +44,6 @@
           "type": "webview",
           "id": "ri-panel",
           "name": "CLI"
-        },
-        {
-          "type": "tree",
-          "id": "ri-sub-panel",
-          "name": "Recent connections"
         }
       ]
     },
@@ -67,11 +62,6 @@
         "command": "RedisInsight.addCli",
         "title": "Add CLI",
         "icon": "$(add)"
-      },
-      {
-        "command": "RedisInsight.deleteCli",
-        "title": "Close CLI",
-        "icon": "$(trash)"
       }
     ],
     "menus": {
@@ -80,13 +70,6 @@
           "command": "RedisInsight.addCli",
           "group": "navigation",
           "when": "view == ri-panel"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "RedisInsight.deleteCli",
-          "when": "view == ri-sub-panel",
-          "group": "inline"
         }
       ]
     }

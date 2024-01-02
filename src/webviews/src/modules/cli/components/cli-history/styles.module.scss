@@ -1,0 +1,41 @@
+.cliItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 22px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 1px 10px;
+  user-select: none;
+
+  & > span {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  & > svg {
+    min-width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+
+  vscode-button {
+    display: none;
+  }
+
+  &.active {
+    background: var(--vscode-merge-commonHeaderBackground);
+  }
+
+  &:hover:not(.hoverless) {
+    background: var(--vscode-merge-commonHeaderBackground);
+
+    vscode-button {
+      display: flex;
+    }
+  }
+}

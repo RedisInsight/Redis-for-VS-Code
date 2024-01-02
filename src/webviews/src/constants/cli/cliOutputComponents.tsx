@@ -16,7 +16,8 @@ export const InitOutputText = (
     <span className="color-green" key={Math.random()}>
       {l10n.t({
         message: 'Try ',
-        comment: 'Context: Try "Workbench", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.',
+        comment:
+              'Context: Try "Workbench", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.',
       })}
       <Link
         onClick={onClick}
@@ -28,8 +29,10 @@ export const InitOutputText = (
         Workbench
       </Link>
       {l10n.t({
-        message: ', our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.',
-        comment: 'Context: Try "Workbench", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.',
+        message:
+              ', our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.',
+        comment:
+              'Context: Try "Workbench", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.',
       })}
     </span>
     )}
@@ -40,18 +43,21 @@ export const InitOutputText = (
   l10n.t('Pinging Redis server on '),
   <span color="default" key={Math.random()}>
     {/* TODO: Remove mock after implementing DB connection: */}
-    redis-12871.c309.us-east-2-1.ec2.cloud.redislabs.com:12871
     {`${host}:${port}${getDbIndex(dbIndex)}`}
   </span>,
 ]
 
 const unsupportedCommandTextCli = l10n.t({
-  message: ' is not supported by the RedisInsight CLI. The list of all unsupported commands: ',
-  comment: 'Example: INFO is not supported by the RedisInsight CLI. The list of all unsupported commands: ...',
+  message:
+    ' is not supported by the RedisInsight CLI. The list of all unsupported commands: ',
+  comment:
+    'Example: INFO is not supported by the RedisInsight CLI. The list of all unsupported commands: ...',
 })
 const unsupportedCommandTextWorkbench = l10n.t({
-  message: ' is not supported by the Workbench. The list of all unsupported commands: ',
-  comment: 'Example: AUTH is not supported by the Workbench. The list of all unsupported commands: ...',
+  message:
+    ' is not supported by the Workbench. The list of all unsupported commands: ',
+  comment:
+    'Example: AUTH is not supported by the Workbench. The list of all unsupported commands: ...',
 })
 // eslint-disable-next-line react-refresh/only-export-components
 export const cliTexts = {
@@ -60,13 +66,18 @@ export const cliTexts = {
   WORKBENCH_UNSUPPORTED_COMMANDS: (commandLine: string, commands: string) =>
     commandLine + unsupportedCommandTextWorkbench + commands,
   REPEAT_COUNT_INVALID: l10n.t('Invalid repeat command option value'),
-  CONNECTION_CLOSED: l10n.t('Client connection previously closed. Run the command after the connection is re-created.'),
-  UNABLE_TO_DECRYPT: l10n.t('Unable to decrypt. Check the system keychain or re-run the command.'),
+  CONNECTION_CLOSED: l10n.t(
+    'Client connection previously closed. Run the command after the connection is re-created.',
+  ),
+  UNABLE_TO_DECRYPT: l10n.t(
+    'Unable to decrypt. Check the system keychain or re-run the command.',
+  ),
   PSUBSCRIBE_COMMAND: (path: string = '') => (
     <span color="danger" key={Date.now()}>
       {l10n.t({
         message: 'Use ',
-        comment: 'Context: Use "Pub/Sub" to see the messages published to all channels in your database.',
+        comment:
+          'Context: Use "Pub/Sub" to see the messages published to all channels in your database.',
       })}
       <Link
         {...getRouterLinkProps(path)}
@@ -77,14 +88,19 @@ export const cliTexts = {
         Pub/Sub
       </Link>
       {l10n.t({
-        message: ' to see the messages published to all channels in your database.',
-        comment: 'Context: Use "Pub/Sub" to see the messages published to all channels in your database.',
+        message:
+          ' to see the messages published to all channels in your database.',
+        comment:
+          'Context: Use "Pub/Sub" to see the messages published to all channels in your database.',
       })}
     </span>
   ),
   SUBSCRIBE_COMMAND: (path: string = '') => (
     <span color="danger" key={Date.now()}>
-      {l10n.t({ message: 'Use ', comment: 'Use "Pub/Sub" tool to subscribe to channels.' })}
+      {l10n.t({
+        message: 'Use ',
+        comment: 'Use "Pub/Sub" tool to subscribe to channels.',
+      })}
       <Link
         {...getRouterLinkProps(path)}
         color="text"
@@ -93,7 +109,10 @@ export const cliTexts = {
       >
         Pub/Sub
       </Link>
-      {l10n.t({ message: ' tool to subscribe to channels.', comment: 'Use "Pub/Sub" tool to subscribe to channels.' })}
+      {l10n.t({
+        message: ' tool to subscribe to channels.',
+        comment: 'Use "Pub/Sub" tool to subscribe to channels.',
+      })}
     </span>
   ),
   PSUBSCRIBE_COMMAND_CLI: (path: string = '') => [
@@ -106,7 +125,11 @@ export const cliTexts = {
   ],
   MONITOR_COMMAND: (onClick: () => void) => (
     <span color="danger" key={Date.now()}>
-      {l10n.t({ message: 'Use ', comment: 'Context: Use "Profiler" tool to see all the requests processed by the server.' })}
+      {l10n.t({
+        message: 'Use ',
+        comment:
+          'Context: Use "Profiler" tool to see all the requests processed by the server.',
+      })}
       <Link
         onClick={onClick}
         className="btnLikeLink"
@@ -118,7 +141,8 @@ export const cliTexts = {
       </Link>
       {l10n.t({
         message: ' tool to see all the requests processed by the server.',
-        comment: 'Context: Use "Profiler" tool to see all the requests processed by the server.',
+        comment:
+          'Context: Use "Profiler" tool to see all the requests processed by the server.',
       })}
     </span>
   ),
@@ -130,7 +154,8 @@ export const cliTexts = {
     <span color="danger" key={Date.now()}>
       {l10n.t({
         message: 'RedisInsight does not support ',
-        comment: 'Context: RedisInsight does not support "RESP3" at the moment, but we are working on it.',
+        comment:
+          'Context: RedisInsight does not support "RESP3" at the moment, but we are working on it.',
       })}
       <Link
         to="https://github.com/redis/redis-specifications/blob/master/protocol/RESP3.md"
@@ -143,7 +168,8 @@ export const cliTexts = {
       </Link>
       {l10n.t({
         message: ' at the moment, but we are working on it.',
-        comment: 'Context: RedisInsight does not support "RESP3" at the moment, but we are working on it.',
+        comment:
+          'Context: RedisInsight does not support "RESP3" at the moment, but we are working on it.',
       })}
     </span>
   ),

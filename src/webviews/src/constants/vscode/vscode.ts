@@ -10,4 +10,5 @@ export enum VscodeMessageAction {
   SelectKey = 'SelectKey',
   InformationMessage = 'InformationMessage',
   ErrorMessage = 'ErrorMessage',
+  AddCli = 'AddCli',
 }

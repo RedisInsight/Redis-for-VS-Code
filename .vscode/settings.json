@@ -46,11 +46,9 @@
     // "src/webviews/public/customThemes.css": true,
     ".storybook/preview-head.html": true
   },
-  "cSpell.words": [
-    "githubocto",
-    "tailwindcss",
-    "webviews",
-    "zustand"
-  ],
-  "testing.automaticallyOpenPeekView": "never"
+  "cSpell.words": ["githubocto", "tailwindcss", "webviews", "zustand"],
+  "testing.automaticallyOpenPeekView": "never",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
 }

@@ -34,6 +34,10 @@ const outputSlice = createSlice({
   reducers: {
     setOutputInitialState: () => initialState,
 
+    setOutput: (state, { payload }: { payload: any[] }) => {
+      state.data = payload
+    },
+
     // Concat text to Output
     concatToOutput: (state, { payload }: { payload: any[] }) => {
       state.data = state.data.concat(payload)
@@ -74,6 +78,7 @@ const outputSlice = createSlice({
 
 // Actions generated from the slice
 export const {
+  setOutput,
   concatToOutput,
   setOutputInitialState,
   resetOutput,

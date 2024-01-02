@@ -2,22 +2,20 @@ import * as vscode from 'vscode'
 import { getNonce, handleMessage } from './utils'
 
 export class WebViewProvider implements vscode.WebviewViewProvider {
-  _view?: vscode.WebviewView
-
   _doc?: vscode.TextDocument
 
   constructor(
     private readonly _route: string,
     private readonly _context: vscode.ExtensionContext,
-  ) {}
+    public view?: vscode.WebviewView,
+  ) { }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
-    this._view = webviewView
+    this.view = webviewView
 
     webviewView.webview.options = {
       // Allow scripts in the webview
       enableScripts: true,
-
       localResourceRoots: [this._context.extensionUri],
     }
 
@@ -32,7 +30,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
   }
 
   public revive(panel: vscode.WebviewView) {
-    this._view = panel
+    this.view = panel
   }
 
   private _getHtmlForWebview(webview: vscode.Webview) {

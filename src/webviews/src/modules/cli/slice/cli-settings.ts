@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { AxiosError } from 'axios'
+import { find } from 'lodash'
 import { apiService, sessionStorageService } from 'uiSrc/services'
 import { ApiEndpoints, StorageItem, cliTexts, ConnectionSuccessOutputText, InitOutputText } from 'uiSrc/constants'
 import { getApiErrorMessage, getUrl, isStatusSuccessful } from 'uiSrc/utils'
 import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 import { AppDispatch, RootState } from 'uiSrc/store'
-import { StateCliSettings } from 'uiSrc/interfaces'
-import { outputSelector, concatToOutput, setCliDbIndex } from './cli-output'
+import { ConnectionHistory, StateCliSettings } from 'uiSrc/interfaces'
+import { Database } from 'uiSrc/slices/connections/databases/interface'
+import { outputSelector, setOutput, concatToOutput, setCliDbIndex } from './cli-output'
 // import { CreateCliClientResponse, DeleteClientResponse } from 'apiSrc/modules/cli/dto/cli.dto'
 
 export const initialState: StateCliSettings = {
@@ -25,6 +27,9 @@ export const initialState: StateCliSettings = {
   isSearching: false,
   unsupportedCommands: [],
   blockingCommands: [],
+  refreshCli: false,
+  activeCliId: '',
+  cliConnectionsHistory: [],
 }
 
 // A slice for recipes
@@ -146,6 +151,28 @@ const cliSettingsSlice = createSlice({
       state.searchedCommand = ''
       state.isSearching = true
     },
+
+    setRefreshCli: (state, { payload }: { payload: boolean }) => {
+      state.refreshCli = payload
+    },
+
+    setActiveCliId: (state, { payload }: { payload: string }) => {
+      state.activeCliId = payload
+    },
+
+    addCliConnectionsHistory: (state, { payload }: { payload: ConnectionHistory }) => {
+      state.cliConnectionsHistory = state.cliConnectionsHistory.concat({ ...payload })
+    },
+
+    updateCliConnectionsHistory: (state, { payload }: { payload: ConnectionHistory[] }) => {
+      state.cliConnectionsHistory = payload
+    },
+
+    removeFromCliConnectionsHistory: (state, { payload }: { payload: ConnectionHistory }) => {
+      state.cliConnectionsHistory = state.cliConnectionsHistory.filter(
+        ({ id }) => id !== payload.id,
+      )
+    },
   },
 })
 
@@ -173,6 +200,11 @@ export const {
   getUnsupportedCommandsSuccess,
   getBlockingCommandsSuccess,
   goBackFromCommand,
+  setRefreshCli,
+  setActiveCliId,
+  addCliConnectionsHistory,
+  updateCliConnectionsHistory,
+  removeFromCliConnectionsHistory,
 } = cliSettingsSlice.actions
 
 // A selector
@@ -184,6 +216,22 @@ export const cliUnsupportedCommandsSelector = (state: RootState, exclude: string
 export default cliSettingsSlice.reducer
 
 // Asynchronous thunk action
+const checkCliHistory = (id: string, database: Database) => async (dispatch: AppDispatch, stateInit: () => RootState) => {
+  const state = stateInit()
+  const matchedInstanceInHistory = find(state.cli.settings.cliConnectionsHistory, { id })
+  // Check if incomming connection is new
+  if (!matchedInstanceInHistory) {
+    const { host, port } = database
+    const connectionInstance = { id, host, port, cliHistory: [] }
+    dispatch(addCliConnectionsHistory(connectionInstance))
+    dispatch(setActiveCliId(id))
+    // Check if connection is already selected
+  } else if (state.cli.settings.activeCliId !== id) {
+    dispatch(setActiveCliId(id))
+  }
+}
+
+// Asynchronous thunk action
 export function createCliClientAction(
   onWorkbenchClick: () => void,
   onSuccessAction?: () => void,
@@ -192,7 +240,8 @@ export function createCliClientAction(
   return async (dispatch: AppDispatch, stateInit: () => RootState) => {
     const state = stateInit()
     if (state.cli.output.data.length) return
-    const { host, port, db } = connectedDatabaseSelector(state)
+    const database = connectedDatabaseSelector(state)
+    const { host, port, db } = database
     const { data = [] } = outputSelector?.(state) ?? {}
     dispatch(processCliClient())
     dispatch(concatToOutput(InitOutputText(host, port, db, !data.length, onWorkbenchClick)))
@@ -204,9 +253,11 @@ export function createCliClientAction(
 
       if (isStatusSuccessful(status)) {
         sessionStorageService.set(StorageItem.cliClientUuid, data?.uuid)
+        dispatch(checkCliHistory(data?.uuid, database))
         dispatch(processCliClientSuccess(data?.uuid))
         dispatch(concatToOutput(ConnectionSuccessOutputText))
         dispatch(setCliDbIndex(state.connections?.databases?.connectedDatabase?.db || 0))
+        dispatch(setRefreshCli(false))
 
         onSuccessAction?.()
       }
@@ -330,5 +381,72 @@ export function fetchUnsupportedCliCommandsAction(
       dispatch(processCliClientFailure(errorMessage))
       onFailAction?.()
     }
+  }
+}
+
+// async thunk function
+function updateCliHistory() {
+  return async (dispatch: AppDispatch, stateInit: () => RootState) => {
+    const state = stateInit()
+    const instanceIndex = state.cli.settings.cliConnectionsHistory.findIndex(({ id }) => id === state.cli.settings.activeCliId)
+    const historyCopy = [...state.cli.settings.cliConnectionsHistory]
+    historyCopy[instanceIndex] = { ...historyCopy[instanceIndex], cliHistory: state.cli.output.data }
+    dispatch(updateCliConnectionsHistory(historyCopy))
+  }
+}
+
+// async thunk function
+export function addCli() {
+  return async (dispatch: AppDispatch) => {
+    dispatch(updateCliHistory())
+    dispatch(setRefreshCli(true))
+  }
+}
+
+// async thunk function
+export function selectCli(
+  uuid: string,
+) {
+  return async (dispatch: AppDispatch, stateInit: () => RootState) => {
+    const state = stateInit()
+    const history = state.cli.settings.cliConnectionsHistory.find(({ id }) => id === uuid)?.cliHistory
+    dispatch(updateCliHistory())
+    dispatch(setActiveCliId(uuid))
+    dispatch(setOutput(history as any[]))
+    dispatch(processCliClientSuccess(uuid))
+  }
+}
+
+// async thunk function
+export function deleteCli(
+  uuid: string,
+) {
+  return async (dispatch: AppDispatch, stateInit: () => RootState) => {
+    const state = stateInit()
+
+    const filteredHistory = state.cli.settings.cliConnectionsHistory.filter(({ id }) => id !== uuid)
+    dispatch(updateCliConnectionsHistory(filteredHistory))
+
+    if (uuid === state.cli.settings.activeCliId) {
+      dispatch(deleteCliClientAction(
+        uuid,
+        async () => dispatch(selectCli(filteredHistory[0].id)),
+      ))
+    } else {
+      dispatch(deleteCliClientAction(
+        uuid,
+        async () => dispatch(processCliClientSuccess(state.cli.settings.activeCliId)),
+      ))
+    }
+  }
+}
+
+export function closeAllCliConnections() {
+  return async (dispatch: AppDispatch, stateInit: () => RootState) => {
+    const state = stateInit()
+    state.cli.settings.cliConnectionsHistory.forEach(({ id }) =>
+      dispatch(deleteCliClientAction(id)))
+    dispatch(setActiveCliId(''))
+    dispatch(updateCliConnectionsHistory([]))
   }
 }

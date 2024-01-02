@@ -20,6 +20,7 @@ import {
   processUnsupportedCommand,
   processUnrepeatableNumber,
   resetOutputLoading,
+  resetOutput,
 } from 'uiSrc/modules/cli/slice/cli-output'
 import {
   cliTexts,
@@ -56,6 +57,7 @@ export const CliBodyWrapper = () => {
     isSearching,
     matchedCommand,
     cliClientUuid,
+    refreshCli,
   } = useSelector(cliSettingsSelector)
   const { host, port, connectionType } = useSelector(connectedDatabaseSelector)
   const { db: currentDbIndex } = useSelector(outputSelector)
@@ -73,11 +75,18 @@ export const CliBodyWrapper = () => {
   }
 
   useEffect(() => {
-    !cliClientUuid && dispatch(createCliClientAction(handleWorkbenchClick))
+    !cliClientUuid && host && dispatch(createCliClientAction(handleWorkbenchClick))
     return () => {
       removeCliClient()
     }
-  }, [])
+  }, [host])
+
+  useEffect(() => {
+    if (refreshCli) {
+      dispatch(resetOutput())
+      dispatch(createCliClientAction(handleWorkbenchClick))
+    }
+  }, [refreshCli])
 
   useEffect(() => {
     if (!isEnteringCommand) {

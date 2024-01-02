@@ -11,6 +11,7 @@ import { AppRoutes } from 'uiSrc/Routes'
 import { RedisString } from 'uiSrc/interfaces'
 import { isEqualBuffers } from 'uiSrc/utils'
 import { VscodeMessageAction } from 'uiSrc/constants'
+import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
 
 import 'uiSrc/styles/main.scss'
 
@@ -32,9 +33,8 @@ const root = createRoot(container!)
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('message', handleMessage)
 
-  function handleMessage(event:any) {
+  function handleMessage(event: any) {
     const message = event.data
-
     if (message.action === VscodeMessageAction.SelectKey) {
       const { data } = message as { data: RedisString }
       const prevKey = useSelectedKeyStore.getState().data?.name
@@ -44,6 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       resetZustand()
       fetchKeyInfo(data)
+    }
+    if (message.action === VscodeMessageAction.AddCli) {
+      // TODO: change logic after DB connection will be implemented
+      store.dispatch(addCli())
     }
   }
 })

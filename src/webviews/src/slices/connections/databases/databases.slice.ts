@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { find, orderBy } from 'lodash'
+import { find, first, orderBy } from 'lodash'
 import { AxiosError } from 'axios'
 import { apiService, localStorageService } from 'uiSrc/services'
 import { ApiEndpoints, CONNECTED_DATABASE_ID, ConnectionType, StorageItem } from 'uiSrc/constants'
@@ -49,9 +49,7 @@ const databasesSlice = createSlice({
         const isRediStack = state.data.find((db) => db.id === state.connectedDatabase.id)?.isRediStack
         state.connectedDatabase.isRediStack = isRediStack || false
       }
-
-      // TODO: remove after BE will be implemented
-      // state.connectedDatabase = first(payload) ?? state.connectedDatabase
+      state.connectedDatabase = first(payload) ?? state.connectedDatabase
     },
     loadDatabasesFailure: (state, { payload }) => {
       state.loading = false
