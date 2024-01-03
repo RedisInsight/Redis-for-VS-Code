@@ -67,13 +67,16 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
    * @param name The field value
    * @param editHashButton function to initialize By
    */
-  protected async editHashKeyValue(
+  protected async editKeyValue(
     value: string,
     name: string,
     editorLocator: By,
-    editHashButton: (name: string) => By,
+    editButton: (name: string) => By,
   ): Promise<void> {
-    const editLocator = editHashButton(name)
+    console.log('bbbbb')
+    const editLocator = editButton(name)
+    console.log('aaaa')
+    console.log(editLocator)
     const element = await this.getElement(editLocator)
     await element.click()
     const editElement = await this.getElement(editorLocator)

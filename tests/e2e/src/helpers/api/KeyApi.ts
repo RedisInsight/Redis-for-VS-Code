@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import { createClient } from 'redis'
 import { DatabaseAPIRequests } from './DatabaseApi'
 import { CommonAPIRequests } from './CommonApi'
+import { random } from 'lodash'
 import {
   AddNewDatabaseParameters,
   HashKeyParameters,
@@ -15,6 +16,7 @@ import {
 } from '../types/types'
 import { Common } from '@e2eSrc/helpers/Common'
 import { AddKeyArguments } from '@e2eSrc/helpers/types/types'
+import { ZMember } from '@redis/client/dist/lib/commands/generic-transformers'
 
 const databaseAPIRequests = new DatabaseAPIRequests()
 
@@ -120,11 +122,10 @@ export class KeyAPIRequests {
    */
   static async addSortedSetKeyApi(
     keyParameters: SortedSetKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       members: keyParameters.members.map(member => ({
@@ -257,6 +258,7 @@ export class KeyAPIRequests {
     const databaseId =
       await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const isKeyExist = await this.searchKeyByNameApi(keyName, databaseName)
+    console.log(isKeyExist)
     if (isKeyExist.length > 0) {
       const requestBody = { keyNames: [Buffer.from(keyName, 'utf-8')] }
       const response = await CommonAPIRequests.sendDeleteRequest(
@@ -343,5 +345,44 @@ export class KeyAPIRequests {
       }
     }
     await client.disconnect()
+  }
+
+  /**
+   * Populate Zset key with members
+   * @param host The host of database
+   * @param port The port of database
+   * @param keyArguments The arguments of key and its members
+   */
+  static async populateZSetWithMembers(
+    host: string,
+    port: string,
+    keyArguments: AddKeyArguments,
+  ): Promise<void> {
+    let minScoreValue = -10
+    let maxScoreValue = 10
+    const members: Array<ZMember> = []
+    const dbConf = { url: `redis://${host}:${port}` }
+    const client = await createClient(dbConf)
+
+    await client
+      .on('error', err => console.error('Redis Client Error', err))
+      .connect()
+    if (keyArguments.membersCount) {
+      for (let i = 0; i < keyArguments.membersCount; i++) {
+        const memberName = `${
+          keyArguments.memberStartWith
+        }${Common.generateWord(10)}`
+        const scoreValue = random(minScoreValue, maxScoreValue)
+
+        members.push({
+          value: memberName,
+          score: scoreValue,
+        })
+      }
+
+      await client.zAdd(keyArguments.keyName as string, members)
+    }
+
+    await client.quit()
   }
 }

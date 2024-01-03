@@ -42,7 +42,7 @@ export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
    * @param name The field value
    */
   async editHashKeyValue(value: string, name: string): Promise<void> {
-    await super.editHashKeyValue(
+    await super.editKeyValue(
       value,
       name,
       this.hashFieldValueEditor,

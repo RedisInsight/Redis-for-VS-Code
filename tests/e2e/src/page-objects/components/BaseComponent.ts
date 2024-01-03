@@ -1,5 +1,5 @@
 import { WebElement, WebDriver, until, Locator, By } from 'selenium-webdriver'
-import { VSBrowser } from 'vscode-extension-tester'
+import { ISize, VSBrowser } from 'vscode-extension-tester'
 
 /**
  * Default wrapper for webelement
@@ -87,5 +87,16 @@ export class BaseComponent extends WebElement {
    */
   async getElementText(locator: Locator): Promise<string> {
     return await (await this.getElement(locator)).getText()
+  }
+
+  /**
+   * Wait for the element to be found by locator and return it
+   * @param locator Webdriver locator to search by
+   * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @returns WebElement
+   */
+  async getElementSize(locator: Locator): Promise<ISize> {
+    const a = await this.getDriver().findElement(locator)
+    return await a.getSize()
   }
 }

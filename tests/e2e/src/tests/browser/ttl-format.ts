@@ -12,6 +12,7 @@ import { Common } from '@e2eSrc/helpers/Common'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { COMMANDS_TO_CREATE_KEY, keyLength } from '@e2eSrc/helpers/constants'
 import { keyTypes } from '@e2eSrc/helpers/keys'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 const keysData = keyTypes.map(object => ({ ...object })).slice(0, 6)
 for (const key of keysData) {
@@ -43,7 +44,7 @@ describe('TTL values in Keys Table', () => {
     await webView.switchBack()
     await bottomBar.openTerminalView()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(CliViewPanel.cliFrame)
+    await webView.switchToFrame(Views.CliViewPanel)
     await cliViewPanel.executeCommand(`FLUSHDB`)
   })
 
@@ -54,7 +55,7 @@ describe('TTL values in Keys Table', () => {
     const keyName = Common.generateWord(10)
 
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(CliViewPanel.cliFrame)
+    await webView.switchToFrame(Views.CliViewPanel)
 
     await cliViewPanel.executeCommand(`set ${keyName} EXPIRE ${TTL}`)
 
@@ -63,7 +64,7 @@ describe('TTL values in Keys Table', () => {
       await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()
     await CommonDriverExtension.driverSleep()
-    await webView.switchToFrame(KeyDetailsView.keyFrame)
+    await webView.switchToFrame(Views.KeyDetailsView)
 
     //TODO verify that the key is really added
 
@@ -74,7 +75,7 @@ describe('TTL values in Keys Table', () => {
 
   it.skip('Verify that user can see TTL in the list of keys rounded down to the nearest unit', async function () {
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(CliViewPanel.cliFrame)
+    await webView.switchToFrame(Views.CliViewPanel)
 
     for (let i = 0; i < keysData.length; i++) {
       await cliViewPanel.executeCommand(
@@ -90,11 +91,11 @@ describe('TTL values in Keys Table', () => {
 
     // Check that Keys has correct TTL value in keys table
     for (let i = 0; i < keysData.length; i++) {
-      await webView.switchToFrame(KeyTreeView.treeFrame)
+      await webView.switchToFrame(Views.KeyTreeView)
       await keyTreeView.openKeyDetailsByKeyName(keysData[i].keyName)
       await webView.switchBack()
 
-      await webView.switchToFrame(KeyDetailsView.keyFrame)
+      await webView.switchToFrame(Views.KeyDetailsView)
       await expect(await keyDetailsView.getKeyTtl()).contains(
         ttlValues[i],
         `TTL value in keys table is not ${ttlValues[i]}`,
