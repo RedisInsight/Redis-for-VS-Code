@@ -8,8 +8,9 @@ import {
   KeyTreeView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { StringKeyParameters } from '@e2eSrc/helpers/keys'
+import { StringKeyParameters } from '@e2eSrc/helpers/KeysActions'
 import { ButtonsActions, InputActions } from '@e2eSrc/helpers/common-actions'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Cases with large data', () => {
   let browser: VSBrowser
@@ -51,18 +52,18 @@ describe('Cases with large data', () => {
       await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()
 
-    await webView.switchToFrame(KeyTreeView.treeFrame)
+    await webView.switchToFrame(Views.KeyTreeView)
     await keyTreeView.openKeyDetailsByKeyName(stringKeyParameters.keyName)
     await webView.switchBack()
 
-    await webView.switchToFrame(StringKeyDetailsView.keyFrame)
+    await webView.switchToFrame(Views.KeyDetailsView)
     expect(
       await keyDetailsView.isElementDisplayed(
         keyDetailsView.loadAllStringValue,
       ),
     ).false
 
-    await webView.switchToFrame(KeyTreeView.treeFrame)
+    await webView.switchToFrame(Views.KeyTreeView)
     await keyTreeView.openKeyDetailsByKeyName(bigStringKeyParameters.keyName)
     await webView.switchBack()
 
