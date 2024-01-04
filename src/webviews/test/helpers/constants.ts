@@ -88,12 +88,26 @@ export const constants = {
   KEY_4_ELEMENT: UTF8ToArray('element'),
   KEY_4_ELEMENT_2: UTF8ToArray('element2'),
 
+  // key 5 set
+  KEY_NAME_SET_5: 'key5',
+  KEY_NAME_5: UTF8ToArray('key5'),
+  KEY_TYPE_5: KeyTypes.Set,
+  KEY_TTL_5: -1,
+  KEY_LENGTH_5: 5,
+  KEY_SIZE_5: 10_000,
+  KEY_5_MEMBER: UTF8ToArray('member'),
+  KEY_5_MEMBER_2: UTF8ToArray('member2'),
+
   get LIST_DATA_RESPONSE() {
     return LIST_DATA_RESPONSE
   },
 
   get LIST_DATA() {
     return LIST_DATA
+  },
+
+  get SET_DATA() {
+    return SET_DATA
   },
 }
 
@@ -126,6 +140,14 @@ const LIST_DATA_RESPONSE = {
   elements: [constants.KEY_4_ELEMENT, constants.KEY_4_ELEMENT_2],
   total: constants.KEY_LENGTH_4,
   nextCursor: 0,
+}
+
+const SET_DATA = {
+  keyName: constants.KEY_NAME_5,
+  members: [constants.KEY_5_MEMBER, constants.KEY_5_MEMBER_2],
+  total: constants.KEY_LENGTH_5,
+  nextCursor: 0,
+  match: DEFAULT_SEARCH_MATCH,
 }
 
 const LIST_DATA = {
