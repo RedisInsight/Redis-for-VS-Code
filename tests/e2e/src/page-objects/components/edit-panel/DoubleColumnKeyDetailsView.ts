@@ -73,7 +73,6 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     editorLocator: By,
     editButton: (name: string) => By,
   ): Promise<void> {
-    console.log('bbbbb')
     const editLocator = editButton(name)
     console.log('aaaa')
     console.log(editLocator)

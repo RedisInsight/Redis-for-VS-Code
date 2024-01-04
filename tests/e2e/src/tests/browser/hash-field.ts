@@ -18,6 +18,7 @@ import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { KeyActions } from '@e2eSrc/helpers/KeysActions'
 
 let keyName: string
 
@@ -124,14 +125,14 @@ describe('Hash Key fields verification', () => {
     )
 
     // Add 20000 fields to the hash key
-    await KeyAPIRequests.populateHashWithFields(
+    await KeyActions.populateHashWithFields(
       Config.ossStandaloneConfig.host,
       Config.ossStandaloneConfig.port,
       keyToAddParameters,
     )
 
     // Add 1 fields to the hash key
-    await KeyAPIRequests.populateHashWithFields(
+    await KeyActions.populateHashWithFields(
       Config.ossStandaloneConfig.host,
       Config.ossStandaloneConfig.port,
       keyToAddParameters2,

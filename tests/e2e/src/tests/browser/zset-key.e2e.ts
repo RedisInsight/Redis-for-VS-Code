@@ -19,6 +19,7 @@ import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { SortedSetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { ViewElements, Views } from '@e2eSrc/page-objects/components/WebView'
+import { KeyActions } from '@e2eSrc/helpers/KeysActions'
 
 let keyName: string
 const deleteMessage = 'Key has been deleted'
@@ -71,8 +72,8 @@ describe('ZSet Key fields verification', () => {
       hashKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    // Add 20000 fields to the hash key
-    await KeyAPIRequests.populateZSetWithMembers(
+    // Add fields to the hash key
+    await KeyActions.populateZSetWithMembers(
       Config.ossStandaloneConfig.host,
       Config.ossStandaloneConfig.port,
       keyToAddParameters,

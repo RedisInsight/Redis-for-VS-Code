@@ -8,7 +8,7 @@ import {
   KeyTreeView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { StringKeyParameters } from '@e2eSrc/helpers/keys'
+import { StringKeyParameters } from '@e2eSrc/helpers/KeysActions'
 import { ButtonsActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 

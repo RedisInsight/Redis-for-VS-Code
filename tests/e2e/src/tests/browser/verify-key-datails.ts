@@ -168,27 +168,22 @@ describe('Key Details verifications', () => {
         sortedSetKeyDetailsView.keyType,
       ),
     ).contain('Sorted Set', 'Type is incorrect')
-    console.log('finishaaaa5')
     expect(
       await sortedSetKeyDetailsView.getElementText(
         sortedSetKeyDetailsView.keyName,
       ),
     ).eq(keyName, 'Name is incorrect')
-    console.log('finishaaaa4')
     expect(await sortedSetKeyDetailsView.getKeySize()).greaterThan(
       0,
       'Size is 0',
     )
-    console.log('finishaaaa3')
     expect(await sortedSetKeyDetailsView.getKeyLength()).greaterThan(
       0,
       'Length is 0',
     )
-    console.log('finishaaaa2')
-    // expect(Number(await sortedSetKeyDetailsView.getKeyTtl())).match(
-    //   expectedTTL,
-    //   'The Key TTL is incorrect',
-    // )
-    // console.log('finishaaaa')
+    expect(Number(await sortedSetKeyDetailsView.getKeyTtl())).match(
+      expectedTTL,
+      'The Key TTL is incorrect',
+    )
   })
 })

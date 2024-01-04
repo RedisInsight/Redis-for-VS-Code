@@ -11,7 +11,7 @@ import {
 import { Common } from '@e2eSrc/helpers/Common'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { COMMANDS_TO_CREATE_KEY, keyLength } from '@e2eSrc/helpers/constants'
-import { keyTypes } from '@e2eSrc/helpers/keys'
+import { keyTypes } from '@e2eSrc/helpers/KeysActions'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 const keysData = keyTypes.map(object => ({ ...object })).slice(0, 6)
