@@ -74,8 +74,6 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     editButton: (name: string) => By,
   ): Promise<void> {
     const editLocator = editButton(name)
-    console.log('aaaa')
-    console.log(editLocator)
     const element = await this.getElement(editLocator)
     await element.click()
     const editElement = await this.getElement(editorLocator)

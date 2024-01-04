@@ -29,11 +29,10 @@ export class ButtonsActions {
 
     if (stateOfDisplayed) {
       await ButtonsActions.clickElement(locatorToClick)
-      const elementToWait = await ButtonsActions.driver.wait(
+      await ButtonsActions.driver.wait(
         until.elementLocated(locatorToDisplayed),
         timeout,
       )
-      await ButtonsActions.driver.wait(until.elementIsVisible(elementToWait))
     } else {
       const elementToWait = await ButtonsActions.driver.wait(
         until.elementLocated(locatorToDisplayed),
