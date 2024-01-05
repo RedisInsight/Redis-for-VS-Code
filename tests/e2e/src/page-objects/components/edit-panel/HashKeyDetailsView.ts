@@ -13,6 +13,9 @@ export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
     `//*[contains(@data-testid, 'hash-field-value-')]/div`,
   )
 
+  truncatedValue = By.xpath(
+    `//*[contains(@data-testid, 'hash-field-value-')]//*[@class = 'truncate']`,
+  )
   trashIcon = (name: string): By =>
     By.xpath(`//*[@data-testid="remove-hash-button-${name}-icon"]`)
   removeButton = (name: string): By =>

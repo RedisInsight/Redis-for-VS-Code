@@ -73,7 +73,7 @@ describe('TTL values in Keys Table', () => {
     //TODO verify that the key is really deleted
   })
 
-  it.skip('Verify that user can see TTL in the list of keys rounded down to the nearest unit', async function () {
+  it('Verify that user can see TTL in the list of keys rounded down to the nearest unit', async function () {
     cliViewPanel = await bottomBar.openCliViewPanel()
     await webView.switchToFrame(Views.CliViewPanel)
 
