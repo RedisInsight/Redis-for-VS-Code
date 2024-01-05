@@ -1,6 +1,6 @@
 import { DEFAULT_SEARCH_MATCH, KeyTypes } from 'uiSrc/constants'
 import { KeyInfo } from 'uiSrc/interfaces'
-import { UTF8ToArray } from 'uiSrc/utils'
+import { UTF8ToArray, stringToBuffer } from 'uiSrc/utils'
 
 const TEST_KEYS = [
   { name: UTF8ToArray('keys:1:2') },
@@ -33,6 +33,10 @@ export const constants = {
 
   get KEY_INFO() {
     return KEY_INFO
+  },
+
+  get KEYS_LIST() {
+    return KEYS_LIST
   },
 
   // key 1 string
@@ -156,5 +160,26 @@ const LIST_DATA = {
   elements: [
     { element: constants.KEY_4_ELEMENT, index: constants.KEY_4_INDEX },
     { element: constants.KEY_4_ELEMENT_2, index: constants.KEY_4_INDEX_2 },
+  ],
+}
+
+const KEYS_LIST: any = {
+  total: 249,
+  nextCursor: '228',
+  previousResultCount: 0,
+  lastRefreshTime: 0,
+  keys: [
+    {
+      name: stringToBuffer(constants.KEY_NAME_1),
+      type: constants.KEY_TYPE_1,
+      ttl: constants.KEY_TTL_1,
+      size: constants.KEY_SIZE_1,
+    },
+    {
+      name: stringToBuffer(constants.KEY_NAME_2),
+      type: constants.KEY_TYPE_2,
+      ttl: constants.KEY_TTL_2,
+      size: constants.KEY_SIZE_2,
+    },
   ],
 }

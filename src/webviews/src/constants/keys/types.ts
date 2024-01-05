@@ -18,6 +18,8 @@ export enum ModulesKeyTypes {
   TimeSeries = 'TSDB-TYPE',
 }
 
+export type AllKeyTypes = KeyTypes | ModulesKeyTypes
+
 export const GROUP_TYPES_DISPLAY = Object.freeze({
   [KeyTypes.Hash]: 'Hash',
   [KeyTypes.List]: 'List',

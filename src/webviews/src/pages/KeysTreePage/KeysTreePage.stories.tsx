@@ -5,7 +5,7 @@ import { HttpResponse, http } from 'msw'
 import { combineReducers, configureStore, createSlice } from '@reduxjs/toolkit'
 
 import { rootReducers, store } from 'uiSrc/store'
-import { initialState as initialStateKeys } from 'uiSrc/modules/keys-tree/slice/keys.slice'
+import { initialState as initialStateKeys } from 'uiSrc/slices/browser/keys.slice'
 import { constants, getMWSUrl } from 'testSrc/helpers'
 import { KeysTreePage } from '.'
 

@@ -53,7 +53,7 @@ const StringDetails = (props: Props) => {
 
   const handleRemoveKey = () => {
     resetStringStore()
-    onRemoveKey()
+    onRemoveKey?.()
   }
 
   const handleUpdated = () => {
