@@ -59,7 +59,7 @@ export const successMessages = {
     ),
   }),
   DELETED_KEY: (keyName: RedisString) => ({
-    title: 'Key has been deleted',
+    title: `${formatNameShort(bufferToString(keyName))} has been deleted.`,
     message: (
       <>
         <b>{formatNameShort(bufferToString(keyName))}</b>

@@ -48,7 +48,7 @@
   },
   "cSpell.words": ["githubocto", "tailwindcss", "webviews", "zustand"],
   "testing.automaticallyOpenPeekView": "never",
-  "[typescript]": {
+  "[typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   }
 }

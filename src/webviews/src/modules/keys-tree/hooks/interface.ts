@@ -1,23 +1,24 @@
-import { KeyTypes, KeyValueCompressor } from 'uiSrc/constants'
-import { KeyInfo, Nullable } from 'uiSrc/interfaces'
+import { KeyTypes } from 'uiSrc/constants'
+import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 
 export interface KeysStore {
   loading: boolean
-  error: string
+  deleting: boolean
   isFiltered: boolean
   isSearched: boolean
   search: string
   filter: Nullable<KeyTypes>
   data: KeysStoreData
-  selectedKey: {
-    loading: boolean
-    refreshing: boolean
-    lastRefreshTime: Nullable<number>
-    error: string
-    data: Nullable<KeyInfo>
-    length?: number
-    compressor: Nullable<KeyValueCompressor>
-  }
+}
+
+export interface KeysActions {
+  loadKeys: () => void
+  loadKeysFinal: () => void
+  loadKeysSuccess: (data: KeysStoreData) => void
+  loadMoreKeysSuccess: (data: KeysStoreData) => void
+  deleteKey: () => void
+  deleteKeyFinal: () => void
+  deleteKeyFromList: (key: RedisString) => void
 }
 
 export interface KeysStoreData {

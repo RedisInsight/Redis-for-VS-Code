@@ -4,6 +4,8 @@ import { SpyInstance } from 'vitest'
 import { stringToBuffer } from 'uiSrc/utils'
 import { apiService } from 'uiSrc/services'
 import { RootState } from 'uiSrc/store'
+import { SetStringWithExpire } from 'uiSrc/slices/browser/interface'
+import { KeyTypes } from 'uiSrc/constants'
 import { constants, initialStateDefault, mockedStore } from 'testSrc/helpers'
 import reducer, {
   initialState,
@@ -17,9 +19,15 @@ import reducer, {
   fetchPatternKeysAction,
   fetchMorePatternKeysAction,
   fetchKeysMetadataTree,
-} from '../keys.slice'
-import { parseKeysListResponse } from '../../utils'
-import { KeysStoreData } from '../interface'
+  addKeyIntoList,
+  addStringKey,
+  updateKeyList,
+  addKey,
+  addKeySuccess,
+  resetAddKey,
+} from './keys.slice'
+import { KeysStoreData } from './interface'
+import { parseKeysListResponse } from '../../modules/keys-tree/utils'
 
 let store: typeof mockedStore
 let dateNow: SpyInstance<[], number>
@@ -442,7 +450,7 @@ describe('keys slice', () => {
 
     describe('fetchKeysMetadataTree', () => {
       it('success to fetch keys metadata', async () => {
-      // Arrange
+        // Arrange
         const data = [
           {
             name: stringToBuffer('key1'),
@@ -496,6 +504,92 @@ describe('keys slice', () => {
         )
 
         expect(onSuccessMock).toBeCalledWith(data)
+      })
+    })
+
+    describe('addStringKey', () => {
+      it('success to add key', async () => {
+        // Arrange
+        const data: SetStringWithExpire = {
+          keyName: 'keyName',
+          value: 'string',
+        }
+        const responsePayload = { data, status: 200 }
+
+        apiService.post = vi.fn().mockResolvedValue(responsePayload)
+
+        // Act
+        await store.dispatch<any>(addStringKey(data, vi.fn()))
+
+        // Assert
+        const expectedActions = [
+          addKey(),
+          addKeySuccess(),
+          updateKeyList({ keyName: data.keyName, keyType: 'string' }),
+        ]
+        expect(store.getActions()).toEqual(expectedActions)
+      })
+    })
+
+    describe('addKeyIntoList', () => {
+      it('updateKeyList should be called', async () => {
+        // Act
+        await store.dispatch<any>(
+          addKeyIntoList({ key: 'key', keyType: KeyTypes.Hash }),
+        )
+
+        // Assert
+        const expectedActions = [
+          updateKeyList({ keyName: 'key', keyType: 'hash' }),
+        ]
+        expect(store.getActions()).toEqual(expectedActions)
+      })
+    })
+
+    describe('updateKeyList', () => {
+      it('should properly set the state after successfully added key', () => {
+        // Arrange
+        const state = {
+          ...initialState,
+          data: {
+            ...initialState.data,
+            keys: [{ name: 'name' }],
+            scanned: 1,
+            total: 1,
+          },
+        }
+
+        // Act
+        const nextState = reducer(initialState, updateKeyList({ keyName: 'name', keyType: 'hash' }))
+
+        // Assert
+        const rootState = Object.assign(initialStateDefault, {
+          browser: { keys: nextState },
+        })
+        expect(keysSelector(rootState)).toEqual(state)
+      })
+    })
+
+    describe('resetAddKey', () => {
+      it('should properly reset the state', () => {
+        // Arrange
+        const state = {
+          ...initialState,
+          addKey: {
+            ...initialState.addKey,
+            loading: false,
+            error: '',
+          },
+        }
+
+        // Act
+        const nextState = reducer(initialState, resetAddKey())
+
+        // Assert
+        const rootState = Object.assign(initialStateDefault, {
+          browser: { keys: nextState },
+        })
+        expect(keysSelector(rootState)).toEqual(state)
       })
     })
   })

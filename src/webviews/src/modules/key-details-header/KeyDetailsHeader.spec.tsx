@@ -2,45 +2,32 @@ import React from 'react'
 import { mock } from 'ts-mockito'
 import { cloneDeep } from 'lodash'
 import { KeyTypes } from 'uiSrc/constants'
-import { render, screen, fireEvent, mockedStore, cleanup, act } from 'testSrc/helpers'
+import { useSelectedKeyStore, initialState as initialSelectedKeyState } from 'uiSrc/store'
+import { bufferToString } from 'uiSrc/utils'
+import { render, screen, fireEvent, mockedStore, cleanup, act, constants } from 'testSrc/helpers'
 import { KeyDetailsHeaderProps, KeyDetailsHeader } from './KeyDetailsHeader'
+import * as useKeys from '../keys-tree/hooks/useKeys'
 
 const mockedProps = mock<KeyDetailsHeaderProps>()
 
 const KEY_INPUT_TEST_ID = 'edit-key-input'
 const KEY_BTN_TEST_ID = 'edit-key-btn'
 const TTL_INPUT_TEST_ID = 'inline-item-editor'
-const DELETE_KEY_BTN_TEST_ID = 'delete-key-btn'
-const DELETE_KEY_CONFIRM_BTN_TEST_ID = 'delete-key-confirm-btn'
+const supportedKeyTypes = [
+  KeyTypes.Hash,
+  KeyTypes.List,
+  KeyTypes.ZSet,
+  KeyTypes.String,
+]
 
+vi.spyOn(useKeys, 'deleteKeyAction')
 let store: typeof mockedStore
 beforeEach(() => {
   cleanup()
   store = cloneDeep(mockedStore)
   store.clearActions()
+  useSelectedKeyStore.setState(initialSelectedKeyState)
 })
-
-// vi.mock('uiSrc/slices/browser/string', () => ({
-//   ...(await vi.importActual('uiSrc/slices/browser/string'),
-//   stringDataSelector: vi.fn().mockReturnValue({
-//     value: {
-//       type: 'Buffer',
-//       data: [49, 50, 51, 52],
-//     },
-//   }),
-// }))
-
-// vi.mock('uiSrc/slices/browser/keys', () => ({
-//   ...(await vi.importActual('uiSrc/slices/browser/keys'),
-//   selectedKeyDataSelector: vi.fn().mockReturnValue({
-//     name: {
-//       type: 'Buffer',
-//       data: [116, 101, 115, 116],
-//     },
-//     nameString: 'test',
-//     length: 4,
-//   }),
-// }))
 
 describe('KeyDetailsHeader', () => {
   it('should render', () => {
@@ -91,23 +78,24 @@ describe('KeyDetailsHeader', () => {
   })
 
   describe.todo('should call onRefresh', () => {
-    test.each(Object.values(KeyTypes))('should call onRefresh for keyType: %s', (keyType) => {
+    test.each(supportedKeyTypes)('should call onRefresh for keyType: %s', (keyType) => {
       const component = render(<KeyDetailsHeader {...mockedProps} keyType={keyType} />)
       fireEvent.click(screen.getByTestId('refresh-key-btn'))
       expect(component).toBeTruthy()
     })
   })
 
-  describe.todo('should call onDelete', () => {
-    test.each(Object.values(KeyTypes))('should call onDelete for keyType: %s', (keyType) => {
-      const onRemoveKeyMock = vi.fn()
-      const component = render(<KeyDetailsHeader {...mockedProps} keyType={keyType} onRemoveKey={onRemoveKeyMock} />)
-      fireEvent.click(screen.getByTestId(DELETE_KEY_BTN_TEST_ID))
-      fireEvent.click(screen.getByTestId(DELETE_KEY_CONFIRM_BTN_TEST_ID))
-      expect(component).toBeTruthy()
+  describe('should call onDelete', async () => {
+    test.each(supportedKeyTypes)('should call onDelete for keyType: %s', (keyType) => {
+      const nameString = bufferToString(constants.KEY_INFO.name)
 
-      // const expectedActions = [deleteSelectedKey()]
-      // expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+      useSelectedKeyStore.setState(() => ({ ...initialSelectedKeyState, data: { ...constants.KEY_INFO, type: keyType, nameString } }))
+
+      const component = render(<KeyDetailsHeader {...mockedProps} keyType={keyType} />)
+      expect(component).toBeTruthy()
+      fireEvent.click(screen.getByTestId(`remove-key-${nameString}-icon`))
+      fireEvent.click(screen.getByTestId(`remove-key-${nameString}`))
+      expect(useKeys.deleteKeyAction).toBeCalled()
     })
   })
 })

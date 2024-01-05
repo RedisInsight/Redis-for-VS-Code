@@ -5,15 +5,16 @@ import {
 } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
-import { fetchKeyInfo, resetZustand, store, useSelectedKeyStore } from 'uiSrc/store'
+import { fetchKeyInfo, store, resetZustand, useSelectedKeyStore } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
 import { RedisString } from 'uiSrc/interfaces'
 import { isEqualBuffers } from 'uiSrc/utils'
-import { VscodeMessageAction } from 'uiSrc/constants'
 
-import 'uiSrc/styles/main.scss'
+import { fetchPatternKeysAction } from './modules/keys-tree/hooks/useKeys'
+import { VscodeMessageAction } from './constants'
 
+import './styles/main.scss'
 import '../vscode.css'
 
 // TODO: Type the incoming config data
@@ -35,15 +36,22 @@ document.addEventListener('DOMContentLoaded', () => {
   function handleMessage(event:any) {
     const message = event.data
 
-    if (message.action === VscodeMessageAction.SelectKey) {
-      const { data } = message as { data: RedisString }
-      const prevKey = useSelectedKeyStore.getState().data?.name
+    switch (message.action) {
+      case VscodeMessageAction.SelectKey:
+        const { data } = message as { data: RedisString }
+        const prevKey = useSelectedKeyStore.getState().data?.name
 
-      if (isEqualBuffers(data, prevKey)) {
-        return
-      }
-      resetZustand()
-      fetchKeyInfo(data)
+        if (isEqualBuffers(data, prevKey)) {
+          return
+        }
+        resetZustand()
+        fetchKeyInfo(data)
+        break
+      case VscodeMessageAction.RefreshTree:
+        fetchPatternKeysAction()
+        break
+      default:
+        break
     }
   }
 })
