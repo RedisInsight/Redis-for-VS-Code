@@ -18,7 +18,6 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
       enableScripts: true,
       localResourceRoots: [this._context.extensionUri],
     }
-
     // todo: connection between webviews
     webviewView.webview.onDidReceiveMessage(
       handleMessage,
@@ -35,10 +34,20 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
 
   private _getHtmlForWebview(webview: vscode.Webview) {
     const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._context.extensionUri, 'dist', 'webviews', 'style.css'),
+      vscode.Uri.joinPath(
+        this._context.extensionUri,
+        'dist',
+        'webviews',
+        'style.css',
+      ),
     )
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._context.extensionUri, 'dist', 'webviews', 'index.mjs'),
+      vscode.Uri.joinPath(
+        this._context.extensionUri,
+        'dist',
+        'webviews',
+        'index.mjs',
+      ),
     )
     const viewRoute = this._route
 

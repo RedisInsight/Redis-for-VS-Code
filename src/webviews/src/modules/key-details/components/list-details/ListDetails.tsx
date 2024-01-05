@@ -12,14 +12,13 @@ import { AddItemsAction } from '../key-details-actions'
 import styles from './styles.module.scss'
 
 export interface Props extends KeyDetailsHeaderProps {
-  onRemoveKey: () => void
   onOpenAddItemPanel: () => void
   onCloseAddItemPanel: () => void
 }
 
 const ListDetails = (props: Props) => {
   const keyType = KeyTypes.List
-  const { onRemoveKey, onOpenAddItemPanel, onCloseAddItemPanel } = props
+  const { onOpenAddItemPanel, onCloseAddItemPanel } = props
   const loading = useSelectedKeyStore((state) => state.loading)
 
   const [isRemoveItemPanelOpen, setIsRemoveItemPanelOpen] = useState<boolean>(false)

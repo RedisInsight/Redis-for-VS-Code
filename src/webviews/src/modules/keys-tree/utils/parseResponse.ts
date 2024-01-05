@@ -4,7 +4,7 @@ import {
   GetKeysWithDetailsResponse,
   GetKeysWithDetailsShardResponse,
   KeysStoreData,
-} from '../slice/interface'
+} from '../../../slices/browser/interface'
 
 const DEFAULT_NODE_ID = 'standalone'
 

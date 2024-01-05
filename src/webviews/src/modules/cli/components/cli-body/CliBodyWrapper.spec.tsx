@@ -20,16 +20,16 @@ beforeEach(() => {
   store.clearActions()
 })
 
-vi.mock('uiSrc/services', () => ({
-  ...vi.importActual<object>('uiSrc/services'),
+vi.mock('uiSrc/services', async () => ({
+  ...(await vi.importActual<object>('uiSrc/services')),
   sessionStorageService: {
     set: vi.fn(),
     get: vi.fn(),
   },
 }))
 
-vi.mock('uiSrc/slices/databases/databases.slice', () => ({
-  ...vi.importActual<object>('uiSrc/slices/databases/databases.slice'),
+vi.mock('uiSrc/slices/databases/databases.slice', async () => ({
+  ...(await vi.importActual<object>('uiSrc/slices/databases/databases.slice')),
   connectedDatabaseSelector: vi.fn().mockReturnValue({
     id: '123',
     connectionType: 'STANDALONE',
@@ -45,8 +45,8 @@ vi.mock('uiSrc/slices/cli/cli-output', async () => ({
   concatToOutput: () => vi.fn(),
 }))
 
-vi.mock('uiSrc/utils/cliHelper', () => ({
-  ...vi.importActual<object>('uiSrc/utils/cliHelper'),
+vi.mock('uiSrc/utils/cliHelper', async () => ({
+  ...(await vi.importActual<object>('uiSrc/utils/cliHelper')),
   updateCliHistoryStorage: vi.fn(),
   clearOutput: vi.fn(),
   cliParseTextResponse: vi.fn(),
@@ -56,8 +56,8 @@ vi.mock('uiSrc/utils/cliHelper', () => ({
 const unsupportedCommands = ['sync', 'subscription']
 const cliCommandTestId = 'cli-command'
 
-vi.mock('react-redux', () => ({
-  ...vi.importActual<object>('react-redux'),
+vi.mock('react-redux', async () => ({
+  ...(await vi.importActual<object>('react-redux')),
   useSelector: vi.fn(),
 }))
 

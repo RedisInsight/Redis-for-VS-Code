@@ -59,7 +59,7 @@ describe('slices', () => {
     })
   })
 
-  describe('setBrowserTreeSort', () => {
+  describe('setKeysTreeSort', () => {
     it('should properly set browser tree sorting', () => {
       // Arrange
       const sorting = SortOrder.DESC
@@ -81,7 +81,7 @@ describe('slices', () => {
     })
   })
 
-  describe('setBrowserTreeNodesOpen', () => {
+  describe('setKeysTreeNodesOpen', () => {
     it('should properly set open nodes in the tree', () => {
       // Arrange
       const openNodes = {
@@ -116,7 +116,7 @@ describe('slices', () => {
     })
   })
 
-  describe('resetBrowserTree', () => {
+  describe('resetKeysTree', () => {
     it('should properly set last page', () => {
       // Arrange
       const prevState = {
