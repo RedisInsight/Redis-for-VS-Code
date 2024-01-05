@@ -6,7 +6,7 @@ import { remove } from 'lodash'
 import * as l10n from '@vscode/l10n'
 
 import { apiService } from 'uiSrc/services'
-import { ApiEndpoints, SCAN_COUNT_DEFAULT, DEFAULT_SEARCH_MATCH, successMessages } from 'uiSrc/constants'
+import { ApiEndpoints, DEFAULT_SEARCH_MATCH, successMessages } from 'uiSrc/constants'
 import {
   bufferToString,
   getApiErrorMessage,
@@ -28,7 +28,6 @@ import {
 
 export const initialState: SetState = {
   loading: false,
-  error: '',
   data: {
     total: 0,
     key: undefined,
@@ -43,16 +42,8 @@ export const useSetStore = create<SetState & SetActions>()(
   immer(devtools(persist((set) => ({
     ...initialState,
     // actions
-    processSetRequest: () => set(() => ({ loading: true, error: '' })),
+    processSetRequest: () => set(() => ({ loading: true })),
     processSetResponse: () => set(() => ({ loading: false })),
-    processSetFailure: (payload) => set(() => ({ loading: false, error: payload })),
-    setSetMembers: (data) => set((state) => ({ data: { ...state.data, members: data } })),
-    loadSetMembers: ([match, resetData = true]) => set((state) => ({
-      loading: true,
-      error: '',
-      data: resetData ? initialState.data : state.data,
-      match: match || '*',
-    })),
     loadSetMembersSuccess: (data) => set((state) => ({ data: {
       ...state.data,
       ...data,
@@ -83,10 +74,9 @@ export const fetchSetMembers = (
   cursor: number,
   count: number,
   match: string,
-  resetData?: boolean,
   onSuccess?: (data: GetSetMembersResponse) => void,
 ) => useSetStore.setState(async (state) => {
-  state.loadSetMembers([match, resetData])
+  state.processSetRequest()
 
   try {
     const { data, status } = await apiService.post<GetSetMembersResponse>(
@@ -147,65 +137,6 @@ export const fetchMoreSetMembers = (
   }
 })
 
-// Async action
-export const refreshSetMembersAction = (key: RedisString, resetData?: boolean) => useSetStore.setState(async (state) => {
-  const { match } = state.data
-  state.loadSetMembers([match || '*', resetData])
-
-  try {
-    const { data, status } = await apiService.post<GetSetMembersResponse>(
-      getUrl(ApiEndpoints.SET_GET_MEMBERS),
-      {
-        keyName: key,
-        cursor: 0,
-        count: SCAN_COUNT_DEFAULT,
-        match,
-      },
-      { params: { encoding: getEncoding() } },
-    )
-
-    if (isStatusSuccessful(status)) {
-      state.loadSetMembersSuccess(data)
-    }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
-  } finally {
-    state.processSetResponse()
-  }
-})
-
-// Async action
-export const addSetMembersAction = (
-  data: AddMembersToSetDto,
-  onSuccessAction?: () => void,
-  onFailAction?: () => void,
-) => useSetStore.setState(async (state) => {
-  state.processSetRequest()
-
-  try {
-    const { status } = await apiService.put(
-      getUrl(ApiEndpoints.SET),
-      data,
-      { params: { encoding: getEncoding() } },
-    )
-
-    if (isStatusSuccessful(status)) {
-      state.processSetResponse()
-      fetchKeyInfo(data.keyName)
-      onSuccessAction?.()
-    }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
-  } finally {
-    state.processSetResponse()
-    onFailAction?.()
-  }
-})
-
 // Asynchronous thunk actions
 export const deleteSetMembers = (
   key: RedisString,
@@ -230,7 +161,6 @@ export const deleteSetMembers = (
       const newTotalValue = state.data.total - data.affected
 
       onSuccessAction?.(newTotalValue)
-      state.processSetResponse()
       state.removeMembersFromList(members)
       if (newTotalValue > 0) {
         showInformationMessage(

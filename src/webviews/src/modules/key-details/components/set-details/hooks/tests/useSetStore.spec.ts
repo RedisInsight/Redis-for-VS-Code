@@ -70,7 +70,7 @@ describe('async', () => {
     const responsePayload = { data: { ...constants.SET_DATA }, status: 200 }
     apiService.post = vi.fn().mockResolvedValue(responsePayload)
 
-    fetchMoreSetMembers(constants.KEY_NAME_3, 0 , 500, DEFAULT_SEARCH_MATCH)
+    fetchMoreSetMembers(constants.KEY_NAME_5, 0 , 500, DEFAULT_SEARCH_MATCH)
     await waitForStack()
 
     expect(useSetStore.getState().data.keyName).toEqual(constants.KEY_NAME_5)

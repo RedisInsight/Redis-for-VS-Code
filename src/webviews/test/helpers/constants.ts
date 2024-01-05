@@ -97,6 +97,7 @@ export const constants = {
   KEY_SIZE_5: 10_000,
   KEY_5_MEMBER: UTF8ToArray('member'),
   KEY_5_MEMBER_2: UTF8ToArray('member2'),
+  KEY_5_MEMBER_3: UTF8ToArray('member3'),
 
   get LIST_DATA_RESPONSE() {
     return LIST_DATA_RESPONSE
