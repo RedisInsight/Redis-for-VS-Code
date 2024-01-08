@@ -26,18 +26,28 @@ export class ButtonsActions {
     timeout: number = 3000,
   ): Promise<void> {
     ButtonsActions.initializeDriver()
-    await ButtonsActions.clickElement(locatorToClick)
-    // Wait for element
-    const elementToWait = await ButtonsActions.driver.wait(
-      until.elementLocated(locatorToClick),
-      timeout,
-    )
-    stateOfDisplayed
-      ? await ButtonsActions.driver.wait(until.elementIsVisible(elementToWait))
-      : await ButtonsActions.driver.wait(
+
+    if (stateOfDisplayed) {
+      await ButtonsActions.clickElement(locatorToClick)
+      await ButtonsActions.driver.wait(
+        until.elementLocated(locatorToDisplayed),
+        timeout,
+      )
+    } else {
+      const elementToWait = await ButtonsActions.driver.wait(
+        until.elementLocated(locatorToDisplayed),
+        timeout,
+      )
+      await ButtonsActions.clickElement(locatorToClick)
+
+      try {
+        await ButtonsActions.driver.wait(
           until.elementIsNotVisible(elementToWait),
         )
+      } catch (error) {}
+    }
   }
+
   /**
    * Click on button
    * @param locatorToClick locator to click
