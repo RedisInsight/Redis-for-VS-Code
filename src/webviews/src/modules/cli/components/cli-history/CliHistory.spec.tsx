@@ -24,7 +24,7 @@ describe('CliHistory', () => {
       <CliHistory {...mockedProps} cliClickHandle={cliClickHandle} cliConnectionsHistory={[cliHistotyUnit]} />,
     )
     const selectCliRow = screen.getByTestId(/cli-select-row-/i)
-    fireEvent.click(selectCliRow)
+    fireEvent(selectCliRow, new MouseEvent('click', { bubbles: true }))
     expect(cliClickHandle).toBeCalledTimes(1)
   })
 

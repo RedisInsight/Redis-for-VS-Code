@@ -11,15 +11,20 @@ describe('CLI', () => {
   })
 
   it('history should render properly', () => {
-    const cliHistotyUnit = {
-      id: 'qwe-rty',
+    const cliHistoty = [{
+      id: '1',
       host: 'reddiscorp.com',
       port: 12687,
       cliHistory: ['some', 'cli', 'history'],
-    }
+    }, {
+      id: '2',
+      host: 'reddiscorp.com',
+      port: 12687,
+      cliHistory: ['some', 'cli', 'history'],
+    }]
 
     render(
-      <Cli {...mockedProps} cliConnectionsHistory={[cliHistotyUnit, cliHistotyUnit]} />,
+      <Cli {...mockedProps} cliConnectionsHistory={cliHistoty} />,
     )
     expect(screen.getByTestId('history-panel-view')).toBeInTheDocument()
   })

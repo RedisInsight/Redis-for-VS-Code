@@ -25,15 +25,12 @@ export const CliHistory = (props: Props) => {
             styles.cliItem,
             isActive(item.id) ? styles.active : null,
           )}
-          onClick={() => cliClickHandle(item)}
-          tabIndex={0}
-          onKeyDown={() => { }}
-          role="button"
-          data-testid={`cli-select-row-${item.id}`}
           key={item.id}
         >
-          <VscTerminal />
-          <span>{`${item.host}:${item.port}`}</span>
+          <button type="button" onClick={() => cliClickHandle(item)} data-testid={`cli-select-row-${item.id}`}>
+            <VscTerminal />
+            <span>{`${item.host}:${item.port}`}</span>
+          </button>
           <VSCodeButton
             appearance="icon"
             onClick={() => cliDeleteHandle(item)}
