@@ -9,6 +9,7 @@ import {
   KeyTreeView,
   HashKeyDetailsView,
   SortedSetKeyDetailsView,
+  ListKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
@@ -31,6 +32,7 @@ describe('Key Details verifications', () => {
   let stringKeyDetailsView: StringKeyDetailsView
   let hashKeyDetailsView: HashKeyDetailsView
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
+  let listKeyDetailsView: ListKeyDetailsView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -41,6 +43,7 @@ describe('Key Details verifications', () => {
     keyTreeView = new KeyTreeView()
     hashKeyDetailsView = new HashKeyDetailsView()
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
+    listKeyDetailsView = new ListKeyDetailsView()
 
     await browser.waitForWorkbench(20_000)
   })
@@ -182,6 +185,54 @@ describe('Key Details verifications', () => {
       'Length is 0',
     )
     expect(Number(await sortedSetKeyDetailsView.getKeyTtl())).match(
+      expectedTTL,
+      'The Key TTL is incorrect',
+    )
+  })
+
+  it('Verify that user can see List Key details', async function () {
+    keyName = Common.generateWord(20)
+    const ttl = '121212'
+    const element = 'element1'
+
+    cliViewPanel = await bottomBar.openCliViewPanel()
+    await webView.switchToFrame(Views.CliViewPanel)
+
+    const command = `LPUSH ${keyName} \"${element}\"`
+    await cliViewPanel.executeCommand(`${command}`)
+    const command2 = `expire ${keyName} \"${ttl}\" `
+    await cliViewPanel.executeCommand(`${command2}`)
+    await webView.switchBack()
+    await bottomBar.toggle(false)
+
+    // Open key details iframe
+    sideBarView = await (
+      await new ActivityBar().getViewControl('RedisInsight')
+    )?.openView()
+    await webView.switchToFrame(Views.KeyTreeView)
+    await keyTreeView.openKeyDetailsByKeyName(keyName)
+    await webView.switchBack()
+    await webView.switchToFrame(Views.KeyDetailsView)
+
+    expect(
+      await listKeyDetailsView.getElementText(
+        listKeyDetailsView.keyType,
+      ),
+    ).contain('List', 'Type is incorrect')
+    expect(
+      await listKeyDetailsView.getElementText(
+        listKeyDetailsView.keyName,
+      ),
+    ).eq(keyName, 'Name is incorrect')
+    expect(await listKeyDetailsView.getKeySize()).greaterThan(
+      0,
+      'Size is 0',
+    )
+    expect(await listKeyDetailsView.getKeyLength()).greaterThan(
+      0,
+      'Length is 0',
+    )
+    expect(Number(await listKeyDetailsView.getKeyTtl())).match(
       expectedTTL,
       'The Key TTL is incorrect',
     )

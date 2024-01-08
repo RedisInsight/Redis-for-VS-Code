@@ -9,7 +9,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { StringKeyParameters } from '@e2eSrc/helpers/KeysActions'
-import { ButtonsActions, InputActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Cases with large data', () => {
@@ -74,7 +74,7 @@ describe('Cases with large data', () => {
     ).true
 
     await ButtonsActions.clickElement(keyDetailsView.loadAllStringValue)
-    await expect(
+    expect(
       (await keyDetailsView.getElementText(keyDetailsView.keyStringValue))
         .length,
     ).eql(

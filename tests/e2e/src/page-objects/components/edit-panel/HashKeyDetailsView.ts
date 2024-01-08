@@ -1,5 +1,6 @@
 import { By } from 'selenium-webdriver'
 import { DoubleColumnKeyDetailsView } from '@e2eSrc/page-objects/components/edit-panel/DoubleColumnKeyDetailsView'
+import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
 /**
  * Hash Key details view
@@ -13,29 +14,6 @@ export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
     `//*[contains(@data-testid, 'hash-field-value-')]/div`,
   )
 
-  trashIcon = (name: string): By =>
-    By.xpath(`//*[@data-testid="remove-hash-button-${name}-icon"]`)
-  removeButton = (name: string): By =>
-    By.xpath(`//*[@data-testid="remove-hash-button-${name}"]`)
-  editHashButton = (name: string): By =>
-    By.xpath(`//*[@data-testid="edit-hash-button-${name}"]`)
-
-  /**
-   * Remove row by field
-   * @param name The field value
-   */
-  async removeRowByField(name: string): Promise<void> {
-    await super.removeRowByField(name, this.trashIcon)
-  }
-
-  /**
-   * Click on remove button by field
-   * @param name The field value
-   */
-  async clickRemoveRowButtonByField(name: string): Promise<void> {
-    await super.clickRemoveRowButtonByField(name, this.removeButton)
-  }
-
   /**
    * Edit Hash key value from details
    * @param value The value of the key
@@ -46,7 +24,7 @@ export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
       value,
       name,
       this.hashFieldValueEditor,
-      this.editHashButton,
+      KeyTypesShort.Hash,
     )
   }
 }

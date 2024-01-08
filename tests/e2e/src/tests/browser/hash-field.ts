@@ -7,7 +7,6 @@ import {
   Workbench,
 } from 'vscode-extension-tester'
 import {
-  BottomBar,
   WebView,
   HashKeyDetailsView,
   KeyTreeView,
@@ -19,20 +18,19 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 import { KeyActions } from '@e2eSrc/helpers/KeysActions'
+import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
 let keyName: string
 
 describe('Hash Key fields verification', () => {
   let browser: VSBrowser
   let webView: WebView
-  let bottomBar: BottomBar
   let keyDetailsView: HashKeyDetailsView
   let keyTreeView: KeyTreeView
   let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new HashKeyDetailsView()
     keyTreeView = new KeyTreeView()
@@ -195,8 +193,8 @@ describe('Hash Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.hashValuesList)
     )[0].getText()
     expect(resultValue).eqls(keyValue)
-    await keyDetailsView.removeRowByField(keyFieldValue)
-    await keyDetailsView.clickRemoveRowButtonByField(keyFieldValue)
+    await keyDetailsView.removeRowByField(KeyTypesShort.Hash, keyFieldValue)
+    await keyDetailsView.clickRemoveRowButtonByField(KeyTypesShort.Hash, keyFieldValue)
     await webView.switchBack()
 
     const notifications = await new Workbench().getNotifications()
