@@ -7,6 +7,7 @@ import { KeyDetailsView } from './edit-panel/KeyDetailsView'
 import { KeyTreeView } from './key-view/KeyTreeView'
 import { HashKeyDetailsView } from './edit-panel/HashKeyDetailsView'
 import { StringKeyDetailsView } from './edit-panel/StringKeyDetailsView'
+import { SortedSetKeyDetailsView } from './edit-panel/SortedSetKeyDetailsView'
 
 export {
   WebView,
@@ -16,5 +17,6 @@ export {
   KeyDetailsView,
   KeyTreeView,
   HashKeyDetailsView,
-  StringKeyDetailsView
+  StringKeyDetailsView,
+  SortedSetKeyDetailsView,
 }

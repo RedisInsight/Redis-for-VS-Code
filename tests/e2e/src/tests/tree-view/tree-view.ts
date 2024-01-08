@@ -5,6 +5,7 @@ import { WebView, KeyTreeView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { KeyAPIRequests, CliAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Tree view verifications', () => {
   let browser: VSBrowser
@@ -74,7 +75,7 @@ describe('Tree view verifications', () => {
       )
     }
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
-    await webView.switchToFrame(KeyTreeView.treeFrame)
+    await webView.switchToFrame(Views.KeyTreeView)
 
     // Verify that if there are keys without namespaces, they are displayed in the root directory after all folders by default in the Tree view
     await keyTreeView.openTreeFolders([`${keyNames[0]}`.split(':')[0]])
@@ -84,5 +85,24 @@ describe('Tree view verifications', () => {
     expect(actualItemsArray).eql(expectedSortedByASC)
 
     // Verify that user can change the sorting ASC-DESC - will be added in future with delimiter feature
+  })
+  // Run this test only for database instance without keys
+  it.skip('Verify that user can see message "No keys to display." when there are no keys in the database', async function () {
+    const message = 'Keys are the foundation of Redis.'
+
+    expect(await keyTreeView.getElementText(keyTreeView.treeViewPage)).eql(
+      message,
+      'Tree view no keys message not shown',
+    )
+  })
+  // Run this test only for big database instance 8103
+  it.skip('Verify that user can see the total number of keys, the number of keys scanned, the “Scan more” control displayed at the top of Tree view and Browser view', async function () {
+    // Verify the controls on the Browser view
+
+    // Verify the controls on the Tree view
+    expect(await keyTreeView.isElementDisplayed(keyTreeView.scanMoreBtn)).eql(
+      true,
+      'Tree view Scan more button not displayed for big database',
+    )
   })
 })

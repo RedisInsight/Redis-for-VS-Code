@@ -11,7 +11,7 @@ import {
 
 import { InputActions, ButtonsActions } from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
-import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Set TTL for Key', () => {
   let browser: VSBrowser
@@ -35,14 +35,14 @@ describe('Set TTL for Key', () => {
     await webView.switchBack()
     await bottomBar.openTerminalView()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(CliViewPanel.cliFrame)
+    await webView.switchToFrame(Views.CliViewPanel)
     await cliViewPanel.executeCommand(`FLUSHDB`)
   })
-  it.skip('Verify that user can specify TTL for Key', async function () {
+  it('Verify that user can specify TTL for Key', async function () {
     const ttlValue = '2147476121'
 
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(CliViewPanel.cliFrame)
+    await webView.switchToFrame(Views.CliViewPanel)
     const keyName = Common.generateWord(20)
     const command = `SET ${keyName} a`
     await cliViewPanel.executeCommand(`${command}`)
@@ -52,17 +52,16 @@ describe('Set TTL for Key', () => {
       await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()
 
-    await webView.switchToFrame(KeyTreeView.treeFrame)
+    await webView.switchToFrame(Views.KeyTreeView)
     await keyTreeView.openKeyDetailsByKeyName(keyName)
     await webView.switchBack()
 
-    await webView.switchToFrame(KeyDetailsView.keyFrame)
+    await webView.switchToFrame(Views.KeyDetailsView)
     const inputField = await keyDetailsView.getElement(keyDetailsView.ttlField)
     await InputActions.slowType(inputField, ttlValue)
     await ButtonsActions.clickElement(keyDetailsView.saveTtl)
 
-    // TODO wait and Refresh the page in several seconds
-    await CommonDriverExtension.driverSleep()
+    await ButtonsActions.clickElement(keyDetailsView.keyRefresh)
 
     const newTtlValue = Number(await keyDetailsView.getKeyTtl())
     expect(Number(ttlValue)).gt(newTtlValue)

@@ -13,6 +13,9 @@ export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
     `//*[contains(@data-testid, 'hash-field-value-')]/div`,
   )
 
+  truncatedValue = By.xpath(
+    `//*[contains(@data-testid, 'hash-field-value-')]//*[@class = 'truncate']`,
+  )
   trashIcon = (name: string): By =>
     By.xpath(`//*[@data-testid="remove-hash-button-${name}-icon"]`)
   removeButton = (name: string): By =>
@@ -42,7 +45,7 @@ export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
    * @param name The field value
    */
   async editHashKeyValue(value: string, name: string): Promise<void> {
-    await super.editHashKeyValue(
+    await super.editKeyValue(
       value,
       name,
       this.hashFieldValueEditor,

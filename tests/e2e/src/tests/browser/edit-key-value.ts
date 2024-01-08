@@ -11,14 +11,18 @@ import {
   WebView,
   HashKeyDetailsView,
   KeyTreeView,
+  SortedSetKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
-import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
+import {
+  HashKeyParameters,
+  SortedSetKeyParameters,
+} from '@e2eSrc/helpers/types/types'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
-let KeyName: string
+let keyName: string
 
 const keyValueBefore = 'ValueBeforeEdit!'
 const keyValueAfter = 'ValueAfterEdit!'
@@ -31,6 +35,7 @@ describe('Edit Key values verification', () => {
   let keyTreeView: KeyTreeView
   let sideBarView: SideBarView | undefined
   let workbeanch: Workbench
+  let sortedSetKeyDetailsView: SortedSetKeyDetailsView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -39,22 +44,23 @@ describe('Edit Key values verification', () => {
     keyDetailsView = new HashKeyDetailsView()
     keyTreeView = new KeyTreeView()
     workbeanch = new Workbench()
+    sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
 
     await browser.waitForWorkbench(20_000)
   })
   afterEach(async () => {
     await webView.switchBack()
     await KeyAPIRequests.deleteKeyByNameApi(
-      KeyName,
+      keyName,
       Config.ossStandaloneConfig.databaseName,
     )
   })
   it('Verify that user can edit Hash Key field', async function () {
     const fieldName = 'test'
-    KeyName = Common.generateWord(10)
+    keyName = Common.generateWord(10)
 
     const hashKeyParameters: HashKeyParameters = {
-      keyName: KeyName,
+      keyName: keyName,
       fields: [
         {
           field: fieldName,
@@ -70,15 +76,55 @@ describe('Edit Key values verification', () => {
       await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()
 
-    await webView.switchToFrame(KeyTreeView.treeFrame)
-    await keyTreeView.openKeyDetailsByKeyName(KeyName)
+    await webView.switchToFrame(Views.KeyTreeView)
+    await keyTreeView.openKeyDetailsByKeyName(keyName)
     await webView.switchBack()
 
-    await webView.switchToFrame(HashKeyDetailsView.keyFrame)
+    await webView.switchToFrame(Views.KeyDetailsView)
     await keyDetailsView.editHashKeyValue(keyValueAfter, fieldName)
     let resultValue = await (
       await keyDetailsView.getElements(keyDetailsView.hashValuesList)
     )[0].getText()
     expect(resultValue).eqls(keyValueAfter)
+  })
+
+  it('Verify that user can edit Sorted Set Key field', async function () {
+    keyName = Common.generateWord(10)
+    const scoreBefore = 5
+    const scoreAfter = '10'
+    const sortedSetKeyParameters: SortedSetKeyParameters = {
+      keyName: keyName,
+      members: [
+        {
+          name: keyValueBefore,
+          score: scoreBefore,
+        },
+      ],
+    }
+
+    await KeyAPIRequests.addSortedSetKeyApi(
+      sortedSetKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+    sideBarView = await (
+      await new ActivityBar().getViewControl('RedisInsight')
+    )?.openView()
+
+    await webView.switchToFrame(Views.KeyTreeView)
+    await keyTreeView.openKeyDetailsByKeyName(keyName)
+    await webView.switchBack()
+
+    await webView.switchToFrame(Views.KeyDetailsView)
+    // await CommonDriverExtension.driverSleep()
+    await sortedSetKeyDetailsView.editSortedSetKeyValue(
+      scoreAfter,
+      keyValueBefore,
+    )
+    let resultValue = await (
+      await keyDetailsView.getElements(
+        sortedSetKeyDetailsView.scoreSortedSetFieldsList,
+      )
+    )[0].getText()
+    expect(resultValue).eqls(scoreAfter)
   })
 })
