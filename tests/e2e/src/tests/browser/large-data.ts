@@ -11,6 +11,8 @@ import { Common } from '@e2eSrc/helpers/Common'
 import { StringKeyParameters } from '@e2eSrc/helpers/KeysActions'
 import { ButtonsActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { Config } from '@e2eSrc/helpers/Conf'
 
 describe('Cases with large data', () => {
   let browser: VSBrowser
@@ -47,7 +49,22 @@ describe('Cases with large data', () => {
       value: keyValue + 1,
     }
 
-    //TODO create 2 strings
+    await KeyAPIRequests.addStringKeyApi(
+      {
+        keyName: stringKeyParameters.keyName,
+        value: stringKeyParameters.value,
+      },
+      Config.ossStandaloneConfig,
+    )
+
+    await KeyAPIRequests.addStringKeyApi(
+      {
+        keyName: bigStringKeyParameters.keyName,
+        value: bigStringKeyParameters.value,
+      },
+      Config.ossStandaloneConfig,
+    )
+
     sideBarView = await (
       await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()

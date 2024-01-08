@@ -86,7 +86,7 @@ describe('Tree view verifications', () => {
 
     // Verify that user can change the sorting ASC-DESC - will be added in future with delimiter feature
   })
-  // Run this test only for database instanse without keys
+  // Run this test only for database instance without keys
   it.skip('Verify that user can see message "No keys to display." when there are no keys in the database', async function () {
     const message = 'Keys are the foundation of Redis.'
 
@@ -95,7 +95,7 @@ describe('Tree view verifications', () => {
       'Tree view no keys message not shown',
     )
   })
-  // Run this test only for big database instanse 8103
+  // Run this test only for big database instance 8103
   it.skip('Verify that user can see the total number of keys, the number of keys scanned, the “Scan more” control displayed at the top of Tree view and Browser view', async function () {
     // Verify the controls on the Browser view
 
