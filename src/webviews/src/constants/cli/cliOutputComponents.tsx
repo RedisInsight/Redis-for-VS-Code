@@ -9,7 +9,6 @@ export const InitOutputText = (
   port: number = 0,
   dbIndex: number = 0,
   emptyOutput: boolean,
-  onClick: () => void,
 ) => [
   <Fragment key={Math.random()}>
     {emptyOutput && (
@@ -20,7 +19,6 @@ export const InitOutputText = (
               'Context: Try "Workbench", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.',
       })}
       <Link
-        onClick={onClick}
         className="color-green"
         style={{ fontSize: 'inherit', fontFamily: 'inherit' }}
         data-test-subj="cli-workbench-page-btn"

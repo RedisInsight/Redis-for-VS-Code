@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case VscodeMessageAction.SelectKey:
         const { data } = message as { data: RedisString }
         const prevKey = useSelectedKeyStore.getState().data?.name
-        
+
         if (isEqualBuffers(data, prevKey)) {
           return
         }

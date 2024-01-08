@@ -8,7 +8,6 @@ import {
   createCliClientAction,
   setCliEnteringCommand,
   clearSearchingCommand,
-  toggleCli,
   deleteCliClientAction,
   resetCliSettings,
 } from 'uiSrc/modules/cli/slice/cli-settings'
@@ -20,7 +19,6 @@ import {
   processUnsupportedCommand,
   processUnrepeatableNumber,
   resetOutputLoading,
-  resetOutput,
 } from 'uiSrc/modules/cli/slice/cli-output'
 import {
   cliTexts,
@@ -57,7 +55,6 @@ export const CliBodyWrapper = () => {
     isSearching,
     matchedCommand,
     cliClientUuid,
-    refreshCli,
   } = useSelector(cliSettingsSelector)
   const { host, port, connectionType } = useSelector(connectedDatabaseSelector)
   const { db: currentDbIndex } = useSelector(outputSelector)
@@ -75,18 +72,11 @@ export const CliBodyWrapper = () => {
   }
 
   useEffect(() => {
-    !cliClientUuid && host && dispatch(createCliClientAction(handleWorkbenchClick))
+    !cliClientUuid && host && dispatch(createCliClientAction())
     return () => {
       removeCliClient()
     }
   }, [host])
-
-  useEffect(() => {
-    if (refreshCli) {
-      dispatch(resetOutput())
-      dispatch(createCliClientAction(handleWorkbenchClick))
-    }
-  }, [refreshCli])
 
   useEffect(() => {
     if (!isEnteringCommand) {
@@ -99,17 +89,6 @@ export const CliBodyWrapper = () => {
 
   const handleClearOutput = () => {
     clearOutput(dispatch)
-  }
-
-  const handleWorkbenchClick = () => {
-    dispatch(toggleCli())
-
-    sendEventTelemetry({
-      event: TelemetryEvent.CLI_WORKBENCH_LINK_CLICKED,
-      eventData: {
-        databaseId: CONNECTED_DATABASE_ID,
-      },
-    })
   }
 
   const refHotkeys = useHotkeys<HTMLDivElement>('command+k,ctrl+l', handleClearOutput)

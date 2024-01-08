@@ -31,7 +31,6 @@ export interface StateCliSettings {
   searchingCommandFilter: string;
   unsupportedCommands: string[];
   blockingCommands: string[];
-  refreshCli: boolean;
   activeCliId: string;
   cliConnectionsHistory: ConnectionHistory[];
 }

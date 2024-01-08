@@ -1,34 +1,21 @@
 import React from 'react'
 import cx from 'classnames'
-import {
-  useDispatch,
-  useSelector,
-} from 'react-redux'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { VscTerminal, VscTrash } from 'react-icons/vsc'
-import { AppDispatch } from 'uiSrc/store'
-import { cliSettingsSelector, selectCli, deleteCli } from 'uiSrc/modules/cli/slice/cli-settings'
 import { ConnectionHistory } from 'uiSrc/interfaces'
 import styles from './styles.module.scss'
 
-export const CliHistory = () => {
-  const dispatch = useDispatch<AppDispatch>()
-  const {
-    activeCliId,
-    cliConnectionsHistory,
-  } = useSelector(cliSettingsSelector)
+export interface Props {
+  activeCliId: string
+  cliConnectionsHistory: ConnectionHistory[]
+  cliClickHandle: (item: ConnectionHistory) => void
+  cliDeleteHandle: (item: ConnectionHistory) => void
+}
+
+export const CliHistory = (props: Props) => {
+  const { activeCliId, cliConnectionsHistory, cliClickHandle, cliDeleteHandle } = props
 
   const isActive = (id: string): boolean => activeCliId === id
-
-  const cliClickHandle = (item: ConnectionHistory) => {
-    if (item.id !== activeCliId) {
-      dispatch(selectCli(item.id))
-    }
-  }
-
-  const handleDelete = (item: ConnectionHistory) => {
-    dispatch(deleteCli(item.id))
-  }
 
   return (
     <div className="flex w-full h-full" style={{ flexDirection: 'column' }}>
@@ -42,15 +29,16 @@ export const CliHistory = () => {
           tabIndex={0}
           onKeyDown={() => { }}
           role="button"
+          data-testid={`cli-select-row-${item.id}`}
           key={item.id}
         >
           <VscTerminal />
           <span>{`${item.host}:${item.port}`}</span>
           <VSCodeButton
             appearance="icon"
-            onClick={() => handleDelete(item)}
+            onClick={() => cliDeleteHandle(item)}
             aria-label="Delete cli"
-            data-testid="delete-button"
+            data-testid={`cli-delete-button-${item.id}`}
           >
             <VscTrash />
           </VSCodeButton>

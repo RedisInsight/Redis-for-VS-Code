@@ -9,7 +9,7 @@ import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/da
 import { AppDispatch, RootState } from 'uiSrc/store'
 import { ConnectionHistory, StateCliSettings } from 'uiSrc/interfaces'
 import { Database } from 'uiSrc/slices/connections/databases/interface'
-import { outputSelector, setOutput, concatToOutput, setCliDbIndex } from './cli-output'
+import { outputSelector, setOutput, concatToOutput, setCliDbIndex, resetOutput } from './cli-output'
 // import { CreateCliClientResponse, DeleteClientResponse } from 'apiSrc/modules/cli/dto/cli.dto'
 
 export const initialState: StateCliSettings = {
@@ -27,7 +27,6 @@ export const initialState: StateCliSettings = {
   isSearching: false,
   unsupportedCommands: [],
   blockingCommands: [],
-  refreshCli: false,
   activeCliId: '',
   cliConnectionsHistory: [],
 }
@@ -43,9 +42,6 @@ const cliSettingsSlice = createSlice({
       state.isShowCli = true
     },
 
-    toggleCli: (state) => {
-      state.isShowCli = !state.isShowCli
-    },
     openCliHelper: (state) => {
       state.isShowHelper = true
     },
@@ -152,10 +148,6 @@ const cliSettingsSlice = createSlice({
       state.isSearching = true
     },
 
-    setRefreshCli: (state, { payload }: { payload: boolean }) => {
-      state.refreshCli = payload
-    },
-
     setActiveCliId: (state, { payload }: { payload: string }) => {
       state.activeCliId = payload
     },
@@ -180,7 +172,6 @@ const cliSettingsSlice = createSlice({
 export const {
   setCliSettingsInitialState,
   openCli,
-  toggleCli,
   openCliHelper,
   toggleCliHelper,
   toggleHideCliHelper,
@@ -200,7 +191,6 @@ export const {
   getUnsupportedCommandsSuccess,
   getBlockingCommandsSuccess,
   goBackFromCommand,
-  setRefreshCli,
   setActiveCliId,
   addCliConnectionsHistory,
   updateCliConnectionsHistory,
@@ -233,7 +223,6 @@ const checkCliHistory = (id: string, database: Database) => async (dispatch: App
 
 // Asynchronous thunk action
 export function createCliClientAction(
-  onWorkbenchClick: () => void,
   onSuccessAction?: () => void,
   onFailAction?: (message: string) => void,
 ) {
@@ -244,7 +233,7 @@ export function createCliClientAction(
     const { host, port, db } = database
     const { data = [] } = outputSelector?.(state) ?? {}
     dispatch(processCliClient())
-    dispatch(concatToOutput(InitOutputText(host, port, db, !data.length, onWorkbenchClick)))
+    dispatch(concatToOutput(InitOutputText(host, port, db, !data.length)))
 
     try {
       const { data, status } = await apiService.post<any>(
@@ -257,7 +246,6 @@ export function createCliClientAction(
         dispatch(processCliClientSuccess(data?.uuid))
         dispatch(concatToOutput(ConnectionSuccessOutputText))
         dispatch(setCliDbIndex(state.connections?.databases?.connectedDatabase?.db || 0))
-        dispatch(setRefreshCli(false))
 
         onSuccessAction?.()
       }
@@ -399,7 +387,8 @@ function updateCliHistory() {
 export function addCli() {
   return async (dispatch: AppDispatch) => {
     dispatch(updateCliHistory())
-    dispatch(setRefreshCli(true))
+    dispatch(resetOutput())
+    dispatch(createCliClientAction())
   }
 }
 

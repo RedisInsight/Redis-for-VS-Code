@@ -1,12 +1,10 @@
 import React, { AbstractView, useState, useEffect } from 'react'
 import cx from 'classnames'
-import {
-  useDispatch,
-  useSelector,
-} from 'react-redux'
-import { cliSettingsSelector, closeAllCliConnections } from 'uiSrc/modules/cli/slice/cli-settings'
+import { useDispatch, useSelector } from 'react-redux'
+import { cliSettingsSelector, closeAllCliConnections, deleteCli, selectCli } from 'uiSrc/modules/cli/slice/cli-settings'
 import { AppDispatch } from 'uiSrc/store'
 
+import { ConnectionHistory } from 'uiSrc/interfaces'
 import { CliBodyWrapper } from './components/cli-body'
 import { CliHistory } from './components/cli-history'
 import styles from './styles.module.scss'
@@ -15,14 +13,20 @@ interface DragEvent extends React.MouseEvent {
   view: AbstractView & { outerWidth: number }
 }
 
-export const Cli = () => {
+export interface Props {
+  cliConnectionsHistory: ConnectionHistory[]
+}
+
+export const Cli = (props: Props) => {
+  const { cliConnectionsHistory } = props
+
+  const {
+    activeCliId,
+  } = useSelector(cliSettingsSelector)
+
   const dispatch = useDispatch<AppDispatch>()
   const [dragged, setDragged] = useState<boolean>(false)
   const [width, setWidth] = useState<number>(365)
-
-  const {
-    cliConnectionsHistory,
-  } = useSelector(cliSettingsSelector)
 
   useEffect(() => () => {
     dispatch(closeAllCliConnections())
@@ -37,6 +41,16 @@ export const Cli = () => {
     }
   }
 
+  const cliClickHandle = (item: ConnectionHistory) => {
+    if (item.id !== activeCliId) {
+      dispatch(selectCli(item.id))
+    }
+  }
+
+  const cliDeleteHandle = (item: ConnectionHistory) => {
+    dispatch(deleteCli(item.id))
+  }
+
   return (
     <table className={cx('h-full', 'w-full', 'overflow-hidden', dragged ? styles.hoverless : null)} data-testid="panel-view-page">
       <tbody>
@@ -48,8 +62,9 @@ export const Cli = () => {
               </div>
             </div>
           </td>
-          {cliConnectionsHistory.length > 1 ? (
-            <td style={{ width }}>
+
+          {cliConnectionsHistory?.length > 1 && (
+            <td style={{ width }} data-testid="history-panel-view">
               <div className="flex h-full" style={{ width }}>
                 <div
                   onMouseDown={enableDragging}
@@ -58,10 +73,15 @@ export const Cli = () => {
                   tabIndex={0}
                   role="treeitem"
                 />
-                <CliHistory />
+                <CliHistory
+                  activeCliId={activeCliId}
+                  cliConnectionsHistory={cliConnectionsHistory}
+                  cliClickHandle={cliClickHandle}
+                  cliDeleteHandle={cliDeleteHandle}
+                />
               </div>
             </td>
-          ) : null}
+          )}
         </tr>
       </tbody>
     </table>
