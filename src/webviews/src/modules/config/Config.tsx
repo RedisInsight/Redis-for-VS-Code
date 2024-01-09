@@ -13,6 +13,7 @@ import {
 import { fetchRedisCommandsInfo } from 'uiSrc/slices/app/commands/redis-commands.slice'
 import { isDifferentConsentsExists } from 'uiSrc/utils'
 import { AppDispatch } from 'uiSrc/store'
+import { fetchDatabasesAction } from 'uiSrc/slices/connections/databases/databases.slice'
 
 export const Config = () => {
   const { config, spec } = useSelector(userSettingsSelector)
@@ -21,9 +22,7 @@ export const Config = () => {
   useEffect(() => {
     dispatch(fetchServerInfo())
     dispatch(fetchRedisCommandsInfo())
-
-    // TODO: remove after BE will be implemented
-    // dispatch(fetchDatabasesAction())
+    dispatch(fetchDatabasesAction())
 
     // fetch config settings, after that take spec
     dispatch(fetchUserConfigSettings(() => dispatch(fetchUserSettingsSpec())))

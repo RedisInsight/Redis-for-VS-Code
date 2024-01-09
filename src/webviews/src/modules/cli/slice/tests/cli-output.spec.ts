@@ -9,6 +9,7 @@ import { cliParseTextResponseWithOffset, cliParseTextResponseWithRedirect } from
 import { processCliClient } from 'uiSrc/modules/cli/slice/cli-settings'
 // import { addErrorNotification } from 'uiSrc/slices/app/notifications'
 import reducer, {
+  setOutput,
   concatToOutput,
   fetchMonitorLog,
   initialState,
@@ -48,6 +49,28 @@ beforeEach(() => {
 })
 
 describe('cliOutput slice', () => {
+  describe('setOutput', () => {
+    it('should properly setOutput an arrayt', () => {
+      const data = ['\n\n', 'tatata']
+      // Arrange
+      const state: typeof initialState = {
+        ...initialState,
+        data,
+      }
+
+      // Act
+      const nextState = reducer(initialState, setOutput(data))
+
+      // Assert
+      const rootState = Object.assign(initialStateDefault, {
+        cli: {
+          output: nextState,
+        },
+      })
+      expect(outputSelector(rootState)).toEqual(state)
+    })
+  })
+
   describe('concatToOutput', () => {
     it('should properly concat a new array to existed output', () => {
       const data = ['\n\n', 'tatata']

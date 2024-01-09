@@ -50,8 +50,10 @@ const databasesSlice = createSlice({
         state.connectedDatabase.isRediStack = isRediStack || false
       }
 
-      // TODO: remove after BE will be implemented
-      // state.connectedDatabase = first(payload) ?? state.connectedDatabase
+      // TODO: remove after database connection will be implemented
+      state.connectedDatabase = payload.length
+        ? payload.find(({ id }) => id === CONNECTED_DATABASE_ID) as Database
+        : state.connectedDatabase
     },
     loadDatabasesFailure: (state, { payload }) => {
       state.loading = false

@@ -9,7 +9,6 @@ import {
 } from 'uiSrc/constants'
 import reducer, {
   initialState,
-  toggleCli,
   resetCliSettings,
   processCliClient,
   processCliClientSuccess,
@@ -29,7 +28,13 @@ import reducer, {
   setSearchingCommand,
   clearSearchingCommand,
   resetCliClientUuid,
-  resetCliHelperSettings, goBackFromCommand,
+  resetCliHelperSettings,
+  goBackFromCommand,
+  setActiveCliId,
+  addCliConnectionsHistory,
+  updateCliConnectionsHistory,
+  removeFromCliConnectionsHistory,
+
 } from 'uiSrc/modules/cli/slice/cli-settings'
 import {
   cleanup,
@@ -88,28 +93,6 @@ describe('cliSettings slice', () => {
 
       // Act
       const nextState = reducer(initialState, toggleCliHelper())
-
-      // Assert
-      const rootState = Object.assign(initialStateDefault, {
-        cli: {
-          settings: nextState,
-        },
-      })
-      expect(cliSettingsSelector(rootState)).toEqual(state)
-    })
-  })
-
-  describe('toggleCli', () => {
-    it('should properly set !isShowCli', () => {
-      // Arrange
-      const state: typeof initialState = {
-        ...initialState,
-        isShowCli: true,
-        isMinimizedHelper: false,
-      }
-
-      // Act
-      const nextState = reducer(initialState, toggleCli())
 
       // Assert
       const rootState = Object.assign(initialStateDefault, {
@@ -633,6 +616,104 @@ describe('cliSettings slice', () => {
       // Assert
       const expectedActions = [processCliClient(), getUnsupportedCommandsSuccess(data)]
       expect(store.getActions()).toEqual(expectedActions)
+    })
+  })
+
+
+  describe('cliHistory', () => {
+    it('should properly set active uuid', () => {
+      const uuid = '70b95d32-c19d-4311-bb24-e684af12cf15'
+      // Arrange
+      const state = {
+        ...initialState,
+        activeCliId: uuid
+      }
+
+      // Act
+      const nextState = reducer(initialState, setActiveCliId(uuid))
+
+      // Assert
+      const rootState = Object.assign(initialStateDefault, {
+        cli: {
+          settings: nextState,
+        },
+      })
+      expect(cliSettingsSelector(rootState)).toEqual(state)
+    })
+
+    it('should properly set add cli history', () => {
+      const cliHistotyUnit = {
+        id: 'qwe-rty',
+        host: 'reddiscorp.com',
+        port: 12687,
+        cliHistory: ['some', 'cli', 'history']
+      }
+      // Arrange
+      const state = {
+        ...initialState,
+        cliConnectionsHistory: [cliHistotyUnit]
+      }
+
+      // Act
+      const nextState = reducer(initialState, addCliConnectionsHistory(cliHistotyUnit))
+
+      // Assert
+      const rootState = Object.assign(initialStateDefault, {
+        cli: {
+          settings: nextState,
+        },
+      })
+      expect(cliSettingsSelector(rootState)).toEqual(state)
+    })
+
+    it('should properly update cli history', () => {
+      const cliHistotyUnit = {
+        id: 'qwe-rty',
+        host: 'reddiscorp.com',
+        port: 12687,
+        cliHistory: ['some', 'cli', 'history']
+      }
+      // Arrange
+      const state = {
+        ...initialState,
+        cliConnectionsHistory: [cliHistotyUnit]
+      }
+
+      // Act
+      const nextState = reducer(initialState, updateCliConnectionsHistory([cliHistotyUnit]))
+
+      // Assert
+      const rootState = Object.assign(initialStateDefault, {
+        cli: {
+          settings: nextState,
+        },
+      })
+      expect(cliSettingsSelector(rootState)).toEqual(state)
+    })
+
+    it('should properly remove from cli history', () => {
+      const cliHistotyUnit = {
+        id: 'qwe-rty',
+        host: 'reddiscorp.com',
+        port: 12687,
+        cliHistory: ['some', 'cli', 'history']
+      }
+      // Arrange
+      const state = {
+        ...initialState,
+        cliConnectionsHistory: []
+      }
+
+      // Act
+      const nextState = reducer(initialState, removeFromCliConnectionsHistory(cliHistotyUnit))
+
+      // Assert
+      const rootState = Object.assign(initialStateDefault, {
+        cli: {
+          settings: nextState,
+        },
+      })
+      expect(cliSettingsSelector(rootState)).toEqual(state)
     })
   })
 })

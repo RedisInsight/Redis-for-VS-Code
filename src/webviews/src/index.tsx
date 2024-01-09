@@ -10,9 +10,9 @@ import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
 import { RedisString } from 'uiSrc/interfaces'
 import { isEqualBuffers } from 'uiSrc/utils'
-
+import { VscodeMessageAction } from 'uiSrc/constants'
+import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
 import { fetchPatternKeysAction } from './modules/keys-tree/hooks/useKeys'
-import { VscodeMessageAction } from './constants'
 
 import './styles/main.scss'
 import '../vscode.css'
@@ -33,7 +33,7 @@ const root = createRoot(container!)
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('message', handleMessage)
 
-  function handleMessage(event:any) {
+  function handleMessage(event: any) {
     const message = event.data
 
     switch (message.action) {
@@ -52,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
         break
       default:
         break
+    }
+    if (message.action === VscodeMessageAction.AddCli) {
+      // TODO: change logic after DB connection will be implemented
+      store.dispatch(addCli())
     }
   }
 })
