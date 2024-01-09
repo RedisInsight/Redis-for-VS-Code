@@ -45,7 +45,7 @@ import {
 } from 'uiSrc/constants'
 import { appContextBrowserKeyDetails, updateKeyDetailsSizes } from 'uiSrc/slices/app/context/context.slice'
 import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
-import { RedisString } from 'uiSrc/interfaces'
+import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { useSelectedKeyStore } from 'uiSrc/store'
 
 import {
@@ -106,6 +106,7 @@ const ZSetDetailsTable = (props: Props) => {
   const [expandedRows, setExpandedRows] = useState<number[]>([])
   const [viewFormat, setViewFormat] = useState(viewFormatProp)
   const [sortedColumnOrder, setSortedColumnOrder] = useState(SortOrder.ASC)
+  const [editingIndex, setEditingIndex] = useState<Nullable<number>>(null)
 
   const dispatch = useDispatch()
 
@@ -126,6 +127,7 @@ const ZSetDetailsTable = (props: Props) => {
     if (viewFormat !== viewFormatProp) {
       setExpandedRows([])
       setViewFormat(viewFormatProp)
+      setEditingIndex(null)
 
       cellCache.clearAll()
       setTimeout(() => {
@@ -159,7 +161,8 @@ const ZSetDetailsTable = (props: Props) => {
     closePopover()
   }
 
-  const handleEditMember = (name: RedisString, editing: boolean) => {
+  const handleEditMember = (rowIndex: Nullable<number> = null, name: RedisString, editing: boolean) => {
+    setEditingIndex(editing ? rowIndex : null)
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_EDITED,
       eventData: {
@@ -177,7 +180,7 @@ const ZSetDetailsTable = (props: Props) => {
     cellCache.clearAll()
   }
 
-  const handleApplyEditScore = (name: RedisString, score: string = '') => {
+  const handleApplyEditScore = (rowIndex: number, name: RedisString, score: string = '') => {
     const data: AddMembersToZSetDto = {
       keyName: key!,
       members: [{
@@ -187,7 +190,7 @@ const ZSetDetailsTable = (props: Props) => {
     }
     updateZSetMembersAction(
       data,
-      () => handleEditMember(name, false),
+      () => handleEditMember(rowIndex, name, false),
     )
   }
 
@@ -307,11 +310,16 @@ const ZSetDetailsTable = (props: Props) => {
       minWidth: 100,
       isSortable: true,
       truncateText: true,
-      render: function Score(_name: string, { name: nameItem, score, editing }: IZsetMember, expanded?: boolean) {
+      render: function Score(
+        _name: string,
+        { name: nameItem, score }: IZsetMember,
+        expanded?: boolean,
+        rowIndex = 0,
+      ) {
         const cellContent = score.toString().substring(0, 200)
         const tooltipContent = formatLongName(score.toString())
 
-        if (editing) {
+        if (rowIndex === editingIndex) {
           return (
             <div className="key-details-edit">
               <StopPropagation>
@@ -323,8 +331,8 @@ const ZSetDetailsTable = (props: Props) => {
                   initialValue={score.toString()}
                   placeholder={l10n.t('Enter Score')}
                   fieldName="score"
-                  onDecline={() => handleEditMember(nameItem, false)}
-                  onApply={(value) => handleApplyEditScore(nameItem, value)}
+                  onDecline={() => handleEditMember(rowIndex, nameItem, false)}
+                  onApply={(value) => handleApplyEditScore(rowIndex, nameItem, value)}
                   validation={validateScoreNumber}
                 />
               </StopPropagation>
@@ -359,8 +367,11 @@ const ZSetDetailsTable = (props: Props) => {
       minWidth: 85,
       maxWidth: 85,
       absoluteWidth: 85,
-      render: function Actions(_act: any, { name: nameItem, score }: IZsetMember) {
+      render: function Actions(_act: any, { name: nameItem, score }: IZsetMember, _, rowIndex = 0) {
         const name = bufferToString(nameItem, viewFormat)
+        if (rowIndex === editingIndex) {
+          return null
+        }
         return (
           <StopPropagation>
             <div className="value-table-actions">
@@ -368,7 +379,7 @@ const ZSetDetailsTable = (props: Props) => {
                 appearance="icon"
                 disabled={updateLoading || !isNumber(score)}
                 className="editFieldBtn"
-                onClick={() => handleEditMember(nameItem, true)}
+                onClick={() => handleEditMember(rowIndex, nameItem, true)}
                 data-testid={`zset-edit-button-${name}`}
                 aria-label="Edit field"
                 title={!isNumber(score) ? l10n.t('Use CLI to edit the score') : ''}
@@ -422,23 +433,6 @@ const ZSetDetailsTable = (props: Props) => {
         match || DEFAULT_SEARCH_MATCH,
       )
     }
-    // if (!searching) {
-    //   fetchZSetMoreMembers(
-    //     key!,
-    //     startIndex,
-    //     stopIndex - startIndex + 1,
-    //     sortedColumnOrder,
-    //   )
-    //   return
-    // }
-    // if (nextCursor !== 0) {
-    //   fetchSearchMoreZSetMembers(
-    //     key,
-    //     nextCursor,
-    //     SCAN_COUNT_DEFAULT,
-    //     match || DEFAULT_SEARCH_MATCH,
-    //   )
-    // }
   }
 
   const sortedColumn = {
