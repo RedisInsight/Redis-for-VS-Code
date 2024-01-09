@@ -18,29 +18,31 @@ export const CliHistory = (props: Props) => {
   const isActive = (id: string): boolean => activeCliId === id
 
   return (
-    <div className="flex w-full h-full" style={{ flexDirection: 'column' }}>
-      {cliConnectionsHistory?.map((item) => (
-        <div
-          className={cx(
-            styles.cliItem,
-            isActive(item.id) ? styles.active : null,
-          )}
-          key={item.id}
-        >
-          <button type="button" onClick={() => cliClickHandle(item)} data-testid={`cli-select-row-${item.id}`}>
-            <VscTerminal />
-            <span>{`${item.host}:${item.port}`}</span>
-          </button>
-          <VSCodeButton
-            appearance="icon"
-            onClick={() => cliDeleteHandle(item)}
-            aria-label="Delete cli"
-            data-testid={`cli-delete-button-${item.id}`}
+    <div className={styles.historyWrapper}>
+      <div className="flex w-full" style={{ flexDirection: 'column' }}>
+        {cliConnectionsHistory?.map((item) => (
+          <div
+            className={cx(
+              styles.cliItem,
+              isActive(item.id) ? styles.active : null,
+            )}
+            key={item.id}
           >
-            <VscTrash />
-          </VSCodeButton>
-        </div>
-      ))}
+            <button type="button" onClick={() => cliClickHandle(item)} data-testid={`cli-select-row-${item.id}`}>
+              <VscTerminal />
+              <span>{`${item.host}:${item.port}`}</span>
+            </button>
+            <VSCodeButton
+              appearance="icon"
+              onClick={() => cliDeleteHandle(item)}
+              aria-label="Delete cli"
+              data-testid={`cli-delete-button-${item.id}`}
+            >
+              <VscTrash />
+            </VSCodeButton>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
