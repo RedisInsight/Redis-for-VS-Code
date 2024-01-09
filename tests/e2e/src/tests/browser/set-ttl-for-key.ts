@@ -41,7 +41,7 @@ describe('Set TTL for Key', () => {
     await webView.switchToFrame(Views.CliViewPanel)
     await cliViewPanel.executeCommand(`FLUSHDB`)
   })
-  it.skip('Verify that user can specify TTL for Key', async function () {
+  it('Verify that user can specify TTL for Key', async function () {
     const ttlValue = '2147476121'
 
     cliViewPanel = await bottomBar.openCliViewPanel()

@@ -14,6 +14,8 @@ import {
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { Config } from '@e2eSrc/helpers/Conf'
 
 describe('Cases with large data', () => {
   let browser: VSBrowser
@@ -50,9 +52,26 @@ describe('Cases with large data', () => {
     }
 
     //TODO create 2 strings
+    await KeyAPIRequests.addStringKeyApi(
+      {
+        keyName: stringKeyParameters.keyName,
+        value: stringKeyParameters.value,
+      },
+      Config.ossStandaloneConfig.databaseName,
+    )
+
+    await KeyAPIRequests.addStringKeyApi(
+      {
+        keyName: bigStringKeyParameters.keyName,
+        value: bigStringKeyParameters.value,
+      },
+      Config.ossStandaloneConfig.databaseName,
+    )
+
     // Open key details iframe
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
     expect(
       await keyDetailsView.isElementDisplayed(
         keyDetailsView.loadAllStringValue,

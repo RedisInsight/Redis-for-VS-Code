@@ -1,10 +1,11 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser } from 'vscode-extension-tester'
+import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
   CliViewPanel,
+  KeyTreeView,
 } from '@e2eSrc/page-objects/components'
 import { InputActions } from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
@@ -19,12 +20,16 @@ describe('CLI critical', () => {
   let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
+  let sideBarView: SideBarView | undefined
+  let keyTreeView: KeyTreeView
+
   let keyName = Common.generateWord(20)
 
   beforeEach(async () => {
     browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
+    keyTreeView = new KeyTreeView()
 
     await browser.waitForWorkbench(20_000)
     cliViewPanel = await bottomBar.openCliViewPanel()
@@ -157,11 +162,20 @@ describe('CLI critical', () => {
     expect(text).contain('redis_version:')
   })
   // Update once treeView class added
-  it.skip('Verify that user can add data via CLI', async function () {
+  it('Verify that user can add data via CLI', async function () {
     await cliViewPanel.executeCommand(
       `SADD ${keyName} "chinese" "japanese" "german"`,
     )
-    // Search key and find created key in Tree view
+
+    await webView.switchBack()
+    // should be removed when iframe get unic locator
+    await bottomBar.toggle(false)
+    sideBarView = await (
+      await new ActivityBar().getViewControl('RedisInsight')
+    )?.openView()
+
+    await webView.switchToFrame(Views.KeyTreeView)
+    await keyTreeView.openKeyDetailsByKeyName(keyName)
   })
   it('Verify that user can use blocking command', async function () {
     await cliViewPanel.executeCommand('blpop newKey 10000')

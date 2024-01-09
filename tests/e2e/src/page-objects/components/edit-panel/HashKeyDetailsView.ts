@@ -13,6 +13,9 @@ export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
   hashValuesList = By.xpath(
     `//*[contains(@data-testid, 'hash-field-value-')]/div`,
   )
+  truncatedValue = By.xpath(
+    `//*[contains(@data-testid, 'hash-field-value-')]//*[@class = 'truncate']`,
+  )
 
   /**
    * Edit Hash key value from details
