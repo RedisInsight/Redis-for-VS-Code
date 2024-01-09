@@ -233,7 +233,7 @@ export const SetDetailsTable = (props: Props) => {
               showPopover={showPopover}
               handleDeleteItem={handleDeleteMember}
               handleButtonClick={handleRemoveIconClick}
-              testid={`set-remove-btn-${member}`}
+              testid={`set-remove-button-${member}`}
               appendInfo={length === 1 ? helpTexts.REMOVE_LAST_ELEMENT('Member') : null}
             />
           </div>

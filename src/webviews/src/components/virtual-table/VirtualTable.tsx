@@ -449,12 +449,15 @@ const VirtualTable = (props: IProps) => {
       if (column.id === columnId) {
         return {
           ...column,
-          isOpened: !!value,
+          isOpened: false,
           value,
         }
       }
       return column
     })
+    cellCache.clearAll()
+    setExpandedRows([])
+
     setSearch(newState)
     onSearch?.(newState)
   }
