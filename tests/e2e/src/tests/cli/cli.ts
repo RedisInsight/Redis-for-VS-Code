@@ -129,7 +129,7 @@ describe('CLI critical', () => {
     // Add Json key with json object
     await KeyAPIRequests.addJsonKeyApi(
       jsonKeyParameters,
-      Config.ossStandaloneConfig,
+      Config.ossStandaloneConfig.databaseName,
     )
     await cliViewPanel.executeCommand(command)
     // Verify result

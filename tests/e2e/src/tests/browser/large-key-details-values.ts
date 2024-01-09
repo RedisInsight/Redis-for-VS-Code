@@ -1,23 +1,26 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
   SortedSetKeyDetailsView,
   KeyTreeView,
-  CliViewPanel,
+  ListKeyDetailsView,
   HashKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import {
+  ButtonsActions,
+  KeyDetailsActions,
+} from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
+  ListKeyParameters,
   HashKeyParameters,
   SortedSetKeyParameters,
 } from '@e2eSrc/helpers/types/types'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 
@@ -28,8 +31,7 @@ describe('Large key details verification', () => {
   let sortedsetKeyDetailsView: SortedSetKeyDetailsView
   let hashKeyDetailsView: HashKeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
-  let cliViewPanel: CliViewPanel
+  let listKeyDetailsView: ListKeyDetailsView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -38,6 +40,7 @@ describe('Large key details verification', () => {
     sortedsetKeyDetailsView = new SortedSetKeyDetailsView()
     hashKeyDetailsView = new HashKeyDetailsView()
     keyTreeView = new KeyTreeView()
+    listKeyDetailsView = new ListKeyDetailsView()
 
     await browser.waitForWorkbench(20_000)
   })
@@ -65,15 +68,10 @@ describe('Large key details verification', () => {
       sortedSetKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     const memberValueCell = await sortedsetKeyDetailsView.getElement(
       sortedsetKeyDetailsView.sortedSetFieldsList,
@@ -117,15 +115,9 @@ describe('Large key details verification', () => {
       hashKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
-
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     const memberValueCell = await hashKeyDetailsView.getElement(
       hashKeyDetailsView.hashValuesList,
@@ -148,6 +140,47 @@ describe('Large key details verification', () => {
     )
 
     newSize = await memberValueCell.getRect()
+    expect(newSize.height).eql(rowHeight, 'Row is not collapsed')
+  })
+  it('Verify that user can expand/collapse for list data type', async function () {
+    keyName = Common.generateWord(20)
+
+    const listKeyParameters: ListKeyParameters = {
+      keyName: keyName,
+      element:
+        'wqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsa',
+    }
+
+    await KeyAPIRequests.addListKeyApi(
+      listKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    const elementValueCell = await listKeyDetailsView.getElement(
+      listKeyDetailsView.elementsList,
+    )
+    const size = await elementValueCell.getRect()
+    const rowHeight = size.height
+
+    await ButtonsActions.clickAndWaitForElement(
+      listKeyDetailsView.elementsList,
+      listKeyDetailsView.truncatedValue,
+      false,
+    )
+    // Verify that user can expand a row of list data type
+    let newSize = await elementValueCell.getRect()
+    expect(newSize.height).gt(rowHeight, 'Row is not expanded')
+
+    await ButtonsActions.clickAndWaitForElement(
+      listKeyDetailsView.elementsList,
+      listKeyDetailsView.truncatedValue,
+    )
+    // Verify that user can collapse a row of list data type
+    newSize = await elementValueCell.getRect()
     expect(newSize.height).eql(rowHeight, 'Row is not collapsed')
   })
 })

@@ -2,25 +2,25 @@ import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import {
   ActivityBar,
-  SideBarView,
   VSBrowser,
   Workbench,
 } from 'vscode-extension-tester'
 import {
-  BottomBar,
   WebView,
   HashKeyDetailsView,
   KeyTreeView,
   SortedSetKeyDetailsView,
+  ListKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
   HashKeyParameters,
+  ListKeyParameters,
   SortedSetKeyParameters,
 } from '@e2eSrc/helpers/types/types'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { KeyDetailsActions } from '@e2eSrc/helpers/common-actions'
 
 let keyName: string
 
@@ -30,21 +30,20 @@ const keyValueAfter = 'ValueAfterEdit!'
 describe('Edit Key values verification', () => {
   let browser: VSBrowser
   let webView: WebView
-  let bottomBar: BottomBar
-  let keyDetailsView: HashKeyDetailsView
+  let hashKeyDetailsView: HashKeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
   let workbeanch: Workbench
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
+  let listKeyDetailsView: ListKeyDetailsView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    bottomBar = new BottomBar()
     webView = new WebView()
-    keyDetailsView = new HashKeyDetailsView()
+    hashKeyDetailsView = new HashKeyDetailsView()
     keyTreeView = new KeyTreeView()
     workbeanch = new Workbench()
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
+    listKeyDetailsView = new ListKeyDetailsView()
 
     await browser.waitForWorkbench(20_000)
   })
@@ -72,22 +71,16 @@ describe('Edit Key values verification', () => {
       hashKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
-    await keyDetailsView.editHashKeyValue(keyValueAfter, fieldName)
+    await hashKeyDetailsView.editHashKeyValue(keyValueAfter, fieldName)
     let resultValue = await (
-      await keyDetailsView.getElements(keyDetailsView.hashValuesList)
+      await hashKeyDetailsView.getElements(hashKeyDetailsView.hashValuesList)
     )[0].getText()
     expect(resultValue).eqls(keyValueAfter)
   })
-
   it('Verify that user can edit Sorted Set Key field', async function () {
     keyName = Common.generateWord(10)
     const scoreBefore = 5
@@ -106,25 +99,40 @@ describe('Edit Key values verification', () => {
       sortedSetKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
-    // await CommonDriverExtension.driverSleep()
     await sortedSetKeyDetailsView.editSortedSetKeyValue(
       scoreAfter,
       keyValueBefore,
     )
     let resultValue = await (
-      await keyDetailsView.getElements(
+      await sortedSetKeyDetailsView.getElements(
         sortedSetKeyDetailsView.scoreSortedSetFieldsList,
       )
     )[0].getText()
     expect(resultValue).eqls(scoreAfter)
+  })
+  it('Verify that user can edit List Key element', async function () {
+    keyName = Common.generateWord(10)
+
+    const listKeyParameters: ListKeyParameters = {
+      keyName: keyName,
+      element: keyValueBefore,
+    }
+    await KeyAPIRequests.addListKeyApi(
+      listKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    await listKeyDetailsView.editListKeyValue(keyValueAfter, '0')
+    let resultValue = await (
+      await listKeyDetailsView.getElements(listKeyDetailsView.elementsList)
+    )[0].getText()
+    expect(resultValue).eqls(keyValueAfter)
   })
 })

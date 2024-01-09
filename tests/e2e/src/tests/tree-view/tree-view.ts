@@ -65,13 +65,13 @@ describe('Tree view verifications', () => {
     for (const key of stringKeys) {
       await KeyAPIRequests.addStringKeyApi(
         { keyName: key, value: 'value' },
-        Config.ossStandaloneConfig,
+        Config.ossStandaloneConfig.databaseName,
       )
     }
     for (const key of setKeys) {
       await KeyAPIRequests.addSetKeyApi(
         { keyName: key, members: ['value'] },
-        Config.ossStandaloneConfig,
+        Config.ossStandaloneConfig.databaseName,
       )
     }
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()

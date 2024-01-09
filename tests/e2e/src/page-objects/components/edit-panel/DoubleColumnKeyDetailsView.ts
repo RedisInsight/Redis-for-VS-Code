@@ -17,6 +17,19 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     '//*[@data-testid="virtual-table-container"]//*[@data-testid="apply-btn"]',
   )
 
+  trashIcon = (keyType: string, name: string): By =>
+    By.xpath(
+      `//*[@data-testid="remove-${keyType}-button-${name}-icon"] | //*[@data-testid="${keyType}-remove-button-${name}-icon"]`,
+    )
+  removeButton = (keyType: string, name: string): By =>
+    By.xpath(
+      `//*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"]`,
+    )
+  editButton = (keyType: string, name: string): By =>
+    By.xpath(
+      `//*[@data-testid="edit-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-edit-button-${name}"]`,
+    )
+
   /**
    * Search by the value in the key details
    * @param value The value of the search parameter
@@ -36,44 +49,55 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
 
   /**
    * Remove row by field
+   * @param keyType The key type
    * @param name The field value
    */
-  protected async removeRowByField(
-    name: string,
-    trashIcon: (name: string) => By,
-  ): Promise<void> {
-    const rowInTheListLocator = trashIcon(name)
+  async removeRowByField(keyType: string, name: string): Promise<void> {
+    const rowInTheListLocator = this.trashIcon(keyType, name)
     const element = await this.getElement(rowInTheListLocator)
     await element.click()
   }
 
   /**
    * Click on remove button by field
+   * @param keyType The key type
    * @param name The field value
-   * @param removeButton function to initialize By
    */
-  protected async clickRemoveRowButtonByField(
+  async clickRemoveRowButtonByField(
+    keyType: string,
     name: string,
-    removeButton: (name: string) => By,
   ): Promise<void> {
-    const removeLocator = removeButton(name)
+    const removeLocator = this.removeButton(keyType, name)
     const element = await this.getElement(removeLocator)
     await element.click()
   }
 
   /**
-   * Edit Hash key value from details
+   * Remove multiple rows in key by field values
+   * @param keyType The key type
+   * @param names The field values
+   */
+  async removeRowsByFieldValues(keyType: string, names: string[]): Promise<void> {
+    for (const name of names) {
+      await this.removeRowByField(keyType, name)
+      await this.clickRemoveRowButtonByField(keyType, name)
+    }
+  }
+
+  /**
+   * Edit key value from details
    * @param value The value of the key
    * @param name The field value
-   * @param editHashButton function to initialize By
+   * @param editorLocator The locator of the edit field
+   * @param keyType The key type
    */
   protected async editKeyValue(
     value: string,
     name: string,
     editorLocator: By,
-    editButton: (name: string) => By,
+    keyType: string,
   ): Promise<void> {
-    const editLocator = editButton(name)
+    const editLocator = this.editButton(keyType, name)
     const element = await this.getElement(editLocator)
     await element.click()
     const editElement = await this.getElement(editorLocator)
