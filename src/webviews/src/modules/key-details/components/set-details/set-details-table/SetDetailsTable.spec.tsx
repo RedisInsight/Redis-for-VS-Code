@@ -46,8 +46,8 @@ describe('SetDetailsTable', () => {
 
   it('should render delete popup after click remove button', () => {
     render(<SetDetailsTable {...instance(mockedProps)} />)
-    fireEvent.click(screen.getAllByTestId(/set-remove-btn/i)[0])
-    expect(screen.getAllByTestId(/set-remove-btn-/i)[0]).toBeInTheDocument()
+    fireEvent.click(screen.getAllByTestId(/set-remove-button/i)[0])
+    expect(screen.getAllByTestId(/set-remove-button-/i)[0]).toBeInTheDocument()
   })
 
   // describe.todo('decompressed  data', () => {
