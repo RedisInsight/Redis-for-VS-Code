@@ -12,6 +12,7 @@ import * as l10n from '@vscode/l10n'
 import { useDetectClickOutside } from 'react-detect-click-outside'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { VscCheck, VscError } from 'react-icons/vsc'
+import { RxCross1 } from 'react-icons/rx'
 import Popup from 'reactjs-popup'
 import { capitalize } from 'lodash'
 
@@ -216,6 +217,7 @@ const InlineEditor = memo((props: Props) => {
               className={cx(
                 'InlineEditor__controls',
                 styles.controls,
+                styles[`controls${capitalize(controlsPosition)}`],
                 controlsClassName,
                 { flex: isActive },
               )}
@@ -226,7 +228,6 @@ const InlineEditor = memo((props: Props) => {
                 className={cx(
                   styles.btn,
                   styles.declineBtn,
-                  styles[`controls${capitalize(controlsPosition)}`],
                 )}
                 onClick={(event) => {
                   setIsActive(false)
@@ -235,7 +236,7 @@ const InlineEditor = memo((props: Props) => {
                 disabled={isLoading}
                 data-testid="cancel-btn"
               >
-                <VscError />
+                { controlsPosition === 'bottom' ? <RxCross1 /> : <VscError />}
               </VSCodeButton>
 
               {!approveByValidation && ApplyBtn}

@@ -33,10 +33,11 @@ describe('ZSetDetailsTable', () => {
     expect(searchInput).toHaveValue('*')
   })
 
-  it('should render delete popup after click remove button', () => {
-    render(<ZSetDetailsTable {...instance(mockedProps)} />)
+  it('should render editor after click edit button', () => {
+    const { queryByTestId } = render(<ZSetDetailsTable {...instance(mockedProps)} />)
+    expect(queryByTestId(/inline-item-editor/)!).not.toBeInTheDocument()
     fireEvent.click(screen.getAllByTestId(/zset-edit-button/)[0])
-    expect(screen.getByTestId(/zset-edit-button-member/)).toBeInTheDocument()
+    expect(screen.getByTestId(/inline-item-editor/)).toBeInTheDocument()
   })
 
   it.todo('should render disabled edit button', () => {
