@@ -1,4 +1,4 @@
-import React, { AbstractView, useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, MouseEvent } from 'react'
 import cx from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { cliSettingsSelector, closeAllCliConnections, deleteCli, selectCli } from 'uiSrc/modules/cli/slice/cli-settings'
@@ -9,16 +9,13 @@ import { CliBodyWrapper } from './components/cli-body'
 import { CliHistory } from './components/cli-history'
 import styles from './styles.module.scss'
 
-interface DragEvent extends React.MouseEvent {
-  view: AbstractView & { outerWidth: number }
-}
-
 export interface Props {
   cliConnectionsHistory: ConnectionHistory[]
 }
 
 export const Cli = (props: Props) => {
   const { cliConnectionsHistory } = props
+  const cliTableRef = useRef<HTMLTableElement>(null)
 
   const {
     activeCliId,
@@ -34,9 +31,9 @@ export const Cli = (props: Props) => {
 
   const enableDragging = () => setDragged(true)
   const disableDragging = () => setDragged(false)
-  const mouseMoveHandler = (e: React.MouseEvent) => {
+  const mouseMoveHandler = (e: MouseEvent) => {
     if (dragged) {
-      const width = (e as DragEvent).view.outerWidth - e.clientX - 54
+      const width = cliTableRef?.current?.offsetWidth as number - e.clientX
       setWidth(width < 250 ? 250 : width)
     }
   }
@@ -52,7 +49,11 @@ export const Cli = (props: Props) => {
   }
 
   return (
-    <table className={cx('h-full', 'w-full', 'overflow-hidden', dragged ? styles.hoverless : null)} data-testid="panel-view-page">
+    <table
+      ref={cliTableRef}
+      className={cx('h-full', 'w-full', 'overflow-hidden', dragged ? styles.hoverless : null)}
+      data-testid="panel-view-page"
+    >
       <tbody>
         <tr onMouseMove={mouseMoveHandler} onMouseUp={disableDragging}>
           <td className="py-1 pl-5" style={{ minWidth: '250px' }}>
