@@ -1,11 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import {
-  ActivityBar,
-  SideBarView,
-  VSBrowser,
-  Workbench,
-} from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser, Workbench } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -13,11 +8,13 @@ import {
   ListKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import {
+  ButtonsActions,
+  KeyDetailsActions,
+} from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ListKeyParameters } from '@e2eSrc/helpers/types/types'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
 import { KeyActions } from '@e2eSrc/helpers/KeysActions'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
@@ -30,7 +27,6 @@ describe('List Key verification', () => {
   let bottomBar: BottomBar
   let listKeyDetailsView: ListKeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -88,13 +84,8 @@ describe('List Key verification', () => {
     )
 
     // Open key details iframe
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-    await webView.switchToFrame(Views.KeyDetailsView)
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     // Search List element by index
     await listKeyDetailsView.searchByTheValueInKeyDetails('1')

@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -16,6 +16,7 @@ import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { KeyDetailsActions } from '@e2eSrc/helpers/common-actions'
 
 const keyTTL = '2147476121'
 const expectedTTL = /214747612*/
@@ -28,7 +29,6 @@ describe('Key Details verifications', () => {
   let cliViewPanel: CliViewPanel
   let keyDetailsView: StringKeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
   let stringKeyDetailsView: StringKeyDetailsView
   let hashKeyDetailsView: HashKeyDetailsView
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
@@ -68,15 +68,9 @@ describe('Key Details verifications', () => {
     await webView.switchBack()
     await bottomBar.toggle(false)
 
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
-
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     await CommonDriverExtension.driverSleep()
 
@@ -114,15 +108,10 @@ describe('Key Details verifications', () => {
     await webView.switchBack()
     await bottomBar.toggle(false)
 
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
     const keyType = await hashKeyDetailsView.getElementText(
       hashKeyDetailsView.keyType,
     )
@@ -156,15 +145,9 @@ describe('Key Details verifications', () => {
     await webView.switchBack()
     await bottomBar.toggle(false)
 
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
-
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     expect(
       await sortedSetKeyDetailsView.getElementText(
@@ -206,13 +189,8 @@ describe('Key Details verifications', () => {
     await bottomBar.toggle(false)
 
     // Open key details iframe
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-    await webView.switchToFrame(Views.KeyDetailsView)
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     expect(
       await listKeyDetailsView.getElementText(

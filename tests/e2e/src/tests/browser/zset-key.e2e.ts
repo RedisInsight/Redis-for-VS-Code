@@ -2,7 +2,6 @@ import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import {
   ActivityBar,
-  SideBarView,
   VSBrowser,
   Workbench,
 } from 'vscode-extension-tester'
@@ -14,7 +13,7 @@ import {
   CliViewPanel,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonsActions, KeyDetailsActions } from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { SortedSetKeyParameters } from '@e2eSrc/helpers/types/types'
@@ -31,7 +30,6 @@ describe('ZSet Key fields verification', () => {
   let bottomBar: BottomBar
   let keyDetailsView: SortedSetKeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
   let cliViewPanel: CliViewPanel
 
   beforeEach(async () => {
@@ -80,15 +78,9 @@ describe('ZSet Key fields verification', () => {
       keyToAddParameters,
     )
 
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
-
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
     // Check the search result
@@ -99,7 +91,10 @@ describe('ZSet Key fields verification', () => {
     await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
 
     await keyDetailsView.removeRowByField(KeyTypesShort.ZSet, keyFieldValue)
-    await keyDetailsView.clickRemoveRowButtonByField(KeyTypesShort.ZSet, keyFieldValue)
+    await keyDetailsView.clickRemoveRowButtonByField(
+      KeyTypesShort.ZSet,
+      keyFieldValue,
+    )
     await webView.switchBack()
 
     const notifications = await new Workbench().getNotifications()
@@ -121,15 +116,11 @@ describe('ZSet Key fields verification', () => {
     await webView.switchBack()
     // should be removed when iframe get unic locator
     await bottomBar.toggle(false)
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    await webView.switchToFrame(Views.KeyDetailsView)
     await ButtonsActions.clickElement(keyDetailsView.scoreButton)
     let result = await (
       await keyDetailsView.getElements(keyDetailsView.scoreSortedSetFieldsList)

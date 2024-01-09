@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -13,6 +13,7 @@ import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { COMMANDS_TO_CREATE_KEY, keyLength } from '@e2eSrc/helpers/constants'
 import { keyTypes } from '@e2eSrc/helpers/KeysActions'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { KeyDetailsActions } from '@e2eSrc/helpers/common-actions'
 
 const keysData = keyTypes.map(object => ({ ...object })).slice(0, 6)
 for (const key of keysData) {
@@ -29,7 +30,6 @@ describe('TTL values in Keys Table', () => {
   let cliViewPanel: CliViewPanel
   let keyDetailsView: KeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -60,9 +60,7 @@ describe('TTL values in Keys Table', () => {
     await cliViewPanel.executeCommand(`set ${keyName} EXPIRE ${TTL}`)
 
     await webView.switchBack()
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await CommonDriverExtension.driverSleep()
     await webView.switchToFrame(Views.KeyDetailsView)
 
@@ -85,18 +83,15 @@ describe('TTL values in Keys Table', () => {
       )
     }
     await webView.switchBack()
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
 
     // Check that Keys has correct TTL value in keys table
     for (let i = 0; i < keysData.length; i++) {
-      await webView.switchToFrame(Views.KeyTreeView)
-      await keyTreeView.openKeyDetailsByKeyName(keysData[i].keyName)
-      await webView.switchBack()
-
-      await webView.switchToFrame(Views.KeyDetailsView)
-      await expect(await keyDetailsView.getKeyTtl()).contains(
+      // Open key details iframe
+      await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(
+        keysData[i].keyName,
+      )
+      expect(await keyDetailsView.getKeyTtl()).contains(
         ttlValues[i],
         `TTL value in keys table is not ${ttlValues[i]}`,
       )

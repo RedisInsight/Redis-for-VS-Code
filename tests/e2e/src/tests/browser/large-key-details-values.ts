@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -9,14 +9,16 @@ import {
   ListKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import {
+  ButtonsActions,
+  KeyDetailsActions,
+} from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
   ListKeyParameters,
   SortedSetKeyParameters,
 } from '@e2eSrc/helpers/types/types'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 
@@ -26,7 +28,6 @@ describe('Large key details verification', () => {
   let bottomBar: BottomBar
   let keyDetailsView: SortedSetKeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
   let listKeyDetailsView: ListKeyDetailsView
 
   beforeEach(async () => {
@@ -63,15 +64,10 @@ describe('Large key details verification', () => {
       sortedSetKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     const memberValueCell = await keyDetailsView.getElement(
       keyDetailsView.sortedSetFieldsList,
@@ -111,13 +107,8 @@ describe('Large key details verification', () => {
     )
 
     // Open key details iframe
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-    await webView.switchToFrame(Views.KeyDetailsView)
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     const elementValueCell = await listKeyDetailsView.getElement(
       listKeyDetailsView.elementsList,
