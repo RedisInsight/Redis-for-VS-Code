@@ -449,7 +449,7 @@ const VirtualTable = (props: IProps) => {
       if (column.id === columnId) {
         return {
           ...column,
-          isOpened: false,
+          isOpened: !!value,
           value,
         }
       }
