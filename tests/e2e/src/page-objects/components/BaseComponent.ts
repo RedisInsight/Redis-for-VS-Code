@@ -1,5 +1,5 @@
 import { WebElement, WebDriver, until, Locator, By } from 'selenium-webdriver'
-import { VSBrowser } from 'vscode-extension-tester'
+import { ISize, VSBrowser } from 'vscode-extension-tester'
 
 /**
  * Default wrapper for webelement

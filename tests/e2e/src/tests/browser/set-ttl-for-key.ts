@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   CliViewPanel,
@@ -9,9 +9,13 @@ import {
   WebView,
 } from '@e2eSrc/page-objects/components'
 
-import { InputActions, ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import {
+  InputActions,
+  ButtonsActions,
+  KeyDetailsActions,
+} from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
-import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Set TTL for Key', () => {
   let browser: VSBrowser
@@ -20,7 +24,6 @@ describe('Set TTL for Key', () => {
   let cliViewPanel: CliViewPanel
   let keyDetailsView: KeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -35,34 +38,28 @@ describe('Set TTL for Key', () => {
     await webView.switchBack()
     await bottomBar.openTerminalView()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(CliViewPanel.cliFrame)
+    await webView.switchToFrame(Views.CliViewPanel)
     await cliViewPanel.executeCommand(`FLUSHDB`)
   })
-  it.skip('Verify that user can specify TTL for Key', async function () {
+  it('Verify that user can specify TTL for Key', async function () {
     const ttlValue = '2147476121'
 
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(CliViewPanel.cliFrame)
+    await webView.switchToFrame(Views.CliViewPanel)
     const keyName = Common.generateWord(20)
     const command = `SET ${keyName} a`
     await cliViewPanel.executeCommand(`${command}`)
     await webView.switchBack()
 
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    await webView.switchToFrame(KeyTreeView.treeFrame)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(KeyDetailsView.keyFrame)
     const inputField = await keyDetailsView.getElement(keyDetailsView.ttlField)
     await InputActions.slowType(inputField, ttlValue)
     await ButtonsActions.clickElement(keyDetailsView.saveTtl)
 
-    // TODO wait and Refresh the page in several seconds
-    await CommonDriverExtension.driverSleep()
+    await ButtonsActions.clickElement(keyDetailsView.keyRefresh)
 
     const newTtlValue = Number(await keyDetailsView.getKeyTtl())
     expect(Number(ttlValue)).gt(newTtlValue)

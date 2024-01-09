@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -8,8 +8,14 @@ import {
   KeyTreeView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { StringKeyParameters } from '@e2eSrc/helpers/keys'
-import { ButtonsActions, InputActions } from '@e2eSrc/helpers/common-actions'
+import { StringKeyParameters } from '@e2eSrc/helpers/KeysActions'
+import {
+  ButtonsActions,
+  KeyDetailsActions,
+} from '@e2eSrc/helpers/common-actions'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { Config } from '@e2eSrc/helpers/Conf'
 
 describe('Cases with large data', () => {
   let browser: VSBrowser
@@ -17,7 +23,6 @@ describe('Cases with large data', () => {
   let bottomBar: BottomBar
   let keyDetailsView: StringKeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -47,22 +52,33 @@ describe('Cases with large data', () => {
     }
 
     //TODO create 2 strings
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    await KeyAPIRequests.addStringKeyApi(
+      {
+        keyName: stringKeyParameters.keyName,
+        value: stringKeyParameters.value,
+      },
+      Config.ossStandaloneConfig.databaseName,
+    )
 
-    await webView.switchToFrame(KeyTreeView.treeFrame)
-    await keyTreeView.openKeyDetailsByKeyName(stringKeyParameters.keyName)
-    await webView.switchBack()
+    await KeyAPIRequests.addStringKeyApi(
+      {
+        keyName: bigStringKeyParameters.keyName,
+        value: bigStringKeyParameters.value,
+      },
+      Config.ossStandaloneConfig.databaseName,
+    )
 
-    await webView.switchToFrame(StringKeyDetailsView.keyFrame)
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
     expect(
       await keyDetailsView.isElementDisplayed(
         keyDetailsView.loadAllStringValue,
       ),
     ).false
 
-    await webView.switchToFrame(KeyTreeView.treeFrame)
+    await webView.switchToFrame(Views.KeyTreeView)
     await keyTreeView.openKeyDetailsByKeyName(bigStringKeyParameters.keyName)
     await webView.switchBack()
 
@@ -73,7 +89,7 @@ describe('Cases with large data', () => {
     ).true
 
     await ButtonsActions.clickElement(keyDetailsView.loadAllStringValue)
-    await expect(
+    expect(
       (await keyDetailsView.getElementText(keyDetailsView.keyStringValue))
         .length,
     ).eql(

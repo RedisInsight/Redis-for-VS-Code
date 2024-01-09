@@ -17,6 +17,7 @@ export class KeyDetailsView extends BaseComponent {
   keyName = By.xpath(`//div[@data-testid='key-name-text']/b`)
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
   keyLength = By.xpath(`//div[@data-testid='key-length-text']`)
+  keyRefresh = By.xpath(`//div[@data-testid='refresh-key-btn']`)
 
   constructor() {
     super(KeyDetailsView.keyFrame)

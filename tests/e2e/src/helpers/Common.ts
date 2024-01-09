@@ -65,4 +65,16 @@ export class Common {
   static doAsyncStuff(): Promise<void> {
     return Promise.resolve()
   }
+
+  /**
+   * Create array of numbers
+   * @param length The amount of array elements
+   */
+  static async createArray(length: number): Promise<string[]> {
+    const arr: string[] = []
+    for (let i = 1; i <= length; i++) {
+      arr[i] = `${i}`
+    }
+    return arr
+  }
 }

@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -11,7 +11,9 @@ import {
 import { Common } from '@e2eSrc/helpers/Common'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { COMMANDS_TO_CREATE_KEY, keyLength } from '@e2eSrc/helpers/constants'
-import { keyTypes } from '@e2eSrc/helpers/keys'
+import { keyTypes } from '@e2eSrc/helpers/KeysActions'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { KeyDetailsActions } from '@e2eSrc/helpers/common-actions'
 
 const keysData = keyTypes.map(object => ({ ...object })).slice(0, 6)
 for (const key of keysData) {
@@ -28,7 +30,6 @@ describe('TTL values in Keys Table', () => {
   let cliViewPanel: CliViewPanel
   let keyDetailsView: KeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -43,7 +44,7 @@ describe('TTL values in Keys Table', () => {
     await webView.switchBack()
     await bottomBar.openTerminalView()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(CliViewPanel.cliFrame)
+    await webView.switchToFrame(Views.CliViewPanel)
     await cliViewPanel.executeCommand(`FLUSHDB`)
   })
 
@@ -54,16 +55,14 @@ describe('TTL values in Keys Table', () => {
     const keyName = Common.generateWord(10)
 
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(CliViewPanel.cliFrame)
+    await webView.switchToFrame(Views.CliViewPanel)
 
     await cliViewPanel.executeCommand(`set ${keyName} EXPIRE ${TTL}`)
 
     await webView.switchBack()
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await CommonDriverExtension.driverSleep()
-    await webView.switchToFrame(KeyDetailsView.keyFrame)
+    await webView.switchToFrame(Views.KeyDetailsView)
 
     //TODO verify that the key is really added
 
@@ -72,9 +71,9 @@ describe('TTL values in Keys Table', () => {
     //TODO verify that the key is really deleted
   })
 
-  it.skip('Verify that user can see TTL in the list of keys rounded down to the nearest unit', async function () {
+  it('Verify that user can see TTL in the list of keys rounded down to the nearest unit', async function () {
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(CliViewPanel.cliFrame)
+    await webView.switchToFrame(Views.CliViewPanel)
 
     for (let i = 0; i < keysData.length; i++) {
       await cliViewPanel.executeCommand(
@@ -84,18 +83,15 @@ describe('TTL values in Keys Table', () => {
       )
     }
     await webView.switchBack()
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
 
     // Check that Keys has correct TTL value in keys table
     for (let i = 0; i < keysData.length; i++) {
-      await webView.switchToFrame(KeyTreeView.treeFrame)
-      await keyTreeView.openKeyDetailsByKeyName(keysData[i].keyName)
-      await webView.switchBack()
-
-      await webView.switchToFrame(KeyDetailsView.keyFrame)
-      await expect(await keyDetailsView.getKeyTtl()).contains(
+      // Open key details iframe
+      await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(
+        keysData[i].keyName,
+      )
+      expect(await keyDetailsView.getKeyTtl()).contains(
         ttlValues[i],
         `TTL value in keys table is not ${ttlValues[i]}`,
       )

@@ -1,9 +1,7 @@
 import { expect } from 'chai'
-import { createClient } from 'redis'
 import { DatabaseAPIRequests } from './DatabaseApi'
 import { CommonAPIRequests } from './CommonApi'
 import {
-  AddNewDatabaseParameters,
   HashKeyParameters,
   JsonKeyParameters,
   ListKeyParameters,
@@ -13,9 +11,6 @@ import {
   StreamKeyParameters,
   StringKeyParameters,
 } from '../types/types'
-import { Common } from '@e2eSrc/helpers/Common'
-import { AddKeyArguments } from '@e2eSrc/helpers/types/types'
-
 const databaseAPIRequests = new DatabaseAPIRequests()
 
 const getKeysPathMask = '/databases/databaseId/keys/get-info?encoding=buffer'
@@ -25,7 +20,7 @@ export class KeyAPIRequests {
   /**
    * Add Hash key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addHashKeyApi(
     keyParameters: HashKeyParameters,
@@ -55,15 +50,14 @@ export class KeyAPIRequests {
   /**
    * Add Stream key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addStreamKeyApi(
     keyParameters: StreamKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       entries: keyParameters.entries.map(member => ({
@@ -87,15 +81,14 @@ export class KeyAPIRequests {
   /**
    * Add Set key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addSetKeyApi(
     keyParameters: SetKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       members: keyParameters.members.map(member =>
@@ -116,15 +109,14 @@ export class KeyAPIRequests {
   /**
    * Add Sorted Set key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addSortedSetKeyApi(
     keyParameters: SortedSetKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       members: keyParameters.members.map(member => ({
@@ -146,15 +138,14 @@ export class KeyAPIRequests {
   /**
    * Add List key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addListKeyApi(
     keyParameters: ListKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       element: Buffer.from(keyParameters.element, 'utf-8'),
@@ -173,15 +164,14 @@ export class KeyAPIRequests {
   /**
    * Add String key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addStringKeyApi(
     keyParameters: StringKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       value: Buffer.from(keyParameters.value, 'utf-8'),
@@ -200,15 +190,14 @@ export class KeyAPIRequests {
   /**
    * Add JSON key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addJsonKeyApi(
     keyParameters: JsonKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       data: keyParameters.data,
@@ -313,35 +302,5 @@ export class KeyAPIRequests {
       )
       expect(response.status).eql(200, 'The deletion of the key request failed')
     }
-  }
-
-  /**
-   * Populate hash key with fields
-   * @param host The host of database
-   * @param port The port of database
-   * @param keyArguments The arguments of key and its fields
-   */
-  static async populateHashWithFields(
-    host: string,
-    port: string,
-    keyArguments: AddKeyArguments,
-  ): Promise<void> {
-    const dbConf = { url: `redis://${host}:${port}` }
-    const client = await createClient(dbConf)
-
-    await client
-      .on('error', err => console.error('Redis Client Error', err))
-      .connect()
-
-    if (keyArguments.fieldsCount) {
-      for (let i = 0; i < keyArguments.fieldsCount; i++) {
-        const field = `${keyArguments.fieldStartWith}${Common.generateWord(10)}`
-        const fieldValue = `${
-          keyArguments.fieldValueStartWith
-        }${Common.generateWord(10)}`
-        await client.hSet(keyArguments.keyName as string, field, fieldValue)
-      }
-    }
-    await client.disconnect()
   }
 }

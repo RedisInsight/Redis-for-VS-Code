@@ -6,9 +6,9 @@ import { BaseComponent } from '../BaseComponent'
  */
 export class KeyTreeView extends BaseComponent {
   // frame locator
-  static treeFrame =
-    By.xpath(`(//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)])
-`)
+  static treeFrame = By.xpath(
+    `(//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)])`,
+  )
   treeViewPage = By.xpath(`//div[@data-testid='tree-view-page']`)
   scanMoreBtn = By.xpath(`//vscode-button[@data-testid='scan-more']`)
   treeViewKey = By.xpath(

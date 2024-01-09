@@ -1,5 +1,7 @@
 import { By, WebElement, until, Locator } from 'selenium-webdriver'
 import { VSBrowser, WebDriver } from 'vscode-extension-tester'
+import { KeyTreeView } from '@e2eSrc/page-objects/components/key-view/KeyTreeView'
+import { KeyDetailsView } from '@e2eSrc/page-objects/components/edit-panel/KeyDetailsView'
 
 /**
  * Returns a class that has the ability to access a webview.
@@ -42,14 +44,21 @@ export class WebView {
    * @param timeout optional maximum time to wait for completion in milliseconds, 0 for unlimited
    * @returns Promise resolving when switched to WebView iframe
    */
-  async switchToFrame(locator: Locator, timeout: number = 5000): Promise<void> {
-    const view = await this.driver.findElement(locator)
+  async switchToFrame(
+    switchView: Views,
+    timeout: number = 10000,
+  ): Promise<void> {
+    const frameLocator = ViewLocators[switchView]
+    const view = await this.driver.findElement(By.xpath(frameLocator))
 
     await this.driver.switchTo().frame(view)
     await this.driver.switchTo().frame(0)
 
-    await this.driver.wait(until.elementLocated(this.iframeBody), timeout)
-    await this.findWebElement(this.iframeBody)
+    const elementLocator = ViewElements[switchView]
+    await this.driver.wait(
+      until.elementLocated(By.xpath(elementLocator)),
+      timeout,
+    )
   }
 
   /**
@@ -61,4 +70,25 @@ export class WebView {
     }
     return await this.driver.switchTo().window(this.handle)
   }
+}
+
+export enum Views {
+  KeyTreeView,
+  KeyDetailsView,
+  CliViewPanel,
+}
+
+export const ViewLocators = {
+  [Views.KeyTreeView]:
+    "//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]",
+  [Views.KeyDetailsView]:
+    "//div[contains(@data-parent-flow-to-element-id, 'webview-editor-element')]/iframe",
+  [Views.CliViewPanel]:
+    "//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]",
+}
+
+export const ViewElements = {
+  [Views.KeyTreeView]: `//div[@data-testid='tree-view-page']`,
+  [Views.KeyDetailsView]: `//*[@data-testid='key-details-page']`,
+  [Views.CliViewPanel]: `//*[@data-testid='panel-view-page']`,
 }
