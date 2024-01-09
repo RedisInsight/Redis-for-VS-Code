@@ -16,7 +16,6 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.options = {
       // Allow scripts in the webview
       enableScripts: true,
-
       localResourceRoots: [this._context.extensionUri],
     }
     // todo: connection between webviews
