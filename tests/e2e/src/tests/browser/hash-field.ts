@@ -2,37 +2,35 @@ import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import {
   ActivityBar,
-  SideBarView,
   VSBrowser,
   Workbench,
 } from 'vscode-extension-tester'
 import {
-  BottomBar,
   WebView,
   HashKeyDetailsView,
   KeyTreeView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import {
+  ButtonsActions,
+  KeyDetailsActions,
+} from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
 import { KeyActions } from '@e2eSrc/helpers/KeysActions'
+import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
 let keyName: string
 
 describe('Hash Key fields verification', () => {
   let browser: VSBrowser
   let webView: WebView
-  let bottomBar: BottomBar
   let keyDetailsView: HashKeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new HashKeyDetailsView()
     keyTreeView = new KeyTreeView()
@@ -63,15 +61,9 @@ describe('Hash Key fields verification', () => {
       hashKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
-
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     const commands = ['hashField*', '*11111', 'hash*11111']
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
@@ -138,15 +130,10 @@ describe('Hash Key fields verification', () => {
       keyToAddParameters2,
     )
 
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
     await keyDetailsView.searchByTheValueInKeyDetails(
       keyToAddParameters2.fieldStartWith + '*',
     )
@@ -176,15 +163,11 @@ describe('Hash Key fields verification', () => {
       hashKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    await webView.switchToFrame(Views.KeyDetailsView)
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
     // Check the search result
     let resultField = await (
@@ -195,8 +178,11 @@ describe('Hash Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.hashValuesList)
     )[0].getText()
     expect(resultValue).eqls(keyValue)
-    await keyDetailsView.removeRowByField(keyFieldValue)
-    await keyDetailsView.clickRemoveRowButtonByField(keyFieldValue)
+    await keyDetailsView.removeRowByField(KeyTypesShort.Hash, keyFieldValue)
+    await keyDetailsView.clickRemoveRowButtonByField(
+      KeyTypesShort.Hash,
+      keyFieldValue,
+    )
     await webView.switchBack()
 
     const notifications = await new Workbench().getNotifications()

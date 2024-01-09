@@ -2,7 +2,6 @@ import { expect } from 'chai'
 import { DatabaseAPIRequests } from './DatabaseApi'
 import { CommonAPIRequests } from './CommonApi'
 import {
-  AddNewDatabaseParameters,
   HashKeyParameters,
   JsonKeyParameters,
   ListKeyParameters,
@@ -21,7 +20,7 @@ export class KeyAPIRequests {
   /**
    * Add Hash key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addHashKeyApi(
     keyParameters: HashKeyParameters,
@@ -51,15 +50,14 @@ export class KeyAPIRequests {
   /**
    * Add Stream key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addStreamKeyApi(
     keyParameters: StreamKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       entries: keyParameters.entries.map(member => ({
@@ -83,15 +81,14 @@ export class KeyAPIRequests {
   /**
    * Add Set key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addSetKeyApi(
     keyParameters: SetKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       members: keyParameters.members.map(member =>
@@ -112,7 +109,7 @@ export class KeyAPIRequests {
   /**
    * Add Sorted Set key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addSortedSetKeyApi(
     keyParameters: SortedSetKeyParameters,
@@ -141,15 +138,14 @@ export class KeyAPIRequests {
   /**
    * Add List key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addListKeyApi(
     keyParameters: ListKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       element: Buffer.from(keyParameters.element, 'utf-8'),
@@ -168,15 +164,14 @@ export class KeyAPIRequests {
   /**
    * Add String key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addStringKeyApi(
     keyParameters: StringKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       value: Buffer.from(keyParameters.value, 'utf-8'),
@@ -195,15 +190,14 @@ export class KeyAPIRequests {
   /**
    * Add JSON key
    * @param keyParameters The key parameters
-   * @param databaseParameters The database parameters
+   * @param databaseName The database name
    */
   static async addJsonKeyApi(
     keyParameters: JsonKeyParameters,
-    databaseParameters: AddNewDatabaseParameters,
+    databaseName: string,
   ): Promise<void> {
-    const databaseId = await databaseAPIRequests.getDatabaseIdByName(
-      databaseParameters.databaseName,
-    )
+    const databaseId =
+      await databaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       data: keyParameters.data,

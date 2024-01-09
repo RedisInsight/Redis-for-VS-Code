@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   CliViewPanel,
@@ -9,7 +9,11 @@ import {
   WebView,
 } from '@e2eSrc/page-objects/components'
 
-import { InputActions, ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import {
+  InputActions,
+  ButtonsActions,
+  KeyDetailsActions,
+} from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 
@@ -20,7 +24,6 @@ describe('Set TTL for Key', () => {
   let cliViewPanel: CliViewPanel
   let keyDetailsView: KeyDetailsView
   let keyTreeView: KeyTreeView
-  let sideBarView: SideBarView | undefined
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -48,15 +51,10 @@ describe('Set TTL for Key', () => {
     await cliViewPanel.executeCommand(`${command}`)
     await webView.switchBack()
 
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
-    await webView.switchBack()
-
-    await webView.switchToFrame(Views.KeyDetailsView)
     const inputField = await keyDetailsView.getElement(keyDetailsView.ttlField)
     await InputActions.slowType(inputField, ttlValue)
     await ButtonsActions.clickElement(keyDetailsView.saveTtl)
