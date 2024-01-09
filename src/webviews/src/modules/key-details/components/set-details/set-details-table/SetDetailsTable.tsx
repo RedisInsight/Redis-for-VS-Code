@@ -154,7 +154,7 @@ export const SetDetailsTable = (props: Props) => {
       })
     }
     setMatch(match)
-    fetchSetMembers(key, 0, SCAN_COUNT_DEFAULT, match || DEFAULT_SEARCH_MATCH, true, onSuccess)
+    fetchSetMembers(key, 0, SCAN_COUNT_DEFAULT, match || DEFAULT_SEARCH_MATCH, onSuccess)
   }
 
   const handleRowToggleViewClick = (expanded: boolean, rowIndex: number) => {
