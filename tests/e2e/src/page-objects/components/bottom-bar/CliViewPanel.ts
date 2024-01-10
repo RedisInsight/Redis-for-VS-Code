@@ -1,6 +1,7 @@
 import { By, until } from 'selenium-webdriver'
 import { Key } from 'vscode-extension-tester'
 import { BaseComponent } from '../BaseComponent'
+import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
 
 /**
  * CLI view on the bottom panel
@@ -29,7 +30,7 @@ export class CliViewPanel extends BaseComponent {
     By.xpath(`(//*[contains(@data-testid, "cli-select-row")])[${index}]`)
 
   constructor() {
-    super(CliViewPanel.cliFrame)
+    super(By.xpath(ViewLocators[Views.CliViewPanel]))
   }
 
   /**

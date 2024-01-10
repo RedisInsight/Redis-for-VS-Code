@@ -10,6 +10,7 @@ import {
   HashKeyDetailsView,
   SortedSetKeyDetailsView,
   ListKeyDetailsView,
+  SetKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
@@ -33,6 +34,7 @@ describe('Key Details verifications', () => {
   let hashKeyDetailsView: HashKeyDetailsView
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
   let listKeyDetailsView: ListKeyDetailsView
+  let setKeyDetailsView: SetKeyDetailsView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -44,6 +46,7 @@ describe('Key Details verifications', () => {
     hashKeyDetailsView = new HashKeyDetailsView()
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
     listKeyDetailsView = new ListKeyDetailsView()
+    setKeyDetailsView = new SetKeyDetailsView()
 
     await browser.waitForWorkbench(20_000)
   })
@@ -131,7 +134,6 @@ describe('Key Details verifications', () => {
 
   it('Verify that user can see Sorted Set Key details', async function () {
     keyName = Common.generateWord(20)
-    const ttl = '121212'
     const value = 'value'
     const score = 1
 
@@ -140,7 +142,7 @@ describe('Key Details verifications', () => {
 
     const command = `ZADD ${keyName} ${score} \"${value}\"`
     await cliViewPanel.executeCommand(`${command}`)
-    const command2 = `expire ${keyName} \"${ttl}\" `
+    const command2 = `expire ${keyName} \"${keyTTL}\" `
     await cliViewPanel.executeCommand(`${command2}`)
     await webView.switchBack()
     await bottomBar.toggle(false)
@@ -193,24 +195,48 @@ describe('Key Details verifications', () => {
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     expect(
-      await listKeyDetailsView.getElementText(
-        listKeyDetailsView.keyType,
-      ),
+      await listKeyDetailsView.getElementText(listKeyDetailsView.keyType),
     ).contain('List', 'Type is incorrect')
     expect(
-      await listKeyDetailsView.getElementText(
-        listKeyDetailsView.keyName,
-      ),
+      await listKeyDetailsView.getElementText(listKeyDetailsView.keyName),
     ).eq(keyName, 'Name is incorrect')
-    expect(await listKeyDetailsView.getKeySize()).greaterThan(
-      0,
-      'Size is 0',
-    )
+    expect(await listKeyDetailsView.getKeySize()).greaterThan(0, 'Size is 0')
     expect(await listKeyDetailsView.getKeyLength()).greaterThan(
       0,
       'Length is 0',
     )
     expect(Number(await listKeyDetailsView.getKeyTtl())).match(
+      expectedTTL,
+      'The Key TTL is incorrect',
+    )
+  })
+  it('Verify that user can see Set Key details', async function () {
+    keyName = Common.generateWord(20)
+    const value = 'value'
+
+    cliViewPanel = await bottomBar.openCliViewPanel()
+    await webView.switchToFrame(Views.CliViewPanel)
+
+    const command = `SADD ${keyName} \"${value}\"`
+    await cliViewPanel.executeCommand(`${command}`)
+    const command2 = `expire ${keyName} \"${keyTTL}\" `
+    await cliViewPanel.executeCommand(`${command2}`)
+    await webView.switchBack()
+    await bottomBar.toggle(false)
+
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    expect(
+      await setKeyDetailsView.getElementText(setKeyDetailsView.keyType),
+    ).contain('Set', 'Type is incorrect')
+    expect(
+      await setKeyDetailsView.getElementText(setKeyDetailsView.keyName),
+    ).eq(keyName, 'Name is incorrect')
+    expect(await setKeyDetailsView.getKeySize()).greaterThan(0, 'Size is 0')
+    expect(await setKeyDetailsView.getKeyLength()).greaterThan(0, 'Length is 0')
+    expect(Number(await setKeyDetailsView.getKeyTtl())).match(
       expectedTTL,
       'The Key TTL is incorrect',
     )
