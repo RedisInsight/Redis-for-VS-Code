@@ -68,10 +68,11 @@
     "jackspeak": "2.1.1"
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run compile && npm run build:extension",
     "compile": "tsc -p ./",
     "postinstall": "patch-package",
     "build": "vite build",
+    "build:extension": "export BUILD_EXIT=true || set BUILD_EXIT=true&& vite build",
     "download:backend": "tsc ./scripts/downloadBackend.ts && node ./scripts/downloadBackend.js",
     "dev:sidebar": "RI_DATA_ROUTE=tree vite dev",
     "dev:cli": "RI_DATA_ROUTE=cli vite dev",
