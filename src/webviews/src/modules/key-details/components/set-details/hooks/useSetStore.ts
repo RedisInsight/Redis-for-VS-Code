@@ -44,12 +44,13 @@ export const useSetStore = create<SetState & SetActions>()(
     // actions
     processSetRequest: () => set(() => ({ loading: true })),
     processSetResponse: () => set(() => ({ loading: false })),
-    loadSetMembersSuccess: (data) => set((state) => ({ data: {
-      ...state.data,
-      ...data,
-      loading: false,
-      key: data.keyName,
-    },
+    loadSetMembersSuccess: (data) => set((state) => ({
+      data: {
+        ...state.data,
+        ...data,
+        loading: false,
+        key: data.keyName,
+      },
     })),
     loadMoreSetMembersSuccess: ({ members, ...rest }) => set((state) => ({
       loading: false,
@@ -59,7 +60,7 @@ export const useSetStore = create<SetState & SetActions>()(
       },
     })),
     removeMembersFromList: (members) => set((state) => {
-      state.data.total - 1
+      state.data.total -= 1
 
       remove(state.data.members, (member) =>
         members.findIndex((item) => isEqualBuffers(item, member)) > -1)
@@ -159,8 +160,6 @@ export const deleteSetMembers = (
 
     if (isStatusSuccessful(status)) {
       const newTotalValue = state.data.total - data.affected
-
-      onSuccessAction?.(newTotalValue)
       state.removeMembersFromList(members)
       if (newTotalValue > 0) {
         showInformationMessage(
@@ -168,7 +167,7 @@ export const deleteSetMembers = (
             key!,
             members?.map((members) => bufferToString(members)).join('')!,
             l10n.t('Member'),
-          ).title,
+          ).message,
         )
         fetchKeyInfo(key!, false)
       } else {
@@ -176,6 +175,7 @@ export const deleteSetMembers = (
         // dispatch(deleteKeyFromList(key))
         showInformationMessage(successMessages.DELETED_KEY(key!).title)
       }
+      onSuccessAction?.(newTotalValue)
     }
   } catch (_err) {
     const error = _err as AxiosError
