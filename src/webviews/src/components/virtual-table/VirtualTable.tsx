@@ -455,6 +455,9 @@ const VirtualTable = (props: IProps) => {
       }
       return column
     })
+    cellCache.clearAll()
+    setExpandedRows([])
+
     setSearch(newState)
     onSearch?.(newState)
   }
