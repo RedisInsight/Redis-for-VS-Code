@@ -50,8 +50,5 @@
   "testing.automaticallyOpenPeekView": "never",
   "[typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   }
 }
