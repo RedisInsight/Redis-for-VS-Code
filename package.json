@@ -68,11 +68,10 @@
     "jackspeak": "2.1.1"
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile && npm run build:extension",
+    "vscode:prepublish": "npm run compile && cross-env BUILD_EXIT=true yarn build",
     "compile": "tsc -p ./",
     "postinstall": "patch-package",
     "build": "vite build",
-    "build:extension": "export BUILD_EXIT=true || set BUILD_EXIT=true&& vite build",
     "download:backend": "tsc ./scripts/downloadBackend.ts && node ./scripts/downloadBackend.js",
     "dev:sidebar": "RI_DATA_ROUTE=tree vite dev",
     "dev:cli": "RI_DATA_ROUTE=cli vite dev",
@@ -162,6 +161,7 @@
     "@vitest/ui": "^0.34.6",
     "@vscode/l10n-dev": "^0.0.31",
     "autoprefixer": "^10.4.16",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.19.5",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
