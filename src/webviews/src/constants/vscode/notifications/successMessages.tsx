@@ -70,14 +70,7 @@ export const successMessages = {
   }),
   REMOVED_KEY_VALUE: (keyName: RedisString, keyValue: RedisString, valueType: string) => ({
     title: `${valueType} has been removed`,
-    message: (
-      <>
-        <b>{formatNameShort(bufferToString(keyValue))}</b>
-        {' '}
-        has been removed from &nbsp;
-        <b>{formatNameShort(bufferToString(keyName))}</b>
-      </>
-    ),
+    message: `${formatNameShort(bufferToString(keyValue))} has been removed from ${formatNameShort(bufferToString(keyName))}`,
   }),
   REMOVED_LIST_ELEMENTS: (
     keyName: RedisString,
