@@ -36,7 +36,7 @@ describe('Set Key fields verification', () => {
       Config.ossStandaloneConfig.databaseName,
     )
   })
-  it.only('Verify that user can search and delete by member in Set', async function () {
+  it('Verify that user can search and delete by member in Set', async function () {
     keyName = Common.generateWord(10)
     const keyFieldValue = 'setField11111'
     const setKeyParameters: SetKeyParameters = {
