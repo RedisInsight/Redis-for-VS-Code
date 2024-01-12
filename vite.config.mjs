@@ -7,7 +7,7 @@ import path from 'path'
  * @type {import('vite').UserConfig}
  */
 export default defineConfig({
-  plugins: [react(), htmlPlugin()],
+  plugins: [react(), htmlPlugin(), closePlugin()],
   publicDir: './src/webviews/public',
   resolve: {
     alias: {
@@ -63,6 +63,24 @@ function htmlPlugin() {
         req.url = req.url === '/' ? './src/webviews/index.html' : req.url
         next()
       })
+    },
+  }
+}
+
+// Exit from watch mode for prepublish build
+function closePlugin() {
+  return {
+    name: 'ClosePlugin',
+    buildEnd(error) {
+      if (error) {
+        console.error(error)
+        process.exit(1)
+      }
+    },
+    closeBundle() {
+      if (process.env.BUILD_EXIT === 'true') {
+        process.exit(0)
+      }
     },
   }
 }
