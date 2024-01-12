@@ -4,12 +4,11 @@ import * as cp from 'child_process'
 import * as fs from 'fs'
 import { ChildProcessWithoutNullStreams } from 'child_process'
 
-// TODO: add separate task builder to save env variables in production builds
-const apiUrl = process.env.RI_BASE_API_URL || 'http://localhost'
+const apiUrl = process.env.RI_BASE_API_URL
 // TODO: add port avialability checker instead of hardcode
-const apiPort = process.env.RI_API_PORT || '5000'
-const apiPrefix = process.env.RI_API_PREFIX || 'api'
-const apiFolder = process.env.RI_API_FOLDER || '.redisinsight-vsc'
+const apiPort = process.env.RI_API_PORT
+const apiPrefix = process.env.RI_API_PREFIX
+const apiFolder = process.env.RI_API_FOLDER
 
 const backendPath = path.join(__dirname, '..', 'redis-backend')
 let PSinst: ChildProcessWithoutNullStreams

@@ -68,8 +68,8 @@
     "jackspeak": "2.1.1"
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile && cross-env BUILD_EXIT=true yarn build",
-    "compile": "tsc -p ./",
+    "vscode:prepublish": "yarn compile && cross-env BUILD_EXIT=true yarn build",
+    "compile": "tsc -p ./ && tsc ./scripts/replaceEnvVariables.ts && node ./scripts/replaceEnvVariables.js",
     "postinstall": "patch-package",
     "build": "vite build",
     "download:backend": "tsc ./scripts/downloadBackend.ts && node ./scripts/downloadBackend.js",
