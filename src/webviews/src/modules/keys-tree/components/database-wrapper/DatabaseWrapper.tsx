@@ -77,10 +77,10 @@ export const DatabaseWrapper: FC<any> = ({ children }: PropsWithChildren<any>) =
           <VSCodeButton appearance="icon" onClick={refreshHandle} data-testid="refresh-keys">
             <VscRefresh />
           </VSCodeButton>
-          <VSCodeButton appearance="icon" onClick={addKeyClickHandle}>
+          <VSCodeButton appearance="icon" onClick={addKeyClickHandle} data-testid="add-key-button">
             <VscAdd />
           </VSCodeButton>
-          <VSCodeButton appearance="icon" onClick={openCliClickHandle}>
+          <VSCodeButton appearance="icon" onClick={openCliClickHandle} data-testid="terminal-button">
             <VscTerminal />
           </VSCodeButton>
         </div>
