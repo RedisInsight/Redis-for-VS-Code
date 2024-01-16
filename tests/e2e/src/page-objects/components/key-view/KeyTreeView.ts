@@ -1,6 +1,7 @@
-import { By } from 'selenium-webdriver'
+import { By, Locator } from 'selenium-webdriver'
 import { BaseComponent } from '../BaseComponent'
 import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
+import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
 
 /**
  * key tree list view
@@ -13,8 +14,15 @@ export class KeyTreeView extends BaseComponent {
   )
   keyStarts = By.xpath(`//div[starts-with(@data-testid, 'key-')]`)
   refreshButton = By.xpath(`//vscode-button[@data-testid = 'refresh-keys']`)
+  sortKeysBtn = By.xpath(`//vscode-button[@data-testid = 'sort-keys']`)
   // mask
   keyMask = '//*[@data-testid="key-$name"]'
+  deleteKeyInListBtn = By.xpath(
+    `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
+  )
+  submitDeleteKeyButton = By.xpath(
+    `//div[@class='popup-content ']${this.deleteKeyInListBtn}`,
+  )
 
   getTreeViewItemByIndex = (index: number) =>
     By.xpath(
@@ -22,6 +30,21 @@ export class KeyTreeView extends BaseComponent {
     )
   getKey = (base: string) =>
     By.xpath(`//div[starts-with(@data-testid, '${base}')]`)
+
+  getFolderSelectorByName = (folderName: string): Locator => {
+    return By.xpath(
+      `//div[starts-with(@data-testid, 'node-item_${folderName}')]`,
+    )
+  }
+
+  getFolderNameSelectorByNameAndIndex = (
+    folderName: string,
+    index: number,
+  ): Locator => {
+    return By.xpath(
+      `(//div[starts-with(@data-testid, 'node-item_${folderName}')])[${index}]//*[starts-with(@data-testid, 'folder-')]`,
+    )
+  }
 
   constructor() {
     super(By.xpath(ViewLocators[Views.KeyTreeView]))
@@ -57,15 +80,24 @@ export class KeyTreeView extends BaseComponent {
   }
 
   /**
+   * Check whether Element is expanded
+   * @param baseSelector the base element selector
+   * * @returns Promise resolving to true if element is expanded
+   */
+  async verifyElementExpanded(baseSelector: Locator): Promise<boolean> {
+    const elementSelector = await (
+      await this.getElement(baseSelector)
+    ).getAttribute('data-testid')
+    return elementSelector?.includes('expanded')
+  }
+
+  /**
    * Click on the folder element if it is not expanded
    * @param base the base element
    */
   private async clickElementIfNotExpanded(base: string): Promise<void> {
     const baseSelector = this.getKey(base)
-    const elementSelector = await (
-      await this.getElement(baseSelector)
-    ).getAttribute('data-testid')
-    if (!elementSelector?.includes('expanded')) {
+    if (!(await this.verifyElementExpanded(baseSelector))) {
       await (await this.getElement(baseSelector)).click()
     }
   }
@@ -88,5 +120,14 @@ export class KeyTreeView extends BaseComponent {
     }
 
     return textArray
+  }
+
+  /**
+   * Delete first Key in list after Hovering
+   */
+  async deleteFirstKeyFromList(): Promise<void> {
+    await ButtonsActions.hoverElement(this.treeViewKey)
+    await (await this.getElement(this.deleteKeyInListBtn)).click()
+    await (await this.getElement(this.submitDeleteKeyButton)).click()
   }
 }
