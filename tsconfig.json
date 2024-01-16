@@ -9,7 +9,6 @@
     "esModuleInterop": true,
     "rootDir": "src"
   },
-  // "include": [".env"],
   "exclude": [
     "typings/browser.d.ts",
     "typings/browser",

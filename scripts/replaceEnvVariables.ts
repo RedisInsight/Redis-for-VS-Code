@@ -9,21 +9,31 @@ const replaceEnvVariables = () => {
   if (fs.existsSync(bootstrapFilePath)) {
     fs.readFile(bootstrapFilePath, 'utf8', function (err, data) {
       if (err) {
-        return console.log(err);
+        return console.debug(err);
       }
-      const result = data
-        .replace(/process.env.RI_BASE_API_URL/g, `"${process.env.RI_BASE_API_URL}"`)
-        .replace(/process.env.RI_API_PORT/g, `"${process.env.RI_API_PORT}"`)
-        .replace(/process.env.RI_API_PREFIX/g, `"${process.env.RI_API_PREFIX}"`)
-        .replace(/process.env.RI_API_FOLDER/g, `"${process.env.RI_API_FOLDER}"`)
-
+      // Get all project env variables
+      const envVariables = Object.keys(process.env).filter((item) => item.includes('RI_'))
+      // Create replace matrix object
+      const envObject = [
+        ...envVariables
+      ].reduce((array, value) => ({ ...array, [`process.env.${value}`]: process.env[value] }), {})
+      // Replace variables with values
+      const result = replaceAll(data, envObject)
+      // Write converted file
       fs.writeFile(bootstrapFilePath, result, 'utf8', function (err) {
-        if (err) return console.log(err);
+        if (err) return console.debug(err);
       });
     });
   } else {
-    console.log('Can\'t find bootstrap file!')
+    console.debug('Can\'t find bootstrap file!')
   }
 }
+
+function replaceAll(inputData: string, replaceMatrix: { [key: string]: any }) {
+  for (const record in replaceMatrix) {
+    inputData = inputData.replace(new RegExp(record, 'g'), `"${replaceMatrix[record]}"`);
+  }
+  return inputData;
+};
 
 replaceEnvVariables()
