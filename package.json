@@ -43,7 +43,7 @@
         {
           "type": "webview",
           "id": "ri-panel",
-          "name": "RedisInsight CLI"
+          "name": "CLI"
         }
       ]
     },
@@ -57,8 +57,22 @@
         "command": "RedisInsight.cliOpen",
         "title": "Open RedisInsight CLI",
         "category": "RedisInsight"
+      },
+      {
+        "command": "RedisInsight.addCli",
+        "title": "Add CLI",
+        "icon": "$(add)"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "RedisInsight.addCli",
+          "group": "navigation",
+          "when": "view == ri-panel"
+        }
+      ]
+    }
   },
   "resolutions": {
     "@microsoft/fast-element": "^1.12.0",
@@ -68,7 +82,7 @@
     "jackspeak": "2.1.1"
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run compile && cross-env BUILD_EXIT=true yarn build",
     "compile": "tsc -p ./",
     "postinstall": "patch-package",
     "build": "vite build",
@@ -161,6 +175,7 @@
     "@vitest/ui": "^0.34.6",
     "@vscode/l10n-dev": "^0.0.31",
     "autoprefixer": "^10.4.16",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.19.5",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",

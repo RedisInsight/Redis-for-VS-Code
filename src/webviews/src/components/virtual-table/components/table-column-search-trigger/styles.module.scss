@@ -1,11 +1,12 @@
 .search {
-  @apply flex absolute h-[24px] w-[40%] m-auto top-1/2 bottom-1/2 right-3 items-center;
+  @apply flex absolute h-[24px] m-auto top-1/2 bottom-1/2 right-3 items-center;
+  width: calc(100% - 20px);
 
   input {
-    @apply border-0 h-full w-full focus:outline-vscode-tab-activeBackground pr-6;
+    @apply border-0 h-full w-full focus:outline-vscode-inputOption-activeBorder pr-7;
   }
 }
 
 .declineBtn {
-  @apply absolute right-1.5 flex h-4 w-4;
+  @apply absolute right-1 flex;
 }

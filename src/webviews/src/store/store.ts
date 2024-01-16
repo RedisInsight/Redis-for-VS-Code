@@ -20,9 +20,6 @@ export const rootReducers = {
   connections: combineReducers({
     databases: databasesReducer,
   }),
-  browser: combineReducers({
-    keys: keysReducer,
-  }),
   cli: combineReducers({
     settings: cliSettingsReducer,
     output: outputReducer,

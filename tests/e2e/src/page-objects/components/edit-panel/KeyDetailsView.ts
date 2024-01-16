@@ -1,15 +1,13 @@
 import { By } from 'selenium-webdriver'
 import { BaseComponent } from '../BaseComponent'
+import { ButtonsActions, InputActions } from '@e2eSrc/helpers/common-actions'
+import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
+import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
 
 /**
  * Key details view
  */
 export class KeyDetailsView extends BaseComponent {
-  // frame locator
-  static keyFrame = By.xpath(
-    `//div[contains(@data-parent-flow-to-element-id, 'webview-editor-element')]/iframe`,
-  )
-
   // key details locators
   ttlField = By.xpath(`//*[@data-testid='inline-item-editor']`)
   saveTtl = By.xpath(`//*[@data-testid='apply-btn']`)
@@ -17,9 +15,32 @@ export class KeyDetailsView extends BaseComponent {
   keyName = By.xpath(`//div[@data-testid='key-name-text']/b`)
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
   keyLength = By.xpath(`//div[@data-testid='key-length-text']`)
+  keyRefresh = By.xpath(`//*[@data-testid='refresh-key-btn']`)
+
+  searchInput = By.xpath(`//*[@data-testid='search']`)
+  searchButtonInKeyDetails = By.xpath(
+    `//vscode-button[@data-testid='search-button']`,
+  )
+  clearSearchInput = By.xpath(`//*[@data-testid='decline-search-button']`)
+  trashIcon = (keyType: string, name: string): By =>
+    By.xpath(
+      `//*[@data-testid="remove-${keyType}-button-${name}-icon"] | //*[@data-testid="${keyType}-remove-button-${name}-icon"] | //*[@data-testid="${keyType}-remove-btn-${name}-icon"]`,
+    )
+
+  commonTrashIcon = (keyType: string): By =>
+    By.xpath(`//*[contains(@data-testid,"${keyType}-remove-btn-")]`)
+  commonRemoveButton = (keyType: string): By =>
+    By.xpath(
+      `//*[contains(@data-testid, "${keyType}-remove-btn-") and not(contains(@data-testid, "-icon"))]`,
+    )
+
+  removeButton = (keyType: string, name: string): By =>
+    By.xpath(
+      `, //*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"] | //*[@data-testid="${keyType}-remove-btn-${name}"]`,
+    )
 
   constructor() {
-    super(KeyDetailsView.keyFrame)
+    super(By.xpath(ViewLocators[Views.KeyDetailsView]))
   }
 
   /**
@@ -48,5 +69,73 @@ export class KeyDetailsView extends BaseComponent {
   async getKeyTtl(): Promise<string> {
     const keySizeText = await this.getElement(this.ttlField)
     return await keySizeText.getAttribute('value')
+  }
+  /**
+   * Search by the value in the key details
+   * @param value The value of the search parameter
+   */
+  async searchByTheValueInKeyDetails(value: string): Promise<void> {
+    if (!(await this.isElementDisplayed(this.searchInput))) {
+      await ButtonsActions.clickAndWaitForElement(
+        this.searchButtonInKeyDetails,
+        this.searchInput,
+      )
+    }
+    const inputField = await this.getElement(this.searchInput)
+    await inputField.sendKeys(value)
+    await InputActions.pressKey(inputField, 'enter')
+    await CommonDriverExtension.driverSleep(1000)
+  }
+
+  /**
+   * Click on remove button by field
+   * @param keyType The key type
+   * @param name The field value
+   */
+  async clickRemoveRowButtonByField(
+    keyType: string,
+    name: string,
+  ): Promise<void> {
+    const removeLocator = this.removeButton(keyType, name)
+    const element = await this.getElement(removeLocator)
+    await element.click()
+  }
+
+  /**
+   * Remove row by field
+   * @param keyType The key type
+   * @param name The field value
+   */
+  async removeRowByField(keyType: string, name: string): Promise<void> {
+    const rowInTheListLocator = this.trashIcon(keyType, name)
+    const element = await this.getElement(rowInTheListLocator)
+    await element.click()
+  }
+
+  /**
+   * Remove the first row
+   * @param keyType The key type
+   */
+  async removeFirstRow(keyType: string): Promise<void> {
+    const rowInTheListLocator = this.commonTrashIcon(keyType)
+    const element = await this.getElement(rowInTheListLocator)
+    await element.click()
+    const removeLocator = this.commonRemoveButton(keyType)
+    const element2 = await this.getElement(removeLocator)
+    await element2.click()
+  }
+  /**
+   * Remove multiple rows in key by field values
+   * @param keyType The key type
+   * @param names The field values
+   */
+  async removeRowsByFieldValues(
+    keyType: string,
+    names: string[],
+  ): Promise<void> {
+    for (const name of names) {
+      await this.removeRowByField(keyType, name)
+      await this.clickRemoveRowButtonByField(keyType, name)
+    }
   }
 }

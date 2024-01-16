@@ -24,10 +24,14 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     myStatusBarItem,
     vscode.window.registerWebviewViewProvider('ri-sidebar', sidebarProvider),
-    vscode.window.registerWebviewViewProvider('ri-panel', panelProvider),
+    vscode.window.registerWebviewViewProvider('ri-panel', panelProvider, { webviewOptions: { retainContextWhenHidden: true } }),
 
     vscode.commands.registerCommand('RedisInsight.cliOpen', () => {
       vscode.commands.executeCommand('ri-panel.focus')
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.addCli', () => {
+      panelProvider.view?.webview.postMessage({ action: 'AddCli' })
     }),
 
     vscode.commands.registerCommand('RedisInsight.openPage', (args) => {
@@ -59,6 +63,11 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('RedisInsight.addKeyCloseAndRefresh', () => {
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
       WebviewPanel.getInstance({ viewId: 'ri-add-key' }).dispose()
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.closeKeyAndRefresh', () => {
+      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
+      WebviewPanel.getInstance({ viewId: 'ri-key' })?.dispose()
     }),
   )
 }

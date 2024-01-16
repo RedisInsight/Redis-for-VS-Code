@@ -6,14 +6,15 @@ import {
 import { Provider } from 'react-redux'
 
 import { fetchKeyInfo, store, resetZustand, useSelectedKeyStore } from 'uiSrc/store'
-import { fetchPatternKeysAction, Config } from 'uiSrc/modules'
+import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
 import { RedisString } from 'uiSrc/interfaces'
 import { isEqualBuffers } from 'uiSrc/utils'
+import { VscodeMessageAction } from 'uiSrc/constants'
+import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
+import { fetchPatternKeysAction } from './modules/keys-tree/hooks/useKeys'
 
-import 'uiSrc/styles/main.scss'
-import { VscodeMessageAction, SCAN_TREE_COUNT_DEFAULT } from './constants'
-
+import './styles/main.scss'
 import '../vscode.css'
 
 // TODO: Type the incoming config data
@@ -32,7 +33,7 @@ const root = createRoot(container!)
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('message', handleMessage)
 
-  function handleMessage(event:any) {
+  function handleMessage(event: any) {
     const message = event.data
 
     switch (message.action) {
@@ -47,10 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchKeyInfo(data)
         break
       case VscodeMessageAction.RefreshTree:
-        store.dispatch(fetchPatternKeysAction('0', SCAN_TREE_COUNT_DEFAULT))
+        fetchPatternKeysAction()
         break
       default:
         break
+    }
+    if (message.action === VscodeMessageAction.AddCli) {
+      // TODO: change logic after DB connection will be implemented
+      store.dispatch(addCli())
     }
   }
 })

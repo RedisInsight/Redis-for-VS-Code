@@ -7,11 +7,9 @@ import { StringDetails } from '../string-details'
 import { HashDetails } from '../hash-details'
 import { ZSetDetails } from '../zset-details'
 import { ListDetails } from '../list-details'
+import { SetDetails } from '../set-details/SetDetails'
 // import { RejsonDetailsWrapper } from '../rejson-details'
-// import { ZSetDetails } from '../zset-details'
-// import { SetDetails } from '../set-details'
 // import { HashDetails } from '../hash-details'
-// import { ListDetails } from '../list-details'
 // import { StreamDetails } from '../stream-details'
 
 export interface Props extends KeyDetailsHeaderProps {
@@ -27,7 +25,7 @@ const DynamicTypeDetails = (props: Props) => {
     [KeyTypes.String]: <StringDetails {...props} />,
     [KeyTypes.Hash]: <HashDetails {...props} />,
     [KeyTypes.List]: <ListDetails {...props} />,
-    // [KeyTypes.Set]: <SetDetails {...props} />,
+    [KeyTypes.Set]: <SetDetails {...props} />,
     // [KeyTypes.ReJSON]: <RejsonDetailsWrapper {...props} />,
     // [KeyTypes.Stream]: <StreamDetails {...props} />,
   }

@@ -9,22 +9,17 @@ import {
   appContextDbConfig,
   setKeysTreeNodesOpen,
 } from 'uiSrc/slices/app/context/context.slice'
-import { KeyInfo, Nullable, RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
-import { ExecuteCommand, KeyTypes, ModulesKeyTypes, SCAN_TREE_COUNT_DEFAULT, VscodeMessageAction, VscodeState } from 'uiSrc/constants'
+import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
+import { ExecuteCommand, AllKeyTypes, SCAN_TREE_COUNT_DEFAULT, VscodeMessageAction } from 'uiSrc/constants'
 import { TelemetryEvent, executeCommand, sendEventTelemetry } from 'uiSrc/utils'
 import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString } from 'uiSrc/utils/formatters'
-import { AppDispatch } from 'uiSrc/store'
+import { AppDispatch, useSelectedKeyStore } from 'uiSrc/store'
 
-import {
-  fetchPatternKeysAction,
-  keysDataSelector,
-  keysSelector,
-  selectedKeyDataSelector,
-} from 'uiSrc/modules'
 import { vscodeApi } from 'uiSrc/services'
 import { constructKeysToTree } from './utils/constructKeysToTree'
 import VirtualTree from './components/virtual-tree'
+import { deleteKeyAction, fetchPatternKeysAction, useKeysStore } from './hooks/useKeys'
 import styles from './styles.module.scss'
 
 const parseKeyNames = (keys: KeyInfo[] = []) =>
@@ -33,11 +28,15 @@ const parseKeyNames = (keys: KeyInfo[] = []) =>
 
 export const KeysTree = () => {
   const { databaseId } = useParams<{ databaseId: string }>()
-  const { loading } = useSelector(keysSelector)
-  const keysState = useSelector(keysDataSelector)
   const { openNodes } = useSelector(appContextKeysTree)
   const { treeViewDelimiter: delimiter = '', treeViewSort: sorting } = useSelector(appContextDbConfig)
-  const { nameString: selectedKeyName = null } = useSelector(selectedKeyDataSelector) ?? {}
+
+  const selectedKeyName = useSelectedKeyStore((state) => state.data?.nameString) || ''
+
+  const { keysState, loading } = useKeysStore((state) => ({
+    keysState: state.data,
+    loading: state.loading,
+  }))
 
   const [statusOpen, setStatusOpen] = useState(openNodes)
   const [constructingTree, setConstructingTree] = useState<boolean>(false)
@@ -47,7 +46,7 @@ export const KeysTree = () => {
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    dispatch(fetchPatternKeysAction('0', SCAN_TREE_COUNT_DEFAULT))
+    fetchPatternKeysAction()
     openSelectedKey(selectedKeyName)
   }, [])
 
@@ -111,15 +110,11 @@ export const KeysTree = () => {
     vscodeApi.postMessage({ action: VscodeMessageAction.SelectKey, data: name })
   }
 
-  const handleDeleteLeaf = (key: RedisResponseBuffer) => {
-    console.debug('handleDeleteLeaf', { key })
-
-    // dispatch(deleteKeyAction(key, () => {
-    //   onDelete(key)
-    // }))
+  const handleDeleteLeaf = (key: RedisString) => {
+    deleteKeyAction(key)
   }
 
-  const handleDeleteClicked = (type: KeyTypes | ModulesKeyTypes) => {
+  const handleDeleteClicked = (type: AllKeyTypes) => {
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_DELETE_CLICKED,
       eventData: {
@@ -137,9 +132,7 @@ export const KeysTree = () => {
 
     return (
       <div className="px-8">
-        <NoKeysMessage
-          total={keysState.total}
-        />
+        <NoKeysMessage total={keysState.total} />
       </div>
     )
   }

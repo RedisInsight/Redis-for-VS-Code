@@ -22,11 +22,20 @@
   z-index: 3;
 
   &Bottom {
-    @apply items-end pb-3;
+    @apply items-end pb-3 mr-3;
+
+    .applyBtn {
+      @apply h-[22px];
+    }
   }
 
   &Center {
     @apply items-center;
+
+    .applyBtn {
+      @apply h-full bg-vscode-button-background min-h-[28px] w-full;
+      border-radius: 0 !important;
+    }
   }
 
   .tooltip,
@@ -37,8 +46,7 @@
 }
 
 .applyBtn {
-  @apply flex items-center w-full h-full bg-vscode-button-background min-h-[28px];
-  border-radius: 0 !important;
+  @apply flex items-center;
 }
 
 .declineBtn {

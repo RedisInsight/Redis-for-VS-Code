@@ -1,5 +1,4 @@
 import { Key, VSBrowser, WebDriver, WebElement } from 'vscode-extension-tester'
-import { Locator, until } from 'selenium-webdriver'
 
 /**
  * Input fields

@@ -1,12 +1,12 @@
 import React, { FC } from 'react'
 import cx from 'classnames'
 
-import { KeyTypes, ModulesKeyTypes } from 'uiSrc/constants'
+import { AllKeyTypes } from 'uiSrc/constants'
 import { getGroupTypeDisplay } from 'uiSrc/utils'
 import styles from './styles.module.scss'
 
 export interface Props {
-  type: KeyTypes | ModulesKeyTypes
+  type: AllKeyTypes
   nameString: string
 }
 

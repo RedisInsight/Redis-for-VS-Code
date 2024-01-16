@@ -5,7 +5,9 @@ import * as l10n from '@vscode/l10n'
 import { VscFolder, VscFolderOpened, VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 
 import { formatLongName } from 'uiSrc/utils'
+import { Maybe, RedisString } from 'uiSrc/interfaces'
 import { KeyRowName } from '../key-row-name'
+import { KeyRowDelete } from '../key-row-delete'
 import { KeyRowType } from '../key-row-type'
 import { TreeData } from '../virtual-tree/interfaces'
 import styles from './styles.module.scss'
@@ -33,6 +35,8 @@ export const Node = ({
     nameString,
     keyApproximate,
     isSelected,
+    onDelete,
+    onDeleteClicked,
     getMetadata,
     updateStatusOpen,
     updateStatusSelected,
@@ -68,6 +72,14 @@ export const Node = ({
     }
   }
 
+  const handleDelete = (nameBuffer: RedisString) => {
+    onDelete?.(nameBuffer)
+  }
+
+  const handleDeletePopoverOpen = () => {
+    onDeleteClicked?.(type)
+  }
+
   const folderTooltipContent = `${formatLongName(nameString)}\n`
     + `${keyCount} ${l10n.t('key(s)')} (${Math.round(keyApproximate * 100) / 100}%)`
 
@@ -98,6 +110,12 @@ export const Node = ({
     <div className="flex truncate h-full">
       <KeyRowName shortString={shortName} nameString={nameString} />
       <KeyRowType type={type} nameString={nameString} />
+      <KeyRowDelete
+        nameBuffer={nameBuffer}
+        nameString={nameString}
+        handleDelete={handleDelete}
+        handleDeletePopoverOpen={handleDeletePopoverOpen}
+      />
     </div>
   )
 
@@ -121,7 +139,7 @@ export const Node = ({
 
   const Node = (
     <div
-      className={cx(styles.nodeContent)}
+      className={cx(styles.nodeContent, 'group')}
       role="treeitem"
       onClick={handleClick}
       onKeyDown={handleKeyDown}

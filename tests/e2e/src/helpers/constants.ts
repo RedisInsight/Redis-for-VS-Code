@@ -9,6 +9,18 @@ export enum KeyTypesTexts {
   Graph = 'Graph',
   TimeSeries = 'TS',
 }
+export enum KeyTypesShort {
+  Hash = 'hash',
+  List = 'list',
+  Set = 'set',
+  ZSet = 'zset',
+  String = 'string',
+  ReJSON = 'json',
+  Stream = 'stream',
+  Graph = 'graph',
+  TimeSeries = 'ts',
+}
+
 export const keyLength = 50
 
 export const COMMANDS_TO_CREATE_KEY = Object.freeze({

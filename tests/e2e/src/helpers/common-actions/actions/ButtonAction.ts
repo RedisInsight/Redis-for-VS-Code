@@ -26,18 +26,28 @@ export class ButtonsActions {
     timeout: number = 3000,
   ): Promise<void> {
     ButtonsActions.initializeDriver()
-    await ButtonsActions.clickElement(locatorToClick)
-    // Wait for element
-    const elementToWait = await ButtonsActions.driver.wait(
-      until.elementLocated(locatorToClick),
-      timeout,
-    )
-    stateOfDisplayed
-      ? await ButtonsActions.driver.wait(until.elementIsVisible(elementToWait))
-      : await ButtonsActions.driver.wait(
+
+    if (stateOfDisplayed) {
+      await ButtonsActions.clickElement(locatorToClick)
+      await ButtonsActions.driver.wait(
+        until.elementLocated(locatorToDisplayed),
+        timeout,
+      )
+    } else {
+      const elementToWait = await ButtonsActions.driver.wait(
+        until.elementLocated(locatorToDisplayed),
+        timeout,
+      )
+      await ButtonsActions.clickElement(locatorToClick)
+
+      try {
+        await ButtonsActions.driver.wait(
           until.elementIsNotVisible(elementToWait),
         )
+      } catch (error) {}
+    }
   }
+
   /**
    * Click on button
    * @param locatorToClick locator to click
@@ -53,5 +63,25 @@ export class ButtonsActions {
       timeout,
     )
     await elementToClick.click()
+  }
+
+  /**
+   * Hover mouse to element
+   * @param locator locator to hover over
+   * @param timeout timeout to wait for element
+   */
+  static async hoverElement(
+    locator: Locator,
+    timeout: number = 3000,
+  ): Promise<void> {
+    ButtonsActions.initializeDriver()
+    const elementToHover = await ButtonsActions.driver.wait(
+      until.elementLocated(locator),
+      timeout,
+    )
+    await ButtonsActions.driver
+      .actions()
+      .move({ duration: 5000, origin: elementToHover, x: 0, y: 0 })
+      .perform()
   }
 }

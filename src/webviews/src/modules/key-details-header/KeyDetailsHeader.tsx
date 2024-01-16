@@ -9,27 +9,29 @@ import * as l10n from '@vscode/l10n'
 
 // import { AutoRefresh } from 'uiSrc/components'
 import {
+  AllKeyTypes,
   KeyTypes,
-  ModulesKeyTypes,
 } from 'uiSrc/constants'
-import { RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
+import { RedisString } from 'uiSrc/interfaces'
 import { editKeyTTL, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
-import { TelemetryEvent, bufferToString, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
+import { TelemetryEvent, bufferToString, formatLongName, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
 import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 // import { KeyDetailsHeaderFormatter } from './components/key-details-header-formatter'
+import { PopoverDelete } from 'uiSrc/components'
 import { KeyDetailsHeaderName } from './components/key-details-header-name'
 import { KeyDetailsHeaderTTL } from './components/key-details-header-ttl'
 // import { KeyDetailsHeaderDelete } from './components/key-details-header-delete'
 import { KeyDetailsHeaderSizeLength } from './components/key-details-header-size-length'
 import { KeyRowType } from '../keys-tree/components/key-row-type'
+import { deleteKeyAction } from '../keys-tree/hooks/useKeys'
 
 import styles from './styles.module.scss'
 
 export interface KeyDetailsHeaderProps {
-  keyType: KeyTypes | ModulesKeyTypes
-  onCloseKey: (key?: RedisString) => void
-  onRemoveKey: () => void
-  onEditKey: (key: RedisString, newKey: RedisString, onFailure?: () => void) => void
+  keyType: AllKeyTypes
+  onCloseKey?: (key?: RedisString) => void
+  onRemoveKey?: () => void
+  onEditKey?: (key: RedisString, newKey: RedisString, onFailure?: () => void) => void
   Actions?: (props: { width: number }) => ReactElement
 }
 
@@ -53,11 +55,11 @@ const KeyDetailsHeader = ({
     // dispatch(refreshKey(keyBuffer!, type))
   }
 
-  const handleEditTTL = (key: RedisResponseBuffer, ttl: number) => {
-    editKeyTTL(key, ttl, onEditKeyyTTLSuccess)
+  const handleEditTTL = (key: RedisString, ttl: number) => {
+    editKeyTTL(key, ttl, onEditKeyTTLSuccess)
   }
 
-  const onEditKeyyTTLSuccess = (ttl: number, prevTTL?: number) => {
+  const onEditKeyTTLSuccess = (ttl: number, prevTTL?: number) => {
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_TTL_CHANGED,
       eventData: {
@@ -67,12 +69,23 @@ const KeyDetailsHeader = ({
       },
     })
   }
-  const handleEditKey = (oldKey: RedisResponseBuffer, newKey: RedisResponseBuffer, onFailure?: () => void) => {
+  const handleEditKey = (oldKey: RedisString, newKey: RedisString, onFailure?: () => void) => {
     // dispatch(editKey(oldKey, newKey, () => onEditKey(oldKey, newKey), onFailure))
   }
 
-  const handleDeleteKey = (key: RedisResponseBuffer) => {
-    // dispatch(deleteSelectedKeyAction(key, onRemoveKey))
+  const handleDeleteKey = (key: RedisString) => {
+    deleteKeyAction(key, onRemoveKey)
+  }
+
+  const handleDeleteKeyClicked = () => {
+    sendEventTelemetry({
+      event: TelemetryEvent.TREE_VIEW_KEY_DELETE_CLICKED,
+      eventData: {
+        databaseId,
+        keyType: type,
+        source: 'keyValue',
+      },
+    })
   }
 
   const handleEnableAutoRefresh = (enableAutoRefresh: boolean, refreshRate: string) => {
@@ -141,6 +154,17 @@ const KeyDetailsHeader = ({
                   >
                     <VscDebugRestart />
                   </VSCodeButton>
+                  <PopoverDelete
+                    item={keyProp!}
+                    itemRaw={keyBuffer}
+                    testid={`remove-key-${keyProp}`}
+                    header={`${formatLongName(keyProp)}`}
+                    text={`${l10n.t(' will be deleted.')}`}
+                    approveTextBtn={l10n.t('Delete')}
+                    triggerClassName="group-hover:block"
+                    handleDeleteItem={handleDeleteKey}
+                    handleButtonClick={handleDeleteKeyClicked}
+                  />
                   {/* <AutoRefresh
                       postfix={type}
                       loading={loading}

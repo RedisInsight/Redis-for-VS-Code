@@ -1,20 +1,18 @@
 import { By } from 'selenium-webdriver'
 import { BaseComponent } from '../BaseComponent'
+import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
 
 /**
  * key tree list view
  */
 export class KeyTreeView extends BaseComponent {
-  // frame locator
-  static treeFrame =
-    By.xpath(`(//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)])
-`)
   treeViewPage = By.xpath(`//div[@data-testid='tree-view-page']`)
   scanMoreBtn = By.xpath(`//vscode-button[@data-testid='scan-more']`)
   treeViewKey = By.xpath(
     `//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')]`,
   )
   keyStarts = By.xpath(`//div[starts-with(@data-testid, 'key-')]`)
+  refreshButton = By.xpath(`//vscode-button[@data-testid = 'refresh-keys']`)
   // mask
   keyMask = '//*[@data-testid="key-$name"]'
 
@@ -26,7 +24,7 @@ export class KeyTreeView extends BaseComponent {
     By.xpath(`//div[starts-with(@data-testid, '${base}')]`)
 
   constructor() {
-    super(KeyTreeView.treeFrame)
+    super(By.xpath(ViewLocators[Views.KeyTreeView]))
   }
 
   /**

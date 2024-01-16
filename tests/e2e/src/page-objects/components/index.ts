@@ -6,7 +6,10 @@ import { CliViewPanel } from './bottom-bar/CliViewPanel'
 import { KeyDetailsView } from './edit-panel/KeyDetailsView'
 import { KeyTreeView } from './key-view/KeyTreeView'
 import { HashKeyDetailsView } from './edit-panel/HashKeyDetailsView'
+import { ListKeyDetailsView } from './edit-panel/ListKeyDetailsView'
 import { StringKeyDetailsView } from './edit-panel/StringKeyDetailsView'
+import { SortedSetKeyDetailsView } from './edit-panel/SortedSetKeyDetailsView'
+import { SetKeyDetailsView } from './edit-panel/SetKeyDetailsView'
 
 export {
   WebView,
@@ -16,5 +19,8 @@ export {
   KeyDetailsView,
   KeyTreeView,
   HashKeyDetailsView,
-  StringKeyDetailsView
+  ListKeyDetailsView,
+  StringKeyDetailsView,
+  SortedSetKeyDetailsView,
+  SetKeyDetailsView,
 }

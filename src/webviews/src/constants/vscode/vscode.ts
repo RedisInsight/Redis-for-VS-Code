@@ -10,7 +10,9 @@ export enum VscodeMessageAction {
   AddKey = 'AddKey',
   InformationMessage = 'InformationMessage',
   ErrorMessage = 'ErrorMessage',
+  AddCli = 'AddCli',
   SelectKey = 'SelectKey',
   OpenCli = 'OpenCli',
   RefreshTree = 'RefreshTree',
+  CloseKeyAndRefresh = 'CloseKeyAndRefresh',
 }
