@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
-import { isNull, isUndefined } from 'lodash'
+import { isNull } from 'lodash'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService, localStorageService } from 'uiSrc/services'
 import {
@@ -14,7 +14,7 @@ import {
   SortOrder,
   StorageItem,
 } from 'uiSrc/constants'
-import { bufferToString, getEncoding, getUrl, isStatusSuccessful } from 'uiSrc/utils'
+import { bufferToString, getApiErrorMessage, getEncoding, getUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { fetchString } from 'uiSrc/modules'
 import { fetchHashFields } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
 import { fetchZSetMembers } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
@@ -75,6 +75,29 @@ export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true) => {
     } catch (_err) {
       const error = _err as AxiosError
       console.debug({ error })
+    } finally {
+      state.processSelectedKeyFinal()
+    }
+  })
+}
+
+// Asynchronous thunk action
+export const checkKey = (key: RedisString, onSuccess?: () => void) => {
+  useSelectedKeyStore.setState(async (state) => {
+    state.processSelectedKey()
+    try {
+      const { status } = await apiService.post<KeyInfo>(
+        getUrl(ApiEndpoints.KEY_INFO),
+        { keyName: key },
+        { params: { encoding: getEncoding() } },
+      )
+      if (isStatusSuccessful(status)) {
+        onSuccess?.()
+      }
+    } catch (_err) {
+      const error = _err as AxiosError
+      const errorMessage = getApiErrorMessage(error)
+      showErrorMessage(errorMessage)
     } finally {
       state.processSelectedKeyFinal()
     }

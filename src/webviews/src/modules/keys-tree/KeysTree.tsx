@@ -14,7 +14,7 @@ import { ExecuteCommand, KeyTypes, ModulesKeyTypes, SCAN_TREE_COUNT_DEFAULT, Vsc
 import { TelemetryEvent, executeCommand, sendEventTelemetry } from 'uiSrc/utils'
 import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString } from 'uiSrc/utils/formatters'
-import { AppDispatch, useVSCodeState } from 'uiSrc/store'
+import { AppDispatch, checkKey, useVSCodeState } from 'uiSrc/store'
 
 import {
   fetchPatternKeysAction,
@@ -91,7 +91,7 @@ export const KeysTree = () => {
     openSelectedKey(selectedKeyName)
   }
 
-  const handleStatusOpen = (name: string, value:boolean) => {
+  const handleStatusOpen = (name: string, value: boolean) => {
     setStatusOpen((prevState) => {
       const newState = { ...prevState }
       // add or remove opened node
@@ -107,8 +107,10 @@ export const KeysTree = () => {
   }
 
   const handleStatusSelected = (name: RedisString) => {
-    // todo: connection between webviews
-    vscodeApi.postMessage({ action: VscodeMessageAction.SelectKey, data: name })
+    checkKey(name, () => {
+      // todo: connection between webviews
+      vscodeApi.postMessage({ action: VscodeMessageAction.SelectKey, data: name })
+    })
   }
 
   const handleDeleteLeaf = (key: RedisResponseBuffer) => {
@@ -150,11 +152,11 @@ export const KeysTree = () => {
         items={items}
         delimiter={delimiter}
         sorting={sorting}
-          // deleting={deleting}
+        // deleting={deleting}
         statusSelected={selectedKeyName}
         statusOpen={statusOpen}
         loading={loading || constructingTree}
-          // commonFilterType={commonFilterType}
+        // commonFilterType={commonFilterType}
         commonFilterType={null}
         setConstructingTree={setConstructingTree}
         webworkerFn={constructKeysToTree}
