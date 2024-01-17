@@ -34,7 +34,7 @@ describe('Tree view verifications', () => {
       )
     }
   })
-  it.skip('Verify that if there are keys without namespaces, they are displayed in the root directory after all folders by default in the Tree view', async function () {
+  it('Verify that if there are keys without namespaces, they are displayed in the root directory after all folders by default in the Tree view', async function () {
     keyNames = [
       `atest:a-${Common.generateWord(10)}`,
       `atest:z-${Common.generateWord(10)}`,
@@ -102,9 +102,7 @@ describe('Tree view verifications', () => {
     )
   })
   // Run this test only for big database instance 8103
-  it.skip('Verify that user can see the total number of keys, the number of keys scanned, the “Scan more” control displayed at the top of Tree view and Browser view', async function () {
-    // Verify the controls on the Browser view
-
+  it.skip('Verify that user can see the total number of keys, the number of keys scanned, the “Scan more” control displayed at the top of Tree view', async function () {
     // Verify the controls on the Tree view
     expect(await keyTreeView.isElementDisplayed(keyTreeView.scanMoreBtn)).eql(
       true,
@@ -140,5 +138,9 @@ describe('Tree view verifications', () => {
       true,
       'The main folder is not expanded',
     )
+  })
+  // Add checks once Edit the key name in details functionality is ready
+  it.skip('Verify that user can refresh Keys', async function () {
+
   })
 })
