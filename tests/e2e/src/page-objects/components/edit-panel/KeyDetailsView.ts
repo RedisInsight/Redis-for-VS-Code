@@ -36,7 +36,7 @@ export class KeyDetailsView extends BaseComponent {
 
   removeButton = (keyType: string, name: string): By =>
     By.xpath(
-      `, //*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"] | //*[@data-testid="${keyType}-remove-btn-${name}"]`,
+      `, //*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"]]`,
     )
 
   constructor() {
