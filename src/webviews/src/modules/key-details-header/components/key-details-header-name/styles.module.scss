@@ -2,6 +2,14 @@
   @apply flex flex-col;
 }
 
+.container {
+  @apply flex flex-row;
+
+  & vscode-button {
+    margin-left: 10px;
+  }
+}
+
 .classNameGridComponent {
   position: relative;
 }
