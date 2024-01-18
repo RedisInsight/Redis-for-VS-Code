@@ -9,7 +9,7 @@ import {
   AddCommonFieldsFormConfig as config,
 } from 'uiSrc/constants'
 import { Maybe } from 'uiSrc/interfaces'
-import { InputText } from 'uiSrc/components'
+import { InputText } from 'uiSrc/ui'
 
 import styles from './styles.module.scss'
 

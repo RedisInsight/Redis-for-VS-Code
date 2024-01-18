@@ -50,6 +50,9 @@ export const handleMessage = (message: any = {}) => {
   if (message.action === 'SelectKey') {
     vscode.commands.executeCommand('RedisInsight.openPage', message)
   }
+  if (message.action === 'EditDatabase') {
+    vscode.commands.executeCommand('RedisInsight.editDatabase', message)
+  }
   if (message.action === 'ErrorMessage') {
     vscode.window.showErrorMessage(message.data)
   }

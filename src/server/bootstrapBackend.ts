@@ -7,7 +7,7 @@ import { ChildProcessWithoutNullStreams } from 'child_process'
 // TODO: add separate task builder to save env variables in production builds
 const apiUrl = process.env.RI_BASE_API_URL || 'http://localhost'
 // TODO: add port avialability checker instead of hardcode
-const apiPort = process.env.RI_API_PORT || '5000'
+const apiPort = process.env.RI_API_PORT || '5001'
 const apiPrefix = process.env.RI_API_PREFIX || 'api'
 const apiFolder = process.env.RI_API_FOLDER || '.redisinsight-vsc'
 

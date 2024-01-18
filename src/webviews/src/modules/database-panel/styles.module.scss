@@ -1,0 +1,17 @@
+.container {
+  @apply overflow-auto;
+  .content {
+    @apply w-[660px] pr-2;
+  }
+  input:not(:global([id^="react-select-"])) {
+    @apply h-9 pl-3 pr-3;
+  }
+
+  textarea {
+    @apply min-h-20 h-20 pl-3 pr-3 pt-2;
+  }
+
+  :global(.checkbox) {
+    @apply mt-3 mb-3 #{!important};
+  }
+}

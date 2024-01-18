@@ -216,7 +216,7 @@ const StringDetailsValue = (props: Props) => {
                 viewFormat,
               )?.isValid}
           >
-            <EuiTextArea
+            <TextArea
               fullWidth
               name="value"
               id="value"

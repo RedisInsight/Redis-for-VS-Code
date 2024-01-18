@@ -1,0 +1,173 @@
+/* @import '../../../../../node_modules/react-select/dist/declarations/src/' */
+/* .database-form-select {
+  *[class*='a11yText'] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    word-wrap: normal;
+    clip: rect(1px, 1px, 1px, 1px);
+  }
+}
+
+// Most of the styling inside here are just replicates of what the library should add.
+// The library are using Emotion but that conflicts with SSR rendering, so we need to
+// replicate the styles here.
+.database-form-select--is-disabled {
+  .database-form-select__control {
+    cursor: not-allowed;
+  }
+}
+
+.database-form-select {
+  &__control {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-height: 38px;
+    outline: 0 !important;
+    position: relative;
+    transition: all 100ms;
+    box-sizing: border-box;
+    cursor: text;
+    border: none;
+  }
+
+  &__placeholder {
+    color: hsl(0, 0%, 50%);
+    grid-area: 1/1/2/3;
+    margin-left: 2px;
+    margin-right: 2px;
+    box-sizing: border-box;
+  }
+
+  &__input {
+    color: inherit;
+    background: 0px center;
+    opacity: 1;
+    width: 100%;
+    grid-area: 1 / 2 / auto / auto;
+    font: inherit;
+    min-width: 2px;
+    border: 0px;
+    margin: 0px;
+    outline: 0px;
+    padding: 0px;
+  }
+
+  &__input-container {
+    margin: 2px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    visibility: visible;
+    color: hsl(0, 0%, 20%);
+    flex: 1 1 auto;
+    display: inline-grid;
+    grid-area: 1/1/2/3;
+    grid-template-columns: 0 min-content;
+    box-sizing: border-box;
+  }
+
+  &__value-container {
+    align-items: center;
+    display: grid;
+    flex: 1;
+    flex-wrap: wrap;
+    padding: 2px 8px;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  &__indicator {
+    color: hsl(0, 0%, 80%);
+    display: flex;
+    padding: 8px;
+    transition: color 150ms;
+    box-sizing: border-box;
+
+    &:hover {
+      color: hsl(0, 0%, 60%);
+    }
+
+    svg {
+      display: inline-block;
+      fill: currentColor;
+      line-height: 1;
+      stroke: currentColor;
+      stroke-width: 0;
+    }
+  }
+
+  &__indicators {
+    padding-right: 20px;
+    align-items: center;
+    align-self: stretch;
+    display: flex;
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
+  &__dropdown-indicator {
+    color: hsl(0, 0%, 80%);
+    display: flex;
+    padding: 8px;
+    transition: color 150ms;
+    box-sizing: border-box;
+  }
+
+  &__menu {
+    top: 100%;
+    background-color: hsl(0, 0%, 100%);
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px hsl(0deg 0% 0% / 10%),
+      0 4px 11px hsl(0deg 0% 0% / 10%);
+    margin-bottom: 8px;
+    margin-top: 8px;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    box-sizing: border-box;
+
+    &-list {
+      max-height: 300px;
+      overflow-y: auto;
+      padding-bottom: 4px;
+      padding-top: 4px;
+      position: relative;
+      -webkit-overflow-scrolling: touch;
+      box-sizing: border-box;
+    }
+  }
+
+  &__option {
+    background-color: transparent;
+    color: inherit;
+    cursor: default;
+    display: block;
+    font-size: inherit;
+    padding: 8px 12px;
+    width: 100%;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    box-sizing: border-box;
+  }
+} */
+
+.database-form-select {
+  @apply h-9;
+  &__control {
+    @apply bg-vscode-tab-activeBackground border-none h-9 rounded-none #{!important};
+  }
+  &__menu {
+    @apply bg-vscode-tab-activeBackground cursor-pointer #{!important};
+  }
+  &__option--is-focused, &__option--is-selected {
+    @apply bg-vscode-button-background #{!important};
+  }
+  &__indicator-separator {
+    @apply hidden;
+  }
+}

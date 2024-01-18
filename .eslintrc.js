@@ -35,6 +35,7 @@ module.exports = {
     radix: 'off',
     semi: ['error', 'never'],
     'no-bitwise': ['error', { allow: ['|'] }],
+    'react/no-unused-prop-types': 'off',
     'max-len': [
       'error',
       {
@@ -42,6 +43,21 @@ module.exports = {
         ignoreStrings: true,
         ignoreRegExpLiterals: true,
         code: 140,
+      },
+    ],
+    'jsx-a11y/label-has-associated-control': [
+      2,
+      {
+        labelComponents: [
+          'FormLabel',
+        ],
+        labelAttributes: [
+          'label',
+        ],
+        controlComponents: [
+          'input',
+        ],
+        depth: 1,
       },
     ],
     'class-methods-use-this': 'off',

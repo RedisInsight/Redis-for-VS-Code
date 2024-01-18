@@ -12,7 +12,7 @@ import {
 import reducer, {
   initialState,
   databasesSelector,
-  loadDatabases,
+  processDatabase,
   loadDatabasesSuccess,
   loadDatabasesFailure,
   fetchDatabasesAction,
@@ -106,7 +106,7 @@ describe('databases slice', () => {
       }
 
       // Act
-      const nextState = reducer(initialState, loadDatabases())
+      const nextState = reducer(initialState, processDatabase())
 
       // Assert
       const rootState = Object.assign(initialStateDefault, {
@@ -129,7 +129,7 @@ describe('databases slice', () => {
       }
 
       // Act
-      const databaseState = reducer(initialState, loadDatabases())
+      const databaseState = reducer(initialState, processDatabase())
       const nextState = reducer(initialState, loadDatabasesSuccess(databases))
 
       // Assert
@@ -201,7 +201,7 @@ describe('databases slice', () => {
 
         // Assert
         const expectedActions = [
-          loadDatabases(),
+          processDatabase(),
           loadDatabasesSuccess(responsePayload.data),
         ]
         expect(store.getActions()).toEqual(expectedActions)
@@ -224,7 +224,7 @@ describe('databases slice', () => {
 
         // Assert
         const expectedActions = [
-          loadDatabases(),
+          processDatabase(),
           loadDatabasesFailure(responsePayload.response.data.message),
         ]
         expect(store.getActions()).toEqual(expectedActions)

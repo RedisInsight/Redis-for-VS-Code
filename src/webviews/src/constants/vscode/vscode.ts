@@ -8,6 +8,7 @@ export enum VscodeState {
 
 export enum VscodeMessageAction {
   AddKey = 'AddKey',
+  EditDatabase = 'EditDatabase',
   InformationMessage = 'InformationMessage',
   ErrorMessage = 'ErrorMessage',
   AddCli = 'AddCli',

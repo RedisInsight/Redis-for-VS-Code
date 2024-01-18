@@ -65,7 +65,7 @@ const KeyDetailsHeaderTTL = ({ onEditTTL }: Props) => {
             onChange={onChangeTTL}
             data-testid="edit-ttl-input"
           />
-          {/* <EuiFieldText
+          {/* <InputText
                 name="ttl"
                 id="ttl"
                 className={cx(

@@ -1,0 +1,9 @@
+$inputHeight: 28px;
+$inputMinWidth: 100px;
+
+.input {
+  @apply bg-vscode-checkbox-background text-vscode-checkbox-foreground border-vscode-checkbox-border focus:border-vscode-inputOption-activeBorder w-4 px-[6px] outline-none border-solid border rounded-none;
+
+  border-color: transparent;
+  min-width: $inputMinWidth;
+}

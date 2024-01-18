@@ -17,7 +17,7 @@ import Popup from 'reactjs-popup'
 import { capitalize } from 'lodash'
 
 import { VSCodeToolkitEvent } from 'uiSrc/interfaces'
-import { InputText } from 'uiSrc/components'
+import { InputText } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {

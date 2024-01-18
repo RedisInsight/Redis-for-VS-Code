@@ -55,7 +55,7 @@ describe('ListDetailsTable', () => {
 
   // describe.todo('decompressed  data', () => {
   //   it('should render decompressed GZIP data = "1"', () => {
-  //     const defaultState = vi.requireActual('uiSrc/slices/browser/list').initialState
+  //     const defaultState = await vi.importActual<object>('uiSrc/slices/browser/list').initialState
   //     const listDataSelectorMock = vi.fn().mockReturnValue({
   //       ...defaultState,
   //       key: '123zxczxczxc',
@@ -72,7 +72,7 @@ describe('ListDetailsTable', () => {
   //   })
 
   //   it('edit button should be disabled if data was compressed', async () => {
-  //     const defaultState = vi.requireActual('uiSrc/slices/browser/list').initialState
+  //     const defaultState = await vi.importActual<object>('uiSrc/slices/browser/list').initialState
   //     const listDataSelectorMock = vi.fn().mockReturnValue({
   //       ...defaultState,
   //       key: '123zxczxczxc',

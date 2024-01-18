@@ -6,6 +6,7 @@ export interface InitialStateDatabases {
   error: string
   data: Database[]
   connectedDatabase: Database
+  editDatabase: Nullable<Database>
   freeDatabase: Nullable<Database>
 }
 

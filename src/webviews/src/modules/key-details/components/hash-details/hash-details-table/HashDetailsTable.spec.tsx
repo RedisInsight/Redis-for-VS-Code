@@ -67,7 +67,7 @@ describe('HashDetailsTable', () => {
 
   // describe.todo('decompressed  data', () => {
   //   it('should render decompressed GZIP data', () => {
-  //     const defaultState = vi.requireActual('uiSrc/slices/browser/hash').initialState
+  //     const defaultState = await vi.importActual<object>('uiSrc/slices/browser/hash').initialState
   //     const hashDataSelectorMock = vi.fn().mockReturnValue({
   //       ...defaultState,
   //       total: 1,
@@ -87,7 +87,7 @@ describe('HashDetailsTable', () => {
   //   })
 
   //   it('edit button should be disabled if data was compressed', async () => {
-  //     const defaultState = vi.requireActual('uiSrc/slices/browser/hash').initialState
+  //     const defaultState = await vi.importActual<object>('uiSrc/slices/browser/hash').initialState
   //     const hashDataSelectorMock = vi.fn().mockReturnValue({
   //       ...defaultState,
   //       total: 1,

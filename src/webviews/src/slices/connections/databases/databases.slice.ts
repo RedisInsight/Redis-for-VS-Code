@@ -2,8 +2,8 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { find, orderBy } from 'lodash'
 import { AxiosError } from 'axios'
 import { apiService, localStorageService } from 'uiSrc/services'
-import { ApiEndpoints, CONNECTED_DATABASE_ID, ConnectionType, StorageItem } from 'uiSrc/constants'
-import { checkRediStack, getApiErrorMessage, isStatusSuccessful } from 'uiSrc/utils'
+import { ApiEndpoints, CONNECTED_DATABASE_ID, ConnectionType, StorageItem, successMessages } from 'uiSrc/constants'
+import { checkRediStack, getApiErrorMessage, isStatusSuccessful, showErrorMessage, showInformationMessage } from 'uiSrc/utils'
 import { AppDispatch, RootState } from 'uiSrc/store'
 import { Database, InitialStateDatabases } from './interface'
 
@@ -12,6 +12,7 @@ export const initialState: InitialStateDatabases = {
   error: '',
   data: [],
   freeDatabase: null,
+  editDatabase: null,
   connectedDatabase: {
     id: CONNECTED_DATABASE_ID,
     name: '',
@@ -34,8 +35,12 @@ const databasesSlice = createSlice({
   initialState,
   reducers: {
     // load databases
-    loadDatabases: (state) => {
+    processDatabase: (state) => {
       state.loading = true
+      state.error = ''
+    },
+    processDatabaseSuccess: (state) => {
+      state.loading = false
       state.error = ''
     },
     loadDatabasesSuccess: (state, { payload }: PayloadAction<Database[]>) => {
@@ -59,19 +64,25 @@ const databasesSlice = createSlice({
       state.loading = false
       state.error = payload
     },
+    setEditDatabase: (state, { payload }:PayloadAction<Database>) => {
+      state.editDatabase = payload
+    },
   },
 })
 
 // Actions generated from the slice
 export const {
-  loadDatabases,
+  processDatabase,
   loadDatabasesSuccess,
   loadDatabasesFailure,
+  processDatabaseSuccess,
+  setEditDatabase,
 } = databasesSlice.actions
 
 // selectors
 export const databasesSelector = (state: RootState) => state.connections.databases
 export const freeDatabaseSelector = (state: RootState) => state.connections.databases.freeDatabase
+export const editDatabaseSelector = (state: RootState) => state.connections.databases.editDatabase
 export const connectedDatabaseSelector = (state: RootState) =>
   state.connections.databases.connectedDatabase
 
@@ -81,7 +92,7 @@ export default databasesSlice.reducer
 // Asynchronous thunk action
 export function fetchDatabasesAction(onSuccess?: (data?: Database[]) => void) {
   return async (dispatch: AppDispatch) => {
-    dispatch(loadDatabases())
+    dispatch(processDatabase())
 
     try {
       const { data, status } = await apiService.get<Database[]>(`${ApiEndpoints.DATABASES}`)
@@ -97,6 +108,101 @@ export function fetchDatabasesAction(onSuccess?: (data?: Database[]) => void) {
       dispatch(loadDatabasesFailure(errorMessage))
 
       localStorageService.set(StorageItem.databasesCount, '0')
+    }
+  }
+}
+
+// Asynchronous thunk action
+export function createDatabaseStandaloneAction(
+  payload: Database,
+  onRedirectToSentinel?: () => void,
+  onSuccess?: (id: string) => void,
+) {
+  return async (dispatch: AppDispatch) => {
+    dispatch(processDatabase())
+
+    try {
+      const { data, status } = await apiService.post(`${ApiEndpoints.DATABASES}`, payload)
+
+      if (isStatusSuccessful(status)) {
+        dispatch(processDatabaseSuccess())
+        dispatch(fetchDatabasesAction())
+
+        showInformationMessage(successMessages.ADDED_NEW_DATABASE(payload.name ?? '').title)
+        onSuccess?.(data.id)
+      }
+    } catch (_error) {
+      const error = _error as AxiosError
+      const errorMessage = getApiErrorMessage(error)
+      showErrorMessage(errorMessage)
+      // const errorCode = get(error, 'response.data.errorCode', 0) as CustomErrorCodes
+
+      // if (errorCode === CustomErrorCodes.DatabaseAlreadyExists) {
+      //   const databaseId: string = get(error, 'response.data.resource.databaseId', '')
+
+      //   dispatch(autoCreateAndConnectToDatabaseActionSuccess(
+      //     databaseId,
+      //     successMessages.DATABASE_ALREADY_EXISTS(),
+      //     () => {
+      //       dispatch(defaultDatabaseChangingSuccess())
+      //       onSuccess?.(databaseId)
+      //     },
+      //     () => { dispatch(defaultDatabaseChangingFailure(errorMessage)) },
+      //   ))
+      //   return
+      // }
+
+      // dispatch(defaultDatabaseChangingFailure(errorMessage))
+
+      // if (error?.response?.data?.error === ApiErrors.SentinelParamsRequired) {
+      //   checkoutToSentinelFlow(payload, dispatch, onRedirectToSentinel)
+      //   return
+      // }
+
+      // dispatch(addErrorNotification(error))
+    }
+  }
+}
+
+// Asynchronous thunk action
+export function fetchEditedDatabaseAction(instance: Database, onSuccess?: () => void) {
+  return async (dispatch: AppDispatch) => {
+    dispatch(processDatabase())
+    dispatch(setEditDatabase(instance))
+
+    try {
+      const { data, status } = await apiService.get<Database>(`${ApiEndpoints.DATABASES}/${instance.id}`)
+
+      if (isStatusSuccessful(status)) {
+        dispatch(setEditDatabase(data))
+        dispatch(processDatabaseSuccess())
+      }
+      onSuccess?.()
+    } catch (_err) {
+      const error = _err as AxiosError
+      const errorMessage = getApiErrorMessage(error)
+      showErrorMessage(errorMessage)
+    }
+  }
+}
+
+// Asynchronous thunk action
+export function updateDatabaseAction({ id, ...payload }: Partial<Database>, onSuccess?: () => void) {
+  return async (dispatch: AppDispatch) => {
+    dispatch(processDatabase())
+
+    try {
+      const { status } = await apiService.patch(`${ApiEndpoints.DATABASES}/${id}`, payload)
+
+      if (isStatusSuccessful(status)) {
+        dispatch(processDatabaseSuccess())
+        dispatch<any>(fetchDatabasesAction())
+        onSuccess?.()
+      }
+    } catch (_err) {
+      const error = _err as AxiosError
+      const errorMessage = getApiErrorMessage(error)
+      showErrorMessage(errorMessage)
     }
   }
 }

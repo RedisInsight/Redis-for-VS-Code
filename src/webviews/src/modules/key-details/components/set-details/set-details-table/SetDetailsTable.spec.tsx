@@ -52,8 +52,8 @@ describe('SetDetailsTable', () => {
 
   // describe.todo('decompressed  data', () => {
   //   it('should render decompressed GZIP data = "1"', () => {
-  //     const defaultState = jest.requireActual('uiSrc/slices/browser/set').initialState
-  //     const setDataSelectorMock = jest.fn().mockReturnValue({
+  //     const defaultState = await vi.importActual<object>('uiSrc/slices/browser/set').initialState
+  //     const setDataSelectorMock = vi.fn().mockReturnValue({
   //       ...defaultState,
   //       key: '123zxczxczxc',
   //       members: [

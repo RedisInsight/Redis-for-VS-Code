@@ -1,19 +1,23 @@
 import React, { FC, PropsWithChildren, useState } from 'react'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import cx from 'classnames'
-import { VscChevronRight, VscChevronDown, VscDatabase, VscTerminal, VscAdd, VscRefresh } from 'react-icons/vsc'
+import { VscChevronRight, VscChevronDown, VscDatabase, VscTerminal, VscAdd, VscRefresh, VscEdit } from 'react-icons/vsc'
 import { BiSortDown, BiSortUp } from 'react-icons/bi'
 import { useDispatch, useSelector } from 'react-redux'
 import * as l10n from '@vscode/l10n'
+import { find } from 'lodash'
 import { vscodeApi } from 'uiSrc/services'
 import { DEFAULT_TREE_SORTING, SortOrder, VscodeMessageAction } from 'uiSrc/constants'
 import { appContextDbConfig, resetKeysTree, setKeysTreeSort } from 'uiSrc/slices/app/context/context.slice'
 import { TelemetryEvent, getDatabaseId, sendEventTelemetry } from 'uiSrc/utils'
 
+import { connectedDatabaseSelector, databasesSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 import { fetchPatternKeysAction } from '../../hooks/useKeys'
 import styles from './styles.module.scss'
 
 export const DatabaseWrapper: FC<any> = ({ children }: PropsWithChildren<any>) => {
+  const { data: databases } = useSelector(databasesSelector)
+  const { id } = useSelector(connectedDatabaseSelector)
   const { treeViewSort: sorting = DEFAULT_TREE_SORTING } = useSelector(appContextDbConfig)
   const [showTree, setShowTree] = useState<boolean>(true)
 
@@ -43,6 +47,17 @@ export const DatabaseWrapper: FC<any> = ({ children }: PropsWithChildren<any>) =
         sorting: newSorting,
       },
     })
+  }
+
+  const editHandle = () => {
+    sendEventTelemetry({
+      event: TelemetryEvent.CONFIG_DATABASES_DATABASE_EDIT_CLICKED,
+      eventData: {
+        databaseId: id,
+      },
+    })
+
+    vscodeApi.postMessage({ action: VscodeMessageAction.EditDatabase, data: find(databases, { id }) })
   }
 
   const refreshHandle = () => {
@@ -76,6 +91,9 @@ export const DatabaseWrapper: FC<any> = ({ children }: PropsWithChildren<any>) =
           </VSCodeButton>
           <VSCodeButton appearance="icon" onClick={refreshHandle} data-testid="refresh-keys">
             <VscRefresh />
+          </VSCodeButton>
+          <VSCodeButton appearance="icon" onClick={editHandle} data-testid="edit-database">
+            <VscEdit />
           </VSCodeButton>
           <VSCodeButton appearance="icon" onClick={addKeyClickHandle} data-testid="add-key-button">
             <VscAdd />

@@ -1,0 +1,9 @@
+$inputHeight: 28px;
+$inputMinWidth: 100px;
+
+.link {
+  @apply bg-vscode-input-background text-vscode-input-foreground border-vscode-input-border focus:border-vscode-inputOption-activeBorder w-full px-[6px] outline-none border-solid border rounded-none;
+
+  border-color: transparent;
+  min-width: $inputMinWidth;
+}

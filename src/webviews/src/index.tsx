@@ -13,6 +13,8 @@ import { isEqualBuffers } from 'uiSrc/utils'
 import { VscodeMessageAction } from 'uiSrc/constants'
 import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
 import { fetchPatternKeysAction } from './modules/keys-tree/hooks/useKeys'
+import { Database } from './slices/connections/databases/interface'
+import { fetchEditedDatabaseAction, setEditDatabase } from './slices/connections/databases/databases.slice'
 
 import './styles/main.scss'
 import '../vscode.css'
@@ -49,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
         break
       case VscodeMessageAction.RefreshTree:
         fetchPatternKeysAction()
+        break
+      case VscodeMessageAction.EditDatabase:
+        const { data: database } = message as { data: Database }
+        store.dispatch(fetchEditedDatabaseAction(database))
         break
       default:
         break
