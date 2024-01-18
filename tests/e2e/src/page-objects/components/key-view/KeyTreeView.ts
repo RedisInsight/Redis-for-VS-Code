@@ -14,6 +14,7 @@ export class KeyTreeView extends BaseComponent {
   )
   keyStarts = By.xpath(`//div[starts-with(@data-testid, 'key-')]`)
   refreshButton = By.xpath(`//vscode-button[@data-testid = 'refresh-keys']`)
+  addKeyButton = By.xpath(`//vscode-button[@data-testid = 'add-key-button']`)
   sortKeysBtn = By.xpath(`//vscode-button[@data-testid = 'sort-keys']`)
   // mask
   keyMask = '//*[@data-testid="key-$name"]'

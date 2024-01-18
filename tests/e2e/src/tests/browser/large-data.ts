@@ -51,7 +51,6 @@ describe('Cases with large data', () => {
       value: keyValue + 1,
     }
 
-    //TODO create 2 strings
     await KeyAPIRequests.addStringKeyApi(
       {
         keyName: stringKeyParameters.keyName,
