@@ -81,7 +81,7 @@ const KeyDetails = (props: Props) => {
   }
 
   const onRemoveKey = () => {
-    vscodeApi.postMessage({ action: VscodeMessageAction.CloseKeyAndRefresh })
+    vscodeApi.postMessage({ action: VscodeMessageAction.CloseKeyAndRefresh, data: { keyName } })
   }
 
   return (
