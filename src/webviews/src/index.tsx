@@ -12,7 +12,7 @@ import { RedisString } from 'uiSrc/interfaces'
 import { isEqualBuffers } from 'uiSrc/utils'
 import { VscodeMessageAction } from 'uiSrc/constants'
 import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
-import { fetchPatternKeysAction } from './modules/keys-tree/hooks/useKeys'
+import { fetchPatternKeysAction, useKeysStore } from './modules/keys-tree/hooks/useKeys'
 
 import './styles/main.scss'
 import '../vscode.css'
@@ -48,7 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchKeyInfo(data)
         break
       case VscodeMessageAction.RefreshTree:
-        fetchPatternKeysAction()
+        if (message.data?.keyName) {
+          useKeysStore.getState()?.deleteKeyFromList(message.data?.keyName)
+        } else {
+          fetchPatternKeysAction()
+        }
         break
       default:
         break
