@@ -7,6 +7,7 @@ import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService, localStorageService } from 'uiSrc/services'
 import {
   ApiEndpoints,
+  DEFAULT_SEARCH_MATCH,
   DEFAULT_VIEW_FORMAT,
   KeyTypes,
   SCAN_COUNT_DEFAULT,
@@ -23,6 +24,7 @@ import {
   fetchSearchingListElement,
   useListStore,
 } from 'uiSrc/modules/key-details/components/list-details/hooks/useListStore'
+import { fetchSetMembers } from 'uiSrc/modules/key-details/components/set-details/hooks/useSetStore'
 import { SelectedKeyActions, SelectedKeyStore } from './interface'
 
 export const initialState: SelectedKeyStore = {
@@ -185,9 +187,9 @@ export const fetchKeyValueByType = (key: RedisString, type?: KeyTypes) => {
       fetchListElements(key, 0, SCAN_COUNT_DEFAULT)
     }
   }
-  // if (type === KeyTypes.Set) {
-  //   dispatch<any>(fetchSetMembers(key, 0, SCAN_COUNT_DEFAULT, '*', resetData))
-  // }
+  if (type === KeyTypes.Set) {
+    fetchSetMembers(key, 0, SCAN_COUNT_DEFAULT, DEFAULT_SEARCH_MATCH)
+  }
   // if (type === KeyTypes.ReJSON) {
   //   dispatch<any>(fetchReJSON(key, '.', resetData))
   // }

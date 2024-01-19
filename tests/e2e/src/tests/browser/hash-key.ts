@@ -1,10 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import {
-  ActivityBar,
-  VSBrowser,
-  Workbench,
-} from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser, Workbench } from 'vscode-extension-tester'
 import {
   WebView,
   HashKeyDetailsView,
@@ -81,6 +77,7 @@ describe('Hash Key fields verification', () => {
         await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
       )[0].getText()
       expect(result).eqls(keyFieldValue)
+      expect(result.length).eqls(1)
       await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
     }
   })
@@ -174,6 +171,7 @@ describe('Hash Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
     )[0].getText()
     expect(resultField).eqls(keyFieldValue)
+    expect(resultField.length).eqls(1)
     let resultValue = await (
       await keyDetailsView.getElements(keyDetailsView.hashValuesList)
     )[0].getText()

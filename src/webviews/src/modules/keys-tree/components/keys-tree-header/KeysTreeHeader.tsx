@@ -1,30 +1,32 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 import { ScanMore } from 'uiSrc/components'
 import { SCAN_TREE_COUNT_DEFAULT } from 'uiSrc/constants'
-import { fetchMorePatternKeysAction, keysDataSelector, keysSelector } from 'uiSrc/modules/keys-tree'
-import { AppDispatch } from 'uiSrc/store'
+import { fetchMorePatternKeysAction, useKeysStore } from '../../hooks/useKeys'
 
-export interface Props {}
+export interface Props { }
 
 export const KeysTreeHeader = () => {
-  const { loading } = useSelector(keysSelector)
-  const { total, scanned, nextCursor } = useSelector(keysDataSelector)
-
-  const dispatch = useDispatch<AppDispatch>()
+  const { loading, total, scanned, nextCursor } = useKeysStore((state) => ({
+    loading: state.loading,
+    total: state.data?.total,
+    scanned: state.data?.scanned,
+    nextCursor: state.data?.nextCursor,
+  }))
 
   const loadMoreItems = () => {
-    dispatch(fetchMorePatternKeysAction(nextCursor, SCAN_TREE_COUNT_DEFAULT))
+    fetchMorePatternKeysAction(nextCursor, SCAN_TREE_COUNT_DEFAULT)
   }
 
   return (
-    <ScanMore
-      loading={loading}
-      totalItemsCount={total}
-      scanned={scanned}
-      loadMoreItems={loadMoreItems}
-      nextCursor={nextCursor}
-    />
+    <>
+      <ScanMore
+        loading={loading}
+        totalItemsCount={total}
+        scanned={scanned}
+        loadMoreItems={loadMoreItems}
+        nextCursor={nextCursor}
+      />
+    </>
   )
 }

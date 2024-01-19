@@ -124,17 +124,18 @@ describe('databases slice', () => {
 
       const state = {
         ...initialState,
-        loading: false,
+        loading: true,
         data: checkRediStack(databases),
       }
 
       // Act
+      const databaseState = reducer(initialState, loadDatabases())
       const nextState = reducer(initialState, loadDatabasesSuccess(databases))
 
       // Assert
       const rootState = Object.assign(initialStateDefault, {
         connections: {
-          databases: nextState,
+          databases: { ...databaseState, data: nextState.data },
         },
       })
       expect(databasesSelector(rootState)).toEqual(state)

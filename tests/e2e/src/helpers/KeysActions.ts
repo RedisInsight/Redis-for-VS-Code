@@ -56,8 +56,8 @@ export class KeyActions {
     await client
       .on('error', err => console.error('Redis Client Error', err))
       .connect()
-    if (keyArguments.membersCount) {
-      for (let i = 0; i < keyArguments.membersCount; i++) {
+    if (keyArguments.fieldsCount) {
+      for (let i = 0; i < keyArguments.fieldsCount; i++) {
         const memberName = `${
           keyArguments.memberStartWith
         }${Common.generateWord(10)}`
@@ -74,7 +74,36 @@ export class KeyActions {
 
     await client.quit()
   }
+  /**
+   * Populate set key with members
+   * @param host The host of database
+   * @param port The port of database
+   * @param keyArguments The arguments of key and its members
+   */
+  static async populateSetWithMembers(
+    host: string,
+    port: string,
+    keyArguments: AddKeyArguments,
+  ): Promise<void> {
+    const dbConf = { url: `redis://${host}:${port}` }
+    const client = await createClient(dbConf)
+
+    await client
+      .on('error', err => console.error('Redis Client Error', err))
+      .connect()
+
+    if (keyArguments.fieldsCount) {
+      for (let i = 0; i < keyArguments.fieldsCount; i++) {
+        const member = `${keyArguments.memberStartWith}${Common.generateWord(
+          10,
+        )}`
+        await client.sAdd(keyArguments.keyName as string, member)
+      }
+    }
+    await client.quit()
+  }
 }
+
 export const keyTypes = [
   { textType: KeyTypesTexts.Hash, keyName: 'hash', data: 'value' },
   { textType: KeyTypesTexts.List, keyName: 'list', data: 'element' },

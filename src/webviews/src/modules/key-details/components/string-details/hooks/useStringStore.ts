@@ -5,7 +5,13 @@ import { immer } from 'zustand/middleware/immer'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints } from 'uiSrc/constants'
-import { getApiErrorMessage, getEncoding, getUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
+import {
+  getApiErrorMessage,
+  getEncoding,
+  getUrl,
+  isStatusSuccessful,
+  showErrorMessage,
+} from 'uiSrc/utils'
 import { StringActions, StringState } from './interface'
 
 export const initialState: StringState = {
@@ -19,16 +25,23 @@ export const initialState: StringState = {
 }
 
 export const useStringStore = create<StringState & StringActions>()(
-  immer(devtools(persist((set) => ({
-    ...initialState,
-    // actions
-    resetStringStore: () => set(initialState),
-    processString: () => set({ loading: true }),
-    processStringFinal: () => set({ loading: false }),
-    processStringSuccess: ({ keyName, value }: any) => set({ data: { key: keyName, value } }),
-    setIsStringCompressed: (isCompressed) => set({ isCompressed }),
-  }),
-  { name: 'keyString' }))),
+  immer(
+    devtools(
+      persist(
+        (set) => ({
+          ...initialState,
+          // actions
+          resetStringStore: () => set(initialState),
+          processString: () => set({ loading: true }),
+          processStringFinal: () => set({ loading: false }),
+          processStringSuccess: ({ keyName, value }: any) =>
+            set({ data: { key: keyName, value } }),
+          setIsStringCompressed: (isCompressed) => set({ isCompressed }),
+        }),
+        { name: 'keyString' },
+      ),
+    ),
+  ),
 )
 
 // async actions

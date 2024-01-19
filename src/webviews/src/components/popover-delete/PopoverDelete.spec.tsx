@@ -23,7 +23,7 @@ describe('PopoverDelete', () => {
 
     // open popover
     await act(() => {
-      fireEvent.click(screen.getByLabelText(/remove field/i))
+      fireEvent.click(screen.getByLabelText(/remove item/i))
     })
     await waitForStack()
 
@@ -44,7 +44,7 @@ describe('PopoverDelete', () => {
 
     // open popover
     await act(() => {
-      fireEvent.click(screen.getByLabelText(/remove field/i))
+      fireEvent.click(screen.getByLabelText(/remove item/i))
     })
     await waitForStack()
 
@@ -69,7 +69,7 @@ describe('PopoverDelete', () => {
 
     // open popover
     await act(() => {
-      fireEvent.click(screen.getByLabelText(/remove field/i))
+      fireEvent.click(screen.getByLabelText(/remove item/i))
     })
     await waitForStack()
 
@@ -95,7 +95,7 @@ describe('PopoverDelete', () => {
 
     // open popover
     await act(() => {
-      fireEvent.click(screen.getByLabelText(/remove field/i))
+      fireEvent.click(screen.getByLabelText(/remove item/i))
     })
     await waitForStack()
 
@@ -103,5 +103,19 @@ describe('PopoverDelete', () => {
     fireEvent.click(deleteBtn)
     expect(handleDeleteItem).toBeCalledTimes(1)
     expect(handleDeleteItem).toBeCalledWith(itemMock)
+  })
+
+  it('should custom render approve button text if it in the props', async () => {
+    const text = 'test'
+    const testId = 'testId'
+    const { queryByTestId } = render(<PopoverDelete {...instance(mockedProps)} testid={testId} approveTextBtn={text} />)
+
+    // open popover
+    await act(() => {
+      fireEvent.click(queryByTestId(`${testId}-icon`)!)
+    })
+    await waitForStack()
+
+    expect(queryByTestId(testId)).toHaveTextContent(text)
   })
 })

@@ -9,9 +9,8 @@ import {
 import { useDispatch } from 'react-redux'
 import cx from 'classnames'
 
-import { DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, KeyTypes, ModulesKeyTypes, SortOrder } from 'uiSrc/constants'
-import { KeyInfo, Nullable, RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
-import { fetchKeysMetadataTree } from 'uiSrc/modules/keys-tree/slice/keys.slice'
+import { AllKeyTypes, DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, KeyTypes, SortOrder } from 'uiSrc/constants'
+import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { bufferToString } from 'uiSrc/utils'
 import { AppDispatch } from 'uiSrc/store'
 import { useDisposableWebworker } from 'uiSrc/hooks'
@@ -19,6 +18,7 @@ import { NodeMeta, TreeData, TreeNode } from './interfaces'
 import { Node } from '../node'
 import { MIN_NODE_WIDTH, PADDING_LEVEL } from '../../constants'
 
+import { fetchKeysMetadataTree } from '../../hooks/useKeys'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -34,8 +34,8 @@ export interface Props {
   onStatusOpen?: (name: string, value: boolean) => void
   onStatusSelected?: (key: RedisString) => void
   setConstructingTree: (status: boolean) => void
-  onDeleteLeaf: (key: RedisResponseBuffer) => void
-  onDeleteClicked: (type: KeyTypes | ModulesKeyTypes) => void
+  onDeleteLeaf: (key: RedisString) => void
+  onDeleteClicked: (type: AllKeyTypes) => void
 }
 
 interface OpenedNodes {
@@ -138,14 +138,14 @@ const VirtualTree = (props: Props) => {
   const getMetadata = useCallback((
     itemsInit: any[][] = [],
   ): void => {
-    dispatch(fetchKeysMetadataTree(
+    fetchKeysMetadataTree(
       itemsInit,
       commonFilterType,
       controller.current?.signal,
       (loadedItems) =>
         onSuccessFetchedMetadata(loadedItems),
       () => { rerender({}) },
-    ))
+    )
   }, [commonFilterType])
 
   const onSuccessFetchedMetadata = useCallback((
@@ -246,7 +246,7 @@ const VirtualTree = (props: Props) => {
     <AutoSizer onResize={onResize}>
       {({ height, width }) => (
         <div data-testid="virtual-tree" style={{ position: 'relative' }}>
-          { nodes.current.length > 0 && (
+          {nodes.current.length > 0 && (
             <>
               <Tree
                 async
@@ -260,7 +260,7 @@ const VirtualTree = (props: Props) => {
               </Tree>
             </>
           )}
-          { nodes.current.length === 0 && loading && (
+          {nodes.current.length === 0 && loading && (
             <div className={styles.loadingContainer} style={{ width: width || 0, height: height || 0 }} data-testid="virtual-tree-spinner">
               <div className={styles.loadingBody}>
                 {/* <EuiLoadingSpinner size="xl" className={styles.loadingSpinner} />
