@@ -131,4 +131,16 @@ export class KeyTreeView extends BaseComponent {
     await (await this.getElement(this.deleteKeyInListBtn)).click()
     await (await this.getElement(this.submitDeleteKeyButton)).click()
   }
+
+  /**
+  * Delete first Key in list after Hovering
+  */
+  async deleteKeyFromList(keyName: string): Promise<void> {
+    const itemDeleteButton = By.xpath(
+      `//vscode-button[starts-with(@data-testid, 'remove-key-${keyName}')]`,
+    )
+    await ButtonsActions.hoverElement(this.treeViewKey)
+    await (await this.getElement(itemDeleteButton)).click()
+    await (await this.getElement(this.submitDeleteKeyButton)).click()
+  }
 }
