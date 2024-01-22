@@ -60,9 +60,10 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({ viewId: 'ri-add-key' }).dispose()
     }),
 
-    vscode.commands.registerCommand('RedisInsight.addKeyCloseAndRefresh', () => {
+    vscode.commands.registerCommand('RedisInsight.addKeyCloseAndRefresh', (args) => {
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
       WebviewPanel.getInstance({ viewId: 'ri-add-key' }).dispose()
+      vscode.commands.executeCommand('RedisInsight.openPage', { action: 'SelectKey', data: args.data })
     }),
 
     vscode.commands.registerCommand('RedisInsight.closeKeyAndRefresh', (args) => {
