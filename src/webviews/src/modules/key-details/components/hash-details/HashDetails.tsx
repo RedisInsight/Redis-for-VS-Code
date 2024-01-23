@@ -9,7 +9,6 @@ import { HashDetailsTable } from './hash-details-table'
 import { AddItemsAction } from '../key-details-actions'
 
 export interface Props extends KeyDetailsHeaderProps {
-  onRemoveKey: () => void
   onOpenAddItemPanel: () => void
   onCloseAddItemPanel: () => void
 }

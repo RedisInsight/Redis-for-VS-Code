@@ -9,6 +9,7 @@ import {
   KeysTreePage,
   CliPage,
   DatabasePage,
+  AddKeyPage,
   KeyDetailsPage,
   NotFoundPage,
 } from 'uiSrc/pages'
@@ -27,6 +28,7 @@ export const AppRoutes = () => {
       <Route path="cli" element={<CliPage />} />
       <Route path="main" element={<DatabasePage />}>
         <Route path="key" element={<KeyDetailsPage />} />
+        <Route path="add_key" element={<AddKeyPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

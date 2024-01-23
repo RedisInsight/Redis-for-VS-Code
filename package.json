@@ -43,7 +43,7 @@
         {
           "type": "webview",
           "id": "ri-panel",
-          "name": "RedisInsight CLI"
+          "name": "CLI"
         }
       ]
     },
@@ -57,8 +57,22 @@
         "command": "RedisInsight.cliOpen",
         "title": "Open RedisInsight CLI",
         "category": "RedisInsight"
+      },
+      {
+        "command": "RedisInsight.addCli",
+        "title": "Add CLI",
+        "icon": "$(add)"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "RedisInsight.addCli",
+          "group": "navigation",
+          "when": "view == ri-panel"
+        }
+      ]
+    }
   },
   "resolutions": {
     "@microsoft/fast-element": "^1.12.0",

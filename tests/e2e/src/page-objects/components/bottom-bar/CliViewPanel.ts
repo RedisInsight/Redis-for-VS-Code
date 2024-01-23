@@ -1,6 +1,7 @@
 import { By, until } from 'selenium-webdriver'
 import { Key } from 'vscode-extension-tester'
 import { BaseComponent } from '../BaseComponent'
+import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
 
 /**
  * CLI view on the bottom panel
@@ -17,12 +18,19 @@ export class CliViewPanel extends BaseComponent {
     '//span[@data-testid="cli-command-autocomplete"]',
   )
   workbenchBtn = By.xpath(`//*[@data-test-subj='cli-workbench-page-btn']`)
+  addCliBtn = By.xpath(`//div[contains(@class, 'title-actions')]//a[contains(@aria-label, 'Add CLI')]`)
+  cliInstance = By.xpath('//*[contains(@data-testid, "cli-select-row")]')
+  cliInstanceDeleteBtn = By.xpath('//*[contains(@data-testid, "cli-delete-button")]')
+  cliInstancesPanel = By.xpath('//*[@data-testid="history-panel-view"]')
   static cliFrame = By.xpath(
     `//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]`,
   )
 
+  cliInstanceByIndex = (index: number) =>
+    By.xpath(`(//*[contains(@data-testid, "cli-select-row")])[${index}]`)
+
   constructor() {
-    super(CliViewPanel.cliFrame)
+    super(By.xpath(ViewLocators[Views.CliViewPanel]))
   }
 
   /**
@@ -133,4 +141,13 @@ export class CliViewPanel extends BaseComponent {
   async getAutocompleteText(): Promise<string> {
     return await (await this.getElement(this.cliCommandAutocomplete)).getText()
   }
+
+  /**
+   * Get Cli instances count
+   * @returns Promise resolving to number of Cli instances
+   */
+    async getCliInstancesCount(): Promise<number> {
+      return (await this.getDriver().findElements(this.cliInstance))
+        .length
+    }
 }

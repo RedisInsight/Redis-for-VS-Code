@@ -81,6 +81,23 @@ export class BaseComponent extends WebElement {
   }
 
   /**
+   * Is the element displayed
+   * @param locator locator to check
+   * @param attribute attribute to check if has disabled
+   */
+  async isElementDisabled(
+    locator: Locator,
+    attribute: string,
+  ): Promise<boolean> {
+    const element = await this.getDriver().findElement(locator)
+    const value = await element.getAttribute(attribute)
+    if (value.includes('disabled')) {
+      return true
+    }
+    return false
+  }
+
+  /**
    * Get text from element
    * @param locator locator to check
    * @returns Promise resolving to element text

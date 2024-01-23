@@ -2,7 +2,9 @@ import React, { useEffect, useRef } from 'react'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { VscTrash } from 'react-icons/vsc'
 import Popup from 'reactjs-popup'
-import { PopupActions } from 'reactjs-popup/dist/types'
+import * as l10n from '@vscode/l10n'
+import cx from 'classnames'
+import { PopupActions, PopupPosition } from 'reactjs-popup/dist/types'
 
 import { RedisString } from 'uiSrc/interfaces'
 import styles from './styles.module.scss'
@@ -12,12 +14,15 @@ export interface Props {
   text: JSX.Element | string
   item: string
   itemRaw?: RedisString
-  suffix: string
-  deleting: string
-  closePopover: () => void
-  showPopover: (item: string) => void
-  updateLoading: boolean
-  handleDeleteItem: (item: RedisString | string) => void
+  suffix?: string
+  deleting?: string
+  approveTextBtn?: string
+  triggerClassName?: string
+  position?: PopupPosition
+  closePopover?: () => void
+  showPopover?: (item: string) => void
+  updateLoading?: boolean
+  handleDeleteItem?: (item: RedisString) => void
   handleButtonClick?: () => void
   appendInfo?: JSX.Element | string | null
   testid?: string
@@ -29,14 +34,17 @@ const PopoverDelete = (props: Props) => {
     text,
     item,
     itemRaw,
-    suffix,
-    deleting,
+    suffix = '',
+    deleting = '',
+    position = 'left center',
     closePopover,
     updateLoading,
     showPopover,
     handleDeleteItem,
     handleButtonClick,
     appendInfo,
+    triggerClassName = '',
+    approveTextBtn = l10n.t('Remove'),
     testid = '',
   } = props
 
@@ -55,22 +63,23 @@ const PopoverDelete = (props: Props) => {
       closeOnEscape
       closeOnDocumentClick
       repositionOnResize
-      position="left center"
-      onClose={() => closePopover()}
+      position={position}
+      onClose={() => closePopover?.()}
       onOpen={() => {
         showPopover?.(item)
         handleButtonClick?.()
       }}
-      trigger={(
+      trigger={(open) => (
         <VSCodeButton
           appearance="icon"
           disabled={updateLoading}
-          aria-label="remove field"
+          className={cx(styles.trigger, triggerClassName, { '!block': open })}
+          aria-label="remove item"
           data-testid={testid ? `${testid}-icon` : 'remove-icon'}
         >
           <VscTrash />
         </VSCodeButton>
-        )}
+      )}
     >
       <div className={styles.popover}>
         <span>
@@ -87,10 +96,10 @@ const PopoverDelete = (props: Props) => {
         <div className={styles.popoverFooter}>
           <VSCodeButton
             className="bg-error focus:bg-error"
-            onClick={() => handleDeleteItem(itemRaw || item)}
+            onClick={() => handleDeleteItem?.(itemRaw || item)}
             data-testid={testid || 'remove'}
           >
-            Remove
+            {approveTextBtn}
           </VSCodeButton>
         </div>
       </div>

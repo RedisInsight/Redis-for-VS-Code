@@ -9,6 +9,13 @@ export enum ClusterNodeRole {
   Slave = 'SLAVE',
 }
 
+export interface ConnectionHistory {
+  id: string;
+  host: string;
+  port: number;
+  cliHistory: any[]
+}
+
 export interface StateCliSettings {
   isMinimizedHelper: boolean;
   isShowCli: boolean;
@@ -24,6 +31,8 @@ export interface StateCliSettings {
   searchingCommandFilter: string;
   unsupportedCommands: string[];
   blockingCommands: string[];
+  activeCliId: string;
+  cliConnectionsHistory: ConnectionHistory[];
 }
 
 export interface StateCliOutput {

@@ -158,7 +158,6 @@ export const deleteHashFields = (
     )
 
     if (isStatusSuccessful(status)) {
-      onSuccess?.(data)
       state.removeFields(fields!)
       const newTotalValue = state.data.total - data.affected
       if (newTotalValue > 0) {
@@ -167,7 +166,7 @@ export const deleteHashFields = (
             key!,
             fields?.map((field) => bufferToString(field)).join('')!,
             l10n.t('Field'),
-          ).title,
+          ).message,
         )
         fetchKeyInfo(key!, false)
       } else {
@@ -176,6 +175,7 @@ export const deleteHashFields = (
         // dispatch(deleteKeyFromList(key))
         showInformationMessage(successMessages.DELETED_KEY(key!).title)
       }
+      onSuccess?.(data)
     }
   } catch (_err) {
     const error = _err as AxiosError

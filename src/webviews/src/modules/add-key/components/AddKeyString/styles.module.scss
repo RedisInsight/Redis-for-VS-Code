@@ -1,0 +1,47 @@
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  width: 100%;
+
+  h4 {
+    text-transform: uppercase;
+    font-weight: 700 !important;
+    padding-bottom: 16px;
+  }
+}
+
+.stringEditorWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stringEditor {
+  display: flex;
+  textarea {
+    resize: vertical;
+    margin-left: 2px;
+    width: calc(100% - 4px);
+    min-height: 200px;
+    padding: calc(var(--design-unit) * 2px + 1px);
+    border-radius: 0;
+
+    &:focus {
+      outline-color: var(--vscode-focusBorder);
+    }
+    margin-bottom: 92px;
+  }
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 48px 16px 16px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  background: var(--vscode-editor-background)
+}

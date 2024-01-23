@@ -1,10 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import {
-  ActivityBar,
-  VSBrowser,
-  Workbench,
-} from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser, Workbench } from 'vscode-extension-tester'
 import {
   WebView,
   HashKeyDetailsView,
@@ -134,5 +130,38 @@ describe('Edit Key values verification', () => {
       await listKeyDetailsView.getElements(listKeyDetailsView.elementsList)
     )[0].getText()
     expect(resultValue).eqls(keyValueAfter)
+  })
+  it('Verify that user can edit Sorted Set Key field', async function () {
+    keyName = Common.generateWord(10)
+    const scoreBefore = 5
+    const scoreAfter = '10'
+    const sortedSetKeyParameters: SortedSetKeyParameters = {
+      keyName: keyName,
+      members: [
+        {
+          name: keyValueBefore,
+          score: scoreBefore,
+        },
+      ],
+    }
+
+    await KeyAPIRequests.addSortedSetKeyApi(
+      sortedSetKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    await sortedSetKeyDetailsView.editSortedSetKeyValue(
+      scoreAfter,
+      keyValueBefore,
+    )
+    let resultValue = await (
+      await sortedSetKeyDetailsView.getElements(
+        sortedSetKeyDetailsView.scoreSortedSetFieldsList,
+      )
+    )[0].getText()
+    expect(resultValue).eqls(scoreAfter)
   })
 })

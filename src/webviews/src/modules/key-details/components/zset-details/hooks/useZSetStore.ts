@@ -53,7 +53,7 @@ export const useZSetStore = create<ZSetState & ZSetActions>()(
       },
     })),
     removeMembers: (members) => set((state) => {
-      state.data.total - 1
+      state.data.total -= 1
 
       remove(state.data.members, ({ name }) =>
         members.findIndex((item) => isEqualBuffers(item, name)) > -1)
@@ -166,7 +166,6 @@ export const deleteZSetMembers = (
     )
 
     if (isStatusSuccessful(status)) {
-      onSuccess?.(data)
       state.removeMembers(members!)
       const newTotalValue = state.data.total - data.affected
       if (newTotalValue > 0) {
@@ -175,15 +174,16 @@ export const deleteZSetMembers = (
             key!,
             members?.map((members) => bufferToString(members)).join('')!,
             l10n.t('Member'),
-          ).title,
+          ).message,
         )
         fetchKeyInfo(key!, false)
       } else {
-      // todo: connection between webviews
-      // dispatch(deleteSelectedKeySuccess())
-      // dispatch(deleteKeyFromList(key))
+        // todo: connection between webviews
+        // dispatch(deleteSelectedKeySuccess())
+        // dispatch(deleteKeyFromList(key))
         showInformationMessage(successMessages.DELETED_KEY(key!).title)
       }
+      onSuccess?.(data)
     }
   } catch (_err) {
     const error = _err as AxiosError

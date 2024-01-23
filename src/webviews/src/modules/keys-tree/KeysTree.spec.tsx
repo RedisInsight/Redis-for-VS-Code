@@ -8,8 +8,8 @@ import { KeyTypes } from 'uiSrc/constants'
 import { setKeysTreeNodesOpen } from 'uiSrc/slices/app/context/context.slice'
 import { mockedStore, render } from 'testSrc/helpers'
 import { KeysTree } from './KeysTree'
-import { KeysStoreData } from './slice/interface'
-import { selectedKeyDataSelector } from './slice/keys.slice'
+import { KeysStoreData } from '../../slices/browser/interface'
+import { selectedKeyDataSelector } from '../../slices/browser/keys.slice'
 
 let store: typeof mockedStore
 beforeEach(() => {
