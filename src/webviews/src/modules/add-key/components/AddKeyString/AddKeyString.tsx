@@ -31,7 +31,7 @@ const AddKeyString = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    setIsFormValid(keyName.length > 0 && value.length > 0)
+    setIsFormValid(keyName.length > 0)
   }, [keyName, value])
 
   const onFormSubmit = (event: FormEvent<HTMLFormElement>): void => {
@@ -55,8 +55,8 @@ const AddKeyString = (props: Props) => {
   const getTooltip = (): string => {
     const keyValid = keyName.length > 0
     const valueValid = value.length > 0
-    const invalidFieldsCount = Number(!keyValid) + Number(!valueValid)
-    const invalidFieldsString = `${!keyValid ? l10n.t('Key Name') : ''}${invalidFieldsCount === 2 ? ',' : ''}${!valueValid ? l10n.t('Key Value') : ''}`
+    const invalidFieldsCount = Number(!keyValid)
+    const invalidFieldsString = `${!keyValid ? l10n.t('Key Name') : ''}`
     if (!keyValid || !valueValid) {
       return `${l10n.t('Enter a value for required fields')} (${invalidFieldsCount}):\n${invalidFieldsString}`
     } return ''

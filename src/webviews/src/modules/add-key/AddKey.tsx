@@ -52,7 +52,7 @@ export const AddKey = () => {
   }
 
   const closeAddKeyPanel = (isCancelled?: boolean) => {
-    vscodeApi.postMessage({ action: isCancelled ? 'CloseAddKey' : 'CloseAddRefreshKey' })
+    vscodeApi.postMessage({ action: isCancelled ? 'CloseAddKey' : 'CloseAddRefreshKey', data: keyName })
   }
 
   const defaultFields = {
