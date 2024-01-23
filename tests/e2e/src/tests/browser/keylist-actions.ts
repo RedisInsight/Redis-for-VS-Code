@@ -10,7 +10,7 @@ import {
   StringKeyDetailsView,
   KeyTreeView,
 } from '@e2eSrc/page-objects/components'
-import { ButtonsActions, KeyDetailsActions } from '@e2eSrc/helpers/common-actions'
+import { KeyDetailsActions } from '@e2eSrc/helpers/common-actions'
 
 describe('Actions with Key List', () => {
   let browser: VSBrowser
@@ -67,14 +67,8 @@ describe('Actions with Key List', () => {
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    // Click delete button
-    const deleteButton = By.xpath(`//vscode-button[starts-with(@data-testid, 'remove-key-')]`)
-    const submitDeleteKeyButton = By.xpath(
-      `//div[@class='popup-content ']${this.deleteKeyInListBtn}`,
-    )
-    await (await this.getElement(deleteButton)).click()
-    await (await this.getElement(submitDeleteKeyButton)).click()
-
+    // Delete key from detailed view 
+    keyDetailsView.removeKeyFromDetailedView()
     expect(!keyDetailsView?.keyStringValue).eql(true, 'Detailed view closed after deleting')
   })
 })

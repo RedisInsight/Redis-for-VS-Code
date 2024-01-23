@@ -39,6 +39,11 @@ export class KeyDetailsView extends BaseComponent {
       `, //*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"]]`,
     )
 
+  detailsDeleteKeyButton = By.xpath(`//vscode-button[starts-with(@data-testid, 'remove-key-')]`)
+  submitDetailsDeleteKeyButton = By.xpath(
+    `//div[@class='popup-content ']${this.detailsDeleteKeyButton}`,
+  )
+
   constructor() {
     super(By.xpath(ViewLocators[Views.KeyDetailsView]))
   }
@@ -137,5 +142,10 @@ export class KeyDetailsView extends BaseComponent {
       await this.removeRowByField(keyType, name)
       await this.clickRemoveRowButtonByField(keyType, name)
     }
+  }
+
+  async removeKeyFromDetailedView(): Promise<void> {
+    await (await this.getElement(this.detailsDeleteKeyButton)).click()
+    await (await this.getElement(this.submitDetailsDeleteKeyButton)).click()
   }
 }
