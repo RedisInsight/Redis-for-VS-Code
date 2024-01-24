@@ -7,7 +7,7 @@ import { ChildProcessWithoutNullStreams } from 'child_process'
 // TODO: add separate task builder to save env variables in production builds
 const apiUrl = process.env.RI_BASE_API_URL || 'http://localhost'
 // TODO: add port avialability checker instead of hardcode
-const apiPort = process.env.RI_API_PORT || '5001'
+const apiPort = process.env.RI_API_PORT || '5541'
 const apiPrefix = process.env.RI_API_PREFIX || 'api'
 const apiFolder = process.env.RI_API_FOLDER || '.redisinsight-vsc'
 
@@ -51,7 +51,7 @@ export async function startBackend(): Promise<any> {
       } else {
         PSinst = cp.spawn(
           'node', [path.resolve(backendPath, 'src/main.js')],
-          { env: { APP_FOLDER_NAME: apiFolder, NODE_ENV: 'production', STDOUT_LOGGER: 'true', BUILD_TYPE: 'DOCKER_ON_PREMISE', PATH: process.env.PATH, APP_PORT: apiPort } },
+          { env: { APP_FOLDER_NAME: apiFolder, NODE_ENV: 'production', STDOUT_LOGGER: 'true', BUILD_TYPE: 'DOCKER_ON_PREMISE', PATH: process.env.PATH, API_PORT: apiPort } },
         )
       }
       // TODO: make it visible only for dev env
