@@ -15,7 +15,7 @@ import {
   SortOrder,
   StorageItem,
 } from 'uiSrc/constants'
-import { bufferToString, getEncoding, getUrl, isStatusSuccessful } from 'uiSrc/utils'
+import { bufferToString, getApiErrorMessage, getEncoding, getUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { fetchString } from 'uiSrc/modules'
 import { fetchHashFields } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
 import { fetchZSetMembers } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
@@ -103,7 +103,8 @@ export const refreshKeyInfo = (key: RedisString, fetchKeyValue = true) => {
       }
     } catch (_err) {
       const error = _err as AxiosError
-      console.debug({ error })
+      const errorMessage = getApiErrorMessage(error)
+      showErrorMessage(errorMessage)
     } finally {
       state.refreshSelectedKeyFinal()
     }

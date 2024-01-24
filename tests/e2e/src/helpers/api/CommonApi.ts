@@ -58,4 +58,23 @@ export class CommonAPIRequests {
 
     return requestEndpoint
   }
+
+  /**
+   * Send PATCH request using API
+   * @param resourcePath URI path segment
+   * @param body Request body
+   */
+  static async sendPatchRequest(
+    resourcePath: string,
+    body?: Record<string, unknown>,
+  ): Promise<any> {
+    let requestEndpoint: any
+
+    requestEndpoint = request(endpoint)
+      .patch(resourcePath)
+      .send(body)
+      .set('Accept', jsonType)
+
+    return requestEndpoint
+  }
 }

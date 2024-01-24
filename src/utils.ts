@@ -70,9 +70,9 @@ export const handleMessage = (message: any = {}) => {
     vscode.commands.executeCommand('RedisInsight.addKeyClose')
   }
   if (message.action === 'CloseAddRefreshKey') {
-    vscode.commands.executeCommand('RedisInsight.addKeyCloseAndRefresh')
+    vscode.commands.executeCommand('RedisInsight.addKeyCloseAndRefresh', message)
   }
   if (message.action === 'CloseKeyAndRefresh') {
-    vscode.commands.executeCommand('RedisInsight.closeKeyAndRefresh')
+    vscode.commands.executeCommand('RedisInsight.closeKeyAndRefresh', message.data)
   }
 }
