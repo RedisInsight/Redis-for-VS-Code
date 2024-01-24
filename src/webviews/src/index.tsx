@@ -11,7 +11,6 @@ import { AppRoutes } from 'uiSrc/Routes'
 import { RedisString } from 'uiSrc/interfaces'
 import { isEqualBuffers } from 'uiSrc/utils'
 import { VscodeMessageAction } from 'uiSrc/constants'
-import { localStorageService } from 'uiSrc/services/storage'
 
 import 'uiSrc/styles/main.scss'
 
@@ -23,7 +22,7 @@ import '../vscode.css'
 
 const container = document.getElementById('root')
 const root = createRoot(container!)
-localStorageService.set('apiPort', container?.dataset.apiPort)
+localStorage.setItem('apiPort', container?.dataset.apiPort as string)
 
 // if (root) {
 //   workspace = root.getAttribute('data-workspace') || ''

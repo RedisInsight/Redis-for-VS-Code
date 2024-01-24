@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid'
 import { handleMessage } from './utils'
 
 type WebviewOptions = {
-  extensionUri: vscode.Uri
+  context: vscode.ExtensionContext
   route: string
   title: string
   viewId: string
@@ -20,11 +20,11 @@ abstract class Webview {
     // fill out the internal configuration with defaults
     this._opts = {
       scriptUri: vscode.Uri.joinPath(
-        options.extensionUri,
+        options.context.extensionUri,
         'dist/webviews/index.mjs',
       ),
       styleUri: vscode.Uri.joinPath(
-        options.extensionUri,
+        options.context.extensionUri,
         'dist/webviews/style.css',
       ),
       nonce: nanoid(),
@@ -39,7 +39,7 @@ abstract class Webview {
       enableScripts: true,
 
       // And restrict the webview to only loading content from our extension's `dist` directory.
-      localResourceRoots: [vscode.Uri.joinPath(this._opts.extensionUri, 'dist')],
+      localResourceRoots: [vscode.Uri.joinPath(this._opts.context.extensionUri, 'dist')],
     }
   }
 
@@ -51,6 +51,8 @@ abstract class Webview {
     // Prepare webview URIs
     const scriptUri = webview.asWebviewUri(this._opts.scriptUri)
     const styleUri = webview.asWebviewUri(this._opts.styleUri)
+
+    const apiPort = this._opts.context.globalState.get('API_PORT')
 
     const contentSecurity = [
       `img-src ${webview.cspSource} 'self' data:`,
@@ -90,7 +92,7 @@ abstract class Webview {
         <title>RedisInsight Webview</title>
       </head>
       <body>
-        <div id="root" data-route="${this._opts.route}"></div>
+        <div id="root" data-route="${this._opts.route}" data-api-port="${apiPort}"></div>
         <script nonce="${this._opts.nonce}" src="${scriptUri}"></script>
       </body>
       </html>`

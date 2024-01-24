@@ -17,6 +17,7 @@ let PSinst: ChildProcessWithoutNullStreams
 
 export async function startBackend(context: vscode.ExtensionContext): Promise<any> {
   const port = (await getAvailablePort())?.toString() as string
+  console.debug(`Starting at port: ${port}`)
   context.globalState.update('API_PORT', port)
 
   return new Promise((resolve) => {
@@ -107,7 +108,7 @@ function checkServerReady(port: string, callback: () => void) {
         callback()
       }
     } catch (err) {
-      console.debug('checking api...')
+      console.debug('Checking api...')
     }
   }, 1000)
 }

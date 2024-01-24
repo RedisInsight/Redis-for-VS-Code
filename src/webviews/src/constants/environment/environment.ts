@@ -1,6 +1,4 @@
-import { localStorageService } from 'uiSrc/services/storage'
-
-const port = Number(localStorageService.get('apiPort'))
+const port = Number(localStorage.getItem('apiPort'))
 
 // server
 export const BASE_API_URL = import.meta.env.RI_BASE_API_URL || 'http://localhost'

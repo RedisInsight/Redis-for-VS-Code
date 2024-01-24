@@ -31,7 +31,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisInsight.openPage', (args) => {
       WebviewPanel.getInstance({
-        extensionUri: context.extensionUri,
+        context,
         route: 'main/key',
         title: 'RedisInsight key details',
         viewId: 'ri-key',
