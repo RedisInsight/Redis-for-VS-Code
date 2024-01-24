@@ -50,6 +50,5 @@
   "testing.automaticallyOpenPeekView": "never",
   "[typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
-  "CodeGPT.apiKey": "CodeGPT Plus Beta"
+  }
 }
