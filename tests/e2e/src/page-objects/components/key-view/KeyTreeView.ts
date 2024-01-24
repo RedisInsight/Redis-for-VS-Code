@@ -24,6 +24,10 @@ export class KeyTreeView extends BaseComponent {
   submitDeleteKeyButton = By.xpath(
     `//div[@class='popup-content ']${this.deleteKeyInListBtn}`,
   )
+  getItemDeleteButton = (keyName: string) =>
+    By.xpath(
+      `//vscode-button[starts-with(@data-testid, 'remove-key-${keyName}')]`,
+    )
 
   getTreeViewItemByIndex = (index: number) =>
     By.xpath(
@@ -135,12 +139,9 @@ export class KeyTreeView extends BaseComponent {
   /**
   * Delete first Key in list after Hovering
   */
-  async deleteKeyFromList(keyName: string): Promise<void> {
-    const itemDeleteButton = By.xpath(
-      `//vscode-button[starts-with(@data-testid, 'remove-key-${keyName}')]`,
-    )
+  async deleteKeyFromListByName(keyName: string): Promise<void> {
     await ButtonsActions.hoverElement(this.treeViewKey)
-    await (await this.getElement(itemDeleteButton)).click()
+    await (await this.getElement(this.getItemDeleteButton(keyName))).click()
     await (await this.getElement(this.submitDeleteKeyButton)).click()
   }
 }

@@ -34,6 +34,8 @@ export class KeyDetailsView extends BaseComponent {
       `//*[contains(@data-testid, "${keyType}-remove-btn-") and not(contains(@data-testid, "-icon"))]`,
     )
 
+  copyButton = By.xpath(`//vscode-button[starts-with(@data-testid, 'copy-name-button')]`)
+
   removeButton = (keyType: string, name: string): By =>
     By.xpath(
       `, //*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"]]`,
@@ -103,6 +105,15 @@ export class KeyDetailsView extends BaseComponent {
   ): Promise<void> {
     const removeLocator = this.removeButton(keyType, name)
     const element = await this.getElement(removeLocator)
+    await element.click()
+  }
+
+  /**
+   * Click on copy button
+   */
+  async clickCopyKeyName(
+  ): Promise<void> {
+    const element = await this.getElement(this.copyButton)
     await element.click()
   }
 

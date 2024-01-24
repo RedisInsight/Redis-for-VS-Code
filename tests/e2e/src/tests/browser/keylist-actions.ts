@@ -30,7 +30,7 @@ describe('Actions with Key List', () => {
     await webView.switchBack()
   })
 
-  it.skip('Verify that key deleted properly', async function () {
+  it('Verify that key deleted properly', async function () {
     // Adding a string key
     const keyName = Common.generateWord(10)
     const keyValue = Common.generateWord(10)
@@ -46,13 +46,13 @@ describe('Actions with Key List', () => {
     await webView.switchToFrame(Views.KeyTreeView)
 
     let actualItemsArray = await keyTreeView.getAllKeysArray()
-    expect(actualItemsArray.length).eql(1, 'Key added properly')
+    expect(actualItemsArray).contains(keyName, 'Key added properly')
 
-    await keyTreeView.deleteKeyFromList(keyName)
-    expect(actualItemsArray.length).eql(0, 'Key deleted from the list properly')
+    await keyTreeView.deleteKeyFromListByName(keyName)
+    expect(actualItemsArray.includes(keyName)).eql(false, 'Key deleted from the list properly')
   })
 
-  it.skip('Verify that key deleted properly from details', async function () {
+  it('Verify that key deleted properly from details', async function () {
     const keyName = Common.generateWord(10)
     const keyValue = Common.generateWord(10)
     await KeyAPIRequests.addStringKeyApi(
