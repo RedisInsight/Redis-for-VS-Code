@@ -61,16 +61,23 @@
       {
         "command": "RedisInsight.addCli",
         "title": "Add CLI",
+        "category": "RedisInsight",
         "icon": "$(add)"
       },
       {
         "command": "RedisInsight.addDatabase",
         "title": "Add Redis database",
-        "category": "RedisInsight"
+        "category": "RedisInsight",
+        "icon": "$(add)"
       }
     ],
     "menus": {
       "view/title": [
+        {
+          "command": "RedisInsight.addDatabase",
+          "group": "navigation",
+          "when": "view == ri-sidebar"
+        },
         {
           "command": "RedisInsight.addCli",
           "group": "navigation",
@@ -95,7 +102,7 @@
     "dev:sidebar": "cross-env RI_DATA_ROUTE=tree vite dev",
     "dev:cli": "cross-env RI_DATA_ROUTE=cli vite dev",
     "dev:key": "cross-env RI_DATA_ROUTE=main/key vite dev",
-    "dev:main": "cross-env RI_DATA_ROUTE=main/edit_database vite dev",
+    "dev:main": "cross-env RI_DATA_ROUTE=main/add_database vite dev",
     "l10n:collect": "npx @vscode/l10n-dev export -o ./l10n ./src",
     "storybook:dev": "storybook dev -p 8081 --no-open",
     "storybook:build": "storybook build",

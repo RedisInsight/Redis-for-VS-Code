@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import { useSelector } from 'react-redux'
 import { FormikProps } from 'formik'
+import * as l10n from '@vscode/l10n'
 import cx from 'classnames'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 
@@ -93,11 +94,11 @@ const DatabaseForm = (props: Props) => {
               autoFocus={autoFocus}
               name="host"
               id="host"
-              label={{ text: 'Host*', className: 'min-w-[110px]' }}
+              label={{ text: l10n.t('Host*'), className: 'min-w-[110px]' }}
               data-testid="host"
               color="secondary"
               maxLength={200}
-              placeholder="Enter Hostname / IP address / Connection URL"
+              placeholder={l10n.t('Enter Hostname / IP address / Connection URL')}
               value={formik.values.host ?? ''}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 formik.setFieldValue(
@@ -116,8 +117,8 @@ const DatabaseForm = (props: Props) => {
               name="port"
               id="port"
               data-testid="port"
-              label={{ text: 'Port*', className: 'min-w-[36px]' }}
-              placeholder="Enter Port"
+              label={{ text: l10n.t('Port*'), className: 'min-w-[36px]' }}
+              placeholder={l10n.t('Enter Port')}
               value={formik.values.port ?? ''}
               maxLength={6}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -138,8 +139,8 @@ const DatabaseForm = (props: Props) => {
               name="timeout"
               id="timeout"
               data-testid="timeout"
-              label={{ text: 'Timeout (s)', className: 'min-w-[76px]' }}
-              placeholder="Enter Timeout (in seconds)"
+              label={{ text: l10n.t('Timeout (s)'), className: 'min-w-[76px]' }}
+              placeholder={l10n.t('Enter Timeout (in seconds)')}
               value={formik.values.timeout ?? ''}
               maxLength={7}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -163,8 +164,8 @@ const DatabaseForm = (props: Props) => {
               name="name"
               id="name"
               data-testid="name"
-              label={{ text: 'Database Alias*', className: 'min-w-[110px]' }}
-              placeholder="Enter Database Alias"
+              label={{ text: l10n.t('Database Alias*'), className: 'min-w-[110px]' }}
+              placeholder={l10n.t('Enter Database Alias')}
               onFocus={selectOnFocus}
               value={formik.values.name ?? ''}
               maxLength={500}
@@ -178,8 +179,8 @@ const DatabaseForm = (props: Props) => {
               name="timeout"
               id="timeout"
               data-testid="timeout"
-              label={{ text: 'Timeout (s)', className: 'min-w-[76px]' }}
-              placeholder="Enter Timeout (in seconds)"
+              label={{ text: l10n.t('Timeout (s)'), className: 'min-w-[76px]' }}
+              placeholder={l10n.t('Enter Timeout (in seconds)')}
               value={formik.values.timeout ?? ''}
               maxLength={7}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -201,10 +202,10 @@ const DatabaseForm = (props: Props) => {
           <InputText
             name="username"
             id="username"
-            label={{ text: 'Username', className: !isEditMode ? 'min-w-[110px]' : '' }}
+            label={{ text: l10n.t('Username'), className: !isEditMode ? 'min-w-[110px]' : '' }}
             data-testid="username"
             maxLength={200}
-            placeholder="Enter Username"
+            placeholder={l10n.t('Enter Username')}
             value={formik.values.username ?? ''}
             onChange={formik.handleChange}
           />
@@ -216,10 +217,10 @@ const DatabaseForm = (props: Props) => {
             name="password"
             id="password"
             data-testid="password"
-            label={{ text: 'Password', className: 'ml-6' }}
+            label={{ text: l10n.t('Password'), className: 'ml-6' }}
             className="passwordField"
             maxLength={10_000}
-            placeholder="Enter Password"
+            placeholder={l10n.t('Enter Password')}
             value={formik.values.password === true ? SECURITY_FIELD : formik.values.password ?? ''}
             onChange={formik.handleChange}
             onFocus={() => {
@@ -234,7 +235,7 @@ const DatabaseForm = (props: Props) => {
           />
         </div>
       </div>
-      <VSCodeDivider className="divider" />
+      <VSCodeDivider className="divider mt-2" />
     </div>
   )
 }

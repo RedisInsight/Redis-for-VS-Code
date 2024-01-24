@@ -1,11 +1,11 @@
-import { renderHook, act } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 import { useDisposableWebworker } from './useWebworkers'
 
 describe.todo('useDisposableWebworker', () => {
   it('should run the worker and return the result', async () => {
     const { result } = renderHook(() => useDisposableWebworker((data) => data * 2))
 
-    act(() => {
+    await waitFor(() => {
       result.current.run(2)
     })
 
@@ -18,7 +18,7 @@ describe.todo('useDisposableWebworker', () => {
       throw new Error('Worker error')
     }))
 
-    act(() => {
+    waitFor(() => {
       result.current.run('input')
     })
 

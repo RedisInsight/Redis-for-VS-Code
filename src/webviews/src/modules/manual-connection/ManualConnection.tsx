@@ -20,10 +20,10 @@ import { ConnectionType, DbType,
   SubmitBtnText,
 } from 'uiSrc/constants'
 import { Database } from 'uiSrc/slices/connections/databases/interface'
-import { appInfoSelector } from 'uiSrc/slices/app/info/info.slice'
 import { databasesSelector, createDatabaseStandaloneAction, updateDatabaseAction } from 'uiSrc/slices/connections/databases/databases.slice'
 import { AppDispatch, fetchCerts } from 'uiSrc/store'
-import { ManualConnectionForm } from './manual-connection-form'
+// import { ManualConnectionForm } from './manual-connection-form'
+import { ManualConnectionForm } from 'uiSrc/modules/manual-connection/manual-connection-form'
 
 export interface Props {
   editMode?: boolean
@@ -47,8 +47,7 @@ const ManualConnection = (props: Props) => {
 
   const [isCloneMode, setIsCloneMode] = useState<boolean>(false)
 
-  const { loadingChanging: loadingStandalone } = useSelector(databasesSelector)
-  const { server } = useSelector(appInfoSelector)
+  const { loading: loadingStandalone } = useSelector(databasesSelector)
 
   const connectionType = editedDatabase?.connectionType ?? DbType.STANDALONE
 
@@ -195,17 +194,17 @@ const ManualConnection = (props: Props) => {
     <div>
       <ManualConnectionForm
         formFields={formFields}
-        connectionType={connectionType}
+        // connectionType={connectionType}
         loading={loadingStandalone}
         submitButtonText={getSubmitButtonText()}
         onSubmit={handleConnectionFormSubmit}
-        onTestConnection={handleTestConnectionDatabase}
+        // onTestConnection={handleTestConnectionDatabase}
         onClose={handleOnClose}
         onHostNamePaste={handlePostHostName}
         isEditMode={editMode}
         isCloneMode={isCloneMode}
         setIsCloneMode={setIsCloneMode}
-        onAliasEdited={onAliasEdited}
+        // onAliasEdited={onAliasEdited}
       />
     </div>
   )

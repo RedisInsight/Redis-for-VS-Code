@@ -3,146 +3,63 @@ import * as modules from 'uiSrc/modules'
 import { constants } from 'testSrc/helpers'
 import { waitForStack } from 'testSrc/helpers/testUtils'
 import {
-  useSelectedKeyStore,
+  useCertificatesStore,
   initialCertsState as initialStateInit,
-  fetchKeyInfo,
-  editKeyTTL,
-  refreshKeyInfo,
+  fetchCerts,
 } from './useCertificatesStore'
 
 vi.spyOn(modules, 'fetchString')
 
 beforeEach(() => {
-  useSelectedKeyStore.setState(initialStateInit)
+  useCertificatesStore.setState(initialStateInit)
 })
 
 afterEach(() => {
   vi.clearAllMocks()
 })
 
-describe('useSelectedKeyStore', () => {
-  it('processSelectedKey', () => {
+describe('useCertificatesStore', () => {
+  it('processCerts', () => {
     // Arrange
-    const { processSelectedKey } = useSelectedKeyStore.getState()
+    const { processCerts } = useCertificatesStore.getState()
     // Act
-    processSelectedKey()
+    processCerts()
     // Assert
-    expect(useSelectedKeyStore.getState().loading).toEqual(true)
+    expect(useCertificatesStore.getState().loading).toEqual(true)
   })
 
-  it('processSelectedKeyFinal', () => {
+  it('processCertsFinal', () => {
     // Arrange
     const initialState = { ...initialStateInit, loading: true } // Custom initial state
-    useSelectedKeyStore.setState((state) => ({ ...state, ...initialState }))
+    useCertificatesStore.setState((state) => ({ ...state, ...initialState }))
 
-    const { processSelectedKeyFinal } = useSelectedKeyStore.getState()
+    const { processCertsFinal } = useCertificatesStore.getState()
     // Act
-    processSelectedKeyFinal()
+    processCertsFinal()
     // Assert
-    expect(useSelectedKeyStore.getState().loading).toEqual(false)
+    expect(useCertificatesStore.getState().loading).toEqual(false)
   })
-  it('processSelectedKeySuccess', () => {
+  it('processCertsSuccess', () => {
     // Arrange
     const initialState = { ...initialStateInit, loading: true } // Custom initial state
-    useSelectedKeyStore.setState((state) => ({ ...state, ...initialState }))
+    useCertificatesStore.setState((state) => ({ ...state, ...initialState }))
 
-    const { processSelectedKeySuccess } = useSelectedKeyStore.getState()
+    const { processCertsSuccess } = useCertificatesStore.getState()
     // Act
-    processSelectedKeySuccess(constants.KEY_INFO)
+    processCertsSuccess(constants.CA_CERTS, constants.CLIENT_CERTS)
     // Assert
-    const expectedData = {
-      ...constants.KEY_INFO,
-      nameString: constants.KEY_NAME_STRING_1,
-    }
-
-    expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
-  })
-  it('refreshSelectedKey', () => {
-    // Arrange
-    const { refreshSelectedKey } = useSelectedKeyStore.getState()
-    // Act
-    refreshSelectedKey()
-    // Assert
-    expect(useSelectedKeyStore.getState().refreshing).toEqual(true)
-    expect(useSelectedKeyStore.getState().loading).toEqual(false)
-  })
-
-  it('refreshSelectedKeyFinal', () => {
-    // Arrange
-    const initialState = { ...initialStateInit, refreshing: true } // Custom initial state
-    useSelectedKeyStore.setState((state) => ({ ...state, ...initialState }))
-
-    const { refreshSelectedKeyFinal } = useSelectedKeyStore.getState()
-    // Act
-    refreshSelectedKeyFinal()
-    // Assert
-    expect(useSelectedKeyStore.getState().refreshing).toEqual(false)
-    expect(useSelectedKeyStore.getState().loading).toEqual(false)
+    expect(useCertificatesStore.getState().caCerts).toEqual(constants.CA_CERTS)
+    expect(useCertificatesStore.getState().clientCerts).toEqual(constants.CLIENT_CERTS)
   })
 })
 
 describe('async', () => {
-  it('fetchKeyInfo', async () => {
-    const expectedData = {
-      ...constants.KEY_INFO,
-      nameString: constants.KEY_NAME_STRING_1,
-    }
-
-    fetchKeyInfo(constants.KEY_NAME_1)
+  it('fetchCerts', async () => {
+    fetchCerts()
     await waitForStack()
 
-    expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
-    expect(useSelectedKeyStore.getState().loading).toEqual(false)
-  })
-
-  it('refreshKeyInfo should not call fetchKeyInfo', async () => {
-    const responsePayload = { data: constants.KEY_INFO, status: 200 }
-    apiService.post = vi.fn().mockResolvedValue(responsePayload)
-
-    refreshKeyInfo(constants.KEY_NAME_1, false)
-    await waitForStack()
-
-    expect(modules.fetchString).not.toBeCalled()
-  })
-
-  it('refreshKeyInfo should call fetchKeyInfo', async () => {
-    const responsePayload = { data: constants.KEY_INFO, status: 200 }
-    apiService.post = vi.fn().mockResolvedValue(responsePayload)
-
-    refreshKeyInfo(constants.KEY_NAME_1, true)
-    await waitForStack()
-
-    expect(modules.fetchString).toBeCalledTimes(1)
-  })
-
-  it('refreshKeyInfo', async () => {
-    const expectedData = {
-      ...constants.KEY_INFO,
-      nameString: constants.KEY_NAME_STRING_1,
-    }
-
-    refreshKeyInfo(constants.KEY_NAME_1)
-    await waitForStack()
-
-    expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
-    expect(useSelectedKeyStore.getState().refreshing).toEqual(false)
-  })
-
-  it('editKeyTTL', async () => {
-    const expectedData = {
-      ...constants.KEY_INFO,
-      ttl: constants.KEY_TTL_2,
-      nameString: constants.KEY_NAME_STRING_1,
-    }
-
-    const responsePayload = { data: { ...constants.KEY_INFO, ttl: constants.KEY_TTL_2 }, status: 200 }
-    apiService.post = vi.fn().mockResolvedValue(responsePayload)
-
-    editKeyTTL(constants.KEY_NAME_1, constants.KEY_TTL_2)
-
-    await waitForStack()
-
-    expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
-    expect(useSelectedKeyStore.getState().loading).toEqual(false)
+    expect(useCertificatesStore.getState().caCerts).toEqual(constants.CA_CERTS)
+    expect(useCertificatesStore.getState().clientCerts).toEqual(constants.CLIENT_CERTS)
+    expect(useCertificatesStore.getState().loading).toEqual(false)
   })
 })

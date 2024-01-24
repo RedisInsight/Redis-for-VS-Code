@@ -1,5 +1,6 @@
 import React from 'react'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import * as l10n from '@vscode/l10n'
 import { VscCopy } from 'react-icons/vsc'
 
 import styles from '../styles.module.scss'
@@ -18,7 +19,7 @@ const SentinelHostPort = (props: Props) => {
 
   return (
     <div className={styles.sentinelCollapsedField}>
-      Host:Port:
+      {l10n.t('Host:Port:')}
       <div className={styles.hostPort}>
         <div>{`${host}:${port}`}</div>
         <VSCodeButton
@@ -26,7 +27,7 @@ const SentinelHostPort = (props: Props) => {
           onClick={() => handleCopy(`${host}:${port}`)}
           aria-label="Copy host:port"
           className={styles.copyHostPortBtn}
-          title="Copy"
+          title={l10n.t('Copy')}
         >
           <VscCopy />
         </VSCodeButton>

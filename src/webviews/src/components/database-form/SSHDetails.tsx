@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useId } from 'react'
 import cx from 'classnames'
 import { FormikProps } from 'formik'
+import * as l10n from '@vscode/l10n'
+import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 import {
   selectOnFocus,
   validateField,
@@ -13,7 +15,6 @@ import { Checkbox, InputText, RadioGroup, RadioGroupOption, TextArea } from 'uiS
 import styles from './styles.module.scss'
 
 export interface Props {
-
   formik: FormikProps<DbConnectionInfo>
 }
 
@@ -23,18 +24,19 @@ const SSHDetails = (props: Props) => {
   const id = useId()
 
   const sshPassTypeOptions: RadioGroupOption[] = [
-    { id: SshPassType.Password, labelText: 'Password', testid: 'radio-btn-password' },
-    { id: SshPassType.PrivateKey, labelText: 'Private Key', testid: 'radio-btn-privateKey' },
+    { id: SshPassType.Password, labelText: l10n.t('Password'), testid: 'radio-btn-password' },
+    { id: SshPassType.PrivateKey, labelText: l10n.t('Private Key'), testid: 'radio-btn-privateKey' },
   ]
 
   return (
     <div className={styles.sshContainer}>
+      {formik.values.ssh && !formik.values.tls && (<VSCodeDivider className="divider mt-3 mb-3" />)}
       <div>
         <div>
           <Checkbox
             id={`${id} ssh`}
             name="ssh"
-            labelText="Use SSH Tunnel"
+            labelText={l10n.t('Use SSH Tunnel')}
             checked={!!formik.values.ssh}
             onChange={(e) => formik.setFieldValue('ssh', e.target.checked)}
             data-testid="use-ssh"
@@ -49,12 +51,12 @@ const SSHDetails = (props: Props) => {
             <InputText
               name="sshHost"
               id="sshHost"
-              label={{ text: 'Host*', className: 'min-w-[100px]' }}
+              label={{ text: l10n.t('Host*'), className: 'min-w-[100px]' }}
               data-testid="sshHost"
               className="w-[256px]"
               color="secondary"
               maxLength={200}
-              placeholder="Enter SSH Host"
+              placeholder={l10n.t('Enter SSH Host')}
               value={formik.values.sshHost ?? ''}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 formik.setFieldValue(
@@ -69,10 +71,10 @@ const SSHDetails = (props: Props) => {
             <InputText
               name="sshPort"
               id="sshPort"
-              label={{ text: 'Port*', className: 'min-w-[100px]' }}
+              label={{ text: l10n.t('Port*'), className: 'min-w-[100px]' }}
               data-testid="sshPort"
               className="w-[256px]"
-              placeholder="Enter SSH Port"
+              placeholder={l10n.t('Enter SSH Port')}
               value={formik.values.sshPort ?? ''}
               maxLength={6}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -97,9 +99,9 @@ const SSHDetails = (props: Props) => {
               data-testid="sshUsername"
               color="secondary"
               className="w-[256px]"
-              label={{ text: 'Username*', className: 'min-w-[100px]' }}
+              label={{ text: l10n.t('Username*'), className: 'min-w-[100px]' }}
               maxLength={200}
-              placeholder="Enter SSH Username"
+              placeholder={l10n.t('Enter SSH Username')}
               value={formik.values.sshUsername ?? ''}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 formik.setFieldValue(
@@ -135,10 +137,10 @@ const SSHDetails = (props: Props) => {
                 name="sshPassword"
                 id="sshPassword"
                 data-testid="sshPassword"
-                label={{ text: 'Password', className: 'min-w-[100px]' }}
+                label={{ text: l10n.t('Password'), className: 'min-w-[100px]' }}
                 className="w-[256px]"
                 maxLength={10_000}
-                placeholder="Enter SSH Password"
+                placeholder={l10n.t('Enter SSH Password')}
                 value={formik.values.sshPassword === true ? SECURITY_FIELD : formik.values.sshPassword ?? ''}
                 onChange={formik.handleChange}
                 onFocus={() => {
@@ -164,9 +166,9 @@ const SSHDetails = (props: Props) => {
                 id="sshPrivateKey"
                 data-testid="sshPrivateKey"
                 className="w-[256px]"
-                label={{ text: 'Private Key*', className: 'min-w-[100px]' }}
+                label={{ text: l10n.t('Private Key*'), className: 'min-w-[100px]' }}
                 maxLength={50_000}
-                placeholder="Enter SSH Private Key in PEM format"
+                placeholder={l10n.t('Enter SSH Private Key in PEM format')}
                 value={formik.values.sshPrivateKey === true ? SECURITY_FIELD : formik?.values?.sshPrivateKey?.replace(/./g, '•') ?? ''}
                 onChange={formik.handleChange}
                 onFocus={() => {
@@ -186,11 +188,11 @@ const SSHDetails = (props: Props) => {
                 type="password"
                 name="sshPassphrase"
                 id="sshPassphrase"
-                label={{ text: 'Passphrase', className: 'min-w-[100px]' }}
+                label={{ text: l10n.t('Passphrase'), className: 'min-w-[100px]' }}
                 data-testid="sshPassphrase"
                 className="w-[256px]"
                 maxLength={50_000}
-                placeholder="Enter Passphrase for Private Key"
+                placeholder={l10n.t('Enter Passphrase for Private Key')}
                 value={formik.values.sshPassphrase === true ? SECURITY_FIELD : formik.values.sshPassphrase ?? ''}
                 onChange={formik.handleChange}
                 onFocus={() => {

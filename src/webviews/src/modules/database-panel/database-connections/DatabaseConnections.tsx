@@ -9,7 +9,7 @@ export interface Props {
 }
 
 // TODO: will needed for autodiscovery connections
-const InstanceConnections = React.memo((props: Props) => {
+const DatabaseConnections = React.memo((props: Props) => {
   const { connectionType, changeConnectionType } = props
 
   // const AddDatabaseManually = () => (
@@ -132,4 +132,4 @@ const InstanceConnections = React.memo((props: Props) => {
   )
 })
 
-export { InstanceConnections }
+export { DatabaseConnections }

@@ -1,10 +1,8 @@
 import React, { ChangeEvent, useId } from 'react'
-
-import cx from 'classnames'
 import { FormikProps } from 'formik'
+import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
+import * as l10n from '@vscode/l10n'
 
-// import Select from 'react-select'
-import { find } from 'lodash'
 import { KeyValueCompressor, NONE } from 'uiSrc/constants'
 import { DbConnectionInfo } from 'uiSrc/interfaces'
 import { Checkbox, Select } from 'uiSrc/ui'
@@ -23,7 +21,7 @@ const DbCompressor = (props: Props) => {
   const optionsCompressor = [
     {
       value: NONE,
-      label: 'No decompression',
+      label: l10n.t('No decompression'),
     },
     {
       value: KeyValueCompressor.GZIP,
@@ -63,12 +61,13 @@ const DbCompressor = (props: Props) => {
 
   return (
     <>
+      {formik.values.showCompressor && !formik.values.showDb && (<VSCodeDivider className="divider mt-3 mb-3" />)}
       <div>
         <div>
           <Checkbox
             id={`${id} over db compressor`}
             name="showCompressor"
-            labelText="Enable automatic data decompression"
+            labelText={l10n.t('Enable automatic data decompression')}
             checked={!!formik.values.showCompressor}
             onChange={handleChangeDbCompressorCheckbox}
             data-testid="showCompressor"
@@ -78,7 +77,7 @@ const DbCompressor = (props: Props) => {
 
       {formik.values.showCompressor && (
         <div className="flex items-center">
-          <div className="pr-1">Decompression format</div>
+          <div className="pr-1">{l10n.t('Decompression format')}</div>
           <div>
             <Select
               options={optionsCompressor}
@@ -96,6 +95,7 @@ const DbCompressor = (props: Props) => {
           </div>
         </div>
       )}
+      {formik.values.showCompressor && (<VSCodeDivider className="divider mt-6 mb-3" />)}
     </>
   )
 }

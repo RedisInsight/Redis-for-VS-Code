@@ -1,7 +1,9 @@
 import React, { ChangeEvent, useId } from 'react'
 import cx from 'classnames'
 import { FormikProps } from 'formik'
+import * as l10n from '@vscode/l10n'
 
+import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 import { validateNumber } from 'uiSrc/utils'
 import { DbConnectionInfo } from 'uiSrc/interfaces'
 import { Checkbox, InputText } from 'uiSrc/ui'
@@ -33,7 +35,7 @@ const DbIndex = (props: Props) => {
           <Checkbox
             id={`${id} over db`}
             name="showDb"
-            labelText="Select Logical Database"
+            labelText={l10n.t('Select Logical Database')}
             checked={!!formik.values.showDb}
             onChange={handleChangeDbIndexCheckbox}
             data-testid="showDb"
@@ -47,9 +49,9 @@ const DbIndex = (props: Props) => {
             <InputText
               name="db"
               id="db"
-              label={{ text: 'Database Index', className: 'min-w-[100px]' }}
+              label={{ text: l10n.t('Database Index'), className: 'min-w-[100px]' }}
               data-testid="db"
-              placeholder="Enter Database Index"
+              placeholder={l10n.t('Enter Database Index')}
               className="min-w-[256px]"
               value={formik.values.db ?? '0'}
               maxLength={6}
@@ -65,6 +67,7 @@ const DbIndex = (props: Props) => {
           </div>
         </div>
       )}
+      {formik.values.showDb && (<VSCodeDivider className="divider mt-6 mb-3" />)}
     </>
   )
 }

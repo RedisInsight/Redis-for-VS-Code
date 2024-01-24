@@ -7,7 +7,7 @@ import { RedisResponseBufferType } from 'uiSrc/slices/interfaces'
 import { anyToBuffer, bufferToString } from 'uiSrc/utils'
 // import { GZIP_COMPRESSED_VALUE_1, GZIP_COMPRESSED_VALUE_2, DECOMPRESSED_VALUE_STR_1, DECOMPRESSED_VALUE_STR_2 } from 'uiSrc/utils/tests/decompressors'
 import { useSelectedKeyStore } from 'uiSrc/store'
-import { act, constants, fireEvent, render, screen } from 'testSrc/helpers'
+import { waitFor, constants, fireEvent, render, screen } from 'testSrc/helpers'
 import { HashDetailsTable, Props } from './HashDetailsTable'
 import { useHashStore } from '../hooks/useHashStore'
 
@@ -107,7 +107,7 @@ describe('HashDetailsTable', () => {
 
   //     fireEvent.click(editBtn)
 
-  //     await act(async () => {
+  //     await waitFor(async () => {
   //       fireEvent.mouseOver(editBtn)
   //     })
   //     await waitForEuiToolTipVisible()

@@ -10,7 +10,7 @@ describe('scrollIntoView', () => {
     }
     const newDiv = document.createElement('div')
     newDiv.scrollIntoView = mockScrollIntoView
-    scrollIntoView(newopts)
+    scrollIntoView(newDiv, opts)
     expect(mockScrollIntoView).toBeCalledWith(opts)
   })
 
@@ -25,7 +25,7 @@ describe('scrollIntoView', () => {
     Object.defineProperty(global.document.documentElement, 'style', { value: {} })
     const newDiv = document.createElement('div')
     newDiv.scrollIntoView = mockScrollIntoView
-    scrollIntoView(newopts)
+    scrollIntoView(newDiv, opts)
     expect(mockScrollIntoView).toBeCalledWith(true)
   })
 })

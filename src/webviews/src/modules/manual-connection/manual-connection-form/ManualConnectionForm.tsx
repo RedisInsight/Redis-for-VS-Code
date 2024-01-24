@@ -76,7 +76,6 @@ const ManualConnectionForm = (props: Props) => {
     nodes = null,
     modules,
     provider,
-    version,
   } = formFields
 
   const { caCerts, clientCerts } = useCertificatesStore((state) => ({
@@ -118,7 +117,7 @@ const ManualConnectionForm = (props: Props) => {
   })
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
-    if (event.key === Keys.ENTER && !submitIsDisable()) {
+    if (event.key.toLowerCase() === Keys.ENTER && !submitIsDisable()) {
       // event.
       formik.submitForm()
     }
@@ -146,7 +145,7 @@ const ManualConnectionForm = (props: Props) => {
     onClick,
     submitIsDisabled,
   }: ISubmitButton) => {
-    const Btn = (
+    const Btn = () => (
       <VSCodeButton
         onClick={onClick}
         disabled={submitIsDisabled}
@@ -157,16 +156,18 @@ const ManualConnectionForm = (props: Props) => {
       </VSCodeButton>
     )
 
-    return !submitIsDisabled ? Btn : (
-      <Popup
-        position="top center"
-        trigger={Btn}
-        on={['hover']}
-      >
-        {validationErrors.REQUIRED_TITLE(Object.keys(errors).length)}
-        {getSubmitButtonContent(errors, submitIsDisabled)}
-      </Popup>
-    )
+    return !submitIsDisabled
+      ? <Btn />
+      : (
+        <Popup
+          position="top center"
+          trigger={<Btn />}
+          on={['hover']}
+        >
+          {validationErrors.REQUIRED_TITLE(Object.keys(errors).length)}
+          {getSubmitButtonContent(errors, submitIsDisabled)}
+        </Popup>
+      )
   }
 
   const Footer = () => {
@@ -202,7 +203,6 @@ const ManualConnectionForm = (props: Props) => {
           </div>
 
           <div>
-
             <SubmitButton
               onClick={formik.submitForm}
               text={submitButtonText}
@@ -415,7 +415,7 @@ const ManualConnectionForm = (props: Props) => {
                   />
                 </>
               )}
-            </f>
+            </form>
           </>
         )} */}
       </div>

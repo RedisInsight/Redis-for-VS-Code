@@ -51,7 +51,7 @@ export async function startBackend(): Promise<any> {
       } else {
         PSinst = cp.spawn(
           'node', [path.resolve(backendPath, 'src/main.js')],
-          { env: { APP_FOLDER_NAME: apiFolder, NODE_ENV: 'production', STDOUT_LOGGER: 'true', BUILD_TYPE: 'DOCKER_ON_PREMISE', PATH: process.env.PATH } },
+          { env: { APP_FOLDER_NAME: apiFolder, NODE_ENV: 'production', STDOUT_LOGGER: 'true', BUILD_TYPE: 'DOCKER_ON_PREMISE', PATH: process.env.PATH, APP_PORT: apiPort } },
         )
       }
       // TODO: make it visible only for dev env

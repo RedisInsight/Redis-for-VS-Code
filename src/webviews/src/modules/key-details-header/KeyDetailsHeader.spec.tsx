@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash'
 import { KeyTypes } from 'uiSrc/constants'
 import { useSelectedKeyStore, initialCertsState as initialSelectedKeyState } from 'uiSrc/store'
 import { bufferToString } from 'uiSrc/utils'
-import { render, screen, fireEvent, mockedStore, cleanup, act, constants } from 'testSrc/helpers'
+import { render, screen, fireEvent, mockedStore, cleanup, waitFor, constants } from 'testSrc/helpers'
 import { KeyDetailsHeaderProps, KeyDetailsHeader } from './KeyDetailsHeader'
 import * as useKeys from '../keys-tree/hooks/useKeys'
 
@@ -67,7 +67,7 @@ describe('KeyDetailsHeader', () => {
 
     // fireEvent.click(screen.getByTestId('edit-ttl-btn'))
 
-    await act(() => {
+    await waitFor(() => {
       fireEvent.input(
         screen.getByTestId(TTL_INPUT_TEST_ID),
         { target: { value: '100' } },

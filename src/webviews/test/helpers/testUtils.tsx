@@ -53,8 +53,11 @@ export {
   cleanup,
   screen,
   fireEvent,
-  act,
+  waitFor,
 } from '@testing-library/react'
+
+const scrollIntoViewMock = vi.fn()
+window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
 // insert mocked store to the render Component
 export const render = (

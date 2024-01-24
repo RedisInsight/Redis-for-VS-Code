@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import cx from 'classnames'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
-import { DatabaseType, Nullable } from 'uiSrc/interfaces'
+import * as l10n from '@vscode/l10n'
 
+import { DatabaseType, Nullable } from 'uiSrc/interfaces'
 import { AddDbType } from 'uiSrc/constants'
 import { ManualConnection } from 'uiSrc/modules'
 import { Database } from 'uiSrc/slices/connections/databases/interface'
-import { InstanceConnections } from './instance-connections'
+import { DatabaseConnections } from './database-connections'
 
 import styles from './styles.module.scss'
 
@@ -117,7 +118,9 @@ const DatabasePanel = React.memo((props: Props) => {
   return (
     <>
       <div className={cx('relative', styles.container, { addDbWrapper: !editMode })}>
-        <h1 className="text-2xl pt-4 pb-4">{!editMode ? 'Add Redis database' : 'Edit Redis database'}</h1>
+        <h1 className="text-2xl pt-4 pb-4">
+          {!editMode ? l10n.t('Add Redis database') : l10n.t('Edit Redis database')}
+        </h1>
         <VSCodeDivider className="divider" />
 
         <div
@@ -126,7 +129,7 @@ const DatabasePanel = React.memo((props: Props) => {
         >
           {!editMode && (
           <>
-            <InstanceConnections
+            <DatabaseConnections
               {...{ connectionType, changeConnectionType }}
             />
             {/* {connectionType === AddDbType.auto && <Databaseypes />} */}

@@ -47,6 +47,7 @@ export interface Database {
   visible?: boolean
   loading?: boolean
   isFreeDb?: boolean
+  nodes?: Endpoint[]
 }
 
 export interface AdditionalRedisModule {

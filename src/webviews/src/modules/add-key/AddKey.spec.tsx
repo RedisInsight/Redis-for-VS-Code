@@ -3,7 +3,7 @@ import React from 'react'
 // import { connectedInstanceSelector } from 'uiSrc/slices/instances/instances'
 // import { RedisDefaultModules } from 'uiSrc/constants'
 import {
-  // act,
+  // waitFor,
   // fireEvent,
   render,
   screen,
@@ -35,7 +35,7 @@ describe('AddKey', () => {
   //   />)
 
   //   fireEvent.click(screen.getByTestId('select-key-type'))
-  //   await act(() => {
+  //   await waitFor(() => {
   //     fireEvent.click(
   //       screen.queryByText('JSON') || document,
   //     )
@@ -53,7 +53,7 @@ describe('AddKey', () => {
   //   />)
 
   //   fireEvent.click(screen.getByTestId('select-key-type'))
-  //   await act(() => {
+  //   await waitFor(() => {
   //     fireEvent.click(
   //       screen.queryByText('JSON') || document,
   //     )

@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useId } from 'react'
 import cx from 'classnames'
 import { FormikProps } from 'formik'
-import { find } from 'lodash'
+import * as l10n from '@vscode/l10n'
+import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 
 import { validateCertName, validateField } from 'uiSrc/utils'
 import {
@@ -60,11 +61,13 @@ const TlsDetails = (props: Props) => {
   return (
     <>
       <div>
+        {formik.values.tls && !formik.values.showCompressor && (<VSCodeDivider className="divider mt-6 mb-6" />)}
+
         <div>
           <Checkbox
             id={`${id} over ssl`}
             name="tls"
-            labelText="Use TLS"
+            labelText={l10n.t('Use TLS')}
             checked={!!formik.values.tls}
             onChange={(e) => formik.setFieldValue('tls', e.target.checked)}
             data-testid="tls"
@@ -77,7 +80,7 @@ const TlsDetails = (props: Props) => {
               <Checkbox
                 id={`${id} sni`}
                 name="sni"
-                labelText="Use SNI"
+                labelText={l10n.t('Use SNI')}
                 checked={!!formik.values.sni}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   formik.setFieldValue(
@@ -94,10 +97,10 @@ const TlsDetails = (props: Props) => {
                 <InputText
                   name="servername"
                   id="servername"
-                  label={{ text: 'Server Name*', className: 'min-w-[100px]' }}
+                  label={{ text: l10n.t('Server Name*'), className: 'min-w-[100px]' }}
                   maxLength={200}
                   className="w-[256px]"
-                  placeholder="Enter Server Name"
+                  placeholder={l10n.t('Enter Server Name')}
                   value={formik.values.servername ?? ''}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     formik.setFieldValue(
@@ -112,7 +115,7 @@ const TlsDetails = (props: Props) => {
               <Checkbox
                 id={`${id} verifyServerTlsCert`}
                 name="verifyServerTlsCert"
-                labelText="Verify TLS Certificate"
+                labelText={l10n.t('Verify TLS Certificate')}
                 checked={!!formik.values.verifyServerTlsCert}
                 onChange={(e) => formik.setFieldValue('verifyServerTlsCert', e.target.checked)}
                 data-testid="verify-tls-cert"
@@ -126,7 +129,7 @@ const TlsDetails = (props: Props) => {
           <div>
             <div className="flex items-center pb-3">
               <div className="w-[100px]">
-                {`CA Certificate${formik.values.verifyServerTlsCert ? '*' : ''}`}
+                {`${l10n.t('CA Certificate')}${formik.values.verifyServerTlsCert ? '*' : ''}`}
               </div>
               <Select
                 // name="selectedCaCertName"
@@ -141,7 +144,7 @@ const TlsDetails = (props: Props) => {
                     value || NO_CA_CERT,
                   )
                 }}
-                data-testid="select-ca-cert"
+                testid="select-ca-cert"
               />
             </div>
 
@@ -151,10 +154,10 @@ const TlsDetails = (props: Props) => {
                   <InputText
                     name="newCaCertName"
                     id="newCaCertName"
-                    label={{ text: 'Name*', className: 'min-w-[100px]' }}
+                    label={{ text: l10n.t('Name*'), className: 'min-w-[100px]' }}
                     maxLength={200}
                     className="w-[256px]"
-                    placeholder="Enter CA Certificate Name"
+                    placeholder={l10n.t('Enter CA Certificate Name')}
                     value={formik.values.newCaCertName ?? ''}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       formik.setFieldValue(
@@ -175,10 +178,10 @@ const TlsDetails = (props: Props) => {
                     name="newCaCert"
                     id="newCaCert"
                     className="w-[256px]"
-                    label={{ text: 'Certificate*', className: 'min-w-[100px]' }}
+                    label={{ text: l10n.t('Certificate*'), className: 'min-w-[100px]' }}
                     value={formik.values.newCaCert ?? ''}
                     onChange={formik.handleChange}
-                    placeholder="Enter CA Certificate"
+                    placeholder={l10n.t('Enter CA Certificate')}
                     data-testid="new-ca-cert"
                   />
                 </div>
@@ -192,7 +195,7 @@ const TlsDetails = (props: Props) => {
             <Checkbox
               id={`${id} is_tls_client_auth_required`}
               name="tlsClientAuthRequired"
-              labelText="Requires TLS Client Authentication"
+              labelText={l10n.t('Requires TLS Client Authentication')}
               checked={!!formik.values.tlsClientAuthRequired}
               onChange={(e) => formik.setFieldValue('tlsClientAuthRequired', e.target.checked)}
               data-testid="tls-required-checkbox"
@@ -204,7 +207,7 @@ const TlsDetails = (props: Props) => {
         <div className={cx('boxSection', styles.tslBoxSection)}>
           <div>
             <div className="flex items-center pb-3">
-              <div className="w-[100px]">Client Certificate*</div>
+              <div className="w-[100px]">{l10n.t('Client Certificate*')}</div>
               <Select
                 containerClassName="database-form-select w-[256px]"
                 itemClassName="database-form-select__option"
@@ -213,7 +216,7 @@ const TlsDetails = (props: Props) => {
                 onChange={(value) => {
                   formik.setFieldValue('selectedTlsClientCertId', value)
                 }}
-                data-testid="select-cert"
+                testid="select-cert"
               />
             </div>
 
@@ -223,11 +226,11 @@ const TlsDetails = (props: Props) => {
                 <div className="pb-3">
                   <InputText
                     name="newTlsCertPairName"
-                    label={{ text: 'Name*', className: 'min-w-[100px]' }}
+                    label={{ text: l10n.t('Name*'), className: 'min-w-[100px]' }}
                     id="newTlsCertPairName"
                     className="w-[256px]"
                     maxLength={200}
-                    placeholder="Enter Client Certificate Name"
+                    placeholder={l10n.t('Enter Client Certificate Name')}
                     value={formik.values.newTlsCertPairName ?? ''}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       formik.setFieldValue(
@@ -248,23 +251,23 @@ const TlsDetails = (props: Props) => {
                   <TextArea
                     name="newTlsClientCert"
                     id="newTlsClientCert"
-                    label={{ text: 'Certificate*', className: 'min-w-[100px]' }}
+                    label={{ text: l10n.t('Certificate*'), className: 'min-w-[100px]' }}
                     value={formik.values.newTlsClientCert}
                     className="w-[256px]"
                     onChange={formik.handleChange}
                     draggable={false}
-                    placeholder="Enter Client Certificate"
+                    placeholder={l10n.t('Enter Client Certificate')}
                     data-testid="new-tls-client-cert"
                   />
                 </div>
 
                 <div>
                   <TextArea
-                    placeholder="Enter Private Key"
+                    placeholder={l10n.t('Enter Private Key')}
                     name="newTlsClientKey"
                     id="newTlsClientKey"
                     className="w-[256px]"
-                    label={{ text: 'Private Key*', className: 'min-w-[100px]' }}
+                    label={{ text: l10n.t('Private Key*'), className: 'min-w-[100px]' }}
                     value={formik.values.newTlsClientKey}
                     onChange={formik.handleChange}
                     data-testid="new-tls-client-cert-key"
@@ -274,6 +277,7 @@ const TlsDetails = (props: Props) => {
           )}
         </div>
       )}
+      {formik.values.tls && (<VSCodeDivider className="divider mt-6 mb-3" />)}
     </>
   )
 }

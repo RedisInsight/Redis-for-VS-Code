@@ -1,10 +1,12 @@
+import * as l10n from '@vscode/l10n'
+
 export const ADD_NEW_CA_CERT = 'ADD_NEW_CA_CERT'
-export const ADD_NEW_CA_CERT_LABEL = 'Add new CA certificate'
+export const ADD_NEW_CA_CERT_LABEL = l10n.t('Add new CA certificate')
 export const NO_CA_CERT = 'NO_CA_CERT'
-export const NO_CA_CERT_LABEL = 'No CA Certificate'
+export const NO_CA_CERT_LABEL = l10n.t('No CA Certificate')
 export const ADD_NEW = 'ADD_NEW'
-export const ADD_NEW_LABEL = 'Add new certificate'
-export const NONE = 'NONE'
+export const ADD_NEW_LABEL = l10n.t('Add new certificate')
+export const NONE = l10n.t('NONE')
 export const DEFAULT_HOST = '127.0.0.1'
 export const DEFAULT_PORT = '6379'
 export const SECURITY_FIELD = '••••••••••••'
@@ -16,31 +18,31 @@ export enum SshPassType {
 }
 
 export const fieldDisplayNames = {
-  port: 'Port',
-  host: 'Host',
-  name: 'Database alias',
-  selectedCaCertName: 'CA Certificate',
-  newCaCertName: 'CA Certificate Name',
-  newCaCert: 'CA certificate',
-  newTlsCertPairName: 'Client Certificate Name',
-  newTlsClientCert: 'Client Certificate',
-  newTlsClientKey: 'Private Key',
-  servername: 'Server Name',
-  sentinelMasterName: 'Primary Group Name',
-  sshHost: 'SSH Host',
-  sshPort: 'SSH Port',
-  sshPrivateKey: 'SSH Private Key',
-  sshUsername: 'SSH Username',
+  port: l10n.t('Port'),
+  host: l10n.t('Host'),
+  name: l10n.t('Database alias'),
+  selectedCaCertName: l10n.t('CA Certificate'),
+  newCaCertName: l10n.t('CA Certificate Name'),
+  newCaCert: l10n.t('CA certificate'),
+  newTlsCertPairName: l10n.t('Client Certificate Name'),
+  newTlsClientCert: l10n.t('Client Certificate'),
+  newTlsClientKey: l10n.t('Private Key'),
+  servername: l10n.t('Server Name'),
+  sentinelMasterName: l10n.t('Primary Group Name'),
+  sshHost: l10n.t('SSH Host'),
+  sshPort: l10n.t('SSH Port'),
+  sshPrivateKey: l10n.t('SSH Private Key'),
+  sshUsername: l10n.t('SSH Username'),
 }
 
 const DEFAULT_TIMEOUT_ENV = process.env.CONNECTIONS_TIMEOUT_DEFAULT || '30000' // 30 sec
 
 export const DEFAULT_TIMEOUT = parseInt(DEFAULT_TIMEOUT_ENV, 10)
 
-export enum SubmitBtnText {
-  AddDatabase = 'Add Redis Database',
-  EditDatabase = 'Apply Changes',
-  CloneDatabase = 'Clone Database',
+export const SubmitBtnText = {
+  AddDatabase: l10n.t('Add Redis Database'),
+  EditDatabase: l10n.t('Apply Changes'),
+  CloneDatabase: l10n.t('Clone Database'),
 }
 
 export const REDIS_URI_SCHEMES = ['redis', 'rediss']

@@ -10,5 +10,5 @@ export {
   screen,
   fireEvent,
   waitForStack,
-  act,
+  waitFor,
 } from './testUtils'

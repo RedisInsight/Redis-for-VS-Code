@@ -98,7 +98,7 @@ export const applySSHDatabase = (database: any, values: DbConnectionInfo) => {
     database.ssh = true
     database.sshOptions = {
       host: sshHost,
-      port: +sshPort,
+      port: +sshPort!,
       username: sshUsername,
     }
 
@@ -325,4 +325,5 @@ export const getFormValues = (instance?: Nullable<Record<string, any>>) => ({
   sshPassword: instance?.sshOptions?.password ?? '',
   sshPrivateKey: instance?.sshOptions?.privateKey ?? '',
   sshPassphrase: instance?.sshOptions?.passphrase ?? '',
+  version: instance?.version ?? '',
 })

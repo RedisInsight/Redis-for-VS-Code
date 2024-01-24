@@ -1,7 +1,7 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
 import { anyToBuffer } from 'uiSrc/utils'
-import { render, screen, fireEvent, act, waitForStack } from 'testSrc/helpers'
+import { render, screen, fireEvent, waitFor, waitForStack } from 'testSrc/helpers'
 import { Props, PopoverDelete } from './PopoverDelete'
 
 const mockedProps = mock<Props>()
@@ -22,7 +22,7 @@ describe('PopoverDelete', () => {
     )
 
     // open popover
-    await act(() => {
+    await waitFor(() => {
       fireEvent.click(screen.getByLabelText(/remove item/i))
     })
     await waitForStack()
@@ -43,7 +43,7 @@ describe('PopoverDelete', () => {
     )
 
     // open popover
-    await act(() => {
+    await waitFor(() => {
       fireEvent.click(screen.getByLabelText(/remove item/i))
     })
     await waitForStack()
@@ -68,7 +68,7 @@ describe('PopoverDelete', () => {
     )
 
     // open popover
-    await act(() => {
+    await waitFor(() => {
       fireEvent.click(screen.getByLabelText(/remove item/i))
     })
     await waitForStack()
@@ -94,7 +94,7 @@ describe('PopoverDelete', () => {
     )
 
     // open popover
-    await act(() => {
+    await waitFor(() => {
       fireEvent.click(screen.getByLabelText(/remove item/i))
     })
     await waitForStack()
@@ -111,7 +111,7 @@ describe('PopoverDelete', () => {
     const { queryByTestId } = render(<PopoverDelete {...instance(mockedProps)} testid={testId} approveTextBtn={text} />)
 
     // open popover
-    await act(() => {
+    await waitFor(() => {
       fireEvent.click(queryByTestId(`${testId}-icon`)!)
     })
     await waitForStack()

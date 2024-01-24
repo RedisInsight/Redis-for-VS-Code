@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormikProps } from 'formik'
-
+import * as l10n from '@vscode/l10n'
 import { DbConnectionInfo, Nullable } from 'uiSrc/interfaces'
 import { SECURITY_FIELD } from 'uiSrc/constants'
 import { InputText } from 'uiSrc/ui'
@@ -19,7 +19,7 @@ const SentinelMasterDatabase = (props: Props) => {
     <>
       {(!!db && !isCloneMode) && (
         <div className={styles.sentinelCollapsedField}>
-          Database Index:
+          {l10n.t('Database Index:')}
           <span className="pl-1">
             <div>{db}</div>
           </span>
@@ -30,9 +30,9 @@ const SentinelMasterDatabase = (props: Props) => {
           <InputText
             name="sentinelMasterUsername"
             id="sentinelMasterUsername"
-            label={{ text: 'Username' }}
+            label={{ text: l10n.t('Username') }}
             maxLength={200}
-            placeholder="Enter Username"
+            placeholder={l10n.t('Enter Username')}
             value={formik.values.sentinelMasterUsername ?? ''}
             onChange={formik.handleChange}
             data-testid="sentinel-mater-username"
@@ -45,10 +45,10 @@ const SentinelMasterDatabase = (props: Props) => {
             name="sentinelMasterPassword"
             id="sentinelMasterPassword"
             data-testid="sentinel-master-password"
-            label={{ text: 'Password' }}
+            label={{ text: l10n.t('Password') }}
             className="passwordField"
             maxLength={200}
-            placeholder="Enter Password"
+            placeholder={l10n.t('Enter Password')}
             value={formik.values.sentinelMasterPassword === true ? SECURITY_FIELD : formik.values.sentinelMasterPassword ?? ''}
             onChange={formik.handleChange}
             onFocus={() => {

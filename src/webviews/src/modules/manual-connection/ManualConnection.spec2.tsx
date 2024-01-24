@@ -1,31 +1,29 @@
+/* eslint-disable react/destructuring-assignment */
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
-import { act } from '@testing-library/react'
-import { fireEvent, render, screen } from 'uiSrc/utils/test-utils'
+import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
+import { SubmitBtnText } from 'uiSrc/constants'
 import {
-  SubmitBtnText,
-} from 'uiSrc/pages/home/constants'
-import ManualConnectionFrom, { Props as ManualConnectionFromProps } from
-  'uiSrc/pages/home/components/manual-connection/manual-connection-form/ManualConnectionForm'
-import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/telemetry'
-import ManualConnectionWrapper, {
-  Props,
-} from './ManualConnection'
+  ManualConnectionFormProps,
+  ManualConnectionForm,
+} from 'uiSrc/modules/manual-connection/manual-connection-form'
+import { fireEvent, render, screen, waitFor } from 'testSrc/helpers'
+import { ManualConnection, Props } from './ManualConnection'
 
 const mockedProps = mock<Props>()
 
-vi.mock('./manual-connection-form/ManualConnectionForm', () => ({
-  __esModule: true,
-  namedExport: vi.fn(),
-  default: vi.fn(),
+vi.mock('uiSrc/modules/manual-connection/manual-connection-form', async () => ({
+  // ...(await vi.importActual<object>('uiSrc/modules/manual-connection/manual-connection-form')),
+  // ManualConnectionForm: vi.fn().mockImplementation(mockManualConnectionForm),
+  ManualConnectionForm: vi.fn(),
 }))
 
-vi.mock('uiSrc/telemetry', () => ({
-  ...await vi.importActual<object>('uiSrc/telemetry'),
+vi.mock('uiSrc/utils', async () => ({
+  ...(await vi.importActual<object>('uiSrc/utils')),
   sendEventTelemetry: vi.fn(),
 }))
 
-const mockManualConnectionFrom = (props: ManualConnectionFromProps) => (
+const mockManualConnectionForm = (props: ManualConnectionFormProps) => (
   <div>
     <button
       type="button"
@@ -58,42 +56,42 @@ const mockManualConnectionFrom = (props: ManualConnectionFromProps) => (
   </div>
 )
 
-describe('ManualConnectionWrapper', () => {
+describe('ManualConnection', () => {
   beforeAll(() => {
-    ManualConnectionFrom.mockImplementation(mockManualConnectionFrom)
+    ManualConnectionForm.mockImplementation(mockManualConnectionForm)
   })
   it('should render', () => {
     expect(
-      render(<ManualConnectionWrapper {...instance(mockedProps)} />),
+      render(<ManualConnection {...instance(mockedProps)} />),
     ).toBeTruthy()
   })
 
-  it('should call onHostNamePaste', () => {
-    const component = render(<ManualConnectionWrapper {...instance(mockedProps)} />)
+  it.only('should call onHostNamePaste', () => {
+    const component = render(<ManualConnection {...instance(mockedProps)} />)
     fireEvent.click(screen.getByTestId('onHostNamePaste-btn'))
     expect(component).toBeTruthy()
   })
 
   it('should call onClose', () => {
     const onClose = vi.fn()
-    render(<ManualConnectionWrapper {...instance(mockedProps)} onClose={onClose} />)
+    render(<ManualConnection {...instance(mockedProps)} onClose={onClose} />)
     fireEvent.click(screen.getByTestId('onClose-btn'))
     expect(onClose).toBeCalled()
   })
 
   it('should have add database submit button', () => {
-    render(<ManualConnectionWrapper {...instance(mockedProps)} />)
+    render(<ManualConnection {...instance(mockedProps)} />)
     expect(screen.getByTestId('btn-submit')).toHaveTextContent(SubmitBtnText.AddDatabase)
   })
 
   it('should have edit database submit button', () => {
-    render(<ManualConnectionWrapper {...instance(mockedProps)} editMode />)
+    render(<ManualConnection {...instance(mockedProps)} editMode />)
     expect(screen.getByTestId('btn-submit')).toHaveTextContent(SubmitBtnText.EditDatabase)
   })
 
   it('should have edit database submit button', () => {
-    render(<ManualConnectionWrapper {...instance(mockedProps)} editMode />)
-    act(() => {
+    render(<ManualConnection {...instance(mockedProps)} editMode />)
+    waitFor(() => {
       fireEvent.click(screen.getByTestId('onClone-btn'))
     })
     expect(screen.getByTestId('btn-submit')).toHaveTextContent(SubmitBtnText.CloneDatabase)
@@ -105,8 +103,8 @@ describe('ManualConnectionWrapper', () => {
     sendEventTelemetry.mockImplementation(() => sendEventTelemetryMock)
 
     sendEventTelemetry.mockRestore()
-    render(<ManualConnectionWrapper {...instance(mockedProps)} />)
-    act(() => {
+    render(<ManualConnection {...instance(mockedProps)} />)
+    waitFor(() => {
       fireEvent.click(screen.getByTestId('btn-submit'))
     })
 
@@ -121,11 +119,11 @@ describe('ManualConnectionWrapper', () => {
     sendEventTelemetry.mockImplementation(() => sendEventTelemetryMock)
 
     sendEventTelemetry.mockRestore()
-    render(<ManualConnectionWrapper {...instance(mockedProps)} editMode />)
-    act(() => {
+    render(<ManualConnection {...instance(mockedProps)} editMode />)
+    waitFor(() => {
       fireEvent.click(screen.getByTestId('onClone-btn'))
     })
-    act(() => {
+    waitFor(() => {
       fireEvent.click(screen.getByTestId('onClose-btn'))
     })
 
