@@ -7,7 +7,7 @@
     "install:chrome-driver": "extest get-chromedriver",
     "install:deps": "yarn run install:vs-code && yarn run install:chrome-driver",
     "install:extension": "extest install-vsix -f redisinsight-vsc-plugin-0.0.1.vsix -e ./test-extensions",
-    "test": "yarn run compile && extest run-tests dist/tests/**/*.js --code_settings settings.json -r . --extensions_dir ./test-extensions"
+    "test": "yarn run compile && extest run-tests dist/setup.js dist/tests/**/*.js --code_settings settings.json -r . --extensions_dir ./test-extensions"
   },
   "devDependencies": {
     "@types/chai": "^4.3.6",
