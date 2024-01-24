@@ -32,16 +32,14 @@ const SSHDetails = (props: Props) => {
     <div className={styles.sshContainer}>
       {formik.values.ssh && !formik.values.tls && (<VSCodeDivider className="divider mt-3 mb-3" />)}
       <div>
-        <div>
-          <Checkbox
-            id={`${id} ssh`}
-            name="ssh"
-            labelText={l10n.t('Use SSH Tunnel')}
-            checked={!!formik.values.ssh}
-            onChange={(e) => formik.setFieldValue('ssh', e.target.checked)}
-            data-testid="use-ssh"
-          />
-        </div>
+        <Checkbox
+          id={`${id} ssh`}
+          name="ssh"
+          labelText={l10n.t('Use SSH Tunnel')}
+          checked={!!formik.values.ssh}
+          onChange={(e) => formik.setFieldValue('ssh', e.target.checked)}
+          data-testid="use-ssh"
+        />
       </div>
 
       {formik.values.ssh && (
@@ -92,120 +90,110 @@ const SSHDetails = (props: Props) => {
         </div>
 
         <div>
-          <div className={cx()}>
-            <InputText
-              name="sshUsername"
-              id="sshUsername"
-              data-testid="sshUsername"
-              color="secondary"
-              className="w-[256px]"
-              label={{ text: l10n.t('Username*'), className: 'min-w-[100px]' }}
-              maxLength={200}
-              placeholder={l10n.t('Enter SSH Username')}
-              value={formik.values.sshUsername ?? ''}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                formik.setFieldValue(
-                  e.target.name,
-                  validateField(e.target.value.trim()),
-                )
-              }}
-            />
-          </div>
+          <InputText
+            name="sshUsername"
+            id="sshUsername"
+            data-testid="sshUsername"
+            color="secondary"
+            className="w-[256px]"
+            label={{ text: l10n.t('Username*'), className: 'min-w-[100px]' }}
+            maxLength={200}
+            placeholder={l10n.t('Enter SSH Username')}
+            value={formik.values.sshUsername ?? ''}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              formik.setFieldValue(
+                e.target.name,
+                validateField(e.target.value.trim()),
+              )
+            }}
+          />
         </div>
 
-        <div>
-          <div className={cx(styles.sshPassTypeWrapper)}>
-            <RadioGroup
+        <div className={cx(styles.sshPassTypeWrapper)}>
+          <RadioGroup
               // id="sshPassType"
               // name="sshPassType"
-              options={sshPassTypeOptions}
-              idSelected={formik.values.sshPassType}
+            options={sshPassTypeOptions}
+            idSelected={formik.values.sshPassType}
               // className={styles.sshPassType}
-              onChange={(id) => {
-                formik.setFieldValue('sshPassType', id)
-              }}
-              data-testid="ssh-pass-type"
-            />
-          </div>
+            onChange={(id) => {
+              formik.setFieldValue('sshPassType', id)
+            }}
+            data-testid="ssh-pass-type"
+          />
         </div>
 
         {formik.values.sshPassType === SshPassType.Password && (
           <div>
-            <div>
-              <InputText
-                type="password"
-                name="sshPassword"
-                id="sshPassword"
-                data-testid="sshPassword"
-                label={{ text: l10n.t('Password'), className: 'min-w-[100px]' }}
-                className="w-[256px]"
-                maxLength={10_000}
-                placeholder={l10n.t('Enter SSH Password')}
-                value={formik.values.sshPassword === true ? SECURITY_FIELD : formik.values.sshPassword ?? ''}
-                onChange={formik.handleChange}
-                onFocus={() => {
-                  if (formik.values.sshPassword === true) {
-                    formik.setFieldValue(
-                      'sshPassword',
-                      '',
-                    )
-                  }
-                }}
-                autoComplete="new-password"
-              />
-            </div>
+            <InputText
+              type="password"
+              name="sshPassword"
+              id="sshPassword"
+              data-testid="sshPassword"
+              label={{ text: l10n.t('Password'), className: 'min-w-[100px]' }}
+              className="w-[256px]"
+              maxLength={10_000}
+              placeholder={l10n.t('Enter SSH Password')}
+              value={formik.values.sshPassword === true ? SECURITY_FIELD : formik.values.sshPassword ?? ''}
+              onChange={formik.handleChange}
+              onFocus={() => {
+                if (formik.values.sshPassword === true) {
+                  formik.setFieldValue(
+                    'sshPassword',
+                    '',
+                  )
+                }
+              }}
+              autoComplete="new-password"
+            />
           </div>
         )}
 
         {formik.values.sshPassType === SshPassType.PrivateKey && (
         <>
           <div>
-            <div>
-              <TextArea
-                name="sshPrivateKey"
-                id="sshPrivateKey"
-                data-testid="sshPrivateKey"
-                className="w-[256px]"
-                label={{ text: l10n.t('Private Key*'), className: 'min-w-[100px]' }}
-                maxLength={50_000}
-                placeholder={l10n.t('Enter SSH Private Key in PEM format')}
-                value={formik.values.sshPrivateKey === true ? SECURITY_FIELD : formik?.values?.sshPrivateKey?.replace(/./g, '•') ?? ''}
-                onChange={formik.handleChange}
-                onFocus={() => {
-                  if (formik.values.sshPrivateKey === true) {
-                    formik.setFieldValue(
-                      'sshPrivateKey',
-                      '',
-                    )
-                  }
-                }}
-              />
-            </div>
+            <TextArea
+              name="sshPrivateKey"
+              id="sshPrivateKey"
+              data-testid="sshPrivateKey"
+              className="w-[256px]"
+              label={{ text: l10n.t('Private Key*'), className: 'min-w-[100px]' }}
+              maxLength={50_000}
+              placeholder={l10n.t('Enter SSH Private Key in PEM format')}
+              value={formik.values.sshPrivateKey === true ? SECURITY_FIELD : formik?.values?.sshPrivateKey?.replace(/./g, '•') ?? ''}
+              onChange={formik.handleChange}
+              onFocus={() => {
+                if (formik.values.sshPrivateKey === true) {
+                  formik.setFieldValue(
+                    'sshPrivateKey',
+                    '',
+                  )
+                }
+              }}
+            />
           </div>
           <div>
-            <div>
-              <InputText
-                type="password"
-                name="sshPassphrase"
-                id="sshPassphrase"
-                label={{ text: l10n.t('Passphrase'), className: 'min-w-[100px]' }}
-                data-testid="sshPassphrase"
-                className="w-[256px]"
-                maxLength={50_000}
-                placeholder={l10n.t('Enter Passphrase for Private Key')}
-                value={formik.values.sshPassphrase === true ? SECURITY_FIELD : formik.values.sshPassphrase ?? ''}
-                onChange={formik.handleChange}
-                onFocus={() => {
-                  if (formik.values.sshPassphrase === true) {
-                    formik.setFieldValue(
-                      'sshPassphrase',
-                      '',
-                    )
-                  }
-                }}
-                autoComplete="new-password"
-              />
-            </div>
+            <InputText
+              type="password"
+              name="sshPassphrase"
+              id="sshPassphrase"
+              label={{ text: l10n.t('Passphrase'), className: 'min-w-[100px]' }}
+              data-testid="sshPassphrase"
+              className="w-[256px]"
+              maxLength={50_000}
+              placeholder={l10n.t('Enter Passphrase for Private Key')}
+              value={formik.values.sshPassphrase === true ? SECURITY_FIELD : formik.values.sshPassphrase ?? ''}
+              onChange={formik.handleChange}
+              onFocus={() => {
+                if (formik.values.sshPassphrase === true) {
+                  formik.setFieldValue(
+                    'sshPassphrase',
+                    '',
+                  )
+                }
+              }}
+              autoComplete="new-password"
+            />
           </div>
         </>
         )}

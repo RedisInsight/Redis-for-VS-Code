@@ -9,7 +9,6 @@ import { Checkbox, Select } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {
-
   formik: FormikProps<DbConnectionInfo>
 }
 
@@ -63,16 +62,14 @@ const DbCompressor = (props: Props) => {
     <>
       {formik.values.showCompressor && !formik.values.showDb && (<VSCodeDivider className="divider mt-3 mb-3" />)}
       <div>
-        <div>
-          <Checkbox
-            id={`${id} over db compressor`}
-            name="showCompressor"
-            labelText={l10n.t('Enable automatic data decompression')}
-            checked={!!formik.values.showCompressor}
-            onChange={handleChangeDbCompressorCheckbox}
-            data-testid="showCompressor"
-          />
-        </div>
+        <Checkbox
+          id={`${id} over db compressor`}
+          name="showCompressor"
+          labelText={l10n.t('Enable automatic data decompression')}
+          checked={!!formik.values.showCompressor}
+          onChange={handleChangeDbCompressorCheckbox}
+          data-testid="showCompressor"
+        />
       </div>
 
       {formik.values.showCompressor && (

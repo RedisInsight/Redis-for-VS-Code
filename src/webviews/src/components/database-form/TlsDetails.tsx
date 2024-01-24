@@ -172,35 +172,31 @@ const TlsDetails = (props: Props) => {
 
           {formik.values.tls
             && formik.values.selectedCaCertName === ADD_NEW_CA_CERT && (
-              <div>
-                <div>
-                  <TextArea
-                    name="newCaCert"
-                    id="newCaCert"
-                    className="w-[256px]"
-                    label={{ text: l10n.t('Certificate*'), className: 'min-w-[100px]' }}
-                    value={formik.values.newCaCert ?? ''}
-                    onChange={formik.handleChange}
-                    placeholder={l10n.t('Enter CA Certificate')}
-                    data-testid="new-ca-cert"
-                  />
-                </div>
-              </div>
+            <div>
+              <TextArea
+                name="newCaCert"
+                id="newCaCert"
+                className="w-[256px]"
+                label={{ text: l10n.t('Certificate*'), className: 'min-w-[100px]' }}
+                value={formik.values.newCaCert ?? ''}
+                onChange={formik.handleChange}
+                placeholder={l10n.t('Enter CA Certificate')}
+                data-testid="new-ca-cert"
+              />
+            </div>
           )}
         </div>
       )}
       {formik.values.tls && (
         <div>
-          <div>
-            <Checkbox
-              id={`${id} is_tls_client_auth_required`}
-              name="tlsClientAuthRequired"
-              labelText={l10n.t('Requires TLS Client Authentication')}
-              checked={!!formik.values.tlsClientAuthRequired}
-              onChange={(e) => formik.setFieldValue('tlsClientAuthRequired', e.target.checked)}
-              data-testid="tls-required-checkbox"
-            />
-          </div>
+          <Checkbox
+            id={`${id} is_tls_client_auth_required`}
+            name="tlsClientAuthRequired"
+            labelText={l10n.t('Requires TLS Client Authentication')}
+            checked={!!formik.values.tlsClientAuthRequired}
+            onChange={(e) => formik.setFieldValue('tlsClientAuthRequired', e.target.checked)}
+            data-testid="tls-required-checkbox"
+          />
         </div>
       )}
       {formik.values.tls && formik.values.tlsClientAuthRequired && (

@@ -13,32 +13,28 @@ const PrimaryGroupSentinel = (props: Props) => {
   return (
     <>
       <div>
-        <div>
-          <InputText
-            name="name"
-            id="name"
-            data-testid="name"
-            placeholder={l10n.t('Enter Database Alias')}
-            label={{ text: l10n.t('Database Alias*') }}
-            value={formik.values.name ?? ''}
-            maxLength={500}
-            onChange={formik.handleChange}
-          />
-        </div>
+        <InputText
+          name="name"
+          id="name"
+          data-testid="name"
+          placeholder={l10n.t('Enter Database Alias')}
+          label={{ text: l10n.t('Database Alias*') }}
+          value={formik.values.name ?? ''}
+          maxLength={500}
+          onChange={formik.handleChange}
+        />
       </div>
       <div>
-        <div>
-          <InputText
-            name="sentinelMasterName"
-            id="sentinelMasterName"
-            data-testid="primary-group"
-            placeholder={l10n.t('Enter Primary Group Name')}
-            label={{ text: l10n.t('Primary Group Name*') }}
-            value={formik.values.sentinelMasterName ?? ''}
-            maxLength={500}
-            onChange={formik.handleChange}
-          />
-        </div>
+        <InputText
+          name="sentinelMasterName"
+          id="sentinelMasterName"
+          data-testid="primary-group"
+          placeholder={l10n.t('Enter Primary Group Name')}
+          label={{ text: l10n.t('Primary Group Name*') }}
+          value={formik.values.sentinelMasterName ?? ''}
+          maxLength={500}
+          onChange={formik.handleChange}
+        />
       </div>
     </>
   )

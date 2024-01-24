@@ -31,40 +31,36 @@ const DbIndex = (props: Props) => {
   return (
     <>
       <div>
-        <div>
-          <Checkbox
-            id={`${id} over db`}
-            name="showDb"
-            labelText={l10n.t('Select Logical Database')}
-            checked={!!formik.values.showDb}
-            onChange={handleChangeDbIndexCheckbox}
-            data-testid="showDb"
-          />
-        </div>
+        <Checkbox
+          id={`${id} over db`}
+          name="showDb"
+          labelText={l10n.t('Select Logical Database')}
+          checked={!!formik.values.showDb}
+          onChange={handleChangeDbIndexCheckbox}
+          data-testid="showDb"
+        />
       </div>
 
       {formik.values.showDb && (
-        <div>
-          <div className={cx('w-[200px]')}>
-            <InputText
-              name="db"
-              id="db"
-              label={{ text: l10n.t('Database Index'), className: 'min-w-[100px]' }}
-              data-testid="db"
-              placeholder={l10n.t('Enter Database Index')}
-              className="min-w-[256px]"
-              value={formik.values.db ?? '0'}
-              maxLength={6}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                formik.setFieldValue(
-                  e.target.name,
-                  validateNumber(e.target.value.trim()),
-                )
-              }}
-              type="text"
-              min={0}
-            />
-          </div>
+        <div className={cx('w-[200px]')}>
+          <InputText
+            name="db"
+            id="db"
+            label={{ text: l10n.t('Database Index'), className: 'min-w-[100px]' }}
+            data-testid="db"
+            placeholder={l10n.t('Enter Database Index')}
+            className="min-w-[256px]"
+            value={formik.values.db ?? '0'}
+            maxLength={6}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              formik.setFieldValue(
+                e.target.name,
+                validateNumber(e.target.value.trim()),
+              )
+            }}
+            type="text"
+            min={0}
+          />
         </div>
       )}
       {formik.values.showDb && (<VSCodeDivider className="divider mt-6 mb-3" />)}
