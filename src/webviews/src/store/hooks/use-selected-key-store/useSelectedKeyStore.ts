@@ -56,7 +56,7 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
 )
 
 // Asynchronous thunk action
-export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true) => {
+export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true, onSuccess?: () => void) => {
   useSelectedKeyStore.setState(async (state) => {
     state.processSelectedKey()
     try {
@@ -67,34 +67,13 @@ export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true) => {
       )
 
       if (isStatusSuccessful(status)) {
+        onSuccess?.()
         state.processSelectedKeySuccess(data)
         state.updateSelectedKeyRefreshTime(Date.now())
 
         if (fetchKeyValue) {
           fetchKeyValueByType(key, data.type)
         }
-      }
-    } catch (_err) {
-      const error = _err as AxiosError
-      console.debug({ error })
-    } finally {
-      state.processSelectedKeyFinal()
-    }
-  })
-}
-
-// Asynchronous thunk action
-export const checkKey = (key: RedisString, onSuccess?: () => void) => {
-  useSelectedKeyStore.setState(async (state) => {
-    state.processSelectedKey()
-    try {
-      const { status } = await apiService.post<KeyInfo>(
-        getUrl(ApiEndpoints.KEY_INFO),
-        { keyName: key },
-        { params: { encoding: getEncoding() } },
-      )
-      if (isStatusSuccessful(status)) {
-        onSuccess?.()
       }
     } catch (_err) {
       const error = _err as AxiosError

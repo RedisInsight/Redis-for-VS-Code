@@ -14,7 +14,7 @@ import { ExecuteCommand, AllKeyTypes, SCAN_TREE_COUNT_DEFAULT, VscodeMessageActi
 import { TelemetryEvent, executeCommand, sendEventTelemetry } from 'uiSrc/utils'
 import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString } from 'uiSrc/utils/formatters'
-import { AppDispatch, checkKey, useSelectedKeyStore } from 'uiSrc/store'
+import { AppDispatch, checkKey, fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 
 import { vscodeApi } from 'uiSrc/services'
 import { constructKeysToTree } from './utils/constructKeysToTree'
@@ -106,8 +106,7 @@ export const KeysTree = () => {
   }
 
   const handleStatusSelected = (name: RedisString) => {
-    checkKey(name, () => {
-      // todo: connection between webviews
+    fetchKeyInfo(name, false, () => {
       vscodeApi.postMessage({ action: VscodeMessageAction.SelectKey, data: name })
     })
   }
