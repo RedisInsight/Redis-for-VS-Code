@@ -51,6 +51,8 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
     )
     const viewRoute = this._route
 
+    const apiPort = this._context.globalState.get('API_PORT')
+
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce()
 
@@ -81,7 +83,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
         </script>
       </head>
       <body>
-        <div id="root" data-route="${viewRoute}"></div>
+        <div id="root" data-route="${viewRoute}" data-api-port="${apiPort}"></div>
         <script nonce="${nonce}" src="${scriptUri}"></script>
       </body>
       </html>`

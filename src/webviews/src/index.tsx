@@ -23,6 +23,7 @@ import '../vscode.css'
 
 const container = document.getElementById('root')
 const root = createRoot(container!)
+localStorage.setItem('apiPort', container?.dataset.apiPort as string)
 
 // if (root) {
 //   workspace = root.getAttribute('data-workspace') || ''
