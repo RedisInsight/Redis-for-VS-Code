@@ -30,7 +30,7 @@ describe('Actions with Key List', () => {
     await webView.switchBack()
   })
 
-  it('Verify that key deleted properly', async function () {
+  it('Verify that key deleted properly from the list', async function () {
     // Adding a string key
     const keyName = Common.generateWord(10)
     const keyValue = Common.generateWord(10)
