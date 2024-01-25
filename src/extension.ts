@@ -7,7 +7,7 @@ import { ViewId } from './constants'
 
 let myStatusBarItem: vscode.StatusBarItem
 export async function activate(context: vscode.ExtensionContext) {
-  await startBackend()
+  await startBackend(context)
   const sidebarProvider = new WebViewProvider('tree', context)
   const panelProvider = new WebViewProvider('cli', context)
 
@@ -37,7 +37,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisInsight.openPage', (args) => {
       WebviewPanel.getInstance({
-        extensionUri: context.extensionUri,
+        context,
         route: 'main/key',
         title: 'RedisInsight - Key details',
         viewId: ViewId.Key,
@@ -48,7 +48,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisInsight.addKeyOpen', (args) => {
       WebviewPanel.getInstance({
-        extensionUri: context.extensionUri,
+        context,
         route: 'main/add_key',
         title: 'RedisInsight - Add new key',
         viewId: ViewId.AddKey,
