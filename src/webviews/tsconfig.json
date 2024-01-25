@@ -30,19 +30,10 @@
     "skipLibCheck": true,
     "types": ["vitest/globals"],
     "paths": {
-      "uiSrc/*": [
-        "./src/*"
-      ],
-      "testSrc/*": [
-        "./test/*"
-      ],
+      "uiSrc/*": ["./src/*"],
+      "testSrc/*": ["./test/*"]
     }
   },
-  "include": [
-    "App.tsx",
-    "./**/*",
-  ],
-  "exclude": [
-    "node_modules",
-  ]
+  "include": ["App.tsx", "./**/*", "src/store/vscodeState.tsx"],
+  "exclude": ["node_modules"]
 }

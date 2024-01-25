@@ -1,6 +1,6 @@
 import { FixedSizeNodeData } from 'react-vtree'
-import { KeyTypes, ModulesKeyTypes } from 'uiSrc/constants'
-import { RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
+import { AllKeyTypes } from 'uiSrc/constants'
+import { RedisString } from 'uiSrc/interfaces'
 
 export interface TreeNode {
   children: TreeNode[]
@@ -36,13 +36,13 @@ export interface TreeData extends FixedSizeNodeData {
   isLeaf: boolean
   name: string
   nameString: string
-  nameBuffer: RedisResponseBuffer
+  nameBuffer: RedisString
   path: string
   keyCount: number
   keyApproximate: number
   fullName: string
   shortName?: string
-  type: KeyTypes | ModulesKeyTypes
+  type: AllKeyTypes
   ttl: number
   size: number
   nestingLevel: number
@@ -52,6 +52,6 @@ export interface TreeData extends FixedSizeNodeData {
   updateStatusOpen: (fullName: string, value: boolean) => void
   updateStatusSelected: (key: RedisString) => void
   getMetadata: (key: RedisString, path: string) => void
-  onDelete: (key: RedisResponseBuffer) => void
-  onDeleteClicked: (type: KeyTypes | ModulesKeyTypes) => void
+  onDelete: (key: RedisString) => void
+  onDeleteClicked: (type: AllKeyTypes) => void
 }

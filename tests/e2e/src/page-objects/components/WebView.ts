@@ -76,6 +76,7 @@ export enum Views {
   KeyTreeView,
   KeyDetailsView,
   CliViewPanel,
+  AddKeyView,
 }
 
 export const ViewLocators = {
@@ -85,10 +86,13 @@ export const ViewLocators = {
     "//div[contains(@data-parent-flow-to-element-id, 'webview-editor-element')]/iframe",
   [Views.CliViewPanel]:
     "//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]",
+  [Views.AddKeyView]:
+    "//div[contains(@data-parent-flow-to-element-id, 'webview-editor-element')]/iframe",
 }
 
 export const ViewElements = {
   [Views.KeyTreeView]: `//div[@data-testid='tree-view-page']`,
   [Views.KeyDetailsView]: `//*[@data-testid='key-details-page']`,
   [Views.CliViewPanel]: `//*[@data-testid='panel-view-page']`,
+  [Views.AddKeyView]: `//*[@data-testid='select-key-type']`,
 }

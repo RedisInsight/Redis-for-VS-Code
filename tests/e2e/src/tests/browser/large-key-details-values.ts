@@ -8,6 +8,7 @@ import {
   KeyTreeView,
   ListKeyDetailsView,
   HashKeyDetailsView,
+  SetKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
@@ -20,7 +21,9 @@ import {
   ListKeyParameters,
   HashKeyParameters,
   SortedSetKeyParameters,
+  SetKeyParameters,
 } from '@e2eSrc/helpers/types/types'
+import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 
 let keyName: string
 
@@ -32,6 +35,7 @@ describe('Large key details verification', () => {
   let hashKeyDetailsView: HashKeyDetailsView
   let keyTreeView: KeyTreeView
   let listKeyDetailsView: ListKeyDetailsView
+  let setKeyDetailsView: SetKeyDetailsView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -41,6 +45,7 @@ describe('Large key details verification', () => {
     hashKeyDetailsView = new HashKeyDetailsView()
     keyTreeView = new KeyTreeView()
     listKeyDetailsView = new ListKeyDetailsView()
+    setKeyDetailsView = new SetKeyDetailsView()
 
     await browser.waitForWorkbench(20_000)
   })
@@ -181,6 +186,47 @@ describe('Large key details verification', () => {
     )
     // Verify that user can collapse a row of list data type
     newSize = await elementValueCell.getRect()
+    expect(newSize.height).eql(rowHeight, 'Row is not collapsed')
+  })
+  it('Verify that user can expand/collapse for set data type', async function () {
+    keyName = Common.generateWord(20)
+
+    const setKeyParameters: SetKeyParameters = {
+      keyName: keyName,
+      members: [
+        'wqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsa',
+      ],
+    }
+
+    await KeyAPIRequests.addSetKeyApi(
+      setKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+
+    // Open key details iframe
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+    const memberValueCell = await setKeyDetailsView.getElement(
+      setKeyDetailsView.setFieldsList,
+    )
+    const size = await memberValueCell.getRect()
+    const rowHeight = size.height
+
+    await ButtonsActions.clickAndWaitForElement(
+      setKeyDetailsView.setFieldsList,
+      setKeyDetailsView.truncatedValue,
+      false,
+    )
+
+    let newSize = await memberValueCell.getRect()
+    expect(newSize.height).gt(rowHeight, 'Row is not expanded')
+
+    await ButtonsActions.clickAndWaitForElement(
+      setKeyDetailsView.setFieldsList,
+      setKeyDetailsView.truncatedValue,
+    )
+
+    newSize = await memberValueCell.getRect()
     expect(newSize.height).eql(rowHeight, 'Row is not collapsed')
   })
 })

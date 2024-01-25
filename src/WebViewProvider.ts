@@ -2,25 +2,22 @@ import * as vscode from 'vscode'
 import { getNonce, handleMessage } from './utils'
 
 export class WebViewProvider implements vscode.WebviewViewProvider {
-  _view?: vscode.WebviewView
-
   _doc?: vscode.TextDocument
 
   constructor(
     private readonly _route: string,
     private readonly _context: vscode.ExtensionContext,
+    public view?: vscode.WebviewView,
   ) { }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
-    this._view = webviewView
+    this.view = webviewView
 
     webviewView.webview.options = {
       // Allow scripts in the webview
       enableScripts: true,
-
       localResourceRoots: [this._context.extensionUri],
     }
-
     // todo: connection between webviews
     webviewView.webview.onDidReceiveMessage(
       handleMessage,
@@ -32,15 +29,25 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
   }
 
   public revive(panel: vscode.WebviewView) {
-    this._view = panel
+    this.view = panel
   }
 
   private _getHtmlForWebview(webview: vscode.Webview) {
     const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._context.extensionUri, 'dist', 'webviews', 'style.css'),
+      vscode.Uri.joinPath(
+        this._context.extensionUri,
+        'dist',
+        'webviews',
+        'style.css',
+      ),
     )
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._context.extensionUri, 'dist', 'webviews', 'index.mjs'),
+      vscode.Uri.joinPath(
+        this._context.extensionUri,
+        'dist',
+        'webviews',
+        'index.mjs',
+      ),
     )
     const viewRoute = this._route
 

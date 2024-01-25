@@ -19,7 +19,7 @@ export const constructKeysToTree = (props: Props): any[] => {
     const nameSplitted = name.split(delimiter)
     const lastIndex = nameSplitted.length - 1
 
-    nameSplitted.forEach((value:any, index: number) => {
+    nameSplitted.forEach((value: any, index: number) => {
       // create a key leaf
       if (index === lastIndex) {
         // eslint-disable-next-line prefer-object-spread
@@ -35,7 +35,7 @@ export const constructKeysToTree = (props: Props): any[] => {
   const ids: any = {}
 
   // common functions
-  const getUniqueId = ():number | string => {
+  const getUniqueId = (): number | string => {
     const candidateId = Math.random().toString(36)
 
     if (ids[candidateId]) {
@@ -89,7 +89,7 @@ export const constructKeysToTree = (props: Props): any[] => {
           delimiter,
           path,
         )
-        node.keyCount = node.children.reduce((a: any, b:any) => a + (b.keyCount || 1), 0)
+        node.keyCount = node.children.reduce((a: any, b: any) => a + (b.keyCount || 1), 0)
         node.keyApproximate = (node.keyCount / keys.length) * 100
       } else {
         // populate leaf

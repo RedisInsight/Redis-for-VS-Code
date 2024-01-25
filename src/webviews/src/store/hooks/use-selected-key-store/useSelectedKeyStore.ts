@@ -7,6 +7,7 @@ import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService, localStorageService } from 'uiSrc/services'
 import {
   ApiEndpoints,
+  DEFAULT_SEARCH_MATCH,
   DEFAULT_VIEW_FORMAT,
   KeyTypes,
   SCAN_COUNT_DEFAULT,
@@ -14,7 +15,7 @@ import {
   SortOrder,
   StorageItem,
 } from 'uiSrc/constants'
-import { bufferToString, getEncoding, getUrl, isStatusSuccessful } from 'uiSrc/utils'
+import { bufferToString, getApiErrorMessage, getEncoding, getUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { fetchString } from 'uiSrc/modules'
 import { fetchHashFields } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
 import { fetchZSetMembers } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
@@ -23,6 +24,7 @@ import {
   fetchSearchingListElement,
   useListStore,
 } from 'uiSrc/modules/key-details/components/list-details/hooks/useListStore'
+import { fetchSetMembers } from 'uiSrc/modules/key-details/components/set-details/hooks/useSetStore'
 import { SelectedKeyActions, SelectedKeyStore } from './interface'
 
 export const initialState: SelectedKeyStore = {
@@ -101,7 +103,8 @@ export const refreshKeyInfo = (key: RedisString, fetchKeyValue = true) => {
       }
     } catch (_err) {
       const error = _err as AxiosError
-      console.debug({ error })
+      const errorMessage = getApiErrorMessage(error)
+      showErrorMessage(errorMessage)
     } finally {
       state.refreshSelectedKeyFinal()
     }
@@ -162,9 +165,9 @@ export const fetchKeyValueByType = (key: RedisString, type?: KeyTypes) => {
       fetchListElements(key, 0, SCAN_COUNT_DEFAULT)
     }
   }
-  // if (type === KeyTypes.Set) {
-  //   dispatch<any>(fetchSetMembers(key, 0, SCAN_COUNT_DEFAULT, '*', resetData))
-  // }
+  if (type === KeyTypes.Set) {
+    fetchSetMembers(key, 0, SCAN_COUNT_DEFAULT, DEFAULT_SEARCH_MATCH)
+  }
   // if (type === KeyTypes.ReJSON) {
   //   dispatch<any>(fetchReJSON(key, '.', resetData))
   // }

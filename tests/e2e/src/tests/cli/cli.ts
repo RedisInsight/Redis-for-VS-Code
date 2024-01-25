@@ -14,6 +14,7 @@ import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
 
 describe('CLI critical', () => {
   let browser: VSBrowser
@@ -182,5 +183,43 @@ describe('CLI critical', () => {
     await CommonDriverExtension.driverSleep(2000)
     const text = await cliViewPanel.getCliText()
     expect(text).contain('Executing command...')
+  })
+  it('Verify that user can switch between CLI instances', async function () {
+    const dbAddress = Config.ossStandaloneConfig.host + ':' + Config.ossStandaloneConfig.port
+    const text = await cliViewPanel.getCliText()
+    // Verify that user can see db instance host and port in CLI
+    expect(text).contain(`Pinging Redis server on ${dbAddress}`)
+
+    await cliViewPanel.executeCommand('info')
+    await webView.switchBack()
+
+    await ButtonsActions.clickElement(cliViewPanel.addCliBtn, 5000)
+
+    await webView.switchToFrame(Views.CliViewPanel)
+    // Verify that user can see the list of all active CLI instances
+    expect(await cliViewPanel.getCliInstancesCount()).eql(2)
+    expect(
+      await cliViewPanel.getElementText(cliViewPanel.cliInstanceByIndex(1)),
+    ).eql(
+      dbAddress,
+    )
+    expect(
+      await cliViewPanel.getElementText(cliViewPanel.cliInstanceByIndex(2)),
+    ).eql(
+      dbAddress,
+    )
+
+    await ButtonsActions.clickElement(cliViewPanel.cliInstanceByIndex(1))
+    // Verify that user can switch between CLI instances
+    expect(await cliViewPanel.getCliLastCommandResponse()).contain(
+      'redis_version:',
+    )
+
+    // Verify that user can not see CLI instances panel when only one instance added
+    await ButtonsActions.hoverElement(cliViewPanel.cliInstanceByIndex(1))
+    await ButtonsActions.clickElement(cliViewPanel.cliInstanceDeleteBtn)
+    expect(
+      await cliViewPanel.isElementDisplayed(cliViewPanel.cliInstancesPanel),
+    ).eql(false, 'CLI instances panel displayed after deleting')
   })
 })

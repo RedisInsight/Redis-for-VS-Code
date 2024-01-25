@@ -1,6 +1,6 @@
 import { createBrowserHistory } from 'history'
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import keysReducer from 'uiSrc/modules/keys-tree/slice/keys.slice'
+import keysReducer from 'uiSrc/slices/browser/keys.slice'
 import userSettingsReducer from 'uiSrc/slices/user/user-settings.slice'
 import appInfoReducer from 'uiSrc/slices/app/info/info.slice'
 import appRedisCommandsReducer from 'uiSrc/slices/app/commands/redis-commands.slice'

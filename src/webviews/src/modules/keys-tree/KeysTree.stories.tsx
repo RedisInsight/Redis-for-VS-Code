@@ -6,7 +6,7 @@ import { HttpResponse, http } from 'msw'
 import { rootReducers, store } from 'uiSrc/store'
 import { getMWSUrl, constants } from 'testSrc/helpers'
 import { KeysTree } from './KeysTree'
-import { initialState as initialStateKeys } from './slice/keys.slice'
+import { initialState as initialStateKeys } from '../../slices/browser/keys.slice'
 
 type Story = StoryObj<typeof KeysTree>
 

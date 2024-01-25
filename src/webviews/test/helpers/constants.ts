@@ -1,6 +1,6 @@
 import { DEFAULT_SEARCH_MATCH, KeyTypes } from 'uiSrc/constants'
 import { KeyInfo } from 'uiSrc/interfaces'
-import { UTF8ToArray } from 'uiSrc/utils'
+import { UTF8ToArray, stringToBuffer } from 'uiSrc/utils'
 
 const TEST_KEYS = [
   { name: UTF8ToArray('keys:1:2') },
@@ -33,6 +33,10 @@ export const constants = {
 
   get KEY_INFO() {
     return KEY_INFO
+  },
+
+  get KEYS_LIST() {
+    return KEYS_LIST
   },
 
   // key 1 string
@@ -88,12 +92,27 @@ export const constants = {
   KEY_4_ELEMENT: UTF8ToArray('element'),
   KEY_4_ELEMENT_2: UTF8ToArray('element2'),
 
+  // key 5 set
+  KEY_NAME_SET_5: 'key5',
+  KEY_NAME_5: UTF8ToArray('key5'),
+  KEY_TYPE_5: KeyTypes.Set,
+  KEY_TTL_5: -1,
+  KEY_LENGTH_5: 5,
+  KEY_SIZE_5: 10_000,
+  KEY_5_MEMBER: UTF8ToArray('member'),
+  KEY_5_MEMBER_2: UTF8ToArray('member2'),
+  KEY_5_MEMBER_3: UTF8ToArray('member3'),
+
   get LIST_DATA_RESPONSE() {
     return LIST_DATA_RESPONSE
   },
 
   get LIST_DATA() {
     return LIST_DATA
+  },
+
+  get SET_DATA() {
+    return SET_DATA
   },
 }
 
@@ -128,11 +147,40 @@ const LIST_DATA_RESPONSE = {
   nextCursor: 0,
 }
 
+const SET_DATA = {
+  keyName: constants.KEY_NAME_5,
+  members: [constants.KEY_5_MEMBER, constants.KEY_5_MEMBER_2],
+  total: constants.KEY_LENGTH_5,
+  nextCursor: 0,
+  match: DEFAULT_SEARCH_MATCH,
+}
+
 const LIST_DATA = {
   ...LIST_DATA_RESPONSE,
   searchedIndex: null,
   elements: [
     { element: constants.KEY_4_ELEMENT, index: constants.KEY_4_INDEX },
     { element: constants.KEY_4_ELEMENT_2, index: constants.KEY_4_INDEX_2 },
+  ],
+}
+
+const KEYS_LIST: any = {
+  total: 249,
+  nextCursor: '228',
+  previousResultCount: 0,
+  lastRefreshTime: 0,
+  keys: [
+    {
+      name: stringToBuffer(constants.KEY_NAME_1),
+      type: constants.KEY_TYPE_1,
+      ttl: constants.KEY_TTL_1,
+      size: constants.KEY_SIZE_1,
+    },
+    {
+      name: stringToBuffer(constants.KEY_NAME_2),
+      type: constants.KEY_TYPE_2,
+      ttl: constants.KEY_TTL_2,
+      size: constants.KEY_SIZE_2,
+    },
   ],
 }

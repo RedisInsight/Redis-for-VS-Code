@@ -5,10 +5,11 @@ import * as l10n from '@vscode/l10n'
 import { VscFolder, VscFolderOpened, VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 
 import { formatLongName } from 'uiSrc/utils'
+import { Maybe, RedisString } from 'uiSrc/interfaces'
 import { KeyRowName } from '../key-row-name'
+import { KeyRowDelete } from '../key-row-delete'
 import { KeyRowType } from '../key-row-type'
 import { TreeData } from '../virtual-tree/interfaces'
-import { PADDING_LEFT, PADDING_LEVEL } from '../../constants'
 import styles from './styles.module.scss'
 
 // Node component receives all the data we created in the `treeWalker` +
@@ -34,6 +35,8 @@ export const Node = ({
     nameString,
     keyApproximate,
     isSelected,
+    onDelete,
+    onDeleteClicked,
     getMetadata,
     updateStatusOpen,
     updateStatusSelected,
@@ -69,6 +72,14 @@ export const Node = ({
     }
   }
 
+  const handleDelete = (nameBuffer: RedisString) => {
+    onDelete?.(nameBuffer)
+  }
+
+  const handleDeletePopoverOpen = () => {
+    onDeleteClicked?.(type)
+  }
+
   const folderTooltipContent = `${formatLongName(nameString)}\n`
     + `${keyCount} ${l10n.t('key(s)')} (${Math.round(keyApproximate * 100) / 100}%)`
 
@@ -99,34 +110,41 @@ export const Node = ({
     <div className="flex truncate h-full">
       <KeyRowName shortString={shortName} nameString={nameString} />
       <KeyRowType type={type} nameString={nameString} />
+      <KeyRowDelete
+        nameBuffer={nameBuffer}
+        nameString={nameString}
+        handleDelete={handleDelete}
+        handleDeletePopoverOpen={handleDeletePopoverOpen}
+      />
     </div>
   )
 
   const NestingLevels = (): ReactNode => {
     if (!nestingLevel) {
-      return null
+      return <div className={styles.nestingLevel} />
     }
     const levels = Array.from({ length: nestingLevel })
-    return levels.map((_, i) => {
-      const left = ((nestingLevel - i) || 1) * PADDING_LEVEL - 2
-      return (
-        <div
-          key={left}
-          className={cx(styles.nestingLevel)}
-          style={{ left }}
-        />
-      )
-    })
+    return (
+      <>
+        <div className={styles.nestingLevel} />
+        {levels.map(() => (
+          <div
+            key={Math.random()}
+            className={styles.nestingLevel}
+          />
+        ))}
+      </>
+    )
   }
 
   const Node = (
     <div
-      className={cx(styles.nodeContent)}
+      className={cx(styles.nodeContent, 'group')}
       role="treeitem"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
-      onFocus={() => {}}
+      onFocus={() => { }}
       data-testid={`node-item_${fullName}${isOpen && !isLeaf ? '--expanded' : ''}`}
     >
       {!isLeaf && <Folder />}
@@ -136,10 +154,7 @@ export const Node = ({
 
   return (
     <div
-      style={{
-        ...style,
-        paddingLeft: (nestingLevel * PADDING_LEVEL) + PADDING_LEFT,
-      }}
+      style={{ ...style }}
       className={cx(
         styles.nodeContainer, {
           [styles.nodeSelected]: isSelected && isLeaf,

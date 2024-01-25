@@ -1,12 +1,12 @@
 import React from 'react'
 import { NodePublicState } from 'react-vtree/dist/es/Tree'
 import { instance, mock } from 'ts-mockito'
-import { screen } from '@testing-library/react'
 import { stringToBuffer } from 'uiSrc/utils'
 import { KeyTypes } from 'uiSrc/constants'
-import { render } from 'testSrc/helpers'
+import { render, screen, fireEvent, waitForStack } from 'testSrc/helpers'
 import { Node } from './Node'
 import { TreeData } from '../virtual-tree/interfaces'
+import * as useKeys from '../../hooks/useKeys'
 // import { mockVirtualTreeResult } from '../virtual-tree/VirtualTree.spec'
 
 const mockDataFullName = 'test'
@@ -29,10 +29,7 @@ const mockedDataWithMetadata = {
   size: 123,
 }
 
-// vi.mock('uiSrc/services', () => ({
-//   ...(await vi.importActual('uiSrc/services'),
-//   useDisposableWebworker: () => ({ result: mockVirtualTreeResult, run: vi.fn() }),
-// }))
+vi.spyOn(useKeys, 'deleteKeyAction')
 
 describe('Node', () => {
   it('should render', () => {
@@ -144,5 +141,25 @@ describe('Node', () => {
     expect(mockUpdateStatusSelected).not.toBeCalled()
     expect(mockUpdateStatusOpen).toHaveBeenCalledWith(mockDataFullName, !mockIsOpen)
     expect(mockSetOpen).toBeCalledWith(!mockIsOpen)
+  })
+
+  it('should call onDelete and onDeleteClicked after click on trash icon', async () => {
+    const mockDelete = vi.fn()
+    const mockDeleteClicked = vi.fn()
+    const mockData: TreeData = {
+      ...mockedData,
+      isLeaf: true,
+      fullName: mockDataFullName,
+      onDelete: mockDelete,
+      onDeleteClicked: mockDeleteClicked,
+    }
+
+    render(<Node {...instance(mockedProps)} data={mockData} />)
+
+    fireEvent.click(screen.getByTestId(`remove-key-${mockDataFullName}-icon`))
+    fireEvent.click(screen.getByTestId(`remove-key-${mockDataFullName}`))
+    await waitForStack()
+    expect(mockDeleteClicked).toBeCalled()
+    expect(mockDelete).toBeCalled()
   })
 })
