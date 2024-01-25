@@ -12,14 +12,7 @@ export interface Props extends InputHTMLAttributes<HTMLInputElement> {
 
 export const Checkbox: FC<Props> = (props) => {
   const { className, labelText } = props
-  // const inputEl = (
-  //   <input
-  //     {...omit(props, 'inputRef', 'labelText')}
-  //     type="checkbox"
-  //     ref={inputRef}
-  //     className={cx(styles.input, className)}
-  //   />
-  // )
+
   return (
     <VSCodeCheckbox
       {...omit(props, 'inputRef', 'labelText')}

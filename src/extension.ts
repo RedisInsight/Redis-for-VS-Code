@@ -59,7 +59,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisInsight.addDatabase', (args) => {
       WebviewPanel.getInstance({
-        extensionUri: context.extensionUri,
+        context,
         route: 'main/add_database',
         title: 'RedisInsight - Add Database connection',
         viewId: ViewId.AddDatabase,
@@ -70,7 +70,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisInsight.editDatabase', (args) => {
       WebviewPanel.getInstance({
-        extensionUri: context.extensionUri,
+        context,
         route: 'main/edit_database',
         title: 'RedisInsight - Edit Database connection',
         viewId: ViewId.EditDatabase,
