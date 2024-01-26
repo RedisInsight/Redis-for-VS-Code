@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
-import { isNull, isUndefined } from 'lodash'
+import { isNull } from 'lodash'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService, localStorageService } from 'uiSrc/services'
 import {
@@ -56,7 +56,7 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
 )
 
 // Asynchronous thunk action
-export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true) => {
+export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true, onSuccess?: () => void) => {
   useSelectedKeyStore.setState(async (state) => {
     state.processSelectedKey()
     try {
@@ -67,6 +67,7 @@ export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true) => {
       )
 
       if (isStatusSuccessful(status)) {
+        onSuccess?.()
         state.processSelectedKeySuccess(data)
         state.updateSelectedKeyRefreshTime(Date.now())
 
@@ -76,7 +77,8 @@ export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true) => {
       }
     } catch (_err) {
       const error = _err as AxiosError
-      console.debug({ error })
+      const errorMessage = getApiErrorMessage(error)
+      showErrorMessage(errorMessage)
     } finally {
       state.processSelectedKeyFinal()
     }

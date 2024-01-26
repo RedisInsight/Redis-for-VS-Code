@@ -131,6 +131,10 @@ describe('Key Details verifications', () => {
       stringKeyDetailsView.keyStringValue,
     )
 
+    await stringKeyDetailsView.clickCopyKeyName()
+    const clipboard = await navigator.clipboard.read()
+    expect(clipboard).contain(keyName, 'Name is not copied to clipboard')
+
     expect(keyType).contain('String', 'Type is incorrect')
     expect(enteredKeyName).eq(keyName, 'Name is incorrect')
     expect(keySize).greaterThan(0, 'Size is 0')
