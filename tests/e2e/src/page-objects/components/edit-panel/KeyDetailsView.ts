@@ -34,10 +34,17 @@ export class KeyDetailsView extends BaseComponent {
       `//*[contains(@data-testid, "${keyType}-remove-btn-") and not(contains(@data-testid, "-icon"))]`,
     )
 
+  copyButton = By.xpath(`//vscode-button[starts-with(@data-testid, 'copy-name-button')]`)
+
   removeButton = (keyType: string, name: string): By =>
     By.xpath(
       `, //*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"]]`,
     )
+
+  detailsDeleteKeyButton = By.xpath(`//vscode-button[starts-with(@data-testid, 'remove-key-')]`)
+  submitDetailsDeleteKeyButton = By.xpath(
+    `//div[@class='popup-content ']${this.detailsDeleteKeyButton}`,
+  )
 
   constructor() {
     super(By.xpath(ViewLocators[Views.KeyDetailsView]))
@@ -102,6 +109,15 @@ export class KeyDetailsView extends BaseComponent {
   }
 
   /**
+   * Click on copy button
+   */
+  async clickCopyKeyName(
+  ): Promise<void> {
+    const element = await this.getElement(this.copyButton)
+    await element.click()
+  }
+
+  /**
    * Remove row by field
    * @param keyType The key type
    * @param name The field value
@@ -137,5 +153,10 @@ export class KeyDetailsView extends BaseComponent {
       await this.removeRowByField(keyType, name)
       await this.clickRemoveRowButtonByField(keyType, name)
     }
+  }
+
+  async removeKeyFromDetailedView(): Promise<void> {
+    await (await this.getElement(this.detailsDeleteKeyButton)).click()
+    await (await this.getElement(this.submitDetailsDeleteKeyButton)).click()
   }
 }
