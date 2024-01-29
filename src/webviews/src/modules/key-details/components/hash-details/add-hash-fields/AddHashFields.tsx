@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 
@@ -12,6 +11,7 @@ import { useSelectedKeyStore } from 'uiSrc/store'
 import { IHashFieldState, INITIAL_HASH_FIELD_STATE } from 'uiSrc/modules/add-key'
 import { InputText } from 'uiSrc/ui'
 
+import { clearFieldValueById, addNewField, handleFieldChange, removeField } from './utils'
 import { AddFieldsToHashDto } from '../hooks/interface'
 import { updateHashFieldsAction, useHashStore } from '../hooks/useHashStore'
 
@@ -41,34 +41,6 @@ const AddHashFields = (props: Props) => {
     lastAddedFieldName.current?.focus()
   }, [fields.length])
 
-  const addField = () => {
-    const lastField = fields[fields.length - 1]
-    const newState = [
-      ...fields,
-      {
-        ...INITIAL_HASH_FIELD_STATE,
-        id: lastField.id + 1,
-      },
-    ]
-    setFields(newState)
-  }
-
-  const removeField = (id: number) => {
-    const newState = fields.filter((item) => item.id !== id)
-    setFields(newState)
-  }
-
-  const clearFieldsValues = (id: number) => {
-    const newState = fields.map((item) => (item.id === id
-      ? {
-        ...item,
-        fieldName: '',
-        fieldValue: '',
-      }
-      : item))
-    setFields(newState)
-  }
-
   const onSuccessAdded = () => {
     onCancel()
     sendEventTelemetry({
@@ -79,19 +51,6 @@ const AddHashFields = (props: Props) => {
         numberOfAdded: fields.length,
       },
     })
-  }
-
-  const handleFieldChange = (formField: string, id: number, value: any) => {
-    const newState = fields.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          [formField]: value,
-        }
-      }
-      return item
-    })
-    setFields(newState)
   }
 
   const submitData = (): void => {
@@ -124,7 +83,7 @@ const AddHashFields = (props: Props) => {
                     disabled={loading}
                     className="h-11"
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleFieldChange('fieldName', item.id, e.target.value)}
+                      setFields(handleFieldChange(fields, 'fieldName', item.id, e.target.value))}
                     inputRef={index === fields.length - 1 ? lastAddedFieldName : null}
                     data-testid={`hash-field-${index}`}
                   />
@@ -138,7 +97,7 @@ const AddHashFields = (props: Props) => {
                     disabled={loading}
                     className="h-11"
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleFieldChange('fieldValue', item.id, e.target.value)}
+                      setFields(handleFieldChange(fields, 'fieldValue', item.id, e.target.value))}
                     data-testid={`hash-value-${index}`}
                   />
                 </div>
@@ -147,9 +106,9 @@ const AddHashFields = (props: Props) => {
                 id={item.id}
                 index={index}
                 length={fields.length}
-                addItem={addField}
-                removeItem={removeField}
-                clearItemValues={clearFieldsValues}
+                addItem={() => setFields(addNewField(fields))}
+                removeItem={(id) => setFields(removeField(fields, id))}
+                clearItemValues={(id) => setFields(clearFieldValueById(fields, id))}
                 clearIsDisabled={isClearDisabled(item)}
                 loading={loading}
               />
