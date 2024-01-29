@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
+import * as l10n from '@vscode/l10n'
 
 import { KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
 import { useSelectedKeyStore } from 'uiSrc/store'
 import { HashDetailsTable } from './hash-details-table'
-// import { AddHashFields } from './add-hash-fields'
+import { AddHashFields } from './add-hash-fields'
 import { AddItemsAction } from '../key-details-actions'
 
 export interface Props extends KeyDetailsHeaderProps {
   onOpenAddItemPanel: () => void
-  onCloseAddItemPanel: () => void
+  onCloseAddItemPanel: (isCancelled: boolean) => void
 }
 
 const HashDetails = (props: Props) => {
@@ -26,13 +27,13 @@ const HashDetails = (props: Props) => {
     onOpenAddItemPanel()
   }
 
-  const closeAddItemPanel = () => {
+  const closeAddItemPanel = (isCancelled = false) => {
     setIsAddItemPanelOpen(false)
-    onCloseAddItemPanel()
+    onCloseAddItemPanel(isCancelled)
   }
 
   const Actions = () => (
-    <AddItemsAction title="Add Fields" openAddItemPanel={openAddItemPanel} />
+    <AddItemsAction title={l10n.t('Add Fields')} openAddItemPanel={openAddItemPanel} />
   )
 
   return (
@@ -51,7 +52,7 @@ const HashDetails = (props: Props) => {
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            {/* <AddHashFields onCancel={closeAddItemPanel} /> */}
+            <AddHashFields onCancel={closeAddItemPanel} />
           </div>
         )}
       </div>
