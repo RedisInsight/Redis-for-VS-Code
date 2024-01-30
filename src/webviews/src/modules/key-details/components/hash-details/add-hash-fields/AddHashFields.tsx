@@ -4,14 +4,21 @@ import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 
 import { KeyTypes } from 'uiSrc/constants'
-import { sendEventTelemetry, TelemetryEvent, stringToBuffer } from 'uiSrc/utils'
+import {
+  sendEventTelemetry,
+  TelemetryEvent,
+  stringToBuffer,
+  setEmptyItemById,
+  addNewItem,
+  handleItemChange,
+  removeItem,
+} from 'uiSrc/utils'
 import { AddItemsActions } from 'uiSrc/components'
 import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 import { useSelectedKeyStore } from 'uiSrc/store'
 import { IHashFieldState, INITIAL_HASH_FIELD_STATE } from 'uiSrc/modules/add-key'
 import { InputText } from 'uiSrc/ui'
 
-import { clearFieldValueById, addNewField, handleFieldChange, removeField } from './utils'
 import { AddFieldsToHashDto } from '../hooks/interface'
 import { updateHashFieldsAction, useHashStore } from '../hooks/useHashStore'
 
@@ -83,7 +90,7 @@ const AddHashFields = (props: Props) => {
                     disabled={loading}
                     className="h-11"
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      setFields(handleFieldChange(fields, 'fieldName', item.id, e.target.value))}
+                      setFields(handleItemChange(fields, 'fieldName', item.id, e.target.value))}
                     inputRef={index === fields.length - 1 ? lastAddedFieldName : null}
                     data-testid={`hash-field-${index}`}
                   />
@@ -97,7 +104,7 @@ const AddHashFields = (props: Props) => {
                     disabled={loading}
                     className="h-11"
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      setFields(handleFieldChange(fields, 'fieldValue', item.id, e.target.value))}
+                      setFields(handleItemChange(fields, 'fieldValue', item.id, e.target.value))}
                     data-testid={`hash-value-${index}`}
                   />
                 </div>
@@ -106,9 +113,14 @@ const AddHashFields = (props: Props) => {
                 id={item.id}
                 index={index}
                 length={fields.length}
-                addItem={() => setFields(addNewField(fields))}
-                removeItem={(id) => setFields(removeField(fields, id))}
-                clearItemValues={(id) => setFields(clearFieldValueById(fields, id))}
+                addItem={() => setFields(addNewItem(fields, INITIAL_HASH_FIELD_STATE))}
+                removeItem={(id) => setFields(removeItem(fields, id))}
+                clearItemValues={(id) =>
+                  setFields(setEmptyItemById(fields, id, {
+                    ...item,
+                    fieldName: '',
+                    fieldValue: '',
+                  }))}
                 clearIsDisabled={isClearDisabled(item)}
                 loading={loading}
               />

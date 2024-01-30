@@ -7,3 +7,7 @@ export type Maybe<T> = T | undefined
  * The value can have NULL value
  */
 export type Nullable<T> = T | null
+
+export interface WithId {
+  id: number
+}
