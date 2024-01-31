@@ -2,7 +2,13 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as dotenv from 'dotenv'
 
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
+dotenv.config({
+  path: [
+    path.join(__dirname, '..', '.env.local'),
+    path.join(__dirname, '..', '.env'),
+  ]
+});
+
 const bootstrapFilePath = path.join(__dirname, '..', 'dist', 'server', 'bootstrapBackend.js')
 
 const replaceEnvVariables = () => {
