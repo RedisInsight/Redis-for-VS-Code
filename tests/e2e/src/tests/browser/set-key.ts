@@ -53,7 +53,7 @@ describe('Set Key fields verification', () => {
       setKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    // Add fields to the hash key
+    // Add fields to the Set key
     await KeyActions.populateSetWithMembers(
       Config.ossStandaloneConfig.host,
       Config.ossStandaloneConfig.port,
@@ -73,6 +73,7 @@ describe('Set Key fields verification', () => {
     await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
     await ButtonsActions.clickElement(keyDetailsView.keyRefresh)
 
+    // Verify that user can remove member from Set
     await keyDetailsView.removeRowByField(KeyTypesShort.Set, keyFieldValue)
     await keyDetailsView.clickRemoveRowButtonByField(
       KeyTypesShort.Set,
