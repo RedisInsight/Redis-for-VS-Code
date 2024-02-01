@@ -76,7 +76,7 @@ interface IHashField extends HashField {}
 
 export interface Props {
   isFooterOpen: boolean
-  onRemoveKey: () => void
+  onRemoveKey?: () => void
 }
 
 const HashDetailsTable = (props: Props) => {
@@ -145,7 +145,7 @@ const HashDetailsTable = (props: Props) => {
   }, [])
 
   const onSuccessRemoved = (newTotalValue: number) => {
-    newTotalValue === 0 && onRemoveKey()
+    newTotalValue === 0 && onRemoveKey?.()
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_REMOVED,
       eventData: {
@@ -189,7 +189,7 @@ const HashDetailsTable = (props: Props) => {
       keyName: key!,
       fields: [{ field, value: stringToSerializedBufferFormat(viewFormat, areaValue) }],
     }
-    updateHashFieldsAction(data, () => onHashEditedSuccess(field))
+    updateHashFieldsAction(data, false, () => onHashEditedSuccess(field))
   }
 
   const onHashEditedSuccess = (fieldName: RedisString = '') => {

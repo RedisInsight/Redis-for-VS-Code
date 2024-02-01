@@ -1,7 +1,5 @@
 .container {
-  @apply px-3 py-1 min-w-full relative;
-  min-height: 80px;
-  /* padding: 18px 18px 12px 18px; */
+  @apply px-4 py-1 min-w-full relative min-h-20;
   border-bottom: 1px solid;
 }
 
@@ -19,11 +17,10 @@
 }
 
 .closeBtn {
-  padding-top: 0 !important;
+  @apply pt-0;
 
   svg {
-    width: 20px;
-    height: 20px;
+    @apply w-4 h-4;
   }
 }
 
@@ -37,15 +34,12 @@
 
 
 .subtitleActionBtns {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  @apply flex justify-end items-center;
   right: 13px;
 }
 
 
 .actionBtn {
-  margin-right: 12px;
-  position: relative;
+  @apply mr-3 relative;
   z-index: 2;
 }

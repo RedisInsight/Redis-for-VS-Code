@@ -90,6 +90,7 @@ describe('ZSet Key fields verification', () => {
     await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
     await ButtonsActions.clickElement(keyDetailsView.keyRefresh)
 
+    // Verify that user can remove member from ZSet
     await keyDetailsView.removeRowByField(KeyTypesShort.ZSet, keyFieldValue)
     await keyDetailsView.clickRemoveRowButtonByField(
       KeyTypesShort.ZSet,
