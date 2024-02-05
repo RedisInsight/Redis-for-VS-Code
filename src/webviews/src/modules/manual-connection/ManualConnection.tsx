@@ -18,19 +18,20 @@ import { DatabaseType, DbConnectionInfo, Nullable } from 'uiSrc/interfaces'
 import { ConnectionType, DbType,
   DEFAULT_TIMEOUT,
   SubmitBtnText,
+  VscodeMessageAction,
 } from 'uiSrc/constants'
 import { Database } from 'uiSrc/slices/connections/databases/interface'
 import { databasesSelector, createDatabaseStandaloneAction, updateDatabaseAction } from 'uiSrc/slices/connections/databases/databases.slice'
 import { AppDispatch, fetchCerts } from 'uiSrc/store'
 // import { ManualConnectionForm } from './manual-connection-form'
 import { ManualConnectionForm } from 'uiSrc/modules/manual-connection/manual-connection-form'
+import { vscodeApi } from 'uiSrc/services'
 
 export interface Props {
   editMode?: boolean
   initialValues?: Nullable<Record<string, any>>
   editedDatabase?: Nullable<Database>
   onClose?: () => void
-  onDbEdited?: () => void
   onAliasEdited?: (value: string) => void
 }
 
@@ -38,7 +39,6 @@ const ManualConnection = (props: Props) => {
   const {
     editMode,
     onClose,
-    onDbEdited,
     onAliasEdited,
     editedDatabase,
     initialValues: initialValuesProp,
@@ -71,8 +71,17 @@ const ManualConnection = (props: Props) => {
       event: TelemetryEvent.CONFIG_DATABASES_MANUALLY_SUBMITTED,
     })
 
-    dispatch(createDatabaseStandaloneAction(payload, onMastersSentinelFetched))
+    dispatch(createDatabaseStandaloneAction(payload, onMastersSentinelFetched, onDbAdded))
   }
+
+  const onDbAdded = () => {
+    vscodeApi.postMessage({ action: VscodeMessageAction.CloseAddDatabase })
+  }
+
+  const onDbEdited = () => {
+    vscodeApi.postMessage({ action: VscodeMessageAction.CloseEditDatabase })
+  }
+
   const handleEditDatabase = (payload: any) => {
     dispatch(updateDatabaseAction(payload, onDbEdited))
   }
