@@ -145,7 +145,7 @@ const ManualConnectionForm = (props: Props) => {
     onClick,
     submitIsDisabled,
   }: ISubmitButton) => {
-    const Btn = () => (
+    const Btn = (
       <VSCodeButton
         onClick={onClick}
         disabled={submitIsDisabled}
@@ -157,12 +157,12 @@ const ManualConnectionForm = (props: Props) => {
     )
 
     return !submitIsDisabled
-      ? <Btn />
+      ? Btn
       : (
         <Popup
           position="top center"
-          trigger={<Btn />}
-          on={['hover']}
+          trigger={Btn}
+          on="hover"
         >
           {validationErrors.REQUIRED_TITLE(Object.keys(errors).length)}
           {getSubmitButtonContent(errors, submitIsDisabled)}
