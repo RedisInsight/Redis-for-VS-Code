@@ -1,4 +1,5 @@
 import * as os from 'os'
+import * as fs from 'fs'
 import { join as joinPath } from 'path'
 import { Chance } from 'chance'
 const chance = new Chance()
@@ -144,6 +145,29 @@ export class Config {
     }-${this.uniqueId}`,
     databaseUsername: process.env.OSS_STANDALONE_SSH_USERNAME,
     databasePassword: process.env.OSS_STANDALONE_SSH_PASSWORD,
+  }
+
+  static ossStandaloneTlsConfig = {
+    host: process.env.OSS_STANDALONE_TLS_HOST || 'oss-standalone-tls',
+    port: process.env.OSS_STANDALONE_TLS_PORT || '6379',
+    databaseName: `${process.env.OSS_STANDALONE_TLS_DATABASE_NAME || 'test_standalone_tls'}-${this.uniqueId}`,
+    databaseUsername: process.env.OSS_STANDALONE_TLS_USERNAME,
+    databasePassword: process.env.OSS_STANDALONE_TLS_PASSWORD,
+    caCert: {
+      name: `ca}-${this.uniqueId}`,
+      certificate:
+        process.env.E2E_CA_CRT ||
+        fs.readFileSync('./rte/oss-standalone-tls/certs/redisCA.crt', 'utf-8'),
+    },
+    clientCert: {
+      name: `client}-${this.uniqueId}`,
+      certificate:
+        process.env.E2E_CLIENT_CRT ||
+        fs.readFileSync('./rte/oss-standalone-tls/certs/redis.crt', 'utf-8'),
+      key:
+        process.env.E2E_CLIENT_KEY ||
+        fs.readFileSync('./rte/oss-standalone-tls/certs/redis.key', 'utf-8'),
+    },
   }
 
   static ossStandaloneRedisGears = {

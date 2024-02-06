@@ -8,7 +8,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
-  ButtonsActions,
+  ButtonActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -34,7 +34,7 @@ describe('Hash Key fields verification', () => {
     await browser.waitForWorkbench(20_000)
   })
   afterEach(async () => {
-    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
+    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
     await webView.switchBack()
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
@@ -69,7 +69,7 @@ describe('Hash Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
     )[0].getText()
     expect(result).contains(keyFieldValue)
-    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
+    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
 
     for (const c of commands) {
       await keyDetailsView.searchByTheValueInKeyDetails(c)

@@ -1,7 +1,7 @@
 import { By, Locator } from 'selenium-webdriver'
 import { BaseComponent } from '../BaseComponent'
 import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 
 /**
  * key tree list view
@@ -16,6 +16,8 @@ export class KeyTreeView extends BaseComponent {
   refreshButton = By.xpath(`//vscode-button[@data-testid = 'refresh-keys']`)
   addKeyButton = By.xpath(`//vscode-button[@data-testid = 'add-key-button']`)
   sortKeysBtn = By.xpath(`//vscode-button[@data-testid = 'sort-keys']`)
+  addDatabaseBtn = By.xpath(`//li[@title='Add Redis database']`)
+  editDatabaseBtn = By.xpath(`//vscode-button[@data-testid='edit-database']`)
   // mask
   keyMask = '//*[@data-testid="key-$name"]'
   deleteKeyInListBtn = By.xpath(
@@ -131,7 +133,7 @@ export class KeyTreeView extends BaseComponent {
    * Delete first Key in list after Hovering
    */
   async deleteFirstKeyFromList(): Promise<void> {
-    await ButtonsActions.hoverElement(this.treeViewKey)
+    await ButtonActions.hoverElement(this.treeViewKey)
     await (await this.getElement(this.deleteKeyInListBtn)).click()
     await (await this.getElement(this.submitDeleteKeyButton)).click()
   }
@@ -140,7 +142,7 @@ export class KeyTreeView extends BaseComponent {
   * Delete first Key in list after Hovering
   */
   async deleteKeyFromListByName(keyName: string): Promise<void> {
-    await ButtonsActions.hoverElement(this.treeViewKey)
+    await ButtonActions.hoverElement(this.treeViewKey)
     await (await this.getElement(this.getItemDeleteButton(keyName))).click()
     await (await this.getElement(this.submitDeleteKeyButton)).click()
   }

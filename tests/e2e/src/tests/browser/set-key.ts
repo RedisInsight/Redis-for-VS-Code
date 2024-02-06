@@ -4,7 +4,7 @@ import { ActivityBar, VSBrowser, Workbench } from 'vscode-extension-tester'
 import { WebView, SetKeyDetailsView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
-  ButtonsActions,
+  ButtonActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -70,8 +70,8 @@ describe('Set Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.setFieldsList)
     )[0].getText()
     expect(result).contains(keyFieldValue)
-    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
-    await ButtonsActions.clickElement(keyDetailsView.keyRefresh)
+    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
+    await ButtonActions.clickElement(keyDetailsView.keyRefresh)
 
     // Verify that user can remove member from Set
     await keyDetailsView.removeRowByField(KeyTypesShort.Set, keyFieldValue)

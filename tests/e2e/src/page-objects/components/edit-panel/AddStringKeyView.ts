@@ -6,7 +6,7 @@ import {
 } from '@e2eSrc/page-objects/components/WebView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { KeyTreeView } from '@e2eSrc/page-objects/components'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 import { AddKeyView } from '@e2eSrc/page-objects/components/edit-panel/AddKeyView'
 
 /**
@@ -33,7 +33,7 @@ export class AddStringKeyView extends AddKeyView {
     let webView = new WebView()
     let keyTreeView = new KeyTreeView()
     await webView.switchToFrame(Views.KeyTreeView)
-    await ButtonsActions.clickElement(keyTreeView.addKeyButton)
+    await ButtonActions.clickElement(keyTreeView.addKeyButton)
 
     await webView.switchBack()
     await webView.switchToFrame(Views.AddKeyView)
@@ -52,7 +52,7 @@ export class AddStringKeyView extends AddKeyView {
     const nameInput = await this.getElement(this.keyNameInput)
     await nameInput.sendKeys(name)
 
-    await ButtonsActions.clickElement(this.addButton)
+    await ButtonActions.clickElement(this.addButton)
     await webView.switchBack()
   }
 }

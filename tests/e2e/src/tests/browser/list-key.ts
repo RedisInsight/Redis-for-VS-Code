@@ -9,7 +9,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
-  ButtonsActions,
+  ButtonActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -96,7 +96,7 @@ describe('List Key verification', () => {
     )[0].getText()
     expect(result).contains(elements[1])
 
-    await ButtonsActions.clickElement(listKeyDetailsView.clearSearchInput)
+    await ButtonActions.clickElement(listKeyDetailsView.clearSearchInput)
 
     // Verify that list key deleted when all elements deleted
     await listKeyDetailsView.removeRowsByFieldValues(

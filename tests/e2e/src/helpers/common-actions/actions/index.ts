@@ -1,4 +1,6 @@
-import { ButtonsActions } from './ButtonAction'
+import { ButtonActions } from './ButtonActions'
+import { CheckboxActions } from './CheckboxActions'
 import { InputActions } from './InputActions'
 
-export { ButtonsActions, InputActions }
+
+export { ButtonActions, CheckboxActions, InputActions }

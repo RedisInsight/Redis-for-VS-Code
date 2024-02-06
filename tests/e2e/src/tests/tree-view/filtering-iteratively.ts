@@ -6,7 +6,7 @@ import { Common } from '@e2eSrc/helpers/Common'
 import { KeyAPIRequests, CliAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 
 describe('Filtering iteratively in Tree view', () => {
   let browser: VSBrowser
@@ -47,7 +47,7 @@ describe('Filtering iteratively in Tree view', () => {
       true,
       'Scan more is not shown',
     )
-    await ButtonsActions.clickElement(keyTreeView.scanMoreBtn)
+    await ButtonActions.clickElement(keyTreeView.scanMoreBtn)
     // Verify that number of results is 1000 - add tests when total number of keys is implemented
   })
   // Run this test only for big database instance 8103
@@ -61,7 +61,7 @@ describe('Filtering iteratively in Tree view', () => {
       true,
       'Scan more is not shown',
     )
-    await ButtonsActions.clickElement(keyTreeView.scanMoreBtn)
+    await ButtonActions.clickElement(keyTreeView.scanMoreBtn)
     const regExp = new RegExp('1 0' + '.')
     // Verify that number of results is 1000 - add tests when total number of keys is implemented
   })

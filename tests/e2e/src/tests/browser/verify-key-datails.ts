@@ -23,7 +23,7 @@ import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 import {
-  ButtonsActions,
+  ButtonActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { AddStringKeyView } from '@e2eSrc/page-objects/components/edit-panel/AddStringKeyView'
@@ -87,7 +87,7 @@ describe('Key Details verifications', () => {
     let webView = new WebView()
     let keyTreeView = new KeyTreeView()
     await webView.switchToFrame(Views.KeyTreeView)
-    await ButtonsActions.clickElement(keyTreeView.addKeyButton)
+    await ButtonActions.clickElement(keyTreeView.addKeyButton)
 
     await webView.switchBack()
     await webView.switchToFrame(Views.AddKeyView)
@@ -112,7 +112,7 @@ describe('Key Details verifications', () => {
     )
     await nameInput.sendKeys(keyName)
 
-    await ButtonsActions.clickElement(addStringKeyView.addButton)
+    await ButtonActions.clickElement(addStringKeyView.addButton)
     await webView.switchBack()
 
     // check the key details
