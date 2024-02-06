@@ -4,15 +4,12 @@ import { ViewElements, Views } from '@e2eSrc/page-objects/components/WebView'
 import {
   WebView,
   KeyTreeView,
-  DatabaseDetailsView,
   EditDatabaseView,
-  KeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Common, Config } from '@e2eSrc/helpers'
 import {
-  sshPrivateKey,
   sshPrivateKeyWithPasscode,
 } from '@e2eSrc/test-data/sshPrivateKeys'
 
@@ -21,29 +18,42 @@ const sshParams = {
   sshPort: '2222',
   sshUsername: 'u',
 }
-const sshDbPrivateKey = {
-  ...Config.ossStandaloneForSSHConfig,
-  databaseName: `SSH_${Common.generateWord(5)}`,
+// const sshDbPrivateKey = {
+//   ...Config.ossStandaloneForSSHConfig,
+//   databaseName: `SSH_${Common.generateWord(5)}`,
+// }
+const verifyDatabaseEdited = async (): Promise<void> => {
+  let editDatabaseView = new EditDatabaseView()
+  let notifications = await new Workbench().getNotifications()
+  let notification = notifications[0]
+  // Check the notification message
+  let message = await notification.getMessage()
+  expect(message).eqls(
+    `Database has been edited`,
+    'The notification is not displayed',
+  )
+
+  // Verify that panel is closed
+  expect(
+    await editDatabaseView.isElementDisplayed(
+      By.xpath(ViewElements[Views.DatabaseDetailsView]),
+    ),
+  ).false
 }
 
 describe('Edit Databases', () => {
   let browser: VSBrowser
   let webView: WebView
-  let keyDetailsView: KeyDetailsView
   let keyTreeView: KeyTreeView
-  let databaseDetailsView: DatabaseDetailsView
   let editDatabaseView: EditDatabaseView
 
   const database = Object.assign({}, Config.ossStandaloneTlsConfig)
-  // const previousDatabaseName = Common.generateWord(20);
   const newDatabaseName = Common.generateWord(20)
 
   beforeEach(async () => {
     browser = VSBrowser.instance
     webView = new WebView()
     keyTreeView = new KeyTreeView()
-    keyDetailsView = new KeyDetailsView()
-    databaseDetailsView = new DatabaseDetailsView()
     editDatabaseView = new EditDatabaseView()
 
     await DatabaseAPIRequests.addNewStandaloneDatabaseApi(database)
@@ -93,20 +103,7 @@ describe('Edit Databases', () => {
       connectionTimeout,
     )
     ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
-    let notifications = await new Workbench().getNotifications()
-    let notification = notifications[0]
-    // Check the notification message
-    let message = await notification.getMessage()
-    expect(message).eqls(
-      `Database has been edited`,
-      'The notification is not displayed',
-    )
-    // Verify that panel is closed
-    expect(
-      await editDatabaseView.isElementDisplayed(
-        By.xpath(ViewElements[Views.DatabaseDetailsView]),
-      ),
-    ).false
+    await verifyDatabaseEdited()
   })
   // TODO unskip after implementing switching between databases
   // add db sshDbPrivateKey to edit it
@@ -136,20 +133,6 @@ describe('Edit Databases', () => {
     )
     await ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
 
-    let notifications = await new Workbench().getNotifications()
-    let notification = notifications[0]
-    // Check the notification message
-    let message = await notification.getMessage()
-    expect(message).eqls(
-      `Database has been edited`,
-      'The notification is not displayed',
-    )
-
-    // Verify that panel is closed
-    expect(
-      await databaseDetailsView.isElementDisplayed(
-        By.xpath(ViewElements[Views.DatabaseDetailsView]),
-      ),
-    ).false
+    await verifyDatabaseEdited()
   })
 })
