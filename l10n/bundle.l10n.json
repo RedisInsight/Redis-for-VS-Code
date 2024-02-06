@@ -46,6 +46,8 @@
   "Encrypted data": "Encrypted data",
   "Database has been added": "Database has been added",
   " has been added to RedisInsight.": " has been added to RedisInsight.",
+  "Database has been edited": "Database has been edited",
+  " has been edited to RedisInsight.": " has been edited to RedisInsight.",
   "Database has been deleted": "Database has been deleted",
   "Databases have been deleted": "Databases have been deleted",
   " databases have been deleted from RedisInsight:": " databases have been deleted from RedisInsight:",

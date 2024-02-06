@@ -17,7 +17,6 @@ export interface Props {
   initConnectionType?: AddDbType
   initialValues?: Nullable<Record<string, any>>
   editedDatabase?: Nullable<Database>
-  onDbEdited?: () => void
   onAliasEdited?: (value: string) => void
 }
 

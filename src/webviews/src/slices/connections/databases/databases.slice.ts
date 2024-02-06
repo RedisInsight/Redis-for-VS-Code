@@ -195,6 +195,7 @@ export function updateDatabaseAction({ id, ...payload }: Partial<Database>, onSu
       const { status } = await apiService.patch(`${ApiEndpoints.DATABASES}/${id}`, payload)
 
       if (isStatusSuccessful(status)) {
+        showInformationMessage(successMessages.EDITED_NEW_DATABASE(payload.name ?? '').title)
         dispatch(processDatabaseSuccess())
         dispatch<any>(fetchDatabasesAction())
         onSuccess?.()
