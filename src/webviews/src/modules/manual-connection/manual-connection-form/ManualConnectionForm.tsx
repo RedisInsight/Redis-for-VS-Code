@@ -7,6 +7,7 @@ import Popup from 'reactjs-popup'
 import { VSCodeButton, VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 
 import { useSelector } from 'react-redux'
+import { VscInfo } from 'react-icons/vsc'
 import {
   Keys,
   validationErrors,
@@ -152,7 +153,10 @@ const ManualConnectionForm = (props: Props) => {
         // isLoading={loading}
         data-testid="btn-submit"
       >
-        {text}
+        <>
+          {submitIsDisabled && <VscInfo className="mr-1" />}
+          {text}
+        </>
       </VSCodeButton>
     )
 
