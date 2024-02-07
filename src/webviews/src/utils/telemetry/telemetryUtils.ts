@@ -5,7 +5,7 @@ import { AdditionalRedisModule, store } from 'uiSrc/store'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints, DEFAULT_SUMMARY, SUPPORTED_REDIS_MODULES } from 'uiSrc/constants'
 import { IModuleSummary, IRedisModulesSummary, ITelemetrySendEvent, MatchType, RedisModules, RedisModulesKeyType } from './interfaces'
-import { isRedisearchAvailable, isTriggeredAndFunctionsAvailable } from '../browser/modules'
+import { isRedisearchAvailable, isTriggeredAndFunctionsAvailable } from '../database'
 
 export const sendEventTelemetry = async ({ event, eventData = {} }: ITelemetrySendEvent) => {
   try {

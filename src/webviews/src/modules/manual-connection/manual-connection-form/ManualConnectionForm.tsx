@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom'
 import Popup from 'reactjs-popup'
 import { VSCodeButton, VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 
+import { VscInfo } from 'react-icons/vsc'
 import {
   Keys,
   validationErrors,
@@ -143,24 +144,27 @@ const ManualConnectionForm = (props: Props) => {
     onClick,
     submitIsDisabled,
   }: ISubmitButton) => {
-    const Btn = () => (
+    const Btn = (
       <VSCodeButton
         onClick={onClick}
         disabled={submitIsDisabled}
         // isLoading={loading}
         data-testid="btn-submit"
       >
-        {text}
+        <>
+          {submitIsDisabled && <VscInfo className="mr-1" />}
+          {text}
+        </>
       </VSCodeButton>
     )
 
     return !submitIsDisabled
-      ? <Btn />
+      ? Btn
       : (
         <Popup
           position="top center"
-          trigger={<Btn />}
-          on={['hover']}
+          trigger={Btn}
+          on="hover"
         >
           {validationErrors.REQUIRED_TITLE(Object.keys(errors).length)}
           {getSubmitButtonContent(errors, submitIsDisabled)}

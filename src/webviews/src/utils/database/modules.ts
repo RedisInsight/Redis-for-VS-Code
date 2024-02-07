@@ -4,8 +4,10 @@ import {
   RedisDefaultModules,
   REDISEARCH_MODULES,
   TRIGGERED_AND_FUNCTIONS_MODULES,
+  AdditionalRedisModule,
 } from 'uiSrc/interfaces'
-import { AdditionalRedisModule, Database } from 'uiSrc/store'
+import modulesInit from 'uiSrc/constants/allRedisModules.json'
+import { Database } from 'uiSrc/store'
 
 export interface IDatabaseModule {
   abbreviation: string
@@ -64,3 +66,9 @@ export const getDbWithModuleLoaded = (databases: Database[], moduleName: string)
 
     return some(modules, ({ name }) => name === moduleName)
   })
+
+const getGenericModuleName = (name = '') =>
+  (DATABASE_LIST_MODULES_TEXT[name] ?? name)?.toLowerCase?.().replaceAll?.(/[-_]/ig, '')
+
+export const getModule = (propName = ''): any =>
+  find(modulesInit, ({ name }) => getGenericModuleName(name) === getGenericModuleName(propName)) ?? {}

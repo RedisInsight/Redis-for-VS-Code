@@ -29,7 +29,6 @@ export interface Props {
   initialValues?: Nullable<Record<string, any>>
   editedDatabase?: Nullable<Database>
   onClose?: () => void
-  onDbEdited?: () => void
   onAliasEdited?: (value: string) => void
 }
 
@@ -37,7 +36,6 @@ const ManualConnection = (props: Props) => {
   const {
     editMode,
     onClose,
-    onDbEdited,
     onAliasEdited,
     editedDatabase,
     initialValues: initialValuesProp,
@@ -68,10 +66,17 @@ const ManualConnection = (props: Props) => {
       event: TelemetryEvent.CONFIG_DATABASES_MANUALLY_SUBMITTED,
     })
 
-    createDatabaseStandalone(payload, onMastersSentinelFetched, () => {
-      vscodeApi.postMessage({ action: VscodeMessageAction.CloseDatabase })
-    })
+    dispatch(createDatabaseStandaloneAction(payload, onMastersSentinelFetched, onDbAdded))
   }
+
+  const onDbAdded = () => {
+    vscodeApi.postMessage({ action: VscodeMessageAction.CloseAddDatabase })
+  }
+
+  const onDbEdited = () => {
+    vscodeApi.postMessage({ action: VscodeMessageAction.CloseEditDatabase })
+  }
+
   const handleEditDatabase = (payload: any) => {
     updateDatabase(payload, onDbEdited)
   }
