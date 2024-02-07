@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react'
+import React, { useState } from 'react'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import cx from 'classnames'
 import { VscChevronRight, VscChevronDown, VscTerminal, VscAdd, VscRefresh, VscEdit } from 'react-icons/vsc'
@@ -7,19 +7,28 @@ import * as l10n from '@vscode/l10n'
 
 import { sessionStorageService, vscodeApi } from 'uiSrc/services'
 import { SortOrder, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
-import { TelemetryEvent, getDatabaseId, getDbIndex, getRedisModulesSummary, sendEventTelemetry } from 'uiSrc/utils'
-import { Database, checkConnectToDatabase, useContextApi, useContextInContext } from 'uiSrc/store'
+import {
+  TelemetryEvent,
+  formatLongName,
+  getDatabaseId,
+  getDbIndex,
+  getRedisModulesSummary,
+  sendEventTelemetry,
+} from 'uiSrc/utils'
+import { Database, checkConnectToDatabase, deleteDatabases, useContextApi, useContextInContext } from 'uiSrc/store'
 import DatabaseOfflineIconSvg from 'uiSrc/assets/database/database_icon_offline.svg?react'
 import DatabaseActiveIconSvg from 'uiSrc/assets/database/database_icon_active.svg?react'
+import { PopoverDelete } from 'uiSrc/components'
 import { useKeysApi } from '../../hooks/useKeys'
 
 import styles from './styles.module.scss'
 
 export interface Props {
   database: Database
+  children: React.ReactNode
 }
 
-export const DatabaseWrapper = ({ children, database }: PropsWithChildren<Props>) => {
+export const DatabaseWrapper = ({ children, database }: Props) => {
   const { id, name } = database
   const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
 
@@ -89,6 +98,19 @@ export const DatabaseWrapper = ({ children, database }: PropsWithChildren<Props>
     vscodeApi.postMessage({ action: VscodeMessageAction.EditDatabase, data: database })
   }
 
+  const deleteDatabaseHandle = () => {
+    deleteDatabases([database])
+  }
+
+  const clickDeleteDatabaseHandle = () => {
+    sendEventTelemetry({
+      event: TelemetryEvent.CONFIG_DATABASES_SINGLE_DATABASE_DELETE_CLICKED,
+      eventData: {
+        databaseId: id,
+      },
+    })
+  }
+
   const refreshHandle = () => {
     keysApi.getState().fetchPatternKeysAction()
   }
@@ -101,6 +123,7 @@ export const DatabaseWrapper = ({ children, database }: PropsWithChildren<Props>
           role="button"
           aria-hidden="true"
           className={styles.databaseNameWrapper}
+          data-testid={`database-${id}`}
         >
           {showTree && (<VscChevronDown className={cx(styles.icon, styles.iconNested)} />)}
           {showTree && (<DatabaseActiveIconSvg className={styles.icon} />)}
@@ -130,6 +153,15 @@ export const DatabaseWrapper = ({ children, database }: PropsWithChildren<Props>
             <VSCodeButton appearance="icon" onClick={addKeyClickHandle} data-testid="add-key-button">
               <VscAdd />
             </VSCodeButton>
+            <PopoverDelete
+              header={formatLongName(name, 50, 10, '...')}
+              text={l10n.t('will be deleted from RedisInsight.')}
+              item={id}
+              updateLoading={false}
+              handleDeleteItem={() => deleteDatabaseHandle()}
+              handleButtonClick={() => clickDeleteDatabaseHandle()}
+              testid={`delete-database-${id}`}
+            />
             <VSCodeButton appearance="icon" onClick={openCliClickHandle} data-testid="terminal-button">
               <VscTerminal />
             </VSCodeButton>

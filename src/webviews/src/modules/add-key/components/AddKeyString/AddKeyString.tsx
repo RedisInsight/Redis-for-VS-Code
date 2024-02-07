@@ -1,14 +1,13 @@
 import React, { FormEvent, useState, useEffect, ChangeEvent, useRef, Ref } from 'react'
 import * as l10n from '@vscode/l10n'
-
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+
 import { stringToBuffer } from 'uiSrc/utils'
 import { Maybe, RedisResponseBuffer } from 'uiSrc/interfaces'
-
 import { TextArea } from 'uiSrc/ui'
-
 import { SetStringWithExpire } from 'uiSrc/modules/keys-tree/hooks/interface'
 import { useKeysApi, useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
+
 import styles from './styles.module.scss'
 
 export interface Props {

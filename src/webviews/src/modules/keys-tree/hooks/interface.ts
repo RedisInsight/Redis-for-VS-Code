@@ -40,7 +40,7 @@ export interface KeysThunks {
     onSuccess?: (data: GetKeysWithDetailsResponse[]) => void,
     onFailed?: () => void,
   ) => void
-  fetchMorePatternKeysAction: (cursor: string, count: number) => void
+  fetchMorePatternKeysAction: (cursor: string, count?: number) => void
   fetchKeysMetadataTree: (
     keys: RedisString[][],
     filter: Nullable<KeyTypes>,

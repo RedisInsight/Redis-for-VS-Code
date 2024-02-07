@@ -91,10 +91,12 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisInsight.addDatabaseClose', () => {
       WebviewPanel.getInstance({ viewId: ViewId.AddDatabase }).dispose()
+      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
     }),
 
     vscode.commands.registerCommand('RedisInsight.editDatabaseClose', () => {
       WebviewPanel.getInstance({ viewId: ViewId.EditDatabase }).dispose()
+      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
     }),
 
     vscode.commands.registerCommand('RedisInsight.addKeyCloseAndRefresh', (args) => {

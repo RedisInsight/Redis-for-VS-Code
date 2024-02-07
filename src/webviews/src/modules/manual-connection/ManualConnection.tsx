@@ -66,7 +66,7 @@ const ManualConnection = (props: Props) => {
       event: TelemetryEvent.CONFIG_DATABASES_MANUALLY_SUBMITTED,
     })
 
-    dispatch(createDatabaseStandaloneAction(payload, onMastersSentinelFetched, onDbAdded))
+    createDatabaseStandalone(payload, onMastersSentinelFetched, onDbAdded)
   }
 
   const onDbAdded = () => {

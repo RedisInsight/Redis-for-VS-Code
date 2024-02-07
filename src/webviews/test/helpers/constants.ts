@@ -1,7 +1,9 @@
+import { v4 as uuidv4 } from 'uuid'
 import { DEFAULT_SEARCH_MATCH, KeyTypes } from 'uiSrc/constants'
 import { KeyInfo } from 'uiSrc/interfaces'
 import { Certificate } from 'uiSrc/store/hooks/use-certificates-store/interface'
 import { UTF8ToArray, stringToBuffer } from 'uiSrc/utils'
+import { Database } from 'uiSrc/store'
 
 const TEST_KEYS = [
   { name: UTF8ToArray('keys:1:2') },
@@ -123,6 +125,17 @@ export const constants = {
   get CLIENT_CERTS() {
     return CLIENT_CERTS
   },
+
+  TEST_DATABASE_ID: uuidv4(),
+  TEST_DATABASE_NAME: uuidv4(),
+  TEST_DATABASE_HOST: uuidv4(),
+  TEST_DATABASE_PORT: 5555,
+  TEST_DATABASE_MODULES: [],
+  TEST_DATABASE_VERSION: '7',
+
+  get DATABASE() {
+    return DATABASE
+  },
 }
 
 const KEY_INFO: KeyInfo = {
@@ -196,3 +209,12 @@ const KEYS_LIST: any = {
 
 const CA_CERTS: Certificate[] = [{ id: 'id1', name: 'ca_name1' }, { id: 'id2', name: 'ca_name2' }]
 const CLIENT_CERTS: Certificate[] = [{ id: 'id11', name: 'client_name1' }, { id: 'id12', name: 'client_name2' }]
+
+const DATABASE: Database = {
+  id: constants.TEST_DATABASE_ID,
+  host: constants.TEST_DATABASE_HOST,
+  port: constants.TEST_DATABASE_PORT,
+  name: constants.TEST_DATABASE_NAME,
+  modules: constants.TEST_DATABASE_MODULES,
+  version: constants.TEST_DATABASE_VERSION,
+}

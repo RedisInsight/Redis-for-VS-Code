@@ -22,7 +22,6 @@ import { parseKeysListResponse } from '../utils'
 // eslint-disable-next-line import/no-mutable-exports
 export let sourceKeysFetch: Nullable<CancelTokenSource> = null
 
-// export const useKeysStore = createStore<KeysStore & KeysActions>()(
 export const createKeysThunksSlice: StateCreator<
 KeysStore & KeysActions & KeysThunks,
 [],
@@ -197,7 +196,7 @@ KeysThunks
       const errorMessage = getApiErrorMessage(error)
       showErrorMessage(errorMessage)
     } finally {
-      get().deleteKeyFinal()
+      get()?.deleteKeyFinal()
     }
   },
 

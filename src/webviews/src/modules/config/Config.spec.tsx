@@ -5,12 +5,11 @@ import { Mock, vi } from 'vitest'
 
 import {
   getUserConfigSettings,
-  setSettingsPopupState,
   userSettingsSelector,
 } from 'uiSrc/slices/user/user-settings.slice'
-import { processDatabase } from 'uiSrc/slices/connections/databases/databases.slice'
 import { getServerInfo } from 'uiSrc/slices/app/info/info.slice'
 import { getRedisCommands } from 'uiSrc/slices/app/commands/redis-commands.slice'
+import * as useDatabases from 'uiSrc/store/hooks/use-databases-store/useDatabasesStore'
 import { mockedStore, render } from 'testSrc/helpers'
 import { Config } from './Config'
 
@@ -46,17 +45,19 @@ vi.mock('uiSrc/services', async () => ({
   },
 }))
 
+vi.spyOn(useDatabases, 'fetchDatabases')
+
 describe('Config', () => {
   it('should render', () => {
     render(<Config />)
     const afterRenderActions = [
       getServerInfo(),
       getRedisCommands(),
-      processDatabase(),
       // setSettingsPopupState(false),
       getUserConfigSettings(),
     ]
     expect(store.getActions()).toEqual([...afterRenderActions])
+    expect(useDatabases.fetchDatabases).toBeCalled()
   })
 
   it('should call the list of actions', () => {
@@ -82,10 +83,10 @@ describe('Config', () => {
     const afterRenderActions = [
       getServerInfo(),
       getRedisCommands(),
-      processDatabase(),
       getUserConfigSettings(),
       // setSettingsPopupState(true),
     ]
     expect(store.getActions()).toEqual([...afterRenderActions])
+    expect(useDatabases.fetchDatabases).toBeCalled()
   })
 })

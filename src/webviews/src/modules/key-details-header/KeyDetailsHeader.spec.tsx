@@ -1,6 +1,7 @@
 import React from 'react'
 import { mock } from 'ts-mockito'
 import { cloneDeep } from 'lodash'
+import { Mock } from 'vitest'
 import { KeyTypes } from 'uiSrc/constants'
 import { useSelectedKeyStore, initialCertsState as initialSelectedKeyState } from 'uiSrc/store'
 import { bufferToString } from 'uiSrc/utils'
@@ -20,7 +21,13 @@ const supportedKeyTypes = [
   KeyTypes.String,
 ]
 
-vi.spyOn(useKeys, 'deleteKeyAction')
+const deleteKeyActionMock = vi.fn();
+(vi.spyOn(useKeys, 'useKeysApi') as Mock).mockImplementation(() => ({
+  getState: () => ({
+    deleteKeyAction: deleteKeyActionMock,
+  }),
+}))
+
 let store: typeof mockedStore
 beforeEach(() => {
   cleanup()
@@ -95,7 +102,8 @@ describe('KeyDetailsHeader', () => {
       expect(component).toBeTruthy()
       fireEvent.click(screen.getByTestId(`remove-key-${nameString}-icon`))
       fireEvent.click(screen.getByTestId(`remove-key-${nameString}`))
-      expect(useKeys.deleteKeyAction).toBeCalled()
+      expect(useKeys.useKeysApi().getState().deleteKeyAction).toBeCalled()
+      // expect(deleteKeyActionMock).toBeCalled()
     })
   })
 })

@@ -1,9 +1,7 @@
 import { StateCreator } from 'zustand'
 import { isNull, remove } from 'lodash'
 
-import {
-  isEqualBuffers,
-} from 'uiSrc/utils'
+import { isEqualBuffers } from 'uiSrc/utils'
 import { KeysStore, KeysActions } from './interface'
 
 export const initialKeysState: KeysStore = {
@@ -25,7 +23,7 @@ export const initialKeysState: KeysStore = {
   },
   addKeyLoading: false,
 }
-// export const useKeysStore = createStore<KeysStore & KeysActions>()(
+
 export const createKeysActionsSlice: StateCreator<
 KeysStore & KeysActions,
 [],
@@ -62,12 +60,14 @@ KeysStore & KeysActions
   deleteKeyFinal: () => set({ deleting: false }),
   deleteKeyFromList: (keyProp) => set((state) => {
     if (state.data?.keys.length === 0) {
-      return
+      return state
     }
     remove(state.data?.keys, (key) => isEqualBuffers(key.name, keyProp))
 
     state.data.total = !isNull(state.data.total) ? state.data.total - 1 : null
     state.data.scanned -= 1
+
+    return state
   }),
 
   // Add Key
@@ -90,6 +90,7 @@ KeysStore & KeysActions
       total: isNull(state.data.total) ? null : state.data.total + 1,
       scanned: state.data.scanned + 1,
     }
+    return state
   }),
 
   resetAddKey: () => set({ addKeyLoading: false }),

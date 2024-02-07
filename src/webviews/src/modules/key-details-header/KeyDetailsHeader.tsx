@@ -1,8 +1,7 @@
 import React, { ReactElement } from 'react'
 import { isUndefined } from 'lodash'
-import { useSelector } from 'react-redux'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { VscClose, VscDebugRestart } from 'react-icons/vsc'
+import { VscDebugRestart } from 'react-icons/vsc'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
@@ -14,14 +13,13 @@ import {
 } from 'uiSrc/constants'
 import { RedisString } from 'uiSrc/interfaces'
 import { editKeyTTL, refreshKeyInfo, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
-import { TelemetryEvent, bufferToString, formatLongName, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
+import { TelemetryEvent, formatLongName, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
 // import { KeyDetailsHeaderFormatter } from './components/key-details-header-formatter'
 import { PopoverDelete } from 'uiSrc/components'
 import { KeyDetailsHeaderName } from './components/key-details-header-name'
 import { KeyDetailsHeaderTTL } from './components/key-details-header-ttl'
 // import { KeyDetailsHeaderDelete } from './components/key-details-header-delete'
 import { KeyDetailsHeaderSizeLength } from './components/key-details-header-size-length'
-import { KeyRowType } from '../keys-tree/components/key-row-type'
 
 import { useKeysApi } from '../keys-tree/hooks/useKeys'
 import styles from './styles.module.scss'
@@ -53,7 +51,6 @@ const KeyDetailsHeader = ({
 
   const handleRefreshKey = () => {
     refreshKeyInfo(keyBuffer!)
-    // dispatch(refreshKey(keyBuffer!, type))
   }
 
   const handleEditTTL = (key: RedisString, ttl: number) => {

@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react'
-import { isNull, isUndefined } from 'lodash'
+import { isUndefined } from 'lodash'
 import cx from 'classnames'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useSelector } from 'react-redux'
 import { KeyTypes, VscodeMessageAction } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { fetchKeyInfo, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { vscodeApi } from 'uiSrc/services'
 import { DynamicTypeDetails } from './components/dynamic-type-details'
 
@@ -34,17 +33,7 @@ const KeyDetails = (props: Props) => {
     data: state.data,
   })))
 
-  const isKeySelected = !isNull(data)
   const { type: keyType = KeyTypes.String, name: keyName, length: keyLength } = data ?? { }
-
-  // useEffect(() => {
-  //   if (keyProp === null) {
-  //     return
-  //   }
-  //   // Restore key details from context in future
-  //   // (selectedKey.data?.name !== keyProp)
-  //   // fetchKeyInfo({ key: keyProp! })
-  // }, [])
 
   useEffect(() => {
     if (!isUndefined(keyName)) {

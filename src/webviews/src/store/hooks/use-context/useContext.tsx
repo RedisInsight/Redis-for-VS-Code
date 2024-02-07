@@ -11,8 +11,9 @@ import { useStoreWithEqualityFn } from 'zustand/traditional'
 
 import { ExtractState, ZustandStore } from 'uiSrc/store'
 import { DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, KeyTypes, StorageItem } from 'uiSrc/constants'
-import { localStorageService, setDBConfigStorageField } from 'uiSrc/services'
+import { localStorageService } from 'uiSrc/services'
 import { AppContextStore, AppContextActions } from './interface'
+import { createContextActions } from './useContextActions'
 
 type StoreType = ZustandStore<AppContextStore & AppContextActions>
 
@@ -42,26 +43,9 @@ const StoreContext = createContext<StoreType>(null!)
 export const ContextStoreProvider = ({ children }: PropsWithChildren) => {
   const storeRef = useRef<StoreType>()
   if (!storeRef.current) {
-    // the main useKeysStore
-    storeRef.current = createStore<AppContextStore & AppContextActions>()(immer(devtools((set) => ({
-      ...initialContextState,
-
-      // actions
-      setKeysTreeSort: (databaseId, sort) => set((state) => {
-        state.dbConfig.treeViewSort = sort
-        setDBConfigStorageField(databaseId, StorageItem.treeViewSort, sort)
-      }),
-      setKeysTreeNodesOpen: (nodes) => set((state) => {
-        state.keys.tree.openNodes = nodes
-      }),
-      resetKeysTree: () => set((state) => {
-        state.keys.tree.selectedLeaf = null
-        state.keys.tree.openNodes = {}
-      }),
-      updateKeyDetailsSizes: ({ type, sizes }) => set((state) => {
-        state.browser.keyDetailsSizes[type] = sizes
-        localStorageService?.set(StorageItem.keyDetailSizes, state.browser.keyDetailsSizes)
-      }),
+    // the main useContextStore
+    storeRef.current = createStore<AppContextStore & AppContextActions>()(immer(devtools((...a) => ({
+      ...createContextActions(...a),
     }))))
   }
   return (

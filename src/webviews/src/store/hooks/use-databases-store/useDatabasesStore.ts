@@ -1,8 +1,8 @@
-import { create, createStore, useStore } from 'zustand'
+import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
-import { cloneDeep, filter, orderBy } from 'lodash'
+import { cloneDeep, filter, first, map, orderBy } from 'lodash'
 import { apiService, localStorageService } from 'uiSrc/services'
 import {
   ApiEndpoints,
@@ -28,7 +28,7 @@ export const initialDatabasesState: DatabasesStore = {
 
 export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
 // export const useDatabases = createStore<DatabasesStore & DatabasesActions>()(
-  immer(devtools(persist((set) => ({
+  immer(devtools((set) => ({
     ...initialDatabasesState,
     // actions
     processDatabase: () => set({ loading: true }),
@@ -46,8 +46,7 @@ export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
     setEditDatabase: (editDatabase: Database) => set({ editDatabase }),
     setConnectedDatabase: (connectedDatabase: Database) => set({ connectedDatabase }),
     resetConnectedDatabase: () => set({ connectedDatabase: cloneDeep(initialDatabasesState.connectedDatabase) }),
-  }),
-  { name: 'databases' }))),
+  }))),
 )
 
 // Asynchronous thunk action
@@ -186,6 +185,28 @@ export function checkConnectToDatabase(
       const errorMessage = getApiErrorMessage(error)
       showErrorMessage(errorMessage)
       onFailAction?.()
+    } finally {
+      state.processDatabaseFinal()
+    }
+  })
+}
+
+export const deleteDatabases = (databases: Database[], onSuccess?: () => void) => {
+  useDatabasesStore.setState(async (state) => {
+    state.processDatabase()
+    try {
+      const ids = map(databases, 'id')
+      const { status } = await apiService.delete(ApiEndpoints.DATABASES, { data: { ids } })
+
+      if (isStatusSuccessful(status)) {
+        fetchDatabases()
+        onSuccess?.()
+        showInformationMessage(successMessages.DELETE_DATABASE(first(databases)?.name ?? '').title)
+      }
+    } catch (_err) {
+      const error = _err as AxiosError
+      const errorMessage = getApiErrorMessage(error)
+      showErrorMessage(errorMessage)
     } finally {
       state.processDatabaseFinal()
     }
