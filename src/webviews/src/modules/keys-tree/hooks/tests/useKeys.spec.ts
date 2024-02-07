@@ -6,7 +6,7 @@ import { apiService } from 'uiSrc/services'
 import { RootState } from 'uiSrc/store'
 import { constants, mockedStore, waitForStack } from 'testSrc/helpers'
 import {
-  initialState as initialStateInit,
+  initialKeysState as initialStateInit,
   fetchPatternKeysAction,
   fetchMorePatternKeysAction,
   fetchKeysMetadataTree,

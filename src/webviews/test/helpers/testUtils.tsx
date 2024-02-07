@@ -7,13 +7,11 @@ import { RenderResult, render as rtlRender, waitFor } from '@testing-library/rea
 import { BrowserRouter } from 'react-router-dom'
 
 import { RootState } from 'uiSrc/store'
-import { initialState as initialStateKeys } from 'uiSrc/slices/browser/keys.slice'
 import { initialState as initialStateCliSettings } from 'uiSrc/modules/cli/slice/cli-settings'
 import { initialState as initialStateCliOutput } from 'uiSrc/modules/cli/slice/cli-output'
 import { initialState as initialStateAppInfo } from 'uiSrc/slices/app/info/info.slice'
 import { initialState as initialStateAppContext } from 'uiSrc/slices/app/context/context.slice'
 import { initialState as initialStateAppRedisCommands } from 'uiSrc/slices/app/commands/redis-commands.slice'
-import { initialState as initialStateDatabases } from 'uiSrc/slices/connections/databases/databases.slice'
 import { initialState as initialStateUserSettings } from 'uiSrc/slices/user/user-settings.slice'
 import { BASE_URL } from 'uiSrc/constants'
 
@@ -29,12 +27,6 @@ export const initialStateDefault: RootState = {
     info: cloneDeep(initialStateAppInfo),
     context: cloneDeep(initialStateAppContext),
     redisCommands: cloneDeep(initialStateAppRedisCommands),
-  },
-  connections: {
-    databases: cloneDeep(initialStateDatabases),
-  },
-  browser: {
-    keys: cloneDeep(initialStateKeys),
   },
   cli: {
     settings: cloneDeep(initialStateCliSettings),

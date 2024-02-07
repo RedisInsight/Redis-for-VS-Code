@@ -7,7 +7,7 @@ import * as l10n from '@vscode/l10n'
 import { DatabaseType, Nullable } from 'uiSrc/interfaces'
 import { AddDbType } from 'uiSrc/constants'
 import { ManualConnection } from 'uiSrc/modules'
-import { Database } from 'uiSrc/slices/connections/databases/interface'
+import { Database } from 'uiSrc/store'
 import { DatabaseConnections } from './database-connections'
 
 import styles from './styles.module.scss'

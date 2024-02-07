@@ -8,7 +8,7 @@ import { ViewId } from './constants'
 let myStatusBarItem: vscode.StatusBarItem
 export async function activate(context: vscode.ExtensionContext) {
   await startBackend(context)
-  const sidebarProvider = new WebViewProvider('tree', context)
+  const sidebarProvider = new WebViewProvider('sidebar', context)
   const panelProvider = new WebViewProvider('cli', context)
 
   // Create a status bar item with a text and an icon
@@ -27,12 +27,18 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.window.registerWebviewViewProvider('ri-sidebar', sidebarProvider),
     vscode.window.registerWebviewViewProvider('ri-panel', panelProvider, { webviewOptions: { retainContextWhenHidden: true } }),
 
-    vscode.commands.registerCommand('RedisInsight.cliOpen', () => {
+    vscode.commands.registerCommand('RedisInsight.cliOpen', (args) => {
       vscode.commands.executeCommand('ri-panel.focus')
+      // setTimeout(() => {
+      //   panelProvider.view?.webview.postMessage({ action: 'OpenCli', data: args.data })
+      // }, 1000)
     }),
 
-    vscode.commands.registerCommand('RedisInsight.addCli', () => {
-      panelProvider.view?.webview.postMessage({ action: 'AddCli' })
+    vscode.commands.registerCommand('RedisInsight.addCli', (args) => {
+      vscode.commands.executeCommand('ri-panel.focus')
+      setTimeout(() => {
+        panelProvider.view?.webview.postMessage({ action: 'AddCli', data: args.data })
+      }, 0)
     }),
 
     vscode.commands.registerCommand('RedisInsight.openPage', (args) => {

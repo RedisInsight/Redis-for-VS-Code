@@ -1,6 +1,5 @@
 import { toNumber, omit } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 import {
   removeEmpty,
@@ -18,12 +17,12 @@ import { DatabaseType, DbConnectionInfo, Nullable } from 'uiSrc/interfaces'
 import { ConnectionType, DbType,
   DEFAULT_TIMEOUT,
   SubmitBtnText,
+  VscodeMessageAction,
 } from 'uiSrc/constants'
-import { Database } from 'uiSrc/slices/connections/databases/interface'
-import { databasesSelector, createDatabaseStandaloneAction, updateDatabaseAction } from 'uiSrc/slices/connections/databases/databases.slice'
-import { AppDispatch, fetchCerts } from 'uiSrc/store'
+import { Database, fetchCerts, createDatabaseStandalone, updateDatabase, useDatabasesStore } from 'uiSrc/store'
 // import { ManualConnectionForm } from './manual-connection-form'
 import { ManualConnectionForm } from 'uiSrc/modules/manual-connection/manual-connection-form'
+import { vscodeApi } from 'uiSrc/services'
 
 export interface Props {
   editMode?: boolean
@@ -47,11 +46,9 @@ const ManualConnection = (props: Props) => {
 
   const [isCloneMode, setIsCloneMode] = useState<boolean>(false)
 
-  const { loading: loadingStandalone } = useSelector(databasesSelector)
+  const loadingStandalone = useDatabasesStore((state) => state.loading)
 
   const connectionType = editedDatabase?.connectionType ?? DbType.STANDALONE
-
-  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
     fetchCerts()
@@ -71,10 +68,12 @@ const ManualConnection = (props: Props) => {
       event: TelemetryEvent.CONFIG_DATABASES_MANUALLY_SUBMITTED,
     })
 
-    dispatch(createDatabaseStandaloneAction(payload, onMastersSentinelFetched))
+    createDatabaseStandalone(payload, onMastersSentinelFetched, () => {
+      vscodeApi.postMessage({ action: VscodeMessageAction.CloseDatabase })
+    })
   }
   const handleEditDatabase = (payload: any) => {
-    dispatch(updateDatabaseAction(payload, onDbEdited))
+    updateDatabase(payload, onDbEdited)
   }
 
   const handleCloneDatabase = (payload: any) => {

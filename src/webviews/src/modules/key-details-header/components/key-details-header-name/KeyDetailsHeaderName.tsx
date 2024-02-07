@@ -22,8 +22,7 @@ import {
   sendEventTelemetry,
   stringToBuffer,
 } from 'uiSrc/utils'
-import { useSelectedKeyStore } from 'uiSrc/store'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { InlineEditor } from 'uiSrc/components'
 import styles from './styles.module.scss'
 
@@ -32,7 +31,7 @@ export interface Props {
 }
 
 const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
   const { loading, data } = useSelectedKeyStore(useShallow((state) => ({
     loading: state.loading,
     data: state.data,

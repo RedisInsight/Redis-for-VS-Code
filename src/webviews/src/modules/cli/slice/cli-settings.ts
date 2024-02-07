@@ -4,11 +4,9 @@ import { AxiosError } from 'axios'
 import { find } from 'lodash'
 import { apiService, sessionStorageService } from 'uiSrc/services'
 import { ApiEndpoints, StorageItem, cliTexts, ConnectionSuccessOutputText, InitOutputText } from 'uiSrc/constants'
-import { getApiErrorMessage, getUrl, isStatusSuccessful } from 'uiSrc/utils'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
-import { AppDispatch, RootState } from 'uiSrc/store'
+import { getApiErrorMessage, getUrl, getUrlWithId, isStatusSuccessful } from 'uiSrc/utils'
+import { AppDispatch, RootState, Database, useDatabasesStore } from 'uiSrc/store'
 import { ConnectionHistory, StateCliSettings } from 'uiSrc/interfaces'
-import { Database } from 'uiSrc/slices/connections/databases/interface'
 import { outputSelector, setOutput, concatToOutput, setCliDbIndex, resetOutput } from './cli-output'
 // import { CreateCliClientResponse, DeleteClientResponse } from 'apiSrc/modules/cli/dto/cli.dto'
 
@@ -211,8 +209,8 @@ const checkCliHistory = (id: string, database: Database) => async (dispatch: App
   const matchedInstanceInHistory = find(state.cli.settings.cliConnectionsHistory, { id })
   // Check if incomming connection is new
   if (!matchedInstanceInHistory) {
-    const { host, port } = database
-    const connectionInstance = { id, host, port, cliHistory: [] }
+    const { name, host, port } = database
+    const connectionInstance = { id, name: name || `${host}:${port}`, cliHistory: [] }
     dispatch(addCliConnectionsHistory(connectionInstance))
     dispatch(setActiveCliId(id))
     // Check if connection is already selected
@@ -223,29 +221,29 @@ const checkCliHistory = (id: string, database: Database) => async (dispatch: App
 
 // Asynchronous thunk action
 export function createCliClientAction(
+  database: Database,
   onSuccessAction?: () => void,
   onFailAction?: (message: string) => void,
 ) {
   return async (dispatch: AppDispatch, stateInit: () => RootState) => {
     const state = stateInit()
     if (state.cli.output.data.length) return
-    const database = connectedDatabaseSelector(state)
-    const { host, port, db } = database
+    const { host, port, db, id } = database
     const { data = [] } = outputSelector?.(state) ?? {}
     dispatch(processCliClient())
     dispatch(concatToOutput(InitOutputText(host, port, db, !data.length)))
 
     try {
       const { data, status } = await apiService.post<any>(
-        getUrl(ApiEndpoints.CLI),
+        getUrlWithId(id, ApiEndpoints.CLI),
       )
 
       if (isStatusSuccessful(status)) {
         sessionStorageService.set(StorageItem.cliClientUuid, data?.uuid)
-        dispatch(checkCliHistory(data?.uuid, database))
+        // dispatch(checkCliHistory(data?.uuid, database))
         dispatch(processCliClientSuccess(data?.uuid))
         dispatch(concatToOutput(ConnectionSuccessOutputText))
-        dispatch(setCliDbIndex(state.connections?.databases?.connectedDatabase?.db || 0))
+        dispatch(setCliDbIndex(db))
 
         onSuccessAction?.()
       }
@@ -384,11 +382,12 @@ function updateCliHistory() {
 }
 
 // async thunk function
-export function addCli() {
+export function addCli(database: Database) {
   return async (dispatch: AppDispatch) => {
+    // useDatabasesStore.getState().setConnectedDatabase(message?.data as Database)
     dispatch(updateCliHistory())
     dispatch(resetOutput())
-    dispatch(createCliClientAction())
+    dispatch(createCliClientAction(database))
   }
 }
 

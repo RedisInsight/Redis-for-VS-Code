@@ -5,14 +5,14 @@ import { HttpResponse, http } from 'msw'
 import { combineReducers, configureStore, createSlice } from '@reduxjs/toolkit'
 
 import { rootReducers, store } from 'uiSrc/store'
-import { initialState as initialStateKeys } from 'uiSrc/slices/browser/keys.slice'
+import { initialKeysState } from 'uiSrc/modules/keys-tree/hooks/useKeys'
 import { constants, getMWSUrl } from 'testSrc/helpers'
-import { KeysTreePage } from '.'
+import { SidebarPage } from '.'
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
-  title: 'Pages/KeysTreePage',
-  component: KeysTreePage,
+  title: 'Pages/SidebarPage',
+  component: SidebarPage,
   decorators: [
     (Story: any) =>
       (
@@ -23,7 +23,7 @@ export default {
   ],
 }
 
-type Story = StoryObj<typeof KeysTreePage>
+type Story = StoryObj<typeof SidebarPage>
 
 // A super-simple mock of a redux store
 const MockStore = ({ keysState: keysStateData, children }: any) => (
@@ -36,9 +36,9 @@ const MockStore = ({ keysState: keysStateData, children }: any) => (
             name: 'keys',
             initialState:
             {
-              ...initialStateKeys,
+              ...initialKeysState,
               data: {
-                ...initialStateKeys.data,
+                ...initialKeysState.data,
                 ...keysStateData,
               },
             },

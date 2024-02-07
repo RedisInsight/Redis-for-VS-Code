@@ -1,7 +1,6 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
 import { KeyValueCompressor, TEXT_DISABLED_COMPRESSED_VALUE } from 'uiSrc/constants'
-import { hashDataSelector } from 'uiSrc/slices/browser/hash'
 import { connectedInstanceSelector } from 'uiSrc/slices/instances/instances'
 import { RedisResponseBufferType } from 'uiSrc/slices/interfaces'
 import { anyToBuffer, bufferToString } from 'uiSrc/utils'

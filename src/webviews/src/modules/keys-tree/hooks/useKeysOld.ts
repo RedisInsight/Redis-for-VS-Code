@@ -1,12 +1,13 @@
 import axios, { AxiosError, CancelTokenSource } from 'axios'
 import { immer } from 'zustand/middleware/immer'
 import { devtools, persist } from 'zustand/middleware'
-import { create } from 'zustand'
+import { create, createStore } from 'zustand'
+import { createContext } from 'zustand-utils'
 import { isNull, remove } from 'lodash'
 
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
-import { DEFAULT_SEARCH_MATCH, ApiEndpoints, KeyTypes, successMessages, SCAN_TREE_COUNT_DEFAULT } from 'uiSrc/constants'
+import { DEFAULT_SEARCH_MATCH, ApiEndpoints, KeyTypes, successMessages, SCAN_TREE_COUNT_DEFAULT, ENDPOINT_BASED_ON_KEY_TYPE, EndpointBasedOnKeyType } from 'uiSrc/constants'
 import {
   TelemetryEvent,
   getApiErrorMessage,
@@ -20,10 +21,11 @@ import {
   showErrorMessage,
   showInformationMessage,
 } from 'uiSrc/utils'
-import { GetKeysWithDetailsResponse, KeysStore, KeysActions } from './interface'
+import { createSelectors } from 'uiSrc/store'
+import { GetKeysWithDetailsResponse, KeysStore, KeysActions, SetStringWithExpire } from './interface'
 import { parseKeysListResponse } from '../utils'
 
-export const initialState: KeysStore = {
+export const initialKeysState: KeysStore = {
   deleting: false,
   loading: false,
   filter: null,
@@ -39,10 +41,11 @@ export const initialState: KeysStore = {
     previousResultCount: 0,
     lastRefreshTime: null,
   },
+  addKeyLoading: false,
 }
 export const useKeysStore = create<KeysStore & KeysActions>()(
-  immer(devtools(persist((set) => ({
-    ...initialState,
+  immer(devtools((set) => ({
+    ...initialKeysState,
     // actions
     loadKeys: () => set({ loading: true }),
     loadKeysFinal: () => set({ loading: false }),
@@ -76,9 +79,33 @@ export const useKeysStore = create<KeysStore & KeysActions>()(
       state.data.total = !isNull(state.data.total) ? state.data.total - 1 : null
       state.data.scanned -= 1
     }),
-  }),
-  { name: 'keys' }))),
+
+    // Add Key
+    addKey: () => set({ loading: true }),
+    addKeyFinal: () => set({ loading: false }),
+
+    addKeySuccess: (data) => set((state) => {
+      state.data = {
+        ...data,
+        previousResultCount: data.keys?.length,
+        lastRefreshTime: Date.now(),
+      }
+    }),
+
+    updateKeyList: (payload) => set((state) => {
+      state.data?.keys.unshift({ name: payload.key })
+
+      state.data = {
+        ...state.data,
+        total: isNull(state.data.total) ? null : state.data.total + 1,
+        scanned: state.data.scanned + 1,
+      }
+    }),
+    resetAddKey: () => set({ addKeyLoading: false }),
+  }))),
 )
+
+export const useKeysStoreNew = createSelectors(useKeysStore)
 
 // eslint-disable-next-line import/no-mutable-exports
 export let sourceKeysFetch: Nullable<CancelTokenSource> = null
@@ -211,7 +238,7 @@ export function fetchKeysMetadataTree(
   onSuccessAction?: (data: KeyInfo[]) => void,
   onFailAction?: () => void,
 ) {
-  return useKeysStore.setState(async (state) => {
+  return useKeysStore.setState(async () => {
     try {
       const { data } = await apiService.post<KeyInfo[]>(
         getUrl(ApiEndpoints.KEYS_METADATA),
@@ -260,5 +287,59 @@ export function deleteKeyAction(
     } finally {
       state.deleteKeyFinal()
     }
+  })
+}
+
+// Asynchronous thunk action
+export function addStringKey(
+  data: SetStringWithExpire,
+  onSuccessAction?: () => void,
+  onFailAction?: () => void,
+) {
+  return addTypedKey(data, KeyTypes.String, onSuccessAction, onFailAction)
+}
+
+function addTypedKey(
+  data: any,
+  keyType: KeyTypes,
+  onSuccessAction?: () => void,
+  onFailAction?: () => void,
+) {
+  return useKeysStore.setState(async (state) => {
+    state.addKey()
+    const endpoint = ENDPOINT_BASED_ON_KEY_TYPE[keyType as EndpointBasedOnKeyType]
+
+    try {
+      const { status } = await apiService.post(
+        getUrl(endpoint),
+        data,
+      )
+      if (isStatusSuccessful(status)) {
+        onSuccessAction?.()
+        addKeyIntoList({ key: data.keyName, keyType })
+        showInformationMessage(successMessages.ADDED_NEW_KEY(data.keyName).title)
+      }
+    } catch (error) {
+      const errorMessage = getApiErrorMessage(error as AxiosError)
+      showErrorMessage(errorMessage)
+      onFailAction?.()
+    } finally {
+      state.addKeyFinal()
+    }
+  })
+}
+
+export function addKeyIntoList({ key, keyType }: { key: RedisString, keyType: KeyTypes }) {
+  return useKeysStore.setState(async (state) => {
+    const { filter, search } = state
+
+    if (search && search !== DEFAULT_SEARCH_MATCH) {
+      return null
+    }
+
+    if (!filter || filter === keyType) {
+      return state.updateKeyList({ key, keyType })
+    }
+    return null
   })
 }

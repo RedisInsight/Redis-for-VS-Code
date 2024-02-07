@@ -1,4 +1,4 @@
-export { getUrl } from './getUrlDatabase'
+export { getUrl, getUrlWithId } from './getUrlDatabase'
 export { getEncoding } from './getEncoding'
 export { getDatabaseId } from './getDatabaseId'
 

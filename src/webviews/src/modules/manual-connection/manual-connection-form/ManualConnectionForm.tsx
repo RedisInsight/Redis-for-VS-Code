@@ -6,7 +6,6 @@ import ReactDOM from 'react-dom'
 import Popup from 'reactjs-popup'
 import { VSCodeButton, VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 
-import { useSelector } from 'react-redux'
 import {
   Keys,
   validationErrors,
@@ -30,11 +29,10 @@ import {
   SentinelMasterDatabase,
 } from 'uiSrc/components'
 import { useCertificatesStore } from 'uiSrc/store'
-import { databasesSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 
 export interface Props {
   formFields: DbConnectionInfo
-  submitButtonText?: SubmitBtnText
+  submitButtonText?: string
   loading: boolean
   isEditMode?: boolean
   isCloneMode: boolean

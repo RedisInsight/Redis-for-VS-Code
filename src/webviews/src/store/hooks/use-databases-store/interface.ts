@@ -1,13 +1,12 @@
 import { ConnectionType } from 'uiSrc/constants'
 import { Nullable } from 'uiSrc/interfaces'
 
-export interface InitialStateDatabases {
+export interface DatabasesStore {
   loading: boolean
-  error: string
   data: Database[]
-  connectedDatabase: Database
+  connectedDatabase: Nullable<Database>
   editDatabase: Nullable<Database>
-  freeDatabase: Nullable<Database>
+  freeDatabases: Database[]
 }
 
 export interface Database {
@@ -87,4 +86,13 @@ export interface SentinelMaster {
 export enum SentinelMasterStatus {
   Active = 'active',
   Down = 'down',
+}
+
+export interface DatabasesActions {
+  processDatabase: () => void
+  processDatabaseFinal: () => void
+  loadDatabasesSuccess: (data: Database[]) => void
+  setEditDatabase: (data: Database) => void
+  setConnectedDatabase: (data: Database) => void
+  resetConnectedDatabase: () => void
 }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHotkeys } from 'react-hotkeys-hook'
 
+import { useShallow } from 'zustand/react/shallow'
 import {
   cliSettingsSelector,
   createCliClientAction,
@@ -27,17 +28,15 @@ import {
   CommandPSubscribe,
   CommandSubscribe,
   CommandHello3,
-  CONNECTED_DATABASE_ID,
   // Pages
 } from 'uiSrc/constants'
 import { getCommandRepeat, isRepeatCountCorrect, sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { ClusterNodeRole } from 'uiSrc/interfaces'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 import { checkUnsupportedCommand, clearOutput, cliCommandOutput } from 'uiSrc/modules/cli/utils/cliHelper'
 // import { showMonitor } from 'uiSrc/slices/cli/monitor'
 // import { SendClusterCommandDto } from 'apiSrc/modules/cli/dto/cli.dto'
 
-import { AppDispatch } from 'uiSrc/store'
+import { AppDispatch, useDatabasesStore } from 'uiSrc/store'
 import { CliBody } from './cli-body'
 
 import styles from './cli-body/styles.module.scss'
@@ -56,7 +55,8 @@ export const CliBodyWrapper = () => {
     matchedCommand,
     cliClientUuid,
   } = useSelector(cliSettingsSelector)
-  const { host, port, connectionType } = useSelector(connectedDatabaseSelector)
+  const database = useDatabasesStore(useShallow((state) => state.connectedDatabase))
+  const { id, host, port, connectionType } = database || {}
   const { db: currentDbIndex } = useSelector(outputSelector)
 
   const removeCliClient = () => {
@@ -66,17 +66,17 @@ export const CliBodyWrapper = () => {
     sendEventTelemetry({
       event: TelemetryEvent.CLI_CLOSED,
       eventData: {
-        databaseId: CONNECTED_DATABASE_ID,
+        databaseId: id,
       },
     })
   }
 
   useEffect(() => {
-    !cliClientUuid && host && dispatch(createCliClientAction())
+    !cliClientUuid && host && dispatch(createCliClientAction(database!))
     return () => {
       removeCliClient()
     }
-  }, [host])
+  }, [database])
 
   useEffect(() => {
     if (!isEnteringCommand) {
@@ -147,7 +147,7 @@ export const CliBodyWrapper = () => {
     sendEventTelemetry({
       event: TelemetryEvent.CLI_COMMAND_SUBMITTED,
       eventData: {
-        databaseId: CONNECTED_DATABASE_ID,
+        databaseId: id,
       },
     })
     if (connectionType !== ConnectionType.Cluster) {

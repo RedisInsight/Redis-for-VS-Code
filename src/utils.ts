@@ -61,7 +61,10 @@ export const handleMessage = (message: any = {}) => {
     showInformationMessage(message.data)
   }
   if (message.action === 'OpenCli') {
-    vscode.commands.executeCommand('RedisInsight.cliOpen')
+    vscode.commands.executeCommand('RedisInsight.cliOpen', message)
+  }
+  if (message.action === 'AddCli') {
+    vscode.commands.executeCommand('RedisInsight.addCli', message)
   }
   if (message.action === 'AddKey') {
     vscode.commands.executeCommand('RedisInsight.addKeyOpen', message)

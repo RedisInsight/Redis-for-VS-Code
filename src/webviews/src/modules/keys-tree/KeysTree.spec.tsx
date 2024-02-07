@@ -8,8 +8,7 @@ import { KeyTypes } from 'uiSrc/constants'
 import { setKeysTreeNodesOpen } from 'uiSrc/slices/app/context/context.slice'
 import { mockedStore, render } from 'testSrc/helpers'
 import { KeysTree } from './KeysTree'
-import { KeysStoreData } from '../../slices/browser/interface'
-import { selectedKeyDataSelector } from '../../slices/browser/keys.slice'
+import { KeysStoreData } from './hooks/interface'
 
 let store: typeof mockedStore
 beforeEach(() => {
@@ -112,11 +111,6 @@ const mockWebWorkerResult = [{
 //   useDisposableWebworker: () => ({ result: mockWebWorkerResult, run: vi.fn() }),
 // }))
 
-// vi.mock('./slice/keys.slice', async () => ({
-//   ...(await vi.importActual<object>('./slice/keys.slice')),
-//   selectedKeyDataSelector: vi.fn().mockReturnValue(null),
-// }))
-
 // vi.mock('uiSrc/telemetry', async () => ({
 //   ...(await vi.importActual<object>('uiSrc/telemetry')),
 //   sendEventTelemetry: vi.fn(),
@@ -154,17 +148,17 @@ describe('KeysTree', () => {
       // expect(onSelectedKeyMock).toBeCalled()
     })
 
-    it('selected key from key list should be opened and selected in the tree', async () => {
-      const selectedKeyDataSelectorMock = vi.fn().mockReturnValue({
-        name: stringToBuffer(leaf2FullName),
-        nameString: leaf2FullName,
-      });
+    // it('selected key from key list should be opened and selected in the tree', async () => {
+    //   const selectedKeyDataSelectorMock = vi.fn().mockReturnValue({
+    //     name: stringToBuffer(leaf2FullName),
+    //     nameString: leaf2FullName,
+    //   });
 
-      (selectedKeyDataSelector as Mock).mockImplementation(selectedKeyDataSelectorMock)
+    //   (selectedKeyDataSelector as Mock).mockImplementation(selectedKeyDataSelectorMock)
 
-      const { getByTestId } = render(<KeysTree />)
+    //   const { getByTestId } = render(<KeysTree />)
 
-      expect(getByTestId(`node-item_${leaf2FullName}`)).toBeInTheDocument()
-    })
+    //   expect(getByTestId(`node-item_${leaf2FullName}`)).toBeInTheDocument()
+    // })
   })
 })

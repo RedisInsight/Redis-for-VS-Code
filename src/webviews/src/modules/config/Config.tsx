@@ -12,8 +12,7 @@ import {
 } from 'uiSrc/slices/app/info/info.slice'
 import { fetchRedisCommandsInfo } from 'uiSrc/slices/app/commands/redis-commands.slice'
 import { isDifferentConsentsExists } from 'uiSrc/utils'
-import { AppDispatch } from 'uiSrc/store'
-import { fetchDatabasesAction } from 'uiSrc/slices/connections/databases/databases.slice'
+import { AppDispatch, fetchDatabases } from 'uiSrc/store'
 
 export const Config = () => {
   const { config, spec } = useSelector(userSettingsSelector)
@@ -22,7 +21,7 @@ export const Config = () => {
   useEffect(() => {
     dispatch(fetchServerInfo())
     dispatch(fetchRedisCommandsInfo())
-    dispatch(fetchDatabasesAction())
+    fetchDatabases()
 
     // fetch config settings, after that take spec
     dispatch(fetchUserConfigSettings(() => dispatch(fetchUserSettingsSpec())))

@@ -1,5 +1,5 @@
 import { ADD_NEW_CA_CERT, NO_CA_CERT } from 'uiSrc/constants'
-import { Database } from 'uiSrc/slices/connections/databases/interface'
+import { Database } from 'uiSrc/store'
 
 export interface DbConnectionInfo extends Database {
   id?: string

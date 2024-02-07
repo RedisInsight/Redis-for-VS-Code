@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+// import compression from 'vite-plugin-compression2'
+import svgr from 'vite-plugin-svgr'
 import { fileURLToPath, URL } from 'node:url'
 import path from 'path'
 
@@ -7,10 +9,22 @@ import path from 'path'
  * @type {import('vite').UserConfig}
  */
 export default defineConfig({
-  plugins: [react(), htmlPlugin(), closePlugin()],
+  plugins: [
+    react(),
+    htmlPlugin(),
+    closePlugin(),
+    svgr(),
+    // compression({
+    //   algorithm: 'gzip', exclude: [/\.(br)$ /, /\.(gz)$/],
+    // }),
+    // compression({
+    //   algorithm: 'brotliCompress', exclude: [/\.(br)$ /, /\.(gz)$/],
+    // }),
+  ],
   publicDir: './src/webviews/public',
   resolve: {
     alias: {
+      lodash: 'lodash-es',
       uiSrc: fileURLToPath(new URL('./src/webviews/src', import.meta.url)),
       testSrc: fileURLToPath(new URL('./src/webviews/test', import.meta.url)),
     },

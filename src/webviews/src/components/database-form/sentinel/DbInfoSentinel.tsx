@@ -2,7 +2,7 @@ import React from 'react'
 import { capitalize } from 'lodash'
 
 import { Nullable, ConnectionType } from 'uiSrc/interfaces'
-import { SentinelMaster } from 'uiSrc/slices/connections/databases/interface'
+import { SentinelMaster } from 'uiSrc/store'
 
 import styles from '../styles.module.scss'
 

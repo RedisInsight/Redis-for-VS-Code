@@ -6,7 +6,7 @@ import { HttpResponse, http } from 'msw'
 import { rootReducers, store } from 'uiSrc/store'
 import { getMWSUrl, constants } from 'testSrc/helpers'
 import { KeysTree } from './KeysTree'
-import { initialState as initialStateKeys } from '../../slices/browser/keys.slice'
+import { initialKeysState } from './hooks/useKeys'
 
 type Story = StoryObj<typeof KeysTree>
 
@@ -35,9 +35,9 @@ const MockStore = ({ keysState, children }: any) => (
             name: 'keys',
             initialState:
             {
-              ...initialStateKeys,
+              ...initialKeysState,
               data: {
-                ...initialStateKeys.data,
+                ...initialKeysState.data,
                 keys: keysState,
               },
             },

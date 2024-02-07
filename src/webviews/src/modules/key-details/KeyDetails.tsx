@@ -7,8 +7,7 @@ import { useSelector } from 'react-redux'
 import { KeyTypes, VscodeMessageAction } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
+import { fetchKeyInfo, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { vscodeApi } from 'uiSrc/services'
 import { DynamicTypeDetails } from './components/dynamic-type-details'
 
@@ -28,7 +27,7 @@ const KeyDetails = (props: Props) => {
     keyProp,
   } = props
 
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
   const { loading, data } = useSelectedKeyStore(useShallow((state) => ({
     loading: state.loading,
@@ -38,14 +37,14 @@ const KeyDetails = (props: Props) => {
   const isKeySelected = !isNull(data)
   const { type: keyType = KeyTypes.String, name: keyName, length: keyLength } = data ?? { }
 
-  useEffect(() => {
-    if (keyProp === null) {
-      return
-    }
-    // Restore key details from context in future
-    // (selectedKey.data?.name !== keyProp)
-    fetchKeyInfo(keyProp)
-  }, [])
+  // useEffect(() => {
+  //   if (keyProp === null) {
+  //     return
+  //   }
+  //   // Restore key details from context in future
+  //   // (selectedKey.data?.name !== keyProp)
+  //   // fetchKeyInfo({ key: keyProp! })
+  // }, [])
 
   useEffect(() => {
     if (!isUndefined(keyName)) {

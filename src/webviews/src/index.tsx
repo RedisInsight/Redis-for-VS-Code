@@ -5,16 +5,23 @@ import {
 } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
-import { fetchKeyInfo, store, resetZustand, useSelectedKeyStore } from 'uiSrc/store'
+import {
+  fetchKeyInfo,
+  store,
+  resetZustand,
+  useSelectedKeyStore,
+  fetchEditedDatabase,
+  Database,
+  useDatabasesStore,
+  fetchDatabases,
+} from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
 import { RedisString } from 'uiSrc/interfaces'
 import { isEqualBuffers } from 'uiSrc/utils'
-import { VscodeMessageAction } from 'uiSrc/constants'
+import { StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
-import { fetchPatternKeysAction, useKeysStore } from './modules/keys-tree/hooks/useKeys'
-import { Database } from './slices/connections/databases/interface'
-import { fetchEditedDatabaseAction } from './slices/connections/databases/databases.slice'
+import { localStorageService, sessionStorageService } from './services'
 
 import './styles/main.scss'
 import '../vscode.css'
@@ -22,10 +29,6 @@ import '../vscode.css'
 // TODO: Type the incoming config data
 // const config: any = {}
 // const workspace = ''
-
-const container = document.getElementById('root')
-localStorage.setItem('apiPort', container?.dataset.apiPort as string)
-const root = createRoot(container!)
 
 // if (root) {
 //   workspace = root.getAttribute('data-workspace') || ''
@@ -38,38 +41,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleMessage(event: any) {
     const message = event.data
+    console.debug(message.action)
 
     switch (message.action) {
       case VscodeMessageAction.SelectKey:
-        const { data } = message as { data: RedisString }
+        const { name, databaseId } = message?.data as { name: RedisString, databaseId: string }
         const prevKey = useSelectedKeyStore.getState().data?.name
 
-        if (isEqualBuffers(data, prevKey)) {
+        if (isEqualBuffers(name, prevKey)) {
           return
         }
+        sessionStorageService.set(StorageItem.databaseId, databaseId)
         resetZustand()
-        fetchKeyInfo(data)
+        fetchKeyInfo({ key: name }, true)
         break
       case VscodeMessageAction.RefreshTree:
+        // TODO
         if (message.data?.keyName) {
-          useKeysStore.getState()?.deleteKeyFromList(message.data?.keyName)
+          // useKeysStore.getState()?.deleteKeyFromList(message.data?.keyName)
         } else {
-          fetchPatternKeysAction()
+          fetchDatabases()
         }
         break
       case VscodeMessageAction.EditDatabase:
-        const { data: database } = message as { data: Database }
-        store.dispatch(fetchEditedDatabaseAction(database))
+        fetchEditedDatabase(message?.data as Database)
+        break
+      case VscodeMessageAction.AddCli:
+      case VscodeMessageAction.OpenCli:
+        const database = message?.data as Database
+
+        localStorageService.set(StorageItem.cliDatabase, database)
+        sessionStorageService.set(StorageItem.databaseId, database.id)
+
+        useDatabasesStore.getState().setConnectedDatabase(database)
+        store.dispatch(addCli(database))
+
         break
       default:
         break
     }
-    if (message.action === VscodeMessageAction.AddCli) {
-      // TODO: change logic after DB connection will be implemented
-      store.dispatch(addCli())
-    }
   }
 })
+
+const container = document.getElementById('root')
+localStorage.setItem('apiPort', container?.dataset.apiPort as string)
+const root = createRoot(container!)
 
 root.render(
   <React.StrictMode>

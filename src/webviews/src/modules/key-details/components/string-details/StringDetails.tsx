@@ -14,8 +14,7 @@ import {
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
 import { TelemetryEvent, isFormatEditable, isFullStringLoaded, sendEventTelemetry } from 'uiSrc/utils'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
-import { useSelectedKeyStore } from 'uiSrc/store'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { StringDetailsValue } from './string-details-value'
 import { fetchString, useStringStore } from './hooks/useStringStore'
 import { EditItemAction } from '../key-details-actions'
@@ -26,7 +25,7 @@ const StringDetails = (props: Props) => {
   const { onRemoveKey } = props
   const keyType = KeyTypes.String
 
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
   const { keyValue, isStringCompressed, resetStringStore } = useStringStore(useShallow((state) => ({
     keyValue: state.data.value,

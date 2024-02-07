@@ -28,6 +28,8 @@ enum StorageItem {
   showHiddenRecommendations = 'showHiddenRecommendations',
   OAuthJobId = 'OAuthJobId',
   OAuthAgreement = 'OAuthAgreement',
+  cliDatabase = 'cliDatabase',
+  databaseId = 'databaseId',
 }
 
 export { StorageItem }

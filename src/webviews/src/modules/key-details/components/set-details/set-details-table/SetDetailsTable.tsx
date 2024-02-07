@@ -28,8 +28,7 @@ import {
 } from 'uiSrc/constants'
 import { PopoverDelete, VirtualTable } from 'uiSrc/components'
 import { IColumnSearchState, ITableColumn } from 'uiSrc/components/virtual-table/interfaces'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import {
   deleteSetMembers,
   fetchSetMembers,
@@ -56,7 +55,7 @@ export interface Props {
 export const SetDetailsTable = (props: Props) => {
   const { isFooterOpen, onRemoveKey } = props
 
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
   const { viewFormatProp, length, key } = useSelectedKeyStore(useShallow((state) => ({
     viewFormatProp: state.viewFormat,

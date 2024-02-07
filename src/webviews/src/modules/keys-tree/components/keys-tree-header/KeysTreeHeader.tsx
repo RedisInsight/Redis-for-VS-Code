@@ -2,20 +2,20 @@ import React from 'react'
 
 import { ScanMore } from 'uiSrc/components'
 import { SCAN_TREE_COUNT_DEFAULT } from 'uiSrc/constants'
-import { fetchMorePatternKeysAction, useKeysStore } from '../../hooks/useKeys'
+import { useKeysApi, useKeysInContext } from '../../hooks/useKeys'
 
 export interface Props { }
 
 export const KeysTreeHeader = () => {
-  const { loading, total, scanned, nextCursor } = useKeysStore((state) => ({
-    loading: state.loading,
-    total: state.data?.total,
-    scanned: state.data?.scanned,
-    nextCursor: state.data?.nextCursor,
-  }))
+  const loading = useKeysInContext((state) => state.loading)
+  const total = useKeysInContext((state) => state.data.total)
+  const scanned = useKeysInContext((state) => state.data.scanned)
+  const nextCursor = useKeysInContext((state) => state.data.nextCursor)
+
+  const keysApi = useKeysApi()
 
   const loadMoreItems = () => {
-    fetchMorePatternKeysAction(nextCursor, SCAN_TREE_COUNT_DEFAULT)
+    keysApi.getState().fetchMorePatternKeysAction(nextCursor, SCAN_TREE_COUNT_DEFAULT)
   }
 
   return (

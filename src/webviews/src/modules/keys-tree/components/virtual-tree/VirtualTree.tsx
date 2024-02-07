@@ -1,24 +1,22 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import AutoSizer, { Size } from 'react-virtualized-auto-sizer'
-import { debounce, get, set } from 'lodash'
+import { debounce, get, isUndefined, set } from 'lodash'
 import {
   TreeWalker,
   TreeWalkerValue,
   FixedSizeTree as Tree,
 } from 'react-vtree'
-import { useDispatch } from 'react-redux'
 import cx from 'classnames'
 
-import { AllKeyTypes, DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, KeyTypes, SortOrder } from 'uiSrc/constants'
+import { AllKeyTypes, DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, KeyTypes, MAX_HEIGHT_TREE, SortOrder } from 'uiSrc/constants'
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { bufferToString } from 'uiSrc/utils'
-import { AppDispatch } from 'uiSrc/store'
 import { useDisposableWebworker } from 'uiSrc/hooks'
 import { NodeMeta, TreeData, TreeNode } from './interfaces'
 import { Node } from '../node'
 import { MIN_NODE_WIDTH, PADDING_LEVEL } from '../../constants'
 
-import { fetchKeysMetadataTree } from '../../hooks/useKeys'
+import { useKeysApi } from '../../hooks/useKeys'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -65,18 +63,36 @@ const VirtualTree = (props: Props) => {
   const controller = useRef<Nullable<AbortController>>(null)
   const elements = useRef<any>({})
   const nodes = useRef<TreeNode[]>([])
+  const innerRef = useRef<HTMLDivElement>(null)
+  const isNotRendered = useRef<boolean>(true)
+
+  const keysApi = useKeysApi()
 
   const { result, run: runWebworker } = useDisposableWebworker(webworkerFn)
-  // todo: remove after testing
-  // const [result, setResult] = useState([])
-
-  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() =>
     () => {
       nodes.current = []
       elements.current = {}
     }, [])
+
+  // receive result from the "runWebworker"
+  useEffect(() => {
+    if (!result) {
+      return
+    }
+
+    elements.current = {}
+    nodes.current = result
+    rerender({})
+    setConstructingTree?.(false)
+  }, [result])
+
+  useEffect(() => {
+    setTimeout(() => {
+      rerender({})
+    }, 0)
+  }, [statusOpen])
 
   // receive result from the "runWebworker"
   useEffect(() => {
@@ -138,7 +154,7 @@ const VirtualTree = (props: Props) => {
   const getMetadata = useCallback((
     itemsInit: any[][] = [],
   ): void => {
-    fetchKeysMetadataTree(
+    keysApi.getState().fetchKeysMetadataTree(
       itemsInit,
       commonFilterType,
       controller.current?.signal,
@@ -242,35 +258,52 @@ const VirtualTree = (props: Props) => {
     [statusSelected, statusOpen, rerenderState, containerWidth],
   )
 
+  const containerHeight = isUndefined(innerRef.current?.clientHeight)
+    ? 1
+    : innerRef.current?.clientHeight < MAX_HEIGHT_TREE
+      ? innerRef.current?.clientHeight
+      : MAX_HEIGHT_TREE
+
+  const onItemsRendered = () => {
+    if (isNotRendered.current) {
+      isNotRendered.current = false
+      rerender({})
+    }
+  }
+
   return (
-    <AutoSizer onResize={onResize}>
-      {({ height, width }) => (
-        <div data-testid="virtual-tree" style={{ position: 'relative' }}>
-          {nodes.current.length > 0 && (
+    <div style={{ height: containerHeight }}>
+      <AutoSizer onResize={onResize}>
+        {({ height, width }) => (
+          <div className="relative" data-testid="virtual-tree">
+            {nodes.current.length > 0 && (
             <>
               <Tree
                 async
                 height={height}
                 width={width}
+                innerRef={innerRef}
                 itemSize={22}
                 treeWalker={treeWalker}
+                onItemsRendered={onItemsRendered}
                 className={cx(styles.customScroll, { 'table-loading': loading })}
               >
                 {Node}
               </Tree>
             </>
-          )}
-          {nodes.current.length === 0 && loading && (
-            <div className={styles.loadingContainer} style={{ width: width || 0, height: height || 0 }} data-testid="virtual-tree-spinner">
-              <div className={styles.loadingBody}>
-                {/* <EuiLoadingSpinner size="xl" className={styles.loadingSpinner} />
-                <EuiIcon type={loadingIcon || 'empty'} className={styles.loadingIcon} /> */}
+            )}
+            {nodes.current.length === 0 && loading && (
+              <div className={styles.loadingContainer} style={{ width: width || 0, height: height || 0 }} data-testid="virtual-tree-spinner">
+                <div className={styles.loadingBody}>
+                  {/* <EuiLoadingSpinner size="xl" className={styles.loadingSpinner} />
+                  <EuiIcon type={loadingIcon || 'empty'} className={styles.loadingIcon} /> */}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
-    </AutoSizer>
+            )}
+          </div>
+        )}
+      </AutoSizer>
+    </div>
   )
 }
 

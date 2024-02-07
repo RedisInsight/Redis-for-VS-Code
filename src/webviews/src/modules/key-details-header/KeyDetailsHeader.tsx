@@ -13,9 +13,8 @@ import {
   KeyTypes,
 } from 'uiSrc/constants'
 import { RedisString } from 'uiSrc/interfaces'
-import { editKeyTTL, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
+import { editKeyTTL, refreshKeyInfo, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { TelemetryEvent, bufferToString, formatLongName, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 // import { KeyDetailsHeaderFormatter } from './components/key-details-header-formatter'
 import { PopoverDelete } from 'uiSrc/components'
 import { KeyDetailsHeaderName } from './components/key-details-header-name'
@@ -23,8 +22,8 @@ import { KeyDetailsHeaderTTL } from './components/key-details-header-ttl'
 // import { KeyDetailsHeaderDelete } from './components/key-details-header-delete'
 import { KeyDetailsHeaderSizeLength } from './components/key-details-header-size-length'
 import { KeyRowType } from '../keys-tree/components/key-row-type'
-import { deleteKeyAction } from '../keys-tree/hooks/useKeys'
 
+import { useKeysApi } from '../keys-tree/hooks/useKeys'
 import styles from './styles.module.scss'
 
 export interface KeyDetailsHeaderProps {
@@ -48,7 +47,9 @@ const KeyDetailsHeader = ({
   })))
 
   const { type = KeyTypes.String, name: keyBuffer, nameString: keyProp, length } = data ?? {}
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
+
+  const keysApi = useKeysApi()
 
   const handleRefreshKey = () => {
     refreshKeyInfo(keyBuffer!)
@@ -74,7 +75,7 @@ const KeyDetailsHeader = ({
   }
 
   const handleDeleteKey = (key: RedisString) => {
-    deleteKeyAction(key, onRemoveKey)
+    keysApi.getState().deleteKeyAction(key, onRemoveKey)
   }
 
   const handleDeleteKeyClicked = () => {

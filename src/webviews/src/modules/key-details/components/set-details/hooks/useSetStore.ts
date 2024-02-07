@@ -169,7 +169,7 @@ export const deleteSetMembers = (
             l10n.t('Member'),
           ).message,
         )
-        fetchKeyInfo(key!, false)
+        fetchKeyInfo({ key: key! }, false)
       } else {
         // dispatch(deleteSelectedKeySuccess())
         // dispatch(deleteKeyFromList(key))

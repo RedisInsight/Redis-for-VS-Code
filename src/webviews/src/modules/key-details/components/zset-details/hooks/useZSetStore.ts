@@ -176,7 +176,7 @@ export const deleteZSetMembers = (
             l10n.t('Member'),
           ).message,
         )
-        fetchKeyInfo(key!, false)
+        fetchKeyInfo({ key: key! }, false)
       } else {
         // todo: connection between webviews
         // dispatch(deleteSelectedKeySuccess())

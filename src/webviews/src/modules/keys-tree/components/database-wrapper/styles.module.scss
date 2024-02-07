@@ -3,7 +3,7 @@
 }
 
 .databaseName {
-  @apply text-ellipsis whitespace-nowrap overflow-hidden;
+  @apply text-ellipsis whitespace-nowrap overflow-hidden flex;
 }
 
 .icon {

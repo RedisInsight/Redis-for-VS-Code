@@ -14,8 +14,7 @@ import {
   removeItem,
 } from 'uiSrc/utils'
 import { AddItemsActions } from 'uiSrc/components'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { IHashFieldState, INITIAL_HASH_FIELD_STATE } from 'uiSrc/modules/add-key'
 import { InputText } from 'uiSrc/ui'
 
@@ -34,7 +33,7 @@ const AddHashFields = (props: Props) => {
   }))
   const selectedKey = useSelectedKeyStore((state) => state.data?.name ?? '')
   const [fields, setFields] = useState<IHashFieldState[]>([{ ...INITIAL_HASH_FIELD_STATE }])
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
   const lastAddedFieldName = useRef<HTMLInputElement>(null)
 
   useEffect(() =>

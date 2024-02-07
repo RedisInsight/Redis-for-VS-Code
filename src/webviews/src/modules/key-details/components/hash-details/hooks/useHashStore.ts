@@ -171,7 +171,7 @@ export const deleteHashFields = (
             l10n.t('Field'),
           ).message,
         )
-        fetchKeyInfo(key!, false)
+        fetchKeyInfo({ key: key! }, false)
       } else {
         // todo: connection between webviews
         // dispatch(deleteSelectedKeySuccess())

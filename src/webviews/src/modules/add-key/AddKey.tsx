@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 import { KeyTypes } from 'uiSrc/constants'
 // import HelpTexts from 'uiSrc/constants/help-texts'
-import {
-  addKeyStateSelector,
-  resetAddKey,
-} from 'uiSrc/slices/browser/keys.slice'
+
 // import { connectedInstanceSelector } from 'uiSrc/slices/instances/instances'
 import {
   // isContainJSONModule,
   Maybe,
 } from 'uiSrc/interfaces'
 import { vscodeApi } from 'uiSrc/services'
-import { AppDispatch } from 'uiSrc/store'
 import AddKeyCommonFields from './components/AddKeyCommonFields/AddKeyCommonFields'
 
 import { ADD_KEY_TYPE_OPTIONS } from './constants/key-type-options'
@@ -25,19 +20,20 @@ import AddKeyString from './components/AddKeyString/AddKeyString'
 // import AddKeyReJSON from './AddKeyReJSON/AddKeyReJSON'
 // import AddKeyStream from './AddKeyStream/AddKeyStream'
 
+import { useKeysApi, useKeysInContext } from '../keys-tree/hooks/useKeys'
 import styles from './styles.module.scss'
 
 export const AddKey = () => {
-  const dispatch = useDispatch<AppDispatch>()
+  const loading = useKeysInContext((state) => state.addKeyLoading)
+  const keysApi = useKeysApi()
 
-  const { loading } = useSelector(addKeyStateSelector)
   // const { id: instanceId } = useSelector(connectedInstanceSelector)
 
   useEffect(
     () =>
       // componentWillUnmount
       () => {
-        dispatch(resetAddKey())
+        keysApi.getState().resetAddKey()
       },
     [],
   )

@@ -1,3 +1,4 @@
+import { AdditionalRedisModule } from 'uiSrc/store'
 import { TelemetryEvent } from './events'
 
 export interface ITelemetryIdentify {
@@ -45,3 +46,6 @@ export interface IModuleSummary {
 }
 
 export type RedisModulesKeyType = keyof typeof RedisModules
+export interface IRedisModulesSummary extends Record<keyof typeof RedisModules, IModuleSummary> {
+  customModules: AdditionalRedisModule[]
+}
