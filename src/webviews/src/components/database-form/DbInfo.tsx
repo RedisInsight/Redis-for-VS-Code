@@ -8,8 +8,9 @@ import { VscInfo } from 'react-icons/vsc'
 import Popup from 'reactjs-popup'
 import { ConnectionType, Nullable } from 'uiSrc/interfaces'
 import { appInfoSelector } from 'uiSrc/slices/app/info/info.slice'
-
 import { AdditionalRedisModule, Endpoint } from 'uiSrc/slices/connections/databases/interface'
+import { DatabaseModules } from 'uiSrc/components'
+
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -91,21 +92,16 @@ const DbInfo = (props: Props) => {
         </div>
       )}
 
-      {/* {!!modules?.length && (
-        <>
-          <EuiListGroupItem
-            className={styles.dbInfoModulesLabel}
-            label={(
-              <div size="s">
-                Modules:
-              </div>
-            )}
-          />
-          <div color="default" className={cx(styles.dbInfoListValue, styles.dbInfoModules)}>
-            <DatabaseListModules modules={modules} />
+      {!!modules?.length && (
+        <div className="flex items-center">
+          <div>
+            Modules:
           </div>
-        </>
-      )} */}
+          <div className={cx(styles.dbInfoListValue, styles.dbInfoModules)}>
+            <DatabaseModules modules={modules} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

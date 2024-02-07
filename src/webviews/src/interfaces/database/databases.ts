@@ -502,3 +502,9 @@ export enum DatabaseType {
   AWSElasticache = 'AWS Elasticache',
   Sentinel = 'Redis Sentinel',
 }
+
+export interface AdditionalRedisModule {
+  name: string;
+  version?: number;
+  semanticVersion?: string;
+}

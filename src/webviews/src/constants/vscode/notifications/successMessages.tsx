@@ -16,6 +16,15 @@ export const successMessages = {
       </>
     ),
   }),
+  EDITED_NEW_DATABASE: (databaseName: string) => ({
+    title: l10n.t('Database has been edited'),
+    message: (
+      <>
+        <b>{formatNameShort(databaseName)}</b>
+        {l10n.t(' has been edited to RedisInsight.')}
+      </>
+    ),
+  }),
   DELETE_DATABASE: (databaseName: string) => ({
     title: l10n.t('Database has been deleted'),
     message: (
