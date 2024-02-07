@@ -57,7 +57,6 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
     storage: createJSONStorage(() => sessionStorage),
   }))),
 )
-// { name: 'selectedKey' }
 
 // Asynchronous thunk action
 export const fetchKeyInfo = (

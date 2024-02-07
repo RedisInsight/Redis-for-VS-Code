@@ -384,7 +384,6 @@ function updateCliHistory() {
 // async thunk function
 export function addCli(database: Database) {
   return async (dispatch: AppDispatch) => {
-    // useDatabasesStore.getState().setConnectedDatabase(message?.data as Database)
     dispatch(updateCliHistory())
     dispatch(resetOutput())
     dispatch(createCliClientAction(database))

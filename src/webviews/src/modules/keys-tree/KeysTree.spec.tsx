@@ -148,6 +148,7 @@ describe('KeysTree', () => {
       // expect(onSelectedKeyMock).toBeCalled()
     })
 
+    // todo
     // it('selected key from key list should be opened and selected in the tree', async () => {
     //   const selectedKeyDataSelectorMock = vi.fn().mockReturnValue({
     //     name: stringToBuffer(leaf2FullName),

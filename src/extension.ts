@@ -29,9 +29,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisInsight.cliOpen', (args) => {
       vscode.commands.executeCommand('ri-panel.focus')
-      // setTimeout(() => {
-      //   panelProvider.view?.webview.postMessage({ action: 'OpenCli', data: args.data })
-      // }, 1000)
     }),
 
     vscode.commands.registerCommand('RedisInsight.addCli', (args) => {

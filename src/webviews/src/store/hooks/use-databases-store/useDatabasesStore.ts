@@ -27,7 +27,6 @@ export const initialDatabasesState: DatabasesStore = {
 }
 
 export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
-// export const useDatabases = createStore<DatabasesStore & DatabasesActions>()(
   immer(devtools((set) => ({
     ...initialDatabasesState,
     // actions

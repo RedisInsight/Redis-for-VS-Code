@@ -68,7 +68,6 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   }
 
   const openCliClickHandle = () => {
-    // vscodeApi.postMessage({ action: VscodeMessageAction.OpenCli, data: database })
     vscodeApi.postMessage({ action: VscodeMessageAction.AddCli, data: database })
   }
 

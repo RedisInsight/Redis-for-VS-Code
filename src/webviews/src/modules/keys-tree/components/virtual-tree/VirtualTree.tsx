@@ -76,18 +76,6 @@ const VirtualTree = (props: Props) => {
       elements.current = {}
     }, [])
 
-  // receive result from the "runWebworker"
-  useEffect(() => {
-    if (!result) {
-      return
-    }
-
-    elements.current = {}
-    nodes.current = result
-    rerender({})
-    setConstructingTree?.(false)
-  }, [result])
-
   useEffect(() => {
     setTimeout(() => {
       rerender({})

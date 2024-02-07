@@ -1,13 +1,13 @@
 import { cleanup } from '@testing-library/react'
 import { cloneDeep } from 'lodash'
 import { Mock, SpyInstance } from 'vitest'
+import { createStore } from 'zustand'
 import * as utils from 'uiSrc/utils'
 import { apiService } from 'uiSrc/services'
 import { constants, mockedStore, waitForStack } from 'testSrc/helpers'
 import * as useKeys from '../useKeys'
 import { KeysActions, KeysStore, KeysStoreData, KeysThunks } from '../interface'
 import { createKeysActionsSlice, initialKeysState as initialStateInit } from '../useKeysActions'
-import { createStore } from 'zustand'
 import { createKeysThunksSlice } from '../useKeysThunks'
 
 const { stringToBuffer } = utils

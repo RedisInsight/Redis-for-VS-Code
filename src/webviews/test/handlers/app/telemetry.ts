@@ -3,7 +3,7 @@ import { ApiEndpoints } from 'uiSrc/constants'
 import { getMWSUrl } from 'testSrc/helpers'
 
 const handlers: RequestHandler[] = [
-  // fetchCerts
+  // fetch telemetry event
   http.post(
     getMWSUrl(`${ApiEndpoints.ANALYTICS_SEND_EVENT}`),
     () => HttpResponse.json(),
