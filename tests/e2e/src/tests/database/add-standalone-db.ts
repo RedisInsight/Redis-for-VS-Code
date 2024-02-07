@@ -14,7 +14,7 @@ import {
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
-import { Common, Config } from '@e2eSrc/helpers'
+import { Common, CommonDriverExtension, Config } from '@e2eSrc/helpers'
 import {
   sshPrivateKey,
   sshPrivateKeyWithPasscode,
@@ -38,7 +38,8 @@ const sshDbPasscode = {
   databaseName: `SSH_${Common.generateWord(5)}`,
 }
 const verifyDatabaseAdded = async (): Promise<void> => {
-  let databaseDetailsView = new DatabaseDetailsView()
+  await new WebView().switchBack()
+  await CommonDriverExtension.driverSleep(1000)
   let notifications = await new Workbench().getNotifications()
   let notification = notifications[0]
   // Check the notification message
@@ -47,10 +48,9 @@ const verifyDatabaseAdded = async (): Promise<void> => {
     `Database has been added`,
     'The notification is not displayed',
   )
-
   // Verify that panel is closed
   expect(
-    await databaseDetailsView.isElementDisplayed(
+    await new DatabaseDetailsView().isElementDisplayed(
       By.xpath(ViewElements[Views.DatabaseDetailsView]),
     ),
   ).false
@@ -76,7 +76,6 @@ describe('Add database', () => {
 
     await browser.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
-    await webView.switchToFrame(Views.KeyTreeView)
     await ButtonActions.clickElement(keyTreeView.addDatabaseBtn)
     await webView.switchBack()
     await webView.switchToFrame(Views.DatabaseDetailsView)
@@ -110,7 +109,7 @@ describe('Add database', () => {
       databaseDetailsView.timeoutInput,
       connectionTimeout,
     )
-    ButtonActions.clickElement(databaseDetailsView.saveDatabaseButton)
+    await ButtonActions.clickElement(databaseDetailsView.saveDatabaseButton)
     await verifyDatabaseAdded()
     // TODO:
     // Wait for database to be exist

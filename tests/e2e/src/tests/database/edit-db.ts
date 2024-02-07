@@ -8,7 +8,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
-import { Common, Config } from '@e2eSrc/helpers'
+import { Common, CommonDriverExtension, Config } from '@e2eSrc/helpers'
 import {
   sshPrivateKeyWithPasscode,
 } from '@e2eSrc/test-data/sshPrivateKeys'
@@ -23,7 +23,8 @@ const sshParams = {
 //   databaseName: `SSH_${Common.generateWord(5)}`,
 // }
 const verifyDatabaseEdited = async (): Promise<void> => {
-  let editDatabaseView = new EditDatabaseView()
+  await new WebView().switchBack()
+  await CommonDriverExtension.driverSleep(1000)
   let notifications = await new Workbench().getNotifications()
   let notification = notifications[0]
   // Check the notification message
@@ -32,10 +33,9 @@ const verifyDatabaseEdited = async (): Promise<void> => {
     `Database has been edited`,
     'The notification is not displayed',
   )
-
   // Verify that panel is closed
   expect(
-    await editDatabaseView.isElementDisplayed(
+    await new EditDatabaseView().isElementDisplayed(
       By.xpath(ViewElements[Views.DatabaseDetailsView]),
     ),
   ).false
@@ -68,7 +68,7 @@ describe('Edit Databases', () => {
     await webView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
-  // TODO unskip after implementing switching between databases
+  // TODO unskip after implementing switching between databases and edit of DB alias
   it.skip('Verify that user can edit DB alias of Standalone DB', async function () {
     // Verify that timeout input is displayed for edit db window with default value when it wasn't specified
     const timeoutValue = await (

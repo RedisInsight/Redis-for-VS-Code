@@ -29,8 +29,8 @@ export class DatabaseDetailsView extends BaseComponent {
   useTlsCheckbox = By.xpath(`//vscode-checkbox[@data-testid='tls']`)
   useSSHCheckbox = By.xpath(`//vscode-checkbox[@data-testid='use-ssh']`)
   // Radiobuttons
-  passwordRadioBtn = By.xpath(`//vscode-checkbox[@data-testid='radio-btn-password']`)
-  sshPrivateKeyRadioBtn = By.xpath(`//vscode-checkbox[@data-testid='radio-btn-privateKey']`)
+  passwordRadioBtn = By.xpath(`//vscode-radio[@data-testid='radio-btn-password']`)
+  sshPrivateKeyRadioBtn = By.xpath(`//vscode-radio[@data-testid='radio-btn-privateKey']`)
 
   constructor() {
     super(By.xpath(ViewLocators[Views.DatabaseDetailsView]))

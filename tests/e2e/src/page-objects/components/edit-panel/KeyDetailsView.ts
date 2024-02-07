@@ -89,7 +89,7 @@ export class KeyDetailsView extends BaseComponent {
       )
     }
     const inputField = await this.getElement(this.searchInput)
-    await inputField.sendKeys(value)
+    await InputActions.typeText(this.searchInput, value)
     await InputActions.pressKey(inputField, 'enter')
     await CommonDriverExtension.driverSleep(1000)
   }

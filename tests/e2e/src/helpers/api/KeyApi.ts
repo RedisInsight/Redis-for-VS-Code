@@ -11,7 +11,6 @@ import {
   StreamKeyParameters,
   StringKeyParameters,
 } from '../types/types'
-const databaseAPIRequests = new DatabaseAPIRequests()
 
 const getKeysPathMask = '/databases/databaseId/keys/get-info?encoding=buffer'
 const bufferPathMask = '/databases/databaseId/keys?encoding=buffer'
@@ -27,7 +26,7 @@ export class KeyAPIRequests {
     databaseName: string,
   ): Promise<void> {
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       fields: keyParameters.fields.map(fields => ({
@@ -57,7 +56,7 @@ export class KeyAPIRequests {
     databaseName: string,
   ): Promise<void> {
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       entries: keyParameters.entries.map(member => ({
@@ -88,7 +87,7 @@ export class KeyAPIRequests {
     databaseName: string,
   ): Promise<void> {
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       members: keyParameters.members.map(member =>
@@ -116,7 +115,7 @@ export class KeyAPIRequests {
     databaseName: string,
   ): Promise<void> {
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       members: keyParameters.members.map(member => ({
@@ -145,7 +144,7 @@ export class KeyAPIRequests {
     databaseName: string,
   ): Promise<void> {
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       element: Buffer.from(keyParameters.element, 'utf-8'),
@@ -171,7 +170,7 @@ export class KeyAPIRequests {
     databaseName: string,
   ): Promise<void> {
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       value: Buffer.from(keyParameters.value, 'utf-8'),
@@ -197,7 +196,7 @@ export class KeyAPIRequests {
     databaseName: string,
   ): Promise<void> {
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       data: keyParameters.data,
@@ -225,7 +224,7 @@ export class KeyAPIRequests {
       keyName: keyName,
     }
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const response = await CommonAPIRequests.sendPostRequest(
       getKeysPathMask.replace('databaseId', databaseId),
       requestBody,
@@ -244,7 +243,7 @@ export class KeyAPIRequests {
     databaseName: string,
   ): Promise<void> {
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const isKeyExist = await this.searchKeyByNameApi(keyName, databaseName)
     if (isKeyExist.length > 0) {
       const requestBody = { keyNames: [Buffer.from(keyName, 'utf-8')] }
@@ -270,7 +269,7 @@ export class KeyAPIRequests {
       keyName: keyName,
     }
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const response = await CommonAPIRequests.sendPostRequest(
       getKeysPathMask.replace('databaseId', databaseId),
       requestBody,
@@ -292,7 +291,7 @@ export class KeyAPIRequests {
     databaseName: string,
   ): Promise<void> {
     const databaseId =
-      await databaseAPIRequests.getDatabaseIdByName(databaseName)
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const isKeyExist = await this.searchKeyIfExistsApi(keyName, databaseName)
     if (isKeyExist.success === true) {
       const requestBody = { keyNames: [Buffer.from(keyName, 'utf-8')] }

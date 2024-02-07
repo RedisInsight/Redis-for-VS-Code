@@ -63,6 +63,7 @@ export class InputActions {
       until.elementLocated(inputLocator),
       timeout,
     )
+    await inputElement.clear()
     await inputElement.sendKeys(text)
   }
 
