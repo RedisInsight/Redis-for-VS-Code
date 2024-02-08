@@ -7,7 +7,7 @@ import { RedisResponseBufferType } from 'uiSrc/slices/interfaces'
 import { anyToBuffer, bufferToString } from 'uiSrc/utils'
 // import { GZIP_COMPRESSED_VALUE_1, GZIP_COMPRESSED_VALUE_2, DECOMPRESSED_VALUE_STR_1, DECOMPRESSED_VALUE_STR_2 } from 'uiSrc/utils/tests/decompressors'
 import { useSelectedKeyStore } from 'uiSrc/store'
-import { act, constants, fireEvent, render, screen } from 'testSrc/helpers'
+import { waitFor, constants, fireEvent, render, screen } from 'testSrc/helpers'
 import { HashDetailsTable, Props } from './HashDetailsTable'
 import { useHashStore } from '../hooks/useHashStore'
 
@@ -67,7 +67,7 @@ describe('HashDetailsTable', () => {
 
   // describe.todo('decompressed  data', () => {
   //   it('should render decompressed GZIP data', () => {
-  //     const defaultState = vi.requireActual('uiSrc/slices/browser/hash').initialState
+  //     const defaultState = await vi.importActual<object>('uiSrc/slices/browser/hash').initialState
   //     const hashDataSelectorMock = vi.fn().mockReturnValue({
   //       ...defaultState,
   //       total: 1,
@@ -87,7 +87,7 @@ describe('HashDetailsTable', () => {
   //   })
 
   //   it('edit button should be disabled if data was compressed', async () => {
-  //     const defaultState = vi.requireActual('uiSrc/slices/browser/hash').initialState
+  //     const defaultState = await vi.importActual<object>('uiSrc/slices/browser/hash').initialState
   //     const hashDataSelectorMock = vi.fn().mockReturnValue({
   //       ...defaultState,
   //       total: 1,
@@ -107,7 +107,7 @@ describe('HashDetailsTable', () => {
 
   //     fireEvent.click(editBtn)
 
-  //     await act(async () => {
+  //     await waitFor(async () => {
   //       fireEvent.mouseOver(editBtn)
   //     })
   //     await waitForEuiToolTipVisible()

@@ -154,6 +154,7 @@ const KeyDetailsHeader = ({
                   >
                     <VscDebugRestart />
                   </VSCodeButton>
+                  {!isUndefined(Actions) && <Actions width={width} />}
                   <PopoverDelete
                     item={keyProp!}
                     itemRaw={keyBuffer}
@@ -179,8 +180,7 @@ const KeyDetailsHeader = ({
                   {/* {Object.values(KeyTypes).includes(keyType as KeyTypes) && (
                       <KeyDetailsHeaderFormatter width={width} />
                     )}
-                    {!isUndefined(Actions) && <Actions width={width} />}
-                    <KeyDetailsHeaderDelete onDelete={handleDeleteKey} /> */}
+                    */}
                 </div>
               </div>
             </div>

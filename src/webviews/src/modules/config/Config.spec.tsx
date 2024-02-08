@@ -8,7 +8,7 @@ import {
   setSettingsPopupState,
   userSettingsSelector,
 } from 'uiSrc/slices/user/user-settings.slice'
-import { loadDatabases } from 'uiSrc/slices/connections/databases/databases.slice'
+import { processDatabase } from 'uiSrc/slices/connections/databases/databases.slice'
 import { getServerInfo } from 'uiSrc/slices/app/info/info.slice'
 import { getRedisCommands } from 'uiSrc/slices/app/commands/redis-commands.slice'
 import { mockedStore, render } from 'testSrc/helpers'
@@ -52,7 +52,7 @@ describe('Config', () => {
     const afterRenderActions = [
       getServerInfo(),
       getRedisCommands(),
-      loadDatabases(),
+      processDatabase(),
       // setSettingsPopupState(false),
       getUserConfigSettings(),
     ]
@@ -82,7 +82,7 @@ describe('Config', () => {
     const afterRenderActions = [
       getServerInfo(),
       getRedisCommands(),
-      loadDatabases(),
+      processDatabase(),
       getUserConfigSettings(),
       // setSettingsPopupState(true),
     ]

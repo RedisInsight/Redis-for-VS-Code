@@ -1,0 +1,47 @@
+.container {
+  @apply h-6 inline-block w-auto pl-1 pr-1;
+
+  &.highlight {
+    @apply rounded-xl;
+  }
+
+  &.containerCircle {
+    @apply h-7;
+  }
+
+  .circle {
+    @apply border-none w-7 max-w-7 h-7 rounded-[50%] p-1 mr-0;
+  }
+}
+
+.icon {
+  @apply mr-1;
+}
+
+.icon img {
+  @apply w-4 max-w-4 h-4;
+}
+
+.tooltipItem {
+  @apply flex items-center;
+
+  path {
+    fill: var(--vscode-foreground);
+  }
+}
+
+.tooltipItem:not(:last-of-type) {
+  @apply pb-2;
+}
+
+.tooltipItemText {
+  @apply align-text-top ml-2;
+}
+
+.abbr {
+  @apply align-text-top;
+}
+
+.anchorModuleTooltip {
+  @apply mr-4;
+}

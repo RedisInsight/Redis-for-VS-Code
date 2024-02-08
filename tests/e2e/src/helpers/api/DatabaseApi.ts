@@ -18,7 +18,7 @@ export class DatabaseAPIRequests {
    * Add a new Standalone database through api using host and port
    * @param databaseParameters The database parameters
    */
-  async addNewStandaloneDatabaseApi(
+  static async addNewStandaloneDatabaseApi(
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {
     const uniqueId = chance.string({ length: 10 })
@@ -75,7 +75,7 @@ export class DatabaseAPIRequests {
    * Add a new Standalone databases through api using host and port
    * @param databasesParameters The databases parameters array
    */
-  async addNewStandaloneDatabasesApi(
+  static async addNewStandaloneDatabasesApi(
     databasesParameters: AddNewDatabaseParameters[],
   ): Promise<void> {
     if (databasesParameters.length) {
@@ -139,7 +139,7 @@ export class DatabaseAPIRequests {
   /**
    * Get all databases through api
    */
-  async getAllDatabases(): Promise<string[]> {
+  static async getAllDatabases(): Promise<string[]> {
     const response = await CommonAPIRequests.sendGetRequest(
       ResourcePath.Databases,
     )
@@ -152,7 +152,7 @@ export class DatabaseAPIRequests {
    * Get database through api using database name
    * @param databaseName The database name
    */
-  async getDatabaseIdByName(databaseName?: string): Promise<string> {
+  static async getDatabaseIdByName(databaseName?: string): Promise<string> {
     if (!databaseName) {
       throw new Error('Error: Missing databaseName')
     }
@@ -176,7 +176,7 @@ export class DatabaseAPIRequests {
    * Get database through api using database connection type
    * @param connectionType The database connection type
    */
-  async getDatabaseByConnectionType(connectionType?: string): Promise<string> {
+  static async getDatabaseByConnectionType(connectionType?: string): Promise<string> {
     if (!connectionType) {
       throw new Error('Error: Missing connectionType')
     }
@@ -195,7 +195,7 @@ export class DatabaseAPIRequests {
   /**
    * Delete all databases through api
    */
-  async deleteAllDatabasesApi(): Promise<void> {
+  static async deleteAllDatabasesApi(): Promise<void> {
     const allDatabases = await this.getAllDatabases()
     if (allDatabases.length > 0) {
       const databaseIds: string[] = []
@@ -219,7 +219,7 @@ export class DatabaseAPIRequests {
    * Delete Standalone database through api
    * @param databaseParameters The database parameters
    */
-  async deleteStandaloneDatabaseApi(
+  static async deleteStandaloneDatabaseApi(
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {
     const databaseId = await this.getDatabaseIdByName(
@@ -241,7 +241,7 @@ export class DatabaseAPIRequests {
    * Delete Standalone databases using their names through api
    * @param databaseNames Databases names
    */
-  async deleteStandaloneDatabasesByNamesApi(
+  static async deleteStandaloneDatabasesByNamesApi(
     databaseNames: string[],
   ): Promise<void> {
     databaseNames.forEach(async databaseName => {
@@ -263,7 +263,7 @@ export class DatabaseAPIRequests {
    * Delete database from OSS Cluster through api
    * @param databaseParameters The database parameters
    */
-  async deleteOSSClusterDatabaseApi(
+  static async deleteOSSClusterDatabaseApi(
     databaseParameters: OSSClusterParameters,
   ): Promise<void> {
     const databaseId = await this.getDatabaseIdByName(
@@ -281,7 +281,7 @@ export class DatabaseAPIRequests {
    * Delete all primary groups from Sentinel through api
    * @param databaseParameters The database parameters
    */
-  async deleteAllSentinelDatabasesApi(
+  static async deleteAllSentinelDatabasesApi(
     databaseParameters: SentinelParameters,
   ): Promise<void> {
     for (let i = 0; i < databaseParameters.name!.length; i++) {
@@ -300,7 +300,7 @@ export class DatabaseAPIRequests {
   /**
    * Delete all databases by connection type
    */
-  async deleteAllDatabasesByConnectionTypeApi(
+  static async deleteAllDatabasesByConnectionTypeApi(
     connectionType: string,
   ): Promise<void> {
     const databaseIds = await this.getDatabaseByConnectionType(connectionType)
@@ -318,7 +318,7 @@ export class DatabaseAPIRequests {
    * Delete Standalone databases through api
    * @param databasesParameters The databases parameters as array
    */
-  async deleteStandaloneDatabasesApi(
+  static async deleteStandaloneDatabasesApi(
     databasesParameters: AddNewDatabaseParameters[],
   ): Promise<void> {
     if (databasesParameters.length) {
@@ -332,7 +332,7 @@ export class DatabaseAPIRequests {
    * Get OSS Cluster nodes
    * @param databaseParameters The database parameters
    */
-  async getClusterNodesApi(
+  static async getClusterNodesApi(
     databaseParameters: OSSClusterParameters,
   ): Promise<string[]> {
     const databaseId = await this.getDatabaseIdByName(

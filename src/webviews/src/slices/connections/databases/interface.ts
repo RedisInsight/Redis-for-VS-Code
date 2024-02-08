@@ -6,6 +6,7 @@ export interface InitialStateDatabases {
   error: string
   data: Database[]
   connectedDatabase: Database
+  editDatabase: Nullable<Database>
   freeDatabase: Nullable<Database>
 }
 
@@ -46,6 +47,7 @@ export interface Database {
   visible?: boolean
   loading?: boolean
   isFreeDb?: boolean
+  nodes?: Endpoint[]
 }
 
 export interface AdditionalRedisModule {

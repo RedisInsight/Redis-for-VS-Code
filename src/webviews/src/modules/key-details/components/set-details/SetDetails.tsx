@@ -42,7 +42,7 @@ export const SetDetails = (props: Props) => {
         {...props}
         key="key-details-header"
         keyType={keyType}
-        Actions={Actions}
+        // Actions={Actions}
       />
       <div className="key-details-body" key="key-details-body">
         {!loading && (

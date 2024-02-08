@@ -3,7 +3,7 @@ import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import * as l10n from '@vscode/l10n'
 import { immer } from 'zustand/middleware/immer'
-import { find, map, remove } from 'lodash'
+import { cloneDeep, find, map, remove } from 'lodash'
 
 import { fetchKeyInfo, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { RedisString } from 'uiSrc/interfaces'
@@ -63,6 +63,9 @@ export const useHashStore = create<HashState & HashActions>()(
       })
 
       state.data.fields = newFields
+    }),
+    resetUpdateValue: () => set((state) => {
+      state.updateValue = cloneDeep(initialState.updateValue)
     }),
 
   }),
@@ -188,6 +191,7 @@ export const deleteHashFields = (
 
 export const updateHashFieldsAction = (
   data: AddFieldsToHashDto,
+  fetchKeyValue: boolean = false,
   onSuccess?: () => void,
   onFail?: () => void,
 ) => useHashStore.setState(async (state) => {
@@ -203,7 +207,7 @@ export const updateHashFieldsAction = (
     if (isStatusSuccessful(status)) {
       state.updateFields(data)
       onSuccess?.()
-      refreshKeyInfo(data.keyName, false)
+      refreshKeyInfo(data.keyName, fetchKeyValue)
     }
   } catch (_err) {
     const error = _err as AxiosError

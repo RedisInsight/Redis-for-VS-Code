@@ -9,7 +9,7 @@ import { Maybe, RedisResponseBuffer } from 'uiSrc/interfaces'
 import { addKeyStateSelector, addStringKey } from 'uiSrc/slices/browser/keys.slice'
 
 import { SetStringWithExpire } from 'uiSrc/slices/browser/interface'
-import { TextArea } from 'uiSrc/components'
+import { InputText, TextArea } from 'uiSrc/ui'
 
 import { AppDispatch } from 'uiSrc/store'
 import styles from './styles.module.scss'

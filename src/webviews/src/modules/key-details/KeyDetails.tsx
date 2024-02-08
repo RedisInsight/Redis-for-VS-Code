@@ -60,14 +60,16 @@ const KeyDetails = (props: Props) => {
     }
   }, [keyName])
 
-  const onCloseAddItemPanel = () => {
-    sendEventTelemetry({
-      event: TelemetryEvent.TREE_VIEW_KEY_ADD_VALUE_CANCELLED,
-      eventData: {
-        databaseId,
-        keyType,
-      },
-    })
+  const onCloseAddItemPanel = (isCancelled = false) => {
+    if (isCancelled) {
+      sendEventTelemetry({
+        event: TelemetryEvent.TREE_VIEW_KEY_ADD_VALUE_CANCELLED,
+        eventData: {
+          databaseId,
+          keyType,
+        },
+      })
+    }
   }
 
   const onOpenAddItemPanel = () => {

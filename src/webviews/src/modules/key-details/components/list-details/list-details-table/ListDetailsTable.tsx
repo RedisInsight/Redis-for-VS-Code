@@ -40,7 +40,8 @@ import {
   TelemetryEvent,
   getColumnWidth,
 } from 'uiSrc/utils'
-import { VirtualTable, InlineEditor, TextArea } from 'uiSrc/components'
+import { VirtualTable, InlineEditor } from 'uiSrc/components'
+import { TextArea } from 'uiSrc/ui'
 import { StopPropagation } from 'uiSrc/components/virtual-table'
 // import { getColumnWidth } from 'uiSrc/components/virtual-grid'
 // import { decompressingBuffer } from 'uiSrc/utils/decompressors'

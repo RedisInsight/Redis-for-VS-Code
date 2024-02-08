@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
-import { KeyTypes } from 'uiSrc/constants'
+import { KeyTypes, VscodeMessageAction } from 'uiSrc/constants'
 // import HelpTexts from 'uiSrc/constants/help-texts'
 import {
   addKeyStateSelector,
@@ -52,7 +52,10 @@ export const AddKey = () => {
   }
 
   const closeAddKeyPanel = (isCancelled?: boolean) => {
-    vscodeApi.postMessage({ action: isCancelled ? 'CloseAddKey' : 'CloseAddRefreshKey', data: keyName })
+    vscodeApi.postMessage({
+      action: isCancelled ? VscodeMessageAction.CloseAddKey : VscodeMessageAction.CloseAddRefreshKey,
+      data: keyName,
+    })
   }
 
   const defaultFields = {

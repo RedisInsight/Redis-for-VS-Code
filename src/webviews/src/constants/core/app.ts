@@ -6,3 +6,4 @@ export enum SortOrder {
 }
 
 export const DEFAULT_ERROR_MESSAGE = l10n.t('Something was wrong!')
+export const APPLICATION_NAME = 'RedisInsight'

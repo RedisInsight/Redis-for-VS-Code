@@ -7,4 +7,9 @@
   }
 }
 
+.divider {
+  margin: 0;
+  border-top: calc(var(--border-width) * 1px) solid var(--divider-background);
+}
+
 

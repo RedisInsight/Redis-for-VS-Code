@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from 'react'
 import { Maybe } from 'uiSrc/interfaces'
 import { Keys } from 'uiSrc/constants'
-import { InputText } from 'uiSrc/components'
+import { InputText } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {

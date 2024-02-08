@@ -4,11 +4,11 @@ import { Locator, until } from 'selenium-webdriver'
 /**
  * Buttons
  */
-export class ButtonsActions {
+export class ButtonActions {
   static driver: WebDriver
   static initializeDriver(): void {
-    if (!ButtonsActions.driver) {
-      ButtonsActions.driver = VSBrowser.instance.driver
+    if (!ButtonActions.driver) {
+      ButtonActions.driver = VSBrowser.instance.driver
     }
   }
 
@@ -25,23 +25,23 @@ export class ButtonsActions {
     stateOfDisplayed: boolean = true,
     timeout: number = 3000,
   ): Promise<void> {
-    ButtonsActions.initializeDriver()
+    ButtonActions.initializeDriver()
 
     if (stateOfDisplayed) {
-      await ButtonsActions.clickElement(locatorToClick)
-      await ButtonsActions.driver.wait(
+      await ButtonActions.clickElement(locatorToClick)
+      await ButtonActions.driver.wait(
         until.elementLocated(locatorToDisplayed),
         timeout,
       )
     } else {
-      const elementToWait = await ButtonsActions.driver.wait(
+      const elementToWait = await ButtonActions.driver.wait(
         until.elementLocated(locatorToDisplayed),
         timeout,
       )
-      await ButtonsActions.clickElement(locatorToClick)
+      await ButtonActions.clickElement(locatorToClick)
 
       try {
-        await ButtonsActions.driver.wait(
+        await ButtonActions.driver.wait(
           until.elementIsNotVisible(elementToWait),
         )
       } catch (error) {}
@@ -57,8 +57,8 @@ export class ButtonsActions {
     locatorToClick: Locator,
     timeout: number = 3000,
   ): Promise<void> {
-    ButtonsActions.initializeDriver()
-    const elementToClick = await ButtonsActions.driver.wait(
+    ButtonActions.initializeDriver()
+    const elementToClick = await ButtonActions.driver.wait(
       until.elementLocated(locatorToClick),
       timeout,
     )
@@ -74,12 +74,12 @@ export class ButtonsActions {
     locator: Locator,
     timeout: number = 3000,
   ): Promise<void> {
-    ButtonsActions.initializeDriver()
-    const elementToHover = await ButtonsActions.driver.wait(
+    ButtonActions.initializeDriver()
+    const elementToHover = await ButtonActions.driver.wait(
       until.elementLocated(locator),
       timeout,
     )
-    await ButtonsActions.driver
+    await ButtonActions.driver
       .actions()
       .move({ duration: 5000, origin: elementToHover, x: 0, y: 0 })
       .perform()

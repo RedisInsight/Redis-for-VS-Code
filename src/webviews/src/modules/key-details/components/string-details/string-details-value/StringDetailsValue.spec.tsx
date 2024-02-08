@@ -5,7 +5,7 @@ import { TelemetryEvent, bufferToString, sendEventTelemetry } from 'uiSrc/utils'
 
 import { downloadFile } from 'uiSrc/utils/dom/downloadFile'
 import { useSelectedKeyStore } from 'uiSrc/store'
-import { render, screen, fireEvent, act, constants } from 'testSrc/helpers'
+import { render, screen, fireEvent, waitFor, constants } from 'testSrc/helpers'
 import { StringDetailsValue, Props } from './StringDetailsValue'
 import { useStringStore, initialState as initialStateInit } from '../hooks/useStringStore'
 import * as stringConstants from '../constants/string'
@@ -114,7 +114,7 @@ describe('StringDetailsValue', () => {
       { target: { value: STRING_VALUE_SPACE } },
     )
     const btnACancel = screen.getByTestId('cancel-btn')
-    await act(() => {
+    await waitFor(() => {
       fireEvent.click(btnACancel)
     })
     const textArea2 = screen.getByTestId(STRING_VALUE)

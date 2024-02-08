@@ -1,5 +1,6 @@
 import { DEFAULT_SEARCH_MATCH, KeyTypes } from 'uiSrc/constants'
 import { KeyInfo } from 'uiSrc/interfaces'
+import { Certificate } from 'uiSrc/store/hooks/use-certificates-store/interface'
 import { UTF8ToArray, stringToBuffer } from 'uiSrc/utils'
 
 const TEST_KEYS = [
@@ -114,6 +115,14 @@ export const constants = {
   get SET_DATA() {
     return SET_DATA
   },
+
+  get CA_CERTS() {
+    return CA_CERTS
+  },
+
+  get CLIENT_CERTS() {
+    return CLIENT_CERTS
+  },
 }
 
 const KEY_INFO: KeyInfo = {
@@ -184,3 +193,6 @@ const KEYS_LIST: any = {
     },
   ],
 }
+
+const CA_CERTS: Certificate[] = [{ id: 'id1', name: 'ca_name1' }, { id: 'id2', name: 'ca_name2' }]
+const CLIENT_CERTS: Certificate[] = [{ id: 'id11', name: 'client_name1' }, { id: 'id12', name: 'client_name2' }]

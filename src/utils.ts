@@ -50,6 +50,9 @@ export const handleMessage = (message: any = {}) => {
   if (message.action === 'SelectKey') {
     vscode.commands.executeCommand('RedisInsight.openPage', message)
   }
+  if (message.action === 'EditDatabase') {
+    vscode.commands.executeCommand('RedisInsight.editDatabase', message)
+  }
   if (message.action === 'ErrorMessage') {
     vscode.window.showErrorMessage(message.data)
   }
@@ -71,5 +74,11 @@ export const handleMessage = (message: any = {}) => {
   }
   if (message.action === 'CloseKeyAndRefresh') {
     vscode.commands.executeCommand('RedisInsight.closeKeyAndRefresh', message.data)
+  }
+  if (message.action === 'CloseAddDatabase') {
+    vscode.commands.executeCommand('RedisInsight.addDatabaseClose')
+  }
+  if (message.action === 'CloseEditDatabase') {
+    vscode.commands.executeCommand('RedisInsight.editDatabaseClose', message)
   }
 }

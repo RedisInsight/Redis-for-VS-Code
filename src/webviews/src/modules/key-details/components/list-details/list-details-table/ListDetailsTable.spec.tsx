@@ -1,7 +1,7 @@
 import React from 'react'
 import { mock } from 'ts-mockito'
 import { useSelectedKeyStore } from 'uiSrc/store'
-import { act, constants, fireEvent, render, screen } from 'testSrc/helpers'
+import { waitFor, constants, fireEvent, render, screen } from 'testSrc/helpers'
 import { ListDetailsTable, Props } from './ListDetailsTable'
 import { useListStore } from '../hooks/useListStore'
 
@@ -40,7 +40,7 @@ describe('ListDetailsTable', () => {
 
   it('should render editor after click edit button', async () => {
     const { debug } = render(<ListDetailsTable {...mockedProps} />)
-    await act(() => {
+    await waitFor(() => {
       fireEvent.click(screen.getAllByTestId(/edit-list-button/)[0])
     })
 
@@ -55,7 +55,7 @@ describe('ListDetailsTable', () => {
 
   // describe.todo('decompressed  data', () => {
   //   it('should render decompressed GZIP data = "1"', () => {
-  //     const defaultState = vi.requireActual('uiSrc/slices/browser/list').initialState
+  //     const defaultState = await vi.importActual<object>('uiSrc/slices/browser/list').initialState
   //     const listDataSelectorMock = vi.fn().mockReturnValue({
   //       ...defaultState,
   //       key: '123zxczxczxc',
@@ -72,7 +72,7 @@ describe('ListDetailsTable', () => {
   //   })
 
   //   it('edit button should be disabled if data was compressed', async () => {
-  //     const defaultState = vi.requireActual('uiSrc/slices/browser/list').initialState
+  //     const defaultState = await vi.importActual<object>('uiSrc/slices/browser/list').initialState
   //     const listDataSelectorMock = vi.fn().mockReturnValue({
   //       ...defaultState,
   //       key: '123zxczxczxc',
@@ -91,7 +91,7 @@ describe('ListDetailsTable', () => {
 
   //     fireEvent.click(editBtn)
 
-  //     await act(async () => {
+  //     await waitFor(async () => {
   //       fireEvent.mouseOver(editBtn)
   //     })
   //     await waitForEuiToolTipVisible()

@@ -1,8 +1,9 @@
 // import { RedisDefaultModules } from 'uiSrc/constants'
+import * as l10n from '@vscode/l10n'
 
 export const bulkReplyCommands = ['LOLWUT', 'INFO', 'CLIENT', 'CLUSTER', 'MEMORY', 'MONITOR', 'PSUBSCRIBE']
 
-export const EMPTY_COMMAND = 'Encrypted data'
+export const EMPTY_COMMAND = l10n.t('Encrypted data')
 
 // export const MODULE_NOT_LOADED_CONTENT: { [key in RedisDefaultModules]?: any } = {
 //   [RedisDefaultModules.TimeSeries]: {

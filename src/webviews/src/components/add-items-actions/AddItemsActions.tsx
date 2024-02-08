@@ -1,5 +1,6 @@
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import React from 'react'
+import * as l10n from '@vscode/l10n'
 import { VscDiffAdded, VscTrash } from 'react-icons/vsc'
 
 export interface Props {
@@ -40,37 +41,41 @@ const AddItemsActions = (props: Props) => {
   }
 
   return (
-    <div className="flex items-center justify-center" style={{ width: 80 }}>
-      <div style={{ width: 60 }} className="flex-row space-between action-buttons">
-        {!clearIsDisabled && (
-          <div title={length === 1 ? 'Clear' : 'Remove'}>
-            <VSCodeButton
-              appearance="icon"
-              disabled={loading}
-              data-testid="remove-item"
-              onClick={handleClick}
-              aria-label={length === 1 ? 'Clear Item' : 'Remove Item'}
-              className={anchorClassName}
-            >
-              <VscTrash />
-            </VSCodeButton>
-          </div>
-        )}
-        { (index === length - 1) && (
-          <div title="Add">
-            <VSCodeButton
-              appearance="icon"
-              disabled={loading || addItemIsDisabled}
-              data-testid={dataTestId || 'add-new-item'}
-              onClick={addItem}
-              aria-label="Add new item"
-              className={anchorClassName}
-            >
-              <VscDiffAdded />
-            </VSCodeButton>
-          </div>
-        )}
-      </div>
+    <div className="flex items-center flex-row action-buttons h-11 w-20 pl-2">
+      {!clearIsDisabled && (
+        <div
+          className="ml-3"
+          title={length === 1 ? l10n.t('Clear') : l10n.t('Remove')}
+        >
+          <VSCodeButton
+            appearance="icon"
+            disabled={loading}
+            data-testid="remove-item"
+            onClick={handleClick}
+            aria-label={length === 1 ? 'Clear Item' : 'Remove Item'}
+            className={anchorClassName}
+          >
+            <VscTrash />
+          </VSCodeButton>
+        </div>
+      )}
+      {(index === length - 1) && (
+        <div
+          className="ml-3"
+          title={l10n.t('Add')}
+        >
+          <VSCodeButton
+            appearance="icon"
+            disabled={loading || addItemIsDisabled}
+            data-testid={dataTestId || 'add-new-item'}
+            onClick={addItem}
+            aria-label="Add new item"
+            className={anchorClassName}
+          >
+            <VscDiffAdded />
+          </VSCodeButton>
+        </div>
+      )}
     </div>
   )
 }

@@ -9,7 +9,7 @@ import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 import { isString } from 'lodash'
 
-import { InlineEditor, PopoverDelete, TextArea, VirtualTable } from 'uiSrc/components'
+import { InlineEditor, PopoverDelete, VirtualTable } from 'uiSrc/components'
 import {
   getColumnWidth,
   getMatchType,
@@ -51,6 +51,7 @@ import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/da
 import { stringToBuffer } from 'uiSrc/utils/formatters/bufferFormatters'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { useSelectedKeyStore } from 'uiSrc/store'
+import { TextArea } from 'uiSrc/ui'
 import { AddFieldsToHashDto, GetHashFieldsResponse, HashField } from '../hooks/interface'
 
 import {
@@ -75,7 +76,7 @@ interface IHashField extends HashField {}
 
 export interface Props {
   isFooterOpen: boolean
-  onRemoveKey: () => void
+  onRemoveKey?: () => void
 }
 
 const HashDetailsTable = (props: Props) => {
@@ -144,7 +145,7 @@ const HashDetailsTable = (props: Props) => {
   }, [])
 
   const onSuccessRemoved = (newTotalValue: number) => {
-    newTotalValue === 0 && onRemoveKey()
+    newTotalValue === 0 && onRemoveKey?.()
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_REMOVED,
       eventData: {
@@ -188,7 +189,7 @@ const HashDetailsTable = (props: Props) => {
       keyName: key!,
       fields: [{ field, value: stringToSerializedBufferFormat(viewFormat, areaValue) }],
     }
-    updateHashFieldsAction(data, () => onHashEditedSuccess(field))
+    updateHashFieldsAction(data, false, () => onHashEditedSuccess(field))
   }
 
   const onHashEditedSuccess = (fieldName: RedisString = '') => {

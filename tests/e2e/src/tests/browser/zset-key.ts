@@ -10,7 +10,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
-  ButtonsActions,
+  ButtonActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -87,9 +87,10 @@ describe('ZSet Key fields verification', () => {
     )[0].getText()
     expect(result).contains(keyFieldValue)
     expect(result.length).eqls(1)
-    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
-    await ButtonsActions.clickElement(keyDetailsView.keyRefresh)
+    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
+    await ButtonActions.clickElement(keyDetailsView.keyRefresh)
 
+    // Verify that user can remove member from ZSet
     await keyDetailsView.removeRowByField(KeyTypesShort.ZSet, keyFieldValue)
     await keyDetailsView.clickRemoveRowButtonByField(
       KeyTypesShort.ZSet,
@@ -131,14 +132,14 @@ describe('ZSet Key fields verification', () => {
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    await ButtonsActions.clickElement(keyDetailsView.scoreButton)
+    await ButtonActions.clickElement(keyDetailsView.scoreButton)
     let result = await (
       await keyDetailsView.getElements(keyDetailsView.scoreSortedSetFieldsList)
     )[0].getText()
 
     expect(result).eql(arr[100 - 1], 'The Zset sort by desc')
 
-    await ButtonsActions.clickElement(keyDetailsView.scoreButton)
+    await ButtonActions.clickElement(keyDetailsView.scoreButton)
     result = await (
       await keyDetailsView.getElements(keyDetailsView.scoreSortedSetFieldsList)
     )[0].getText()

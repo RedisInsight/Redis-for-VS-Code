@@ -1,0 +1,9 @@
+.database-form-select {
+  @apply bg-vscode-input-background h-9;
+
+  &__option {
+    @apply bg-vscode-input-background h-9 pl-2 pt-2 #{!important};
+  }
+}
+
+

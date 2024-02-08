@@ -3,6 +3,7 @@ import { WebviewPanel } from './Webview'
 import { startBackend, closeBackend } from './server/bootstrapBackend'
 import { WebViewProvider } from './WebViewProvider'
 import { handleMessage } from './utils'
+import { ViewId } from './constants'
 
 let myStatusBarItem: vscode.StatusBarItem
 export async function activate(context: vscode.ExtensionContext) {
@@ -39,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
         context,
         route: 'main/key',
         title: 'RedisInsight - Key details',
-        viewId: 'ri-key',
+        viewId: ViewId.Key,
         // todo: connection between webviews
         message: args,
       })
@@ -50,25 +51,55 @@ export async function activate(context: vscode.ExtensionContext) {
         context,
         route: 'main/add_key',
         title: 'RedisInsight - Add new key',
-        viewId: 'ri-add-key',
+        viewId: ViewId.AddKey,
+        handleMessage: (message) => handleMessage(message),
+        message: args,
+      })
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.addDatabase', (args) => {
+      WebviewPanel.getInstance({
+        context,
+        route: 'main/add_database',
+        title: 'RedisInsight - Add Database connection',
+        viewId: ViewId.AddDatabase,
+        handleMessage: (message) => handleMessage(message),
+        message: args,
+      })
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.editDatabase', (args) => {
+      WebviewPanel.getInstance({
+        context,
+        route: 'main/edit_database',
+        title: 'RedisInsight - Edit Database connection',
+        viewId: ViewId.EditDatabase,
         handleMessage: (message) => handleMessage(message),
         message: args,
       })
     }),
 
     vscode.commands.registerCommand('RedisInsight.addKeyClose', () => {
-      WebviewPanel.getInstance({ viewId: 'ri-add-key' }).dispose()
+      WebviewPanel.getInstance({ viewId: ViewId.Key }).dispose()
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.addDatabaseClose', () => {
+      WebviewPanel.getInstance({ viewId: ViewId.AddDatabase }).dispose()
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.editDatabaseClose', () => {
+      WebviewPanel.getInstance({ viewId: ViewId.EditDatabase }).dispose()
     }),
 
     vscode.commands.registerCommand('RedisInsight.addKeyCloseAndRefresh', (args) => {
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
-      WebviewPanel.getInstance({ viewId: 'ri-add-key' }).dispose()
+      WebviewPanel.getInstance({ viewId: ViewId.AddKey }).dispose()
       vscode.commands.executeCommand('RedisInsight.openPage', { action: 'SelectKey', data: args.data })
     }),
 
     vscode.commands.registerCommand('RedisInsight.closeKeyAndRefresh', (args) => {
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
-      WebviewPanel.getInstance({ viewId: 'ri-key' })?.dispose()
+      WebviewPanel.getInstance({ viewId: ViewId.Key })?.dispose()
     }),
   )
 }

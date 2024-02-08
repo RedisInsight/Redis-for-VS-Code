@@ -6,7 +6,7 @@ import {
 } from '@e2eSrc/page-objects/components/WebView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { KeyTreeView } from '@e2eSrc/page-objects/components'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { AddKeyView } from '@e2eSrc/page-objects/components/edit-panel/AddKeyView'
 
 /**
@@ -33,26 +33,23 @@ export class AddStringKeyView extends AddKeyView {
     let webView = new WebView()
     let keyTreeView = new KeyTreeView()
     await webView.switchToFrame(Views.KeyTreeView)
-    await ButtonsActions.clickElement(keyTreeView.addKeyButton)
+    await ButtonActions.clickElement(keyTreeView.addKeyButton)
 
     await webView.switchBack()
     await webView.switchToFrame(Views.AddKeyView)
     await this.selectKeyTypeByValue(KeyTypesShort.String)
 
     if (ttl.length > 0) {
-      const ttlInput = await this.getElement(this.ttlInput)
-      await ttlInput.sendKeys(ttl)
+      await InputActions.typeText(this.ttlInput, ttl)
     }
 
     if (value.length > 0) {
-      const valueInput = await this.getElement(this.stringValueInput)
-      await valueInput.sendKeys(value)
+      await InputActions.typeText(this.stringValueInput, value)
     }
 
-    const nameInput = await this.getElement(this.keyNameInput)
-    await nameInput.sendKeys(name)
+    await InputActions.typeText(this.keyNameInput, name)
 
-    await ButtonsActions.clickElement(this.addButton)
+    await ButtonActions.clickElement(this.addButton)
     await webView.switchBack()
   }
 }

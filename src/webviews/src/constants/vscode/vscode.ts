@@ -8,6 +8,7 @@ export enum VscodeState {
 
 export enum VscodeMessageAction {
   AddKey = 'AddKey',
+  EditDatabase = 'EditDatabase',
   InformationMessage = 'InformationMessage',
   ErrorMessage = 'ErrorMessage',
   AddCli = 'AddCli',
@@ -15,4 +16,8 @@ export enum VscodeMessageAction {
   OpenCli = 'OpenCli',
   RefreshTree = 'RefreshTree',
   CloseKeyAndRefresh = 'CloseKeyAndRefresh',
+  CloseAddDatabase = 'CloseAddDatabase',
+  CloseEditDatabase = 'CloseEditDatabase',
+  CloseAddKey = 'CloseAddKey',
+  CloseAddRefreshKey = 'CloseAddRefreshKey',
 }

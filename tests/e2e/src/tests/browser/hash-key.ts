@@ -8,7 +8,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
-  ButtonsActions,
+  ButtonActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -34,6 +34,7 @@ describe('Hash Key fields verification', () => {
     await browser.waitForWorkbench(20_000)
   })
   afterEach(async () => {
+    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
     await webView.switchBack()
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
@@ -68,7 +69,7 @@ describe('Hash Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
     )[0].getText()
     expect(result).contains(keyFieldValue)
-    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
+    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
 
     for (const c of commands) {
       await keyDetailsView.searchByTheValueInKeyDetails(c)
@@ -78,9 +79,9 @@ describe('Hash Key fields verification', () => {
       )[0].getText()
       expect(result).eqls(keyFieldValue)
       expect(result.length).eqls(1)
-      await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
     }
   })
+  // Run for db with 1 million keys
   it('Verify that user can search per exact field name in Hash in DB with 1 million of fields', async function () {
     keyName = Common.generateWord(10)
     const keyFieldValue = 'field'
@@ -139,14 +140,11 @@ describe('Hash Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
     )[0].getText()
     expect(result).contains(keyToAddParameters2.fieldStartWith)
-    await ButtonsActions.clickElement(keyDetailsView.clearSearchInput)
   })
-  it('Verify that user can search by full field name in Hash', async function () {
+  it('Verify that user can add field to Hash', async t => {
     keyName = Common.generateWord(10)
     const keyFieldValue = 'hashField11111'
     const keyValue = 'hashValue11111!'
-    const deleteMessage = 'Key has been deleted'
-
     const hashKeyParameters: HashKeyParameters = {
       keyName: keyName,
       fields: [
@@ -160,22 +158,25 @@ describe('Hash Key fields verification', () => {
       hashKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-
     // Open key details iframe
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
+    // Add field to the hash key
+    await keyDetailsView.addFieldToHash(keyFieldValue, keyValue)
+    // Search the added field
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
-    // Check the search result
-    let resultField = await (
+    let fieldValue = await (
       await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
     )[0].getText()
-    expect(resultField).eqls(keyFieldValue)
-    expect(resultField.length).eqls(1)
-    let resultValue = await (
+    let value = await (
       await keyDetailsView.getElements(keyDetailsView.hashValuesList)
     )[0].getText()
-    expect(resultValue).eqls(keyValue)
+    // Check the added field
+    expect(fieldValue).contains(keyFieldValue, 'The field is not displayed')
+    expect(value).contains(keyValue, 'The value is not displayed')
+
+    // Verify that user can remove field from Hash
     await keyDetailsView.removeRowByField(KeyTypesShort.Hash, keyFieldValue)
     await keyDetailsView.clickRemoveRowButtonByField(
       KeyTypesShort.Hash,
@@ -183,10 +184,13 @@ describe('Hash Key fields verification', () => {
     )
     await webView.switchBack()
 
-    const notifications = await new Workbench().getNotifications()
-    const notification = notifications[0]
-    // get the message
-    const message = await notification.getMessage()
-    expect(message).eqls(deleteMessage)
+    let notifications = await new Workbench().getNotifications()
+    let notification = notifications[0]
+    // Check the notification message
+    let message = await notification.getMessage()
+    expect(message).eqls(
+      `${keyFieldValue} has been removed from ${keyName}`,
+      'The notification is not displayed',
+    )
   })
 })

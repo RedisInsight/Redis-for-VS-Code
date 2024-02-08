@@ -11,7 +11,7 @@ import {
 
 import {
   InputActions,
-  ButtonsActions,
+  ButtonActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
@@ -57,9 +57,9 @@ describe('Set TTL for Key', () => {
 
     const inputField = await keyDetailsView.getElement(keyDetailsView.ttlField)
     await InputActions.slowType(inputField, ttlValue)
-    await ButtonsActions.clickElement(keyDetailsView.saveTtl)
+    await ButtonActions.clickElement(keyDetailsView.saveTtl)
 
-    await ButtonsActions.clickElement(keyDetailsView.keyRefresh)
+    await ButtonActions.clickElement(keyDetailsView.keyRefresh)
 
     const newTtlValue = Number(await keyDetailsView.getKeyTtl())
     expect(Number(ttlValue)).gt(newTtlValue)

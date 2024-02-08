@@ -1,0 +1,15 @@
+.database-form-select {
+  @apply h-9;
+  &__control {
+    @apply bg-vscode-tab-activeBackground border-none h-9 rounded-none #{!important};
+  }
+  &__menu {
+    @apply bg-vscode-tab-activeBackground cursor-pointer #{!important};
+  }
+  &__option--is-focused, &__option--is-selected {
+    @apply bg-vscode-button-background #{!important};
+  }
+  &__indicator-separator {
+    @apply hidden;
+  }
+}

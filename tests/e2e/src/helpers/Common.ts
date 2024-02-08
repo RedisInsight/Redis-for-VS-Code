@@ -28,6 +28,14 @@ export class Common {
   }
 
   /**
+   * Generate a string by number of symbols
+   * @param number The number of symbols
+   */
+  static generateString(number: number): string {
+    return chance.string({ length: number })
+  }
+
+  /**
    * Helper function to work with arr.filter() method with async functions
    * @param array The array
    * @param callback The callback function need to be processed
@@ -79,16 +87,16 @@ export class Common {
   }
 
   /**
-    * Create array of keys and values
-    * @param length The amount of array elements
-    */
+   * Create array of keys and values
+   * @param length The amount of array elements
+   */
   static async createArrayWithKeyValue(length: number): Promise<string[]> {
-    const arr: string[] = [];
+    const arr: string[] = []
     for (let i = 1; i <= length * 2; i++) {
-        arr[i] = `${chance.word({ length: 10 })}-key${i}`;
-        arr[i + 1] = `${chance.word({ length: 10 })}-value${i}`;
-        i++;
+      arr[i] = `${chance.word({ length: 10 })}-key${i}`
+      arr[i + 1] = `${chance.word({ length: 10 })}-value${i}`
+      i++
     }
-    return arr;
-}
+    return arr
+  }
 }
