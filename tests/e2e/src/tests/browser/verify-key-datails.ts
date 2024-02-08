@@ -23,7 +23,8 @@ import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 import {
-  ButtonsActions,
+  ButtonActions,
+  InputActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { AddStringKeyView } from '@e2eSrc/page-objects/components/edit-panel/AddStringKeyView'
@@ -87,19 +88,13 @@ describe('Key Details verifications', () => {
     let webView = new WebView()
     let keyTreeView = new KeyTreeView()
     await webView.switchToFrame(Views.KeyTreeView)
-    await ButtonsActions.clickElement(keyTreeView.addKeyButton)
+    await ButtonActions.clickElement(keyTreeView.addKeyButton)
 
     await webView.switchBack()
     await webView.switchToFrame(Views.AddKeyView)
     await addStringKeyView.selectKeyTypeByValue(KeyTypesShort.String)
-
-    const ttl = await addStringKeyView.getElement(addStringKeyView.ttlInput)
-    await ttl.sendKeys(ttlValue)
-
-    const valueInput = await addStringKeyView.getElement(
-      addStringKeyView.stringValueInput,
-    )
-    await valueInput.sendKeys(testStringValue)
+    await InputActions.typeText(addStringKeyView.ttlInput, ttlValue)
+    await InputActions.typeText(addStringKeyView.stringValueInput, testStringValue)
 
     const isDisabled = await addStringKeyView.isElementDisabled(
       addStringKeyView.addButton,
@@ -107,12 +102,9 @@ describe('Key Details verifications', () => {
     )
     expect(isDisabled).true
 
-    const nameInput = await addStringKeyView.getElement(
-      addStringKeyView.keyNameInput,
-    )
-    await nameInput.sendKeys(keyName)
+    await InputActions.typeText(addStringKeyView.keyNameInput, keyName)
 
-    await ButtonsActions.clickElement(addStringKeyView.addButton)
+    await ButtonActions.clickElement(addStringKeyView.addButton)
     await webView.switchBack()
 
     // check the key details

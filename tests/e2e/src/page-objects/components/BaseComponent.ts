@@ -81,7 +81,7 @@ export class BaseComponent extends WebElement {
   }
 
   /**
-   * Is the element displayed
+   * Is the element disabled
    * @param locator locator to check
    * @param attribute attribute to check if has disabled
    */
@@ -91,10 +91,7 @@ export class BaseComponent extends WebElement {
   ): Promise<boolean> {
     const element = await this.getDriver().findElement(locator)
     const value = await element.getAttribute(attribute)
-    if (value.includes('disabled')) {
-      return true
-    }
-    return false
+    return value.includes('disabled')
   }
 
   /**

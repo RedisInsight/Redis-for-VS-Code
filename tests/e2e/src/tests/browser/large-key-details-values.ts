@@ -12,7 +12,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
-  ButtonsActions,
+  ButtonActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -84,7 +84,7 @@ describe('Large key details verification', () => {
     const size = await memberValueCell.getRect()
     const rowHeight = size.height
 
-    await ButtonsActions.clickAndWaitForElement(
+    await ButtonActions.clickAndWaitForElement(
       sortedsetKeyDetailsView.sortedSetFieldsList,
       sortedsetKeyDetailsView.truncatedValue,
       false,
@@ -93,7 +93,7 @@ describe('Large key details verification', () => {
     let newSize = await memberValueCell.getRect()
     expect(newSize.height).gt(rowHeight, 'Row is not expanded')
 
-    await ButtonsActions.clickAndWaitForElement(
+    await ButtonActions.clickAndWaitForElement(
       sortedsetKeyDetailsView.sortedSetFieldsList,
       sortedsetKeyDetailsView.truncatedValue,
     )
@@ -130,7 +130,7 @@ describe('Large key details verification', () => {
     const size = await memberValueCell.getRect()
     const rowHeight = size.height
 
-    await ButtonsActions.clickAndWaitForElement(
+    await ButtonActions.clickAndWaitForElement(
       hashKeyDetailsView.hashValuesList,
       hashKeyDetailsView.truncatedValue,
       false,
@@ -139,7 +139,7 @@ describe('Large key details verification', () => {
     let newSize = await memberValueCell.getRect()
     expect(newSize.height).gt(rowHeight, 'Row is not expanded')
 
-    await ButtonsActions.clickAndWaitForElement(
+    await ButtonActions.clickAndWaitForElement(
       hashKeyDetailsView.hashValuesList,
       hashKeyDetailsView.truncatedValue,
     )
@@ -171,7 +171,7 @@ describe('Large key details verification', () => {
     const size = await elementValueCell.getRect()
     const rowHeight = size.height
 
-    await ButtonsActions.clickAndWaitForElement(
+    await ButtonActions.clickAndWaitForElement(
       listKeyDetailsView.elementsList,
       listKeyDetailsView.truncatedValue,
       false,
@@ -180,7 +180,7 @@ describe('Large key details verification', () => {
     let newSize = await elementValueCell.getRect()
     expect(newSize.height).gt(rowHeight, 'Row is not expanded')
 
-    await ButtonsActions.clickAndWaitForElement(
+    await ButtonActions.clickAndWaitForElement(
       listKeyDetailsView.elementsList,
       listKeyDetailsView.truncatedValue,
     )
@@ -212,7 +212,7 @@ describe('Large key details verification', () => {
     const size = await memberValueCell.getRect()
     const rowHeight = size.height
 
-    await ButtonsActions.clickAndWaitForElement(
+    await ButtonActions.clickAndWaitForElement(
       setKeyDetailsView.setFieldsList,
       setKeyDetailsView.truncatedValue,
       false,
@@ -221,7 +221,7 @@ describe('Large key details verification', () => {
     let newSize = await memberValueCell.getRect()
     expect(newSize.height).gt(rowHeight, 'Row is not expanded')
 
-    await ButtonsActions.clickAndWaitForElement(
+    await ButtonActions.clickAndWaitForElement(
       setKeyDetailsView.setFieldsList,
       setKeyDetailsView.truncatedValue,
     )

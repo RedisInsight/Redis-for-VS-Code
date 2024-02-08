@@ -1,21 +1,22 @@
 import * as os from 'os'
+import * as fs from 'fs'
 import { join as joinPath } from 'path'
 import { Chance } from 'chance'
 const chance = new Chance()
 
 export class Config {
   static commonUrl = process.env.COMMON_URL || 'http://localhost:8080'
-  static apiUrl = process.env.API_URL || 'http://127.0.0.1:5000/api'
+  static apiUrl = process.env.API_URL || 'http://127.0.0.1:5541/api'
 
   static workingDirectory =
     process.env.APP_FOLDER_ABSOLUTE_PATH ||
-    joinPath(os.homedir(), process.env.APP_FOLDER_NAME || '.redisinsight-app')
+    joinPath(os.homedir(), process.env.APP_FOLDER_NAME || '.redisinsight-vsc')
   static fileDownloadPath = joinPath(os.homedir(), 'Downloads')
   static uniqueId = chance.string({ length: 10 })
 
   static ossStandaloneConfig = {
-    host: process.env.OSS_STANDALONE_HOST || 'localhost',
-    port: process.env.OSS_STANDALONE_PORT || '8103',
+    host: process.env.OSS_STANDALONE_HOST || 'oss-standalone',
+    port: process.env.OSS_STANDALONE_PORT || '6379',
     databaseName: `${
       process.env.OSS_STANDALONE_DATABASE_NAME || 'test_standalone'
     }-${this.uniqueId}`,
@@ -144,6 +145,29 @@ export class Config {
     }-${this.uniqueId}`,
     databaseUsername: process.env.OSS_STANDALONE_SSH_USERNAME,
     databasePassword: process.env.OSS_STANDALONE_SSH_PASSWORD,
+  }
+
+  static ossStandaloneTlsConfig = {
+    host: process.env.OSS_STANDALONE_TLS_HOST || 'oss-standalone-tls',
+    port: process.env.OSS_STANDALONE_TLS_PORT || '6379',
+    databaseName: `${process.env.OSS_STANDALONE_TLS_DATABASE_NAME || 'test_standalone_tls'}-${this.uniqueId}`,
+    databaseUsername: process.env.OSS_STANDALONE_TLS_USERNAME,
+    databasePassword: process.env.OSS_STANDALONE_TLS_PASSWORD,
+    caCert: {
+      name: `ca}-${this.uniqueId}`,
+      certificate:
+        process.env.E2E_CA_CRT ||
+        fs.readFileSync('./src/rte/oss-standalone-tls/certs/redisCA.crt', 'utf-8'),
+    },
+    clientCert: {
+      name: `client}-${this.uniqueId}`,
+      certificate:
+        process.env.E2E_CLIENT_CRT ||
+        fs.readFileSync('./src/rte/oss-standalone-tls/certs/redis.crt', 'utf-8'),
+      key:
+        process.env.E2E_CLIENT_KEY ||
+        fs.readFileSync('./src/rte/oss-standalone-tls/certs/redis.key', 'utf-8'),
+    },
   }
 
   static ossStandaloneRedisGears = {

@@ -1,6 +1,6 @@
 import { By } from 'selenium-webdriver'
 import { BaseComponent } from '../BaseComponent'
-import { ButtonsActions, InputActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
 
@@ -83,13 +83,13 @@ export class KeyDetailsView extends BaseComponent {
    */
   async searchByTheValueInKeyDetails(value: string): Promise<void> {
     if (!(await this.isElementDisplayed(this.searchInput))) {
-      await ButtonsActions.clickAndWaitForElement(
+      await ButtonActions.clickAndWaitForElement(
         this.searchButtonInKeyDetails,
         this.searchInput,
       )
     }
     const inputField = await this.getElement(this.searchInput)
-    await inputField.sendKeys(value)
+    await InputActions.typeText(this.searchInput, value)
     await InputActions.pressKey(inputField, 'enter')
     await CommonDriverExtension.driverSleep(1000)
   }
