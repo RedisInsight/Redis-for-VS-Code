@@ -103,7 +103,6 @@ describe('KeyDetailsHeader', () => {
       fireEvent.click(screen.getByTestId(`remove-key-${nameString}-icon`))
       fireEvent.click(screen.getByTestId(`remove-key-${nameString}`))
       expect(useKeys.useKeysApi().getState().deleteKeyAction).toBeCalled()
-      // expect(deleteKeyActionMock).toBeCalled()
     })
   })
 })

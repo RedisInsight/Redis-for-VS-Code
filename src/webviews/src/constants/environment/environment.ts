@@ -1,8 +1,8 @@
-const port = Number(localStorage.getItem('apiPort'))
+import { toNumber } from 'lodash'
 
 // server
 export const BASE_API_URL = import.meta.env.RI_BASE_API_URL || 'http://localhost'
-export const API_PORT = port || import.meta.env.RI_API_PORT || 5541
+export const API_PORT = toNumber(window.apiPort) || import.meta.env.RI_API_PORT || 5541
 export const API_PREFIX = import.meta.env.RI_API_PREFIX || 'api'
 
 // browser

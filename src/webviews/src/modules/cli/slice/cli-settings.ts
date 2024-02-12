@@ -4,7 +4,7 @@ import { AxiosError } from 'axios'
 import { find } from 'lodash'
 import { apiService, sessionStorageService } from 'uiSrc/services'
 import { ApiEndpoints, StorageItem, cliTexts, ConnectionSuccessOutputText, InitOutputText } from 'uiSrc/constants'
-import { getApiErrorMessage, getUrl, getUrlWithId, isStatusSuccessful } from 'uiSrc/utils'
+import { getApiErrorMessage, getUrl, getDatabaseUrl, isStatusSuccessful } from 'uiSrc/utils'
 import { AppDispatch, RootState, Database, useDatabasesStore } from 'uiSrc/store'
 import { ConnectionHistory, StateCliSettings } from 'uiSrc/interfaces'
 import { outputSelector, setOutput, concatToOutput, setCliDbIndex, resetOutput } from './cli-output'
@@ -235,7 +235,7 @@ export function createCliClientAction(
 
     try {
       const { data, status } = await apiService.post<any>(
-        getUrlWithId(id, ApiEndpoints.CLI),
+        getDatabaseUrl(id, ApiEndpoints.CLI),
       )
 
       if (isStatusSuccessful(status)) {

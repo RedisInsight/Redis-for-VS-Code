@@ -15,7 +15,7 @@ import {
   SortOrder,
   StorageItem,
 } from 'uiSrc/constants'
-import { bufferToString, getApiErrorMessage, getEncoding, getUrl, getUrlWithId, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
+import { bufferToString, getApiErrorMessage, getEncoding, getUrl, getDatabaseUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { fetchString } from 'uiSrc/modules'
 import { fetchHashFields } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
 import { fetchZSetMembers } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
@@ -68,7 +68,7 @@ export const fetchKeyInfo = (
     state.processSelectedKey()
     try {
       const { data, status } = await apiService.post<KeyInfo>(
-        databaseId ? getUrlWithId(databaseId, ApiEndpoints.KEY_INFO) : getUrl(ApiEndpoints.KEY_INFO),
+        databaseId ? getDatabaseUrl(databaseId, ApiEndpoints.KEY_INFO) : getUrl(ApiEndpoints.KEY_INFO),
         { keyName: key },
         { params: { encoding: getEncoding() } },
       )

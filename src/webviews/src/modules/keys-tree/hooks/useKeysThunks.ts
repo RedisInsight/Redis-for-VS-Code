@@ -14,7 +14,7 @@ import {
   sendEventTelemetry,
   showErrorMessage,
   showInformationMessage,
-  getUrlWithId,
+  getDatabaseUrl,
 } from 'uiSrc/utils'
 import { GetKeysWithDetailsResponse, KeysStore, KeysActions, SetStringWithExpire, KeysThunks } from './interface'
 import { parseKeysListResponse } from '../utils'
@@ -46,7 +46,7 @@ KeysThunks
       const { search: match, filter: type, databaseId } = get()
 
       const { data, status } = await apiService.post<GetKeysWithDetailsResponse[]>(
-        getUrlWithId(databaseId, ApiEndpoints.KEYS),
+        getDatabaseUrl(databaseId, ApiEndpoints.KEYS),
         {
           cursor, count, type, match: match || DEFAULT_SEARCH_MATCH, keysInfo: false,
         },
@@ -106,7 +106,7 @@ KeysThunks
 
       const { search: match, filter: type, databaseId } = get()
       const { data, status } = await apiService.post(
-        getUrlWithId(databaseId, ApiEndpoints.KEYS),
+        getDatabaseUrl(databaseId, ApiEndpoints.KEYS),
         {
           cursor, count, type, match: match || DEFAULT_SEARCH_MATCH, keysInfo: false,
         },
@@ -154,7 +154,7 @@ KeysThunks
   ) => {
     try {
       const { data } = await apiService.post<KeyInfo[]>(
-        getUrlWithId(get().databaseId, ApiEndpoints.KEYS_METADATA),
+        getDatabaseUrl(get().databaseId, ApiEndpoints.KEYS_METADATA),
         { keys: keys.map(([,nameBuffer]) => nameBuffer), type: filter || undefined },
         { params: { encoding: getEncoding() }, signal },
       )
@@ -179,7 +179,7 @@ KeysThunks
     get().deleteKey()
     try {
       const { status } = await apiService.delete(
-        getUrlWithId(get().databaseId, ApiEndpoints.KEYS),
+        getDatabaseUrl(get().databaseId, ApiEndpoints.KEYS),
         {
           data: { keyNames: [key] },
           params: { encoding: getEncoding() },
@@ -218,7 +218,7 @@ KeysThunks
 
     try {
       const { status } = await apiService.post(
-        getUrlWithId(get().databaseId, endpoint),
+        getDatabaseUrl(get().databaseId, endpoint),
         data,
       )
       if (isStatusSuccessful(status)) {
