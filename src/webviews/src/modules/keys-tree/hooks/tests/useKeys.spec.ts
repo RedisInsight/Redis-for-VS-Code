@@ -25,10 +25,8 @@ vi.spyOn(utils, 'showInformationMessage')
 
 const fnMock = vi.fn();
 (vi.spyOn(useKeys, 'useKeysApi') as Mock).mockImplementation(() => ({
-  getState: () => ({
-    fetchPatternKeysAction: fnMock,
-    setDatabaseId: fnMock,
-  }),
+  fetchPatternKeysAction: fnMock,
+  setDatabaseId: fnMock,
 }))
 
 const useKeysStore = createStore<KeysStore & KeysActions & KeysThunks>()((...a) => ({

@@ -66,7 +66,7 @@ interface IZsetMember extends ZSetMember {
 
 export interface Props {
   isFooterOpen: boolean
-  onRemoveKey: () => void
+  onRemoveKey?: () => void
 }
 
 const ZSetDetailsTable = (props: Props) => {
@@ -139,7 +139,7 @@ const ZSetDetailsTable = (props: Props) => {
   }, [])
 
   const onSuccessRemoved = (newTotal: number) => {
-    newTotal === 0 && onRemoveKey()
+    newTotal === 0 && onRemoveKey?.()
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_REMOVED,
       eventData: {
@@ -249,7 +249,7 @@ const ZSetDetailsTable = (props: Props) => {
   }
 
   const onColResizeEnd = (sizes: RelativeWidthSizes) => {
-    contextApi.getState().updateKeyDetailsSizes({
+    contextApi.updateKeyDetailsSizes({
       type: KeyTypes.ZSet,
       sizes,
     })

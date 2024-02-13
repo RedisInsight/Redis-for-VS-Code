@@ -183,7 +183,7 @@ export const deleteZSetMembers = (
         // dispatch(deleteKeyFromList(key))
         showInformationMessage(successMessages.DELETED_KEY(key!).title)
       }
-      onSuccess?.(data)
+      onSuccess?.(newTotalValue)
     }
   } catch (_err) {
     const error = _err as AxiosError

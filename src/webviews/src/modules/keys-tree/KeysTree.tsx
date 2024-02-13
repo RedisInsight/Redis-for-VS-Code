@@ -40,7 +40,7 @@ export const KeysTree = () => {
 
   useEffect(() => {
     if (!firstDataLoaded) {
-      keysApi.getState().fetchPatternKeysAction()
+      keysApi.fetchPatternKeysAction()
     }
     openSelectedKey(selectedKeyName)
   }, [])
@@ -81,7 +81,7 @@ export const KeysTree = () => {
 
   // select default leaf "Keys" after each change delimiter, filter or search
   const updateSelectedKeys = () => {
-    contextApi.getState().resetKeysTree()
+    contextApi.resetKeysTree()
     openSelectedKey(selectedKeyName)
   }
 
@@ -95,19 +95,22 @@ export const KeysTree = () => {
         newState[name] = value
       }
 
-      contextApi.getState().setKeysTreeNodesOpen(newState)
+      contextApi.setKeysTreeNodesOpen(newState)
       return newState
     })
   }
 
   const handleStatusSelected = (name: RedisString) => {
     fetchKeyInfo({ key: name, databaseId }, false, () => {
-      vscodeApi.postMessage({ action: VscodeMessageAction.SelectKey, data: { name, databaseId } })
+      vscodeApi.postMessage({
+        action: VscodeMessageAction.SelectKey,
+        data: { key: name, databaseId },
+      })
     })
   }
 
   const handleDeleteLeaf = (key: RedisString) => {
-    keysApi.getState().deleteKeyAction(key)
+    keysApi.deleteKeyAction(key)
   }
 
   const handleDeleteClicked = (type: AllKeyTypes) => {

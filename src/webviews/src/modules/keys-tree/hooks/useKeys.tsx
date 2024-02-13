@@ -43,4 +43,7 @@ export function useKeysInContext<U>(
   return useStoreWithEqualityFn(store, selector)
 }
 export const useKeysApi = () =>
+  useContext(StoreContext).getState()
+
+export const useKeysFullApi = () =>
   useContext(StoreContext)

@@ -23,9 +23,7 @@ const supportedKeyTypes = [
 
 const deleteKeyActionMock = vi.fn();
 (vi.spyOn(useKeys, 'useKeysApi') as Mock).mockImplementation(() => ({
-  getState: () => ({
-    deleteKeyAction: deleteKeyActionMock,
-  }),
+  deleteKeyAction: deleteKeyActionMock,
 }))
 
 let store: typeof mockedStore
@@ -102,7 +100,7 @@ describe('KeyDetailsHeader', () => {
       expect(component).toBeTruthy()
       fireEvent.click(screen.getByTestId(`remove-key-${nameString}-icon`))
       fireEvent.click(screen.getByTestId(`remove-key-${nameString}`))
-      expect(useKeys.useKeysApi().getState().deleteKeyAction).toBeCalled()
+      expect(useKeys.useKeysApi().deleteKeyAction).toBeCalled()
       // expect(deleteKeyActionMock).toBeCalled()
     })
   })

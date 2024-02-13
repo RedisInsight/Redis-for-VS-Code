@@ -34,6 +34,7 @@ export const initialSelectedKeyState: SelectedKeyStore = {
   data: null,
   viewFormat: localStorageService?.get(StorageItem.viewFormat) ?? DEFAULT_VIEW_FORMAT,
   compressor: null,
+  action: null,
 }
 
 export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>()(
@@ -50,7 +51,9 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
     // delete selected key
     // deleteSelectedKey: () => set({ data: null }),
     // update selected key
-    updateSelectedKeyRefreshTime: (lastRefreshTime: number) => set({ lastRefreshTime }),
+    updateSelectedKeyRefreshTime: (lastRefreshTime) => set({ lastRefreshTime }),
+
+    setSelectedKeyAction: (action) => set({ action }),
   }),
   {
     name: 'selectedKey',

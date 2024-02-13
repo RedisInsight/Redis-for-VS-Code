@@ -21,13 +21,13 @@ export interface KeysActions {
 
   deleteKey: () => void
   deleteKeyFinal: () => void
-  deleteKeyFromList: (key: RedisString) => void
+  deleteKeyFromTree: (key: RedisString) => void
 
   // Add key
   addKey: () => void
   addKeyFinal: () => void
   addKeySuccess: (data: KeysStoreData) => void
-  updateKeyList: (data: { key: RedisString, keyType: KeyTypes }) => void
+  addKeyToTree: (key: RedisString, keyType: KeyTypes) => void
   resetAddKey: () => void
   setDatabaseId: (databaseId: string) => void
 }
@@ -50,7 +50,7 @@ export interface KeysThunks {
   ) => void
   deleteKeyAction: (key: RedisString, onSuccessAction?: () => void) => void
   addStringKey: (data: SetStringWithExpire, onSuccessAction?: () => void, onFailAction?: () => void) => void
-  addKeyIntoList: (data: { key: RedisString, keyType: KeyTypes }) => void
+  addKeyIntoTree: (key: RedisString, keyType: KeyTypes) => void
   addTypedKey: (
     data: any,
     keyType: KeyTypes,

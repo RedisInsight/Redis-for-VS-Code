@@ -15,7 +15,9 @@ import {
   showErrorMessage,
   showInformationMessage,
   getUrlWithId,
+  getUrl,
 } from 'uiSrc/utils'
+import { useSelectedKeyStore } from 'uiSrc/store'
 import { GetKeysWithDetailsResponse, KeysStore, KeysActions, SetStringWithExpire, KeysThunks } from './interface'
 import { parseKeysListResponse } from '../utils'
 
@@ -187,7 +189,7 @@ KeysThunks
       )
 
       if (isStatusSuccessful(status)) {
-        get().deleteKeyFromList(key)
+        get().deleteKeyFromTree(key)
         showInformationMessage(successMessages.DELETED_KEY(key).title)
         onSuccessAction?.()
       }
@@ -218,7 +220,7 @@ KeysThunks
 
     try {
       const { status } = await apiService.post(
-        getUrlWithId(get().databaseId, endpoint),
+        getUrl(endpoint),
         data,
       )
       if (isStatusSuccessful(status)) {
@@ -235,16 +237,16 @@ KeysThunks
     }
   },
 
-  addKeyIntoList: async ({ key, keyType }: { key: RedisString, keyType: KeyTypes }) => {
+  addKeyIntoTree: (key, keyType) => {
     const { filter, search } = get()
 
     if (search && search !== DEFAULT_SEARCH_MATCH) {
-      return null
+      return
     }
 
     if (!filter || filter === keyType) {
-      return get().updateKeyList({ key, keyType })
+      get().addKeyToTree(key, keyType)
+      useSelectedKeyStore.getState().setSelectedKeyAction(null)
     }
-    return null
   },
 })

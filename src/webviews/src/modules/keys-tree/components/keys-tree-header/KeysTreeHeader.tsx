@@ -15,7 +15,7 @@ export const KeysTreeHeader = () => {
   const keysApi = useKeysApi()
 
   const loadMoreItems = () => {
-    keysApi.getState().fetchMorePatternKeysAction(nextCursor, SCAN_TREE_COUNT_DEFAULT)
+    keysApi.fetchMorePatternKeysAction(nextCursor, SCAN_TREE_COUNT_DEFAULT)
   }
 
   return (

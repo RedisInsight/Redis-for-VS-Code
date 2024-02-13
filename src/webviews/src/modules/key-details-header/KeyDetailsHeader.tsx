@@ -72,7 +72,7 @@ const KeyDetailsHeader = ({
   }
 
   const handleDeleteKey = (key: RedisString) => {
-    keysApi.getState().deleteKeyAction(key, onRemoveKey)
+    keysApi.deleteKeyAction(key, onRemoveKey)
   }
 
   const handleDeleteKeyClicked = () => {

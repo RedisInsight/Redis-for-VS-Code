@@ -214,7 +214,7 @@ const ListDetailsTable = (props: Props) => {
   }
 
   const onColResizeEnd = (sizes: RelativeWidthSizes) => {
-    contextApi.getState().updateKeyDetailsSizes({
+    contextApi.updateKeyDetailsSizes({
       type: KeyTypes.List,
       sizes,
     })
