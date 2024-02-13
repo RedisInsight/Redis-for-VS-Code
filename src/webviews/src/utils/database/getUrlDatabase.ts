@@ -8,5 +8,5 @@ export const getUrl = (...path: string[]) => {
   return (`/${ApiEndpoints.DATABASES}/${databaseId}/${path.join('/')}`)
 }
 
-export const getUrlWithId = (databaseId: Nullable<string>, ...path: string[]) =>
+export const getDatabaseUrl = (databaseId: Nullable<string>, ...path: string[]) =>
   (`/${ApiEndpoints.DATABASES}/${databaseId}/${path.join('/')}`)

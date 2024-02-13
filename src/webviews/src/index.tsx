@@ -26,22 +26,11 @@ import { localStorageService, sessionStorageService } from './services'
 import './styles/main.scss'
 import '../vscode.css'
 
-// TODO: Type the incoming config data
-// const config: any = {}
-// const workspace = ''
-
-// if (root) {
-//   workspace = root.getAttribute('data-workspace') || ''
-// }
-
-// const rootEl = document.getElementById('root')
-
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('message', handleMessage)
 
   function handleMessage(event: any) {
     const message = event.data
-    console.debug(message.action)
 
     switch (message.action) {
       case VscodeMessageAction.SelectKey:
@@ -87,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 const container = document.getElementById('root')
-localStorage.setItem('apiPort', container?.dataset.apiPort as string)
+window.apiPort = container?.dataset.apiPort as string
 const root = createRoot(container!)
 
 root.render(
