@@ -142,7 +142,7 @@ const VirtualTree = (props: Props) => {
   const getMetadata = useCallback((
     itemsInit: any[][] = [],
   ): void => {
-    keysApi.getState().fetchKeysMetadataTree(
+    keysApi.fetchKeysMetadataTree(
       itemsInit,
       commonFilterType,
       controller.current?.signal,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
-import { KeyTypes, VscodeMessageAction } from 'uiSrc/constants'
+import { KeyTypes, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
 // import HelpTexts from 'uiSrc/constants/help-texts'
 
 // import { connectedInstanceSelector } from 'uiSrc/slices/instances/instances'
@@ -9,6 +9,8 @@ import {
   Maybe,
 } from 'uiSrc/interfaces'
 import { vscodeApi } from 'uiSrc/services'
+import { useDatabasesStore } from 'uiSrc/store'
+import { stringToBuffer } from 'uiSrc/utils'
 import AddKeyCommonFields from './components/AddKeyCommonFields/AddKeyCommonFields'
 
 import { ADD_KEY_TYPE_OPTIONS } from './constants/key-type-options'
@@ -26,6 +28,7 @@ import styles from './styles.module.scss'
 export const AddKey = () => {
   const loading = useKeysInContext((state) => state.addKeyLoading)
   const keysApi = useKeysApi()
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
   // const { id: instanceId } = useSelector(connectedInstanceSelector)
 
@@ -33,7 +36,7 @@ export const AddKey = () => {
     () =>
       // componentWillUnmount
       () => {
-        keysApi.getState().resetAddKey()
+        keysApi.resetAddKey()
       },
     [],
   )
@@ -47,10 +50,18 @@ export const AddKey = () => {
     setTypeSelected(value)
   }
 
-  const closeAddKeyPanel = (isCancelled?: boolean) => {
+  const closeAddKeyPanel = (isCancelled?: boolean, keyType?: KeyTypes) => {
+    if (isCancelled) {
+      vscodeApi.postMessage({
+        action: VscodeMessageAction.CloseAddKey,
+        data: keyName,
+      })
+      return
+    }
+
     vscodeApi.postMessage({
-      action: isCancelled ? VscodeMessageAction.CloseAddKey : VscodeMessageAction.CloseAddRefreshKey,
-      data: keyName,
+      action: VscodeMessageAction.CloseAddKeyAndRefresh,
+      data: { key: stringToBuffer(keyName), keyType, databaseId: databaseId!, type: SelectedKeyActionType.Added },
     })
   }
 

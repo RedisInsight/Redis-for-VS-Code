@@ -86,20 +86,20 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({ viewId: ViewId.Key }).dispose()
     }),
 
-    vscode.commands.registerCommand('RedisInsight.addDatabaseClose', () => {
+    vscode.commands.registerCommand('RedisInsight.addDatabaseClose', (args) => {
       WebviewPanel.getInstance({ viewId: ViewId.AddDatabase }).dispose()
-      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
+      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
     }),
 
-    vscode.commands.registerCommand('RedisInsight.editDatabaseClose', () => {
+    vscode.commands.registerCommand('RedisInsight.editDatabaseClose', (args) => {
       WebviewPanel.getInstance({ viewId: ViewId.EditDatabase }).dispose()
-      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
+      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
     }),
 
-    vscode.commands.registerCommand('RedisInsight.addKeyCloseAndRefresh', (args) => {
-      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
-      WebviewPanel.getInstance({ viewId: ViewId.AddKey }).dispose()
-      vscode.commands.executeCommand('RedisInsight.openPage', { action: 'SelectKey', data: args.data })
+    vscode.commands.registerCommand('RedisInsight.closeAddKeyAndRefresh', (args) => {
+      WebviewPanel.getInstance({ viewId: ViewId.AddKey })?.dispose()
+      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
+      vscode.commands.executeCommand('RedisInsight.openPage', { action: 'SelectKey', data: args })
     }),
 
     vscode.commands.registerCommand('RedisInsight.closeKeyAndRefresh', (args) => {

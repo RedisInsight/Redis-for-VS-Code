@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import cx from 'classnames'
 import { VscChevronRight, VscChevronDown, VscTerminal, VscAdd, VscRefresh, VscEdit } from 'react-icons/vsc'
 import { BiSortDown, BiSortUp } from 'react-icons/bi'
 import * as l10n from '@vscode/l10n'
+import { useShallow } from 'zustand/react/shallow'
 
 import { sessionStorageService, vscodeApi } from 'uiSrc/services'
-import { SortOrder, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
+import { SelectedKeyActionType, SortOrder, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import {
   TelemetryEvent,
   formatLongName,
@@ -15,7 +16,7 @@ import {
   getRedisModulesSummary,
   sendEventTelemetry,
 } from 'uiSrc/utils'
-import { Database, checkConnectToDatabase, deleteDatabases, useContextApi, useContextInContext } from 'uiSrc/store'
+import { Database, checkConnectToDatabase, deleteDatabases, useContextApi, useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
 import DatabaseOfflineIconSvg from 'uiSrc/assets/database/database_icon_offline.svg?react'
 import DatabaseActiveIconSvg from 'uiSrc/assets/database/database_icon_active.svg?react'
 import { PopoverDelete } from 'uiSrc/components'
@@ -32,12 +33,37 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   const { id, name } = database
   const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
 
+  const { selectedKeyAction, setSelectedKeyAction } = useSelectedKeyStore(useShallow((state) => ({
+    selectedKeyAction: state.action,
+    setSelectedKeyAction: state.setSelectedKeyAction,
+  })))
+
   const [showTree, setShowTree] = useState<boolean>(false)
 
   const keysApi = useKeysApi()
   const contextApi = useContextApi()
 
   const isSortingASC = sorting === SortOrder.ASC
+
+  useEffect(() => {
+    const { type, key, keyType, databaseId } = selectedKeyAction || {}
+
+    if (!type || databaseId !== database.id) {
+      return
+    }
+
+    switch (type) {
+      case SelectedKeyActionType.Added:
+        keysApi.addKeyIntoTree(key!, keyType!)
+        break
+      case SelectedKeyActionType.Removed:
+        keysApi.deleteKeyFromTree(key!)
+        setSelectedKeyAction(null)
+        break
+      default:
+        break
+    }
+  }, [selectedKeyAction])
 
   const handleCheckConnectToDatabase = ({ id, provider, modules }: Database) => {
     const modulesSummary = getRedisModulesSummary(modules)
@@ -54,17 +80,17 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   }
 
   const connectToInstance = (id = '') => {
-    keysApi.getState().setDatabaseId(id)
+    keysApi.setDatabaseId(id)
 
     // todo: fix for cli first open
     sessionStorageService.set(StorageItem.databaseId, database.id)
     sessionStorageService.set(StorageItem.cliDatabase, database)
-    // contextApi.getState().setDatabaseId(id)
+    // contextApi.setDatabaseId(id)
     setShowTree(!showTree)
   }
 
   const addKeyClickHandle = () => {
-    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey })
+    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey, data: database })
   }
 
   const openCliClickHandle = () => {
@@ -74,8 +100,8 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   const changeSortHandle = () => {
     const newSorting = isSortingASC ? SortOrder.DESC : SortOrder.ASC
 
-    contextApi.getState().setKeysTreeSort(id, newSorting)
-    contextApi.getState().resetKeysTree()
+    contextApi.setKeysTreeSort(id, newSorting)
+    contextApi.resetKeysTree()
 
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEYS_SORTED,
@@ -111,7 +137,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   }
 
   const refreshHandle = () => {
-    keysApi.getState().fetchPatternKeysAction()
+    keysApi.fetchPatternKeysAction()
   }
 
   return (

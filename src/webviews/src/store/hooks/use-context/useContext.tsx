@@ -65,4 +65,7 @@ export function useContextInContext<U>(
   return useStoreWithEqualityFn(store, selector)
 }
 export const useContextApi = () =>
+  useContext(StoreContext).getState()
+
+export const useContextFullApi = () =>
   useContext(StoreContext)

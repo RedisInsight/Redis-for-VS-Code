@@ -58,7 +58,7 @@ KeysStore & KeysActions
 
   deleteKey: () => set({ deleting: true }),
   deleteKeyFinal: () => set({ deleting: false }),
-  deleteKeyFromList: (keyProp) => set((state) => {
+  deleteKeyFromTree: (keyProp) => set((state) => {
     if (state.data?.keys.length === 0) {
       return state
     }
@@ -82,8 +82,8 @@ KeysStore & KeysActions
     },
   })),
 
-  updateKeyList: (payload) => set((state) => {
-    state.data?.keys.unshift({ name: payload.key })
+  addKeyToTree: (key, type) => set((state) => {
+    state.data?.keys.unshift({ name: key, type })
 
     state.data = {
       ...state.data,

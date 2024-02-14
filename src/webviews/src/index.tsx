@@ -17,7 +17,7 @@ import {
 } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
-import { RedisString } from 'uiSrc/interfaces'
+import { PostMessage } from 'uiSrc/interfaces'
 import { isEqualBuffers } from 'uiSrc/utils'
 import { StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
@@ -29,31 +29,34 @@ import '../vscode.css'
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('message', handleMessage)
 
-  function handleMessage(event: any) {
+  function handleMessage(event: MessageEvent<PostMessage>) {
     const message = event.data
 
     switch (message.action) {
       case VscodeMessageAction.SelectKey:
-        const { name, databaseId } = message?.data as { name: RedisString, databaseId: string }
+        const { key, databaseId } = message?.data
         const prevKey = useSelectedKeyStore.getState().data?.name
 
-        if (isEqualBuffers(name, prevKey)) {
+        if (isEqualBuffers(key, prevKey)) {
           return
         }
         sessionStorageService.set(StorageItem.databaseId, databaseId)
         resetZustand()
-        fetchKeyInfo({ key: name }, true)
+        fetchKeyInfo({ key }, true)
         break
       case VscodeMessageAction.RefreshTree:
-        // TODO
-        if (message.data?.keyName) {
-          // useKeysStore.getState()?.deleteKeyFromList(message.data?.keyName)
+        if (message.data?.key) {
+          useSelectedKeyStore.getState().setSelectedKeyAction(message.data)
         } else {
           fetchDatabases()
         }
         break
       case VscodeMessageAction.EditDatabase:
         fetchEditedDatabase(message?.data as Database)
+        break
+      case VscodeMessageAction.AddKey:
+        sessionStorageService.set(StorageItem.databaseId, message?.data?.id)
+        useDatabasesStore.getState().setConnectedDatabase(message?.data as Database)
         break
       case VscodeMessageAction.AddCli:
       case VscodeMessageAction.OpenCli:

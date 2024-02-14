@@ -7,13 +7,14 @@ import { Maybe, RedisResponseBuffer } from 'uiSrc/interfaces'
 import { TextArea } from 'uiSrc/ui'
 import { SetStringWithExpire } from 'uiSrc/modules/keys-tree/hooks/interface'
 import { useKeysApi, useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
+import { KeyTypes } from 'uiSrc/constants'
 
 import styles from './styles.module.scss'
 
 export interface Props {
   keyName: string
   keyTTL: Maybe<number>
-  onCancel: (isCancelled?: boolean) => void
+  onCancel: (isCancelled?: boolean, keyType?: KeyTypes) => void
 }
 
 const AddKeyString = (props: Props) => {
@@ -45,7 +46,7 @@ const AddKeyString = (props: Props) => {
     if (keyTTL !== undefined) {
       data.expire = keyTTL
     }
-    keysApi.getState().addStringKey(data, onCancel)
+    keysApi.addStringKey(data, () => onCancel(false, KeyTypes.String))
   }
 
   const getTooltip = (): string => {
