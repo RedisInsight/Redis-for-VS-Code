@@ -61,7 +61,7 @@ export const AddKey = () => {
 
     vscodeApi.postMessage({
       action: VscodeMessageAction.CloseAddKeyAndRefresh,
-      data: { key: stringToBuffer(keyName), keyType, databaseId, type: SelectedKeyActionType.Added },
+      data: { key: stringToBuffer(keyName), keyType, databaseId: databaseId!, type: SelectedKeyActionType.Added },
     })
   }
 

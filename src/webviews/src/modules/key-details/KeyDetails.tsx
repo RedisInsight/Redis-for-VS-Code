@@ -76,7 +76,7 @@ const KeyDetails = (props: Props) => {
   const onRemoveKey = () => {
     vscodeApi.postMessage({
       action: VscodeMessageAction.CloseKeyAndRefresh,
-      data: { key: keyName, type: SelectedKeyActionType.Removed, databaseId },
+      data: { key: keyName, type: SelectedKeyActionType.Removed, databaseId: databaseId! },
     })
   }
 

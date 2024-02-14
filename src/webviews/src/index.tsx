@@ -17,7 +17,7 @@ import {
 } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
-import { RedisString } from 'uiSrc/interfaces'
+import { PostMessage } from 'uiSrc/interfaces'
 import { isEqualBuffers } from 'uiSrc/utils'
 import { StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
@@ -29,12 +29,12 @@ import '../vscode.css'
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('message', handleMessage)
 
-  function handleMessage(event: any) {
+  function handleMessage(event: MessageEvent<PostMessage>) {
     const message = event.data
 
     switch (message.action) {
       case VscodeMessageAction.SelectKey:
-        const { key, databaseId } = message?.data as { key: RedisString, databaseId: string }
+        const { key, databaseId } = message?.data
         const prevKey = useSelectedKeyStore.getState().data?.name
 
         if (isEqualBuffers(key, prevKey)) {

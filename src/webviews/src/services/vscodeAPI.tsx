@@ -1,4 +1,4 @@
-import { IVSCodeApi } from 'uiSrc/interfaces'
+import { IVSCodeApi, PostMessage } from 'uiSrc/interfaces'
 
 class VSCodeWrapper {
   public readonly vscodeApi: IVSCodeApi = window.acquireVsCodeApi?.()
@@ -7,7 +7,7 @@ class VSCodeWrapper {
    * Send a message to the extension framework.
    * @param message
    */
-  public postMessage(message: any): void {
+  public postMessage(message: PostMessage): void {
     this.vscodeApi?.postMessage(message)
   }
 
