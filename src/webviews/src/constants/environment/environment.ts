@@ -2,8 +2,8 @@ const port = Number(localStorage.getItem('apiPort'))
 
 // server
 export const BASE_API_URL = import.meta.env.RI_BASE_API_URL || 'http://localhost'
-export const API_PORT = port || import.meta.env.RI_API_PORT || 5541
-export const API_PREFIX = import.meta.env.RI_API_PREFIX || 'api'
+export const API_PORT = port || import.meta.env.RI_APP_PORT || 5541
+export const API_PREFIX = import.meta.env.RI_APP_PREFIX || 'api'
 export const CONNECTED_DATABASE_ID = import.meta.env.RI_INSTANCE_ID || ''
 
 // browser
