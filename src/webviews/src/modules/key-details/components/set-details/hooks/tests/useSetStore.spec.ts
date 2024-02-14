@@ -8,30 +8,34 @@ import {
   fetchSetMembers,
   fetchMoreSetMembers,
   deleteSetMembers,
+  addSetMembersAction,
 } from '../useSetStore'
+import * as store from 'uiSrc/store'
+
+vi.spyOn(store, 'refreshKeyInfo')
 
 beforeEach(() => {
   useSetStore.setState(initialStateInit)
 })
 
 describe('useSetStore', () => {
-  it('processSetRequest', () => {
+  it('processSet', () => {
     // Arrange
-    const { processSetRequest } = useSetStore.getState()
+    const { processSet } = useSetStore.getState()
     // Act
-    processSetRequest()
+    processSet()
     // Assert
     expect(useSetStore.getState().loading).toEqual(true)
   })
 
-  it('processSetResponse', () => {
+  it('processSetFinal', () => {
     // Arrange
     const initialState = { ...initialStateInit, loading: true } // Custom initial state
     useSetStore.setState((state) => ({ ...state, ...initialState }))
 
-    const { processSetResponse } = useSetStore.getState()
+    const { processSetFinal } = useSetStore.getState()
     // Act
-    processSetResponse()
+    processSetFinal()
     // Assert
     expect(useSetStore.getState().loading).toEqual(false)
   })
@@ -89,6 +93,20 @@ describe('async', () => {
 
     expect(useSetStore.getState().data.keyName).toEqual(constants.KEY_NAME_5)
     expect(useSetStore.getState().data.members?.length).toEqual(1)
+    expect(useSetStore.getState().loading).toEqual(false)
+  })
+
+  it('addSetMembersAction', async () => {
+    useSetStore.setState(({ ...initialStateInit, data: constants.SET_DATA}))
+    const responsePayload = { data: { affected: 1 }, status: 200 }
+    apiService.put = vi.fn().mockResolvedValue(responsePayload)
+
+    addSetMembersAction({ keyName: constants.KEY_NAME_5, members: [constants.KEY_3_MEMBER] })
+
+    await waitForStack()
+
+    expect(store.refreshKeyInfo).toBeCalledWith(constants.KEY_NAME_5)
+    expect(useSetStore.getState().data.keyName).toEqual(constants.KEY_NAME_5)
     expect(useSetStore.getState().loading).toEqual(false)
   })
 })

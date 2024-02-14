@@ -173,9 +173,6 @@ export const deleteHashFields = (
         )
         fetchKeyInfo({ key: key! }, false)
       } else {
-        // todo: connection between webviews
-        // dispatch(deleteSelectedKeySuccess())
-        // dispatch(deleteKeyFromList(key))
         showInformationMessage(successMessages.DELETED_KEY(key!).title)
       }
       onSuccess?.(newTotalValue)

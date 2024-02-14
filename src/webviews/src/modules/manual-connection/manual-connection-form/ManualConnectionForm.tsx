@@ -24,10 +24,6 @@ import {
   DatabaseForm,
   DbCompressor,
   SSHDetails,
-  DbInfoSentinel,
-  PrimaryGroupSentinel,
-  SentinelHostPort,
-  SentinelMasterDatabase,
 } from 'uiSrc/components'
 import { useCertificatesStore } from 'uiSrc/store'
 

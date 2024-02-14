@@ -9,12 +9,29 @@ import {
   mockedStore,
   waitForStack,
 } from 'testSrc/helpers'
-import { fetchDatabases, useDatabasesStore } from './useDatabasesStore'
+import {
+  fetchDatabases,
+  useDatabasesStore,
+  createDatabaseStandalone,
+  fetchEditedDatabase,
+  updateDatabase,
+  checkConnectToDatabase,
+  deleteDatabases,
+} from './useDatabasesStore'
 
 let store: typeof mockedStore
 let databases: any[]
 
 vi.spyOn(utils, 'showErrorMessage')
+vi.spyOn(utils, 'showInformationMessage')
+
+const errorMessage = 'Could not connect to aoeu:123, please check the connection details.'
+const errorResponsePayload = {
+  response: {
+    status: 500,
+    data: { message: errorMessage },
+  },
+}
 
 beforeEach(() => {
   cleanup()
@@ -131,18 +148,179 @@ describe('useDatabasesStore', () => {
         // Arrange
         useDatabasesStore.setState((state) => ({ ...state, data: [] }))
 
-        const errorMessage = 'Could not connect to aoeu:123, please check the connection details.'
-        const responsePayload = {
-          response: {
-            status: 500,
-            data: { message: errorMessage },
-          },
-        }
-
-        apiService.get = vi.fn().mockRejectedValueOnce(responsePayload)
+        apiService.get = vi.fn().mockRejectedValueOnce(errorResponsePayload)
 
         // Act
         fetchDatabases()
+        await waitForStack()
+
+        // Assert
+        expect(useDatabasesStore.getState().data).toEqual([])
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+        expect(utils.showErrorMessage).toBeCalled()
+      })
+    })
+
+    describe('fetchEditedDatabase', () => {
+      it('call both fetchEditedDatabase and setEditDatabase when fetch is successed', async () => {
+        // Arrange
+        const data = { ...databases[0], password: true }
+        const responsePayload = { data, status: 200 }
+
+        apiService.get = vi.fn().mockResolvedValue(responsePayload)
+
+        // Act
+        fetchEditedDatabase(databases[0])
+        await waitForStack()
+
+        expect(useDatabasesStore.getState().editDatabase).toEqual(data)
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+      })
+
+      it('call both fetchEditedDatabase and showErrorMessage when fetch is fail', async () => {
+        // Arrange
+        useDatabasesStore.setState((state) => ({ ...state, data: [] }))
+
+        apiService.get = vi.fn().mockRejectedValueOnce(errorResponsePayload)
+
+        // Act
+        fetchEditedDatabase(databases[0])
+        await waitForStack()
+
+        // Assert
+        expect(useDatabasesStore.getState().editDatabase).toEqual(databases[0])
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+        expect(utils.showErrorMessage).toBeCalled()
+      })
+    })
+
+    describe('createDatabaseStandalone', () => {
+      it('call both createDatabaseStandalone and fetchDatabases when fetch is successed', async () => {
+        // Arrange
+        const data = { ...databases[0], password: true }
+        const responsePayload = { data, status: 200 }
+        const responseGetPayload = { data: [databases[2]], status: 200 }
+
+        apiService.get = vi.fn().mockResolvedValue(responseGetPayload)
+        apiService.post = vi.fn().mockResolvedValue(responsePayload)
+
+        // Act
+        createDatabaseStandalone(databases[0])
+        await waitForStack()
+
+        expect(utils.showInformationMessage).toBeCalledWith('Database has been added')
+        expect(useDatabasesStore.getState().data).toEqual(checkRediStack([databases[2]]))
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+      })
+
+      it('call showErrorMessage when fetch is fail', async () => {
+        // Arrange
+        useDatabasesStore.setState((state) => ({ ...state, data: [] }))
+
+        apiService.post = vi.fn().mockRejectedValueOnce(errorResponsePayload)
+
+        // Act
+        createDatabaseStandalone(databases[0])
+        await waitForStack()
+
+        // Assert
+        expect(useDatabasesStore.getState().editDatabase).toEqual(databases[0])
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+        expect(utils.showErrorMessage).toBeCalled()
+      })
+    })
+
+    describe('deleteDatabases', () => {
+      it('call both deleteDatabases and fetchDatabases when fetch is successed', async () => {
+        // Arrange
+        const responseDeletePayload = { status: 200 }
+        const responseGetPayload = { data: [databases[1]], status: 200 }
+
+        apiService.get = vi.fn().mockResolvedValue(responseGetPayload)
+        apiService.delete = vi.fn().mockResolvedValue(responseDeletePayload)
+
+        // Act
+        deleteDatabases(databases)
+        await waitForStack()
+
+        expect(utils.showInformationMessage).toBeCalledWith('Database has been deleted')
+        expect(useDatabasesStore.getState().data).toEqual(checkRediStack([databases[1]]))
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+      })
+
+      it('call showErrorMessage when fetch is fail', async () => {
+        // Arrange
+        useDatabasesStore.setState((state) => ({ ...state, data: [] }))
+
+        apiService.delete = vi.fn().mockRejectedValueOnce(errorResponsePayload)
+
+        // Act
+        deleteDatabases(databases[0])
+        await waitForStack()
+
+        // Assert
+        expect(useDatabasesStore.getState().editDatabase).toEqual(databases[0])
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+        expect(utils.showErrorMessage).toBeCalled()
+      })
+    })
+
+    describe('updateDatabase', () => {
+      it('call both updateDatabase and fetchDatabases when fetch is successed', async () => {
+        // Arrange
+        const responsePatchPayload = { status: 200 }
+        const responseGetPayload = { data: [databases[1]], status: 200 }
+
+        apiService.get = vi.fn().mockResolvedValue(responseGetPayload)
+        apiService.patch = vi.fn().mockResolvedValue(responsePatchPayload)
+
+        // Act
+        updateDatabase(databases[1])
+        await waitForStack()
+
+        expect(useDatabasesStore.getState().data).toEqual(checkRediStack([databases[1]]))
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+      })
+
+      it('call showErrorMessage when fetch is fail', async () => {
+        // Arrange
+        useDatabasesStore.setState((state) => ({ ...state, data: [] }))
+
+        apiService.patch = vi.fn().mockRejectedValueOnce(errorResponsePayload)
+
+        // Act
+        updateDatabase(databases[0])
+        await waitForStack()
+
+        // Assert
+        expect(useDatabasesStore.getState().data).toEqual([])
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+        expect(utils.showErrorMessage).toBeCalled()
+      })
+    })
+
+    describe('checkConnectToDatabase', () => {
+      it('call checkConnectToDatabase when fetch is successed', async () => {
+        // Arrange
+        const responseGetPayload = { status: 200 }
+
+        apiService.get = vi.fn().mockResolvedValue(responseGetPayload)
+
+        // Act
+        checkConnectToDatabase(databases[1].id)
+        await waitForStack()
+
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+      })
+
+      it('call showErrorMessage when fetch is fail', async () => {
+        // Arrange
+        useDatabasesStore.setState((state) => ({ ...state, data: [] }))
+
+        apiService.get = vi.fn().mockRejectedValueOnce(errorResponsePayload)
+
+        // Act
+        checkConnectToDatabase(databases[0].id)
         await waitForStack()
 
         // Assert
