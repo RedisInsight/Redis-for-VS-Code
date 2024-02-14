@@ -14,7 +14,7 @@ import { KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 
 describe('CLI critical', () => {
   let browser: VSBrowser
@@ -193,7 +193,7 @@ describe('CLI critical', () => {
     await cliViewPanel.executeCommand('info')
     await webView.switchBack()
 
-    await ButtonsActions.clickElement(cliViewPanel.addCliBtn, 5000)
+    await ButtonActions.clickElement(cliViewPanel.addCliBtn, 5000)
 
     await webView.switchToFrame(Views.CliViewPanel)
     // Verify that user can see the list of all active CLI instances
@@ -209,15 +209,15 @@ describe('CLI critical', () => {
       dbAddress,
     )
 
-    await ButtonsActions.clickElement(cliViewPanel.cliInstanceByIndex(1))
+    await ButtonActions.clickElement(cliViewPanel.cliInstanceByIndex(1))
     // Verify that user can switch between CLI instances
     expect(await cliViewPanel.getCliLastCommandResponse()).contain(
       'redis_version:',
     )
 
     // Verify that user can not see CLI instances panel when only one instance added
-    await ButtonsActions.hoverElement(cliViewPanel.cliInstanceByIndex(1))
-    await ButtonsActions.clickElement(cliViewPanel.cliInstanceDeleteBtn)
+    await ButtonActions.hoverElement(cliViewPanel.cliInstanceByIndex(1))
+    await ButtonActions.clickElement(cliViewPanel.cliInstanceDeleteBtn)
     expect(
       await cliViewPanel.isElementDisplayed(cliViewPanel.cliInstancesPanel),
     ).eql(false, 'CLI instances panel displayed after deleting')

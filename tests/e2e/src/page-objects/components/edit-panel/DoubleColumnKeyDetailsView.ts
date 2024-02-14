@@ -1,7 +1,6 @@
 import { By } from 'selenium-webdriver'
 import { KeyDetailsView } from '@e2eSrc/page-objects/components'
-import { ButtonsActions, InputActions } from '@e2eSrc/helpers/common-actions'
-import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
+import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 
 /**
  * Base view for all keyTypes that have 2 columns value
@@ -31,9 +30,7 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     const editLocator = this.editButton(keyType, name)
     const element = await this.getElement(editLocator)
     await element.click()
-    const editElement = await this.getElement(editorLocator)
-    await editElement.clear()
-    await editElement.sendKeys(value)
-    await ButtonsActions.clickElement(this.applyButton)
+    await InputActions.typeText(editorLocator, value)
+    await ButtonActions.clickElement(this.applyButton)
   }
 }

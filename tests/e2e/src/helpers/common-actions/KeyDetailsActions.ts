@@ -1,4 +1,3 @@
-import { VSBrowser, WebDriver } from 'vscode-extension-tester'
 import { WebView, KeyTreeView } from '@e2eSrc/page-objects/components'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
@@ -6,14 +5,7 @@ import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 /**
  * Key details actions
  */
-export class KeyDetailsActions {
-  static driver: WebDriver
-  static initializeDriver(): void {
-    if (!KeyDetailsActions.driver) {
-      KeyDetailsActions.driver = VSBrowser.instance.driver
-    }
-  }
-
+export class KeyDetailsActions extends CommonDriverExtension{
   /**
    * Open key details of the key by name in iframe
    * @param keyName The name of the key
@@ -22,7 +14,7 @@ export class KeyDetailsActions {
     let webView = new WebView()
     let keyTreeView = new KeyTreeView()
     await webView.switchToFrame(Views.KeyTreeView)
-    await CommonDriverExtension.driverSleep(1000)
+    await this.driverSleep(1000)
     await keyTreeView.openKeyDetailsByKeyName(name)
     await webView.switchBack()
     await webView.switchToFrame(Views.KeyDetailsView)

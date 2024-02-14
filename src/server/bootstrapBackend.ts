@@ -8,9 +8,9 @@ import { ChildProcessWithoutNullStreams } from 'child_process'
 const devEnv = process.env.NODE_ENV === 'development'
 
 const apiUrl = process.env.RI_BASE_API_URL
-const apiPort = process.env.RI_API_PORT
-const apiPrefix = process.env.RI_API_PREFIX
-const apiFolder = process.env.RI_API_FOLDER
+const apiPort = process.env.RI_APP_PORT
+const apiPrefix = process.env.RI_APP_PREFIX
+const apiFolder = process.env.RI_APP_FOLDER
 
 const backendPath = path.join(__dirname, '..', 'redis-backend')
 let PSinst: ChildProcessWithoutNullStreams
@@ -37,7 +37,7 @@ export async function startBackend(context: vscode.ExtensionContext): Promise<an
           '-NoLogo',
           '-Command',
           `$env:APP_FOLDER_NAME=${apiFolder};`
-          + `$env:API_PORT=${port};`
+          + `$env:APP_PORT=${port};`
           + '$env:NODE_ENV="production";'
           + '$env:STDOUT_LOGGER="true";'
           + '$env:BUILD_TYPE="DOCKER_ON_PREMISE";'
@@ -50,7 +50,7 @@ export async function startBackend(context: vscode.ExtensionContext): Promise<an
             env:
             {
               APP_FOLDER_NAME: apiFolder,
-              API_PORT: port,
+              APP_PORT: port,
               NODE_ENV: 'production',
               STDOUT_LOGGER: 'true',
               BUILD_TYPE: 'DOCKER_ON_PREMISE',

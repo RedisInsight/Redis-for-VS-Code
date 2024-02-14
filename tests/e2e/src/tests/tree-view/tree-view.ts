@@ -6,7 +6,7 @@ import { Common } from '@e2eSrc/helpers/Common'
 import { KeyAPIRequests, CliAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
-import { ButtonsActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 
 describe('Tree view verifications', () => {
   let browser: VSBrowser
@@ -86,7 +86,7 @@ describe('Tree view verifications', () => {
     expect(actualItemsArray).eql(expectedSortedByASC)
 
     // Verify that user can change the sorting ASC-DESC
-    await ButtonsActions.clickElement(keyTreeView.sortKeysBtn)
+    await ButtonActions.clickElement(keyTreeView.sortKeysBtn)
     await keyTreeView.openTreeFolders([`${keyNames[2]}`.split(':')[0]])
     await keyTreeView.openTreeFolders([`${keyNames[0]}`.split(':')[0]])
     actualItemsArray = await keyTreeView.getAllKeysArray()
@@ -120,14 +120,14 @@ describe('Tree view verifications', () => {
       true,
       'The key folder is not displayed',
     )
-    await ButtonsActions.clickElement(mainFolder)
+    await ButtonActions.clickElement(mainFolder)
     const targetFolderName = await keyTreeView.getElementText(
       keyTreeView.getFolderNameSelectorByNameAndIndex('device', 2),
     )
     const targetFolderSelector = keyTreeView.getFolderSelectorByName(
       `device:${targetFolderName}`,
     )
-    await ButtonsActions.clickElement(targetFolderSelector)
+    await ButtonActions.clickElement(targetFolderSelector)
     await keyTreeView.deleteFirstKeyFromList()
     // Verify the results
     expect(await keyTreeView.isElementDisplayed(targetFolderSelector)).eql(

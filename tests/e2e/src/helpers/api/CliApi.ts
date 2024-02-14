@@ -3,8 +3,6 @@ import { AddNewDatabaseParameters } from '../types/types'
 import { CommonAPIRequests } from './CommonApi'
 import { DatabaseAPIRequests } from './DatabaseApi'
 
-const databaseAPIRequests = new DatabaseAPIRequests()
-
 export class CliAPIRequests {
   /**
    * Create Redis client for CLI
@@ -48,7 +46,7 @@ export class CliAPIRequests {
     command: string,
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {
-    const dbInstance = await databaseAPIRequests.getDatabaseIdByName(
+    const dbInstance = await DatabaseAPIRequests.getDatabaseIdByName(
       databaseParameters.databaseName,
     )
     const uuid = await this.createRedisClientForCli(dbInstance)
