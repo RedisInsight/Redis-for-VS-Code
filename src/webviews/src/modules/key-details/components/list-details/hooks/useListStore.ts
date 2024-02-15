@@ -98,10 +98,8 @@ export const fetchListElements = (
       useSelectedKeyStore.getState().updateSelectedKeyRefreshTime(Date.now())
       onSuccess?.(data)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processListFinal()
   }
@@ -131,10 +129,8 @@ export const fetchListMoreElements = (
       state.processListMoreSuccess(data)
       onSuccess?.(data)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processListFinal()
   }
@@ -162,10 +158,8 @@ export const fetchSearchingListElement = (
       useSelectedKeyStore.getState().updateSelectedKeyRefreshTime(Date.now())
       onSuccess?.(data.value)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
     state.processSearchListElement()
   } finally {
     state.processListFinal()
@@ -191,10 +185,8 @@ export const updateListElementsAction = (
       state.updateElementInList(data)
       refreshKeyInfo(data.keyName, false)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
     onFail?.()
   } finally {
     state.processListFinal()

@@ -19,8 +19,8 @@ import styles from './styles.module.scss'
 
 export interface Props {
   formik: FormikProps<DbConnectionInfo>
-  caCertificates?: { id: string; name: string }[]
-  certificates?: { id: string; name: string }[]
+  caCertificates?: { id: string, name: string }[]
+  certificates?: { id: string, name: string }[]
 }
 const TlsDetails = (props: Props) => {
   const { formik, caCertificates, certificates } = props

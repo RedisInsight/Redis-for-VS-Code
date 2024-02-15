@@ -85,10 +85,8 @@ export const fetchKeyInfo = (
           fetchKeyValueByType(key, data.type)
         }
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       state.processSelectedKeyFinal()
     }
@@ -113,10 +111,8 @@ export const refreshKeyInfo = (key: RedisString, fetchKeyValue = true) => {
           fetchKeyValueByType(key, data.type)
         }
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       state.refreshSelectedKeyFinal()
     }
@@ -148,8 +144,7 @@ export function editKeyTTL(
           // dispatch<any>(deleteKeyFromList(key))
         }
       }
-    } catch (_err) {
-      const error = _err as AxiosError
+    } catch (error) {
       console.debug({ error })
     } finally {
       state.processSelectedKeyFinal()
