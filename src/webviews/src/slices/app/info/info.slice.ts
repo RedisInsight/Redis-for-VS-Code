@@ -65,8 +65,8 @@ export function fetchServerInfo(onSuccessAction?: () => void, onFailAction?: () 
         dispatch(getServerInfoSuccess(data))
         onSuccessAction?.()
       }
-    } catch (_err) {
-      dispatch(getServerInfoFailure(getApiErrorMessage(_err as AxiosError)))
+    } catch (error) {
+      dispatch(getServerInfoFailure(getApiErrorMessage(error as AxiosError)))
       onFailAction?.()
     }
   }
