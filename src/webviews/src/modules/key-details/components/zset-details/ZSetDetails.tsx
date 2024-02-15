@@ -11,7 +11,7 @@ import { AddItemsAction } from '../key-details-actions'
 
 export interface Props extends KeyDetailsHeaderProps {
   onOpenAddItemPanel: () => void
-  onCloseAddItemPanel: () => void
+  onCloseAddItemPanel: (isCancelled: boolean) => void
 }
 
 const ZSetDetails = (props: Props) => {
@@ -26,9 +26,9 @@ const ZSetDetails = (props: Props) => {
     onOpenAddItemPanel()
   }
 
-  const closeAddItemPanel = () => {
+  const closeAddItemPanel = (isCancelled = false) => {
     setIsAddItemPanelOpen(false)
-    onCloseAddItemPanel()
+    onCloseAddItemPanel(isCancelled)
   }
 
   const Actions = () => (
@@ -51,7 +51,7 @@ const ZSetDetails = (props: Props) => {
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            <AddZSetMembers onCancel={closeAddItemPanel} />
+            <AddZSetMembers closePanel={closeAddItemPanel} />
           </div>
         )}
       </div>

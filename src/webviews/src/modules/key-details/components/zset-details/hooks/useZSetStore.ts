@@ -230,10 +230,8 @@ export const addZSetMembersAction = (
       onSuccess?.()
       refreshKeyInfo(data.keyName)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
     onFail?.()
   } finally {
     state.processZSetFinal()

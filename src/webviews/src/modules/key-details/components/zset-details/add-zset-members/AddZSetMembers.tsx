@@ -22,11 +22,11 @@ import { InputText } from 'uiSrc/ui'
 import { addZSetMembersAction, useZSetStore } from '../hooks/useZSetStore'
 
 export interface Props {
-  onCancel: (isCancelled?: boolean) => void;
+  closePanel: (isCancelled?: boolean) => void
 }
 
 const AddZSetMembers = (props: Props) => {
-  const { onCancel } = props
+  const { closePanel } = props
   const loading = useZSetStore((state) => state.loading)
   const selectedKey = useSelectedKeyStore((state) => state.data?.name ?? '')
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
@@ -62,7 +62,7 @@ const AddZSetMembers = (props: Props) => {
   }
 
   const onSuccessAdded = () => {
-    onCancel()
+    closePanel()
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_ADDED,
       eventData: {
@@ -143,7 +143,7 @@ const AddZSetMembers = (props: Props) => {
         <div className="flex justify-end">
           <VSCodeButton
             appearance="secondary"
-            onClick={() => onCancel(true)}
+            onClick={() => closePanel(true)}
             className="mr-3"
             data-testid="cancel-members-btn"
           >
