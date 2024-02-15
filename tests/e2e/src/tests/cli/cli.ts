@@ -5,12 +5,12 @@ import {
   BottomBar,
   WebView,
   CliViewPanel,
-  KeyTreeView,
+  TreeView,
 } from '@e2eSrc/page-objects/components'
-import { InputActions } from '@e2eSrc/helpers/common-actions'
+import { DatabasesActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
 import { JsonKeyParameters } from '@e2eSrc/helpers/types/types'
-import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
@@ -22,7 +22,7 @@ describe('CLI critical', () => {
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
   let sideBarView: SideBarView | undefined
-  let keyTreeView: KeyTreeView
+  let treeView: TreeView
 
   let keyName = Common.generateWord(20)
 
@@ -30,9 +30,12 @@ describe('CLI critical', () => {
     browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
-    keyTreeView = new KeyTreeView()
+    treeView = new TreeView()
 
-    await browser.waitForWorkbench(20_000)
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneConfig,
+    )
+    await webView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
     await webView.switchToFrame(Views.CliViewPanel)
   })
@@ -43,6 +46,7 @@ describe('CLI critical', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that Redis returns error if command is not correct when user works with CLI', async function () {
     await cliViewPanel.executeCommand('SET key')
@@ -162,7 +166,6 @@ describe('CLI critical', () => {
     const text = await cliViewPanel.getCliLastCommandResponse()
     expect(text).contain('redis_version:')
   })
-  // Update once treeView class added
   it('Verify that user can add data via CLI', async function () {
     await cliViewPanel.executeCommand(
       `SADD ${keyName} "chinese" "japanese" "german"`,
@@ -175,8 +178,8 @@ describe('CLI critical', () => {
       await new ActivityBar().getViewControl('RedisInsight')
     )?.openView()
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(keyName)
+    await webView.switchToFrame(Views.TreeView)
+    await treeView.openKeyDetailsByKeyName(keyName)
   })
   it('Verify that user can use blocking command', async function () {
     await cliViewPanel.executeCommand('blpop newKey 10000')
@@ -185,7 +188,8 @@ describe('CLI critical', () => {
     expect(text).contain('Executing command...')
   })
   it('Verify that user can switch between CLI instances', async function () {
-    const dbAddress = Config.ossStandaloneConfig.host + ':' + Config.ossStandaloneConfig.port
+    const dbAddress =
+      Config.ossStandaloneConfig.host + ':' + Config.ossStandaloneConfig.port
     const text = await cliViewPanel.getCliText()
     // Verify that user can see db instance host and port in CLI
     expect(text).contain(`Pinging Redis server on ${dbAddress}`)
@@ -200,14 +204,10 @@ describe('CLI critical', () => {
     expect(await cliViewPanel.getCliInstancesCount()).eql(2)
     expect(
       await cliViewPanel.getElementText(cliViewPanel.cliInstanceByIndex(1)),
-    ).eql(
-      dbAddress,
-    )
+    ).eql(dbAddress)
     expect(
       await cliViewPanel.getElementText(cliViewPanel.cliInstanceByIndex(2)),
-    ).eql(
-      dbAddress,
-    )
+    ).eql(dbAddress)
 
     await ButtonActions.clickElement(cliViewPanel.cliInstanceByIndex(1))
     // Verify that user can switch between CLI instances
@@ -220,6 +220,6 @@ describe('CLI critical', () => {
     await ButtonActions.clickElement(cliViewPanel.cliInstanceDeleteBtn)
     expect(
       await cliViewPanel.isElementDisplayed(cliViewPanel.cliInstancesPanel),
-    ).eql(false, 'CLI instances panel displayed after deleting')
+    ).ok('CLI instances panel displayed after deleting')
   })
 })

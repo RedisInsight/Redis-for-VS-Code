@@ -1,29 +1,24 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import {
-  ActivityBar,
-  NotificationType,
-  VSBrowser,
-  Workbench,
-} from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
   CliViewPanel,
   StringKeyDetailsView,
-  KeyTreeView,
+  TreeView,
   HashKeyDetailsView,
   SortedSetKeyDetailsView,
   ListKeyDetailsView,
   SetKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
-import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 import {
   ButtonActions,
+  DatabasesActions,
   InputActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
@@ -40,7 +35,7 @@ describe('Key Details verifications', () => {
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
   let keyDetailsView: StringKeyDetailsView
-  let keyTreeView: KeyTreeView
+  let treeView: TreeView
   let stringKeyDetailsView: StringKeyDetailsView
   let hashKeyDetailsView: HashKeyDetailsView
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
@@ -54,14 +49,16 @@ describe('Key Details verifications', () => {
     webView = new WebView()
     keyDetailsView = new StringKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
-    keyTreeView = new KeyTreeView()
+    treeView = new TreeView()
     hashKeyDetailsView = new HashKeyDetailsView()
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
     listKeyDetailsView = new ListKeyDetailsView()
     setKeyDetailsView = new SetKeyDetailsView()
     addStringKeyView = new AddStringKeyView()
 
-    await browser.waitForWorkbench(20_000)
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneConfig,
+    )
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -69,6 +66,7 @@ describe('Key Details verifications', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can see string details', async function () {
     const ttlValue = '2147476121'
@@ -76,25 +74,21 @@ describe('Key Details verifications', () => {
     const testStringValue = 'stringValue'
     keyName = Common.generateWord(20)
 
-    // add a key
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
-    const center = await new Workbench().openNotificationsCenter()
-    const notifications = await center.getNotifications(NotificationType.Any)
-
-    for (const notification of notifications) {
-      await notification.dismiss()
-    }
-
-    let webView = new WebView()
-    let keyTreeView = new KeyTreeView()
-    await webView.switchToFrame(Views.KeyTreeView)
-    await ButtonActions.clickElement(keyTreeView.addKeyButton)
+    // const center = await new Workbench().openNotificationsCenter()
+    // const notifications = await center.getNotifications(NotificationType.Any)
+    // for (const notification of notifications) {
+    //   await notification.dismiss()
+    // }
+    await ButtonActions.clickElement(treeView.addKeyButton)
 
     await webView.switchBack()
     await webView.switchToFrame(Views.AddKeyView)
     await addStringKeyView.selectKeyTypeByValue(KeyTypesShort.String)
     await InputActions.typeText(addStringKeyView.ttlInput, ttlValue)
-    await InputActions.typeText(addStringKeyView.stringValueInput, testStringValue)
+    await InputActions.typeText(
+      addStringKeyView.stringValueInput,
+      testStringValue,
+    )
 
     const isDisabled = await addStringKeyView.isElementDisabled(
       addStringKeyView.addButton,
@@ -106,6 +100,7 @@ describe('Key Details verifications', () => {
 
     await ButtonActions.clickElement(addStringKeyView.addButton)
     await webView.switchBack()
+    await webView.switchToFrame(Views.TreeView)
 
     // check the key details
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
@@ -137,7 +132,7 @@ describe('Key Details verifications', () => {
 
   it('Verify that user can see Hash Key details', async function () {
     keyName = Common.generateWord(10)
-
+    await webView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
     await webView.switchToFrame(Views.CliViewPanel)
 
@@ -148,8 +143,12 @@ describe('Key Details verifications', () => {
     await webView.switchBack()
     await bottomBar.toggle(false)
 
+    // Refresh database
+    await webView.switchToFrame(Views.TreeView)
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     const keyType = await hashKeyDetailsView.getElementText(
@@ -184,8 +183,12 @@ describe('Key Details verifications', () => {
     await webView.switchBack()
     await bottomBar.toggle(false)
 
+    // Refresh database
+    await webView.switchToFrame(Views.TreeView)
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     expect(
@@ -227,8 +230,12 @@ describe('Key Details verifications', () => {
     await webView.switchBack()
     await bottomBar.toggle(false)
 
+    // Refresh database
+    await webView.switchToFrame(Views.TreeView)
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     expect(
@@ -261,8 +268,12 @@ describe('Key Details verifications', () => {
     await webView.switchBack()
     await bottomBar.toggle(false)
 
+    // Refresh database
+    await webView.switchToFrame(Views.TreeView)
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     expect(

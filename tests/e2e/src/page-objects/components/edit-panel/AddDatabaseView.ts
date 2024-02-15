@@ -98,4 +98,29 @@ export class AddDatabaseView extends DatabaseDetailsView {
     // Click for saving
     await ButtonActions.clickElement(this.saveDatabaseButton)
   }
+
+  /**
+   * Adding a new redis database
+   * @param parameters the parameters of the database
+   */
+  async addRedisDataBase(parameters: AddNewDatabaseParameters): Promise<void> {
+    await InputActions.typeText(this.hostInput, parameters.host)
+    await InputActions.typeText(this.portInput, parameters.port)
+    await InputActions.typeText(
+      this.databaseAliasInput,
+      parameters.databaseName!,
+    )
+    if (!!parameters.databaseUsername) {
+      await InputActions.typeText(
+        this.usernameInput,
+        parameters.databaseUsername,
+      )
+    }
+    if (!!parameters.databasePassword) {
+      await InputActions.typeText(
+        this.passwordInput,
+        parameters.databasePassword,
+      )
+    }
+  }
 }

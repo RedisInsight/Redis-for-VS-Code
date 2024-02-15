@@ -1,18 +1,19 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, VSBrowser, Workbench } from 'vscode-extension-tester'
+import { VSBrowser, Workbench } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
-  KeyTreeView,
+  TreeView,
   ListKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
+  DatabasesActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
-import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ListKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyActions } from '@e2eSrc/helpers/KeysActions'
@@ -26,16 +27,18 @@ describe('List Key verification', () => {
   let webView: WebView
   let bottomBar: BottomBar
   let listKeyDetailsView: ListKeyDetailsView
-  let keyTreeView: KeyTreeView
+  let treeView: TreeView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
     listKeyDetailsView = new ListKeyDetailsView()
-    keyTreeView = new KeyTreeView()
+    treeView = new TreeView()
 
-    await browser.waitForWorkbench(20_000)
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneConfig,
+    )
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -43,6 +46,7 @@ describe('List Key verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search List element by index', async function () {
     keyName = Common.generateWord(10)
@@ -82,9 +86,11 @@ describe('List Key verification', () => {
       Config.ossStandaloneConfig.port,
       keyToAddParameters2,
     )
-
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     // Search List element by index

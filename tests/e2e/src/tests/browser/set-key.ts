@@ -1,18 +1,22 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, VSBrowser, Workbench } from 'vscode-extension-tester'
-import { WebView, SetKeyDetailsView } from '@e2eSrc/page-objects/components'
+import { VSBrowser, Workbench } from 'vscode-extension-tester'
+import {
+  WebView,
+  SetKeyDetailsView,
+  TreeView,
+} from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
+  DatabasesActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
-import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { SetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyActions } from '@e2eSrc/helpers/KeysActions'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
-import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
@@ -21,13 +25,17 @@ describe('Set Key fields verification', () => {
   let browser: VSBrowser
   let webView: WebView
   let keyDetailsView: SetKeyDetailsView
+  let treeView: TreeView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
     webView = new WebView()
     keyDetailsView = new SetKeyDetailsView()
+    treeView = new TreeView()
 
-    await browser.waitForWorkbench(20_000)
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneConfig,
+    )
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -35,6 +43,7 @@ describe('Set Key fields verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search and delete by member in Set', async function () {
     keyName = Common.generateWord(10)
@@ -59,9 +68,11 @@ describe('Set Key fields verification', () => {
       Config.ossStandaloneConfig.port,
       keyToAddParameters,
     )
-
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
