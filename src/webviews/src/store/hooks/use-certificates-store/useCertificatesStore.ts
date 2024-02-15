@@ -37,8 +37,7 @@ export const fetchCerts = () => {
       if (isStatusSuccessful(statusCaCerts) && isStatusSuccessful(statusClientCerts)) {
         state.processCertsSuccess(caCerts, clientCerts)
       }
-    } catch (_err) {
-      const error = _err as AxiosError
+    } catch (error) {
       console.debug({ error })
     } finally {
       state.processCertsFinal()

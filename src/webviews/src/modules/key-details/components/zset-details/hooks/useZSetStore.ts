@@ -102,10 +102,8 @@ export const fetchZSetMembers = (
       useSelectedKeyStore.getState().updateSelectedKeyRefreshTime(Date.now())
       onSuccess?.(data)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processZSetFinal()
   }
@@ -140,10 +138,8 @@ export const fetchZSetMoreMembers = (
       state.processZSetMoreSuccess(data, match)
       onSuccess?.(data)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processZSetFinal()
   }
@@ -182,10 +178,8 @@ export const deleteZSetMembers = (
       }
       onSuccess?.(newTotalValue)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processZSetFinal()
   }
@@ -210,10 +204,8 @@ export const updateZSetMembersAction = (
       state.updateMembers(data)
       refreshKeyInfo(data.keyName, false)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
     onFail?.()
   } finally {
     state.processZSetFinal()

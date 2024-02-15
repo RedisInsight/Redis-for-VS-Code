@@ -10,7 +10,7 @@ import { AddItemsAction } from '../key-details-actions'
 
 export interface Props extends KeyDetailsHeaderProps {
   onOpenAddItemPanel: () => void
-  onCloseAddItemPanel: () => void
+  onCloseAddItemPanel: (isCancelled: boolean) => void
 }
 
 export const SetDetails = (props: Props) => {
@@ -26,9 +26,9 @@ export const SetDetails = (props: Props) => {
     onOpenAddItemPanel()
   }
 
-  const closeAddItemPanel = () => {
+  const closeAddItemPanel = (isCancelled = false) => {
     setIsAddItemPanelOpen(false)
-    onCloseAddItemPanel()
+    onCloseAddItemPanel(isCancelled)
   }
 
   const Actions = () => (
@@ -51,7 +51,7 @@ export const SetDetails = (props: Props) => {
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            <AddSetMembers onCancel={closeAddItemPanel} />
+            <AddSetMembers closePanel={closeAddItemPanel} />
           </div>
         )}
       </div>

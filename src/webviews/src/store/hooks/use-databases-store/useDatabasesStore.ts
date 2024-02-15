@@ -60,10 +60,8 @@ export const fetchDatabases = (onSuccess?: () => void) => {
         onSuccess?.()
         state.loadDatabasesSuccess(data)
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
       localStorageService.set(StorageItem.databasesCount, '0')
     } finally {
       state.processDatabaseFinal()
@@ -88,10 +86,8 @@ export const createDatabaseStandalone = (
 
         showInformationMessage(successMessages.ADDED_NEW_DATABASE(payload.name ?? '').title)
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
       // const errorCode = get(error, 'response.data.errorCode', 0) as CustomErrorCodes
 
       // if (errorCode === CustomErrorCodes.DatabaseAlreadyExists) {
@@ -134,10 +130,8 @@ export const fetchEditedDatabase = (instance: Database, onSuccess?: () => void) 
         state.setEditDatabase(data)
         onSuccess?.()
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       state.processDatabaseFinal()
     }
@@ -154,10 +148,8 @@ export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?
         fetchDatabases()
         onSuccess?.()
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       state.processDatabaseFinal()
     }
@@ -179,10 +171,8 @@ export function checkConnectToDatabase(
       if (isStatusSuccessful(status)) {
         onSuccessAction?.(id)
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
       onFailAction?.()
     } finally {
       state.processDatabaseFinal()
@@ -202,10 +192,8 @@ export const deleteDatabases = (databases: Database[], onSuccess?: () => void) =
         onSuccess?.()
         showInformationMessage(successMessages.DELETE_DATABASE(first(databases)?.name ?? '').title)
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       state.processDatabaseFinal()
     }

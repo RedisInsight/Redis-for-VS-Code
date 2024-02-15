@@ -84,11 +84,9 @@ KeysThunks
         })
         onSuccess?.(data)
       }
-    } catch (_err) {
-      const error = _err as AxiosError
+    } catch (error) {
       if (!axios.isCancel(error)) {
-        const errorMessage = getApiErrorMessage(error)
-        showErrorMessage(errorMessage)
+        showErrorMessage(getApiErrorMessage(error as AxiosError))
         onFailed?.()
       }
     } finally {
@@ -135,11 +133,9 @@ KeysThunks
           },
         })
       }
-    } catch (_err) {
-      const error = _err as AxiosError
+    } catch (error) {
       if (!axios.isCancel(error)) {
-        const errorMessage = getApiErrorMessage(error)
-        showErrorMessage(errorMessage)
+        showErrorMessage(getApiErrorMessage(error as AxiosError))
       }
     } finally {
       get().loadKeysFinal()
@@ -164,11 +160,10 @@ KeysThunks
       const newData = data.map((key, i) => ({ ...key, path: keys[i][0] || 0 })) as KeyInfo[]
 
       onSuccessAction?.(newData)
-    } catch (_err) {
-      if (!axios.isCancel(_err)) {
-        const error = _err as AxiosError
+    } catch (error) {
+      if (!axios.isCancel(error)) {
         onFailAction?.()
-        console.error(error)
+        console.error(error as AxiosError)
       }
     }
   },
@@ -193,10 +188,8 @@ KeysThunks
         showInformationMessage(successMessages.DELETED_KEY(key).title)
         onSuccessAction?.()
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       get()?.deleteKeyFinal()
     }
