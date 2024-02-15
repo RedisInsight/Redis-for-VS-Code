@@ -17,7 +17,7 @@ const truncateTTLToRangeTests: any[] = [
   [2_120_042_300, '2 B'],
 ]
 
-describe.only('truncateTTLToRange', () => {
+describe('truncateTTLToRange', () => {
   it.each(truncateTTLToRangeTests)('for input: %s (i), should be output: %s',
     (ttl, expected) => {
       const result = truncateTTLToRange(ttl)
@@ -34,7 +34,7 @@ const truncateNumberToDurationTests: any[] = [
   [2_120_042_300, '67 yr, 2 mo, 6 d, 12 h, 38 min, 20 s'],
 ]
 
-describe.only('truncateNumberToDuration', () => {
+describe('truncateNumberToDuration', () => {
   it.each(truncateNumberToDurationTests)('for input: %s (i), should be output: %s',
     (milliseconds, expected) => {
       const result = truncateNumberToDuration(milliseconds)
@@ -49,7 +49,7 @@ const truncateTTLToSecondsTests: any[] = [
   [122_331_231, '122 331 231'],
 ]
 
-describe.only('truncateTTLToSeconds', () => {
+describe('truncateTTLToSeconds', () => {
   it.each(truncateTTLToSecondsTests)('for input: %s (i), should be output: %s',
     (milliseconds, expected) => {
       const result = truncateTTLToSeconds(milliseconds)
@@ -66,7 +66,7 @@ const truncateNumberToFirstUnitTests: any[] = [
   [2_120_042_300, '67 yr'], // '67 yr, 2 mo, 6 d, 12 h, 38 min, 20 s'
 ]
 
-describe.only('truncateNumberToFirstUnit', () => {
+describe('truncateNumberToFirstUnit', () => {
   it.each(truncateNumberToFirstUnitTests)('for input: %s (i), should be output: %s',
     (milliseconds, expected) => {
       const result = truncateNumberToFirstUnit(milliseconds)
