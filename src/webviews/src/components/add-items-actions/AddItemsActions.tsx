@@ -41,7 +41,7 @@ const AddItemsActions = (props: Props) => {
   }
 
   return (
-    <div className="flex items-center flex-row action-buttons h-11 w-20 pl-2">
+    <div className="flex items-center flex-row action-buttons h-11 w-20 pl-1">
       {!clearIsDisabled && (
         <div
           className="ml-3"

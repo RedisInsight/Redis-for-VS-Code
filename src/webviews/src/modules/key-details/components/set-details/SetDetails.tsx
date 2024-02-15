@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
+import * as l10n from '@vscode/l10n'
 
 import { KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
@@ -32,7 +33,7 @@ export const SetDetails = (props: Props) => {
   }
 
   const Actions = () => (
-    <AddItemsAction title="Add Fields" openAddItemPanel={openAddItemPanel} />
+    <AddItemsAction title={l10n.t('Add Members')} openAddItemPanel={openAddItemPanel} />
   )
 
   return (

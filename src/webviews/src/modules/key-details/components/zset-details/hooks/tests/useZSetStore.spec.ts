@@ -2,6 +2,7 @@ import { apiService } from 'uiSrc/services'
 import { constants } from 'testSrc/helpers'
 import { waitForStack } from 'testSrc/helpers/testUtils'
 import { DEFAULT_SEARCH_MATCH, SortOrder } from 'uiSrc/constants'
+import * as store from 'uiSrc/store'
 import {
   useZSetStore,
   initialState as initialStateInit,
@@ -9,7 +10,10 @@ import {
   fetchZSetMoreMembers,
   deleteZSetMembers,
   updateZSetMembersAction,
+  addZSetMembersAction,
 } from '../useZSetStore'
+
+vi.spyOn(store, 'refreshKeyInfo')
 
 beforeEach(() => {
   useZSetStore.setState(initialStateInit)
@@ -123,6 +127,23 @@ describe('async', () => {
     expect(useZSetStore.getState().data.keyName).toEqual(constants.KEY_NAME_3)
     expect(useZSetStore.getState().data.members?.[0].name).toEqual(constants.KEY_3_MEMBER)
     expect(useZSetStore.getState().data.members?.[0].score).toEqual(constants.KEY_3_SCORE_2)
+    expect(useZSetStore.getState().loading).toEqual(false)
+  })
+
+  it('addZSetMembersAction', async () => {
+    useZSetStore.setState(({ ...initialStateInit, data: constants.ZSET_DATA}))
+    const responsePayload = { data: { affected: 1 }, status: 200 }
+    apiService.put = vi.fn().mockResolvedValue(responsePayload)
+
+    addZSetMembersAction({
+      keyName: constants.KEY_NAME_3,
+      members: [{name: constants.KEY_3_MEMBER_2, score: constants.KEY_3_SCORE_2}]
+    })
+
+    await waitForStack()
+
+    expect(store.refreshKeyInfo).toBeCalledWith(constants.KEY_NAME_3)
+    expect(useZSetStore.getState().data.keyName).toEqual(constants.KEY_NAME_3)
     expect(useZSetStore.getState().loading).toEqual(false)
   })
 })

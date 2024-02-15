@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
+import * as l10n from '@vscode/l10n'
 
 import { KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
 import { useSelectedKeyStore } from 'uiSrc/store'
 import { ZSetDetailsTable } from './zset-details-table'
-// import AddZsetMembers from './add-zset-members/AddZsetMembers'
+import { AddZSetMembers } from './add-zset-members'
 import { AddItemsAction } from '../key-details-actions'
 
 export interface Props extends KeyDetailsHeaderProps {
@@ -31,7 +32,7 @@ const ZSetDetails = (props: Props) => {
   }
 
   const Actions = () => (
-    <AddItemsAction title="Add Members" openAddItemPanel={openAddItemPanel} />
+    <AddItemsAction title={l10n.t('Add Members')} openAddItemPanel={openAddItemPanel} />
   )
 
   return (
@@ -40,7 +41,7 @@ const ZSetDetails = (props: Props) => {
         {...props}
         key="key-details-header"
         keyType={keyType}
-        // Actions={Actions}
+        Actions={Actions}
       />
       <div className="key-details-body" key="key-details-body">
         {!loading && (
@@ -50,7 +51,7 @@ const ZSetDetails = (props: Props) => {
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            {/* <AddZsetMembers onCancel={closeAddItemPanel} /> */}
+            <AddZSetMembers onCancel={closeAddItemPanel} />
           </div>
         )}
       </div>

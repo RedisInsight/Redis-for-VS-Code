@@ -219,3 +219,31 @@ export const updateZSetMembersAction = (
     state.processZSetFinal()
   }
 })
+
+export const addZSetMembersAction = (
+  data: AddMembersToZSetDto,
+  onSuccess?: () => void,
+  onFail?: () => void,
+) => useZSetStore.setState(async (state) => {
+  state.processZSet()
+
+  try {
+    const { status } = await apiService.put(
+      getUrl(ApiEndpoints.ZSET),
+      data,
+      { params: { encoding: getEncoding() } },
+    )
+
+    if (isStatusSuccessful(status)) {
+      onSuccess?.()
+      refreshKeyInfo(data.keyName)
+    }
+  } catch (_err) {
+    const error = _err as AxiosError
+    const errorMessage = getApiErrorMessage(error)
+    showErrorMessage(errorMessage)
+    onFail?.()
+  } finally {
+    state.processZSetFinal()
+  }
+})

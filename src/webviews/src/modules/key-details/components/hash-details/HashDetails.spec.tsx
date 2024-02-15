@@ -9,4 +9,10 @@ describe('HashDetails', () => {
   it('should render', () => {
     expect(render(<HashDetails {...instance(mockedProps)} />)).toBeTruthy()
   })
+
+  it('should render add fields btn', () => {
+    const { getByTestId } = render(<HashDetails {...instance(mockedProps)} />)
+
+    expect(getByTestId('add-key-value-items-btn')).toBeInTheDocument()
+  })
 })
