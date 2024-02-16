@@ -1,43 +1,50 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import {
-  BottomBar,
   WebView,
+  TreeView,
   StringKeyDetailsView,
-  KeyTreeView,
+  HashKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { StringKeyParameters } from '@e2eSrc/helpers/KeysActions'
+import { KeyActions, StringKeyParameters } from '@e2eSrc/helpers/KeysActions'
 import {
   ButtonActions,
+  DatabasesActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
-import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
+import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
+
+let keyName: string
 
 describe('Cases with large data', () => {
   let browser: VSBrowser
   let webView: WebView
-  let bottomBar: BottomBar
-  let keyDetailsView: StringKeyDetailsView
-  let keyTreeView: KeyTreeView
+  let stringKeyDetailsView: StringKeyDetailsView
+  let hashKeyDetailsView: HashKeyDetailsView
+  let treeView: TreeView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    bottomBar = new BottomBar()
     webView = new WebView()
-    keyDetailsView = new StringKeyDetailsView()
-    keyTreeView = new KeyTreeView()
+    stringKeyDetailsView = new StringKeyDetailsView()
+    hashKeyDetailsView = new HashKeyDetailsView()
+    treeView = new TreeView()
 
-    await browser.waitForWorkbench(20_000)
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneBigConfig,
+    )
   })
   afterEach(async () => {
     await webView.switchBack()
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
-  it.skip('Verify that user can download String key value as txt file when it has > 5000 characters', async function () {
-    const keyName = Common.generateWord(10)
+  it('Verify that user can download String key value as txt file when it has > 5000 characters', async function () {
+    keyName = Common.generateWord(10)
     const bigKeyName = Common.generateWord(10)
     // Create string key with 5000 characters
     const length = 5000
@@ -66,34 +73,100 @@ describe('Cases with large data', () => {
       },
       Config.ossStandaloneConfig.databaseName,
     )
-
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     expect(
-      await keyDetailsView.isElementDisplayed(
-        keyDetailsView.loadAllStringValue,
+      await stringKeyDetailsView.isElementDisplayed(
+        stringKeyDetailsView.loadAllStringValue,
       ),
     ).false
 
-    await webView.switchToFrame(Views.KeyTreeView)
-    await keyTreeView.openKeyDetailsByKeyName(bigStringKeyParameters.keyName)
+    await webView.switchToFrame(Views.TreeView)
+    await treeView.openKeyDetailsByKeyName(bigStringKeyParameters.keyName)
     await webView.switchBack()
 
     expect(
-      await keyDetailsView.isElementDisplayed(
-        keyDetailsView.loadAllStringValue,
+      await stringKeyDetailsView.isElementDisplayed(
+        stringKeyDetailsView.loadAllStringValue,
       ),
     ).true
 
-    await ButtonActions.clickElement(keyDetailsView.loadAllStringValue)
+    await ButtonActions.clickElement(stringKeyDetailsView.loadAllStringValue)
     expect(
-      (await keyDetailsView.getElementText(keyDetailsView.keyStringValue))
-        .length,
+      (
+        await stringKeyDetailsView.getElementText(
+          stringKeyDetailsView.keyStringValue,
+        )
+      ).length,
     ).eql(
       bigStringKeyParameters.value.length,
       'String key > 5000 value is not fully loaded after clicking Load All',
     )
+  })
+  it('Verify that user can search per exact field name in Hash in DB with 1 million of fields', async function () {
+    keyName = Common.generateWord(10)
+    const keyFieldValue = 'field'
+    const keyValue = 'value!'
+    const hashKeyParameters: HashKeyParameters = {
+      keyName: keyName,
+      fields: [
+        {
+          field: keyFieldValue,
+          value: keyValue,
+        },
+      ],
+    }
+    const keyToAddParameters = {
+      fieldsCount: 20000,
+      KeyName: keyName,
+      fieldStartWith: 'hashField',
+      fieldValueStartWith: 'hashValue',
+    }
+
+    const keyToAddParameters2 = {
+      fieldsCount: 1,
+      KeyName: keyName,
+      fieldStartWith: 'hastToSearch',
+      fieldValueStartWith: 'hashValue',
+    }
+
+    await KeyAPIRequests.addHashKeyApi(
+      hashKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+
+    // Add 20000 fields to the hash key
+    await KeyActions.populateHashWithFields(
+      Config.ossStandaloneConfig.host,
+      Config.ossStandaloneConfig.port,
+      keyToAddParameters,
+    )
+
+    // Add 1 fields to the hash key
+    await KeyActions.populateHashWithFields(
+      Config.ossStandaloneConfig.host,
+      Config.ossStandaloneConfig.port,
+      keyToAddParameters2,
+    )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Open key details iframe
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    await hashKeyDetailsView.searchByTheValueInKeyDetails(
+      keyToAddParameters2.fieldStartWith + '*',
+    )
+    // Check the search result
+    let result = await (
+      await hashKeyDetailsView.getElements(hashKeyDetailsView.hashFieldsList)
+    )[0].getText()
+    expect(result).contains(keyToAddParameters2.fieldStartWith)
   })
 })

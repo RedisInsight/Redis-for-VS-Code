@@ -1,33 +1,37 @@
-import { By } from 'selenium-webdriver'
 import { expect } from 'chai'
-import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Common } from '@e2eSrc/helpers/Common'
 import { Config } from '@e2eSrc/helpers/Conf'
-import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { VSBrowser } from 'vscode-extension-tester'
 import {
   WebView,
   StringKeyDetailsView,
-  KeyTreeView,
+  TreeView,
 } from '@e2eSrc/page-objects/components'
-import { KeyDetailsActions } from '@e2eSrc/helpers/common-actions'
+import {
+  DatabasesActions,
+  KeyDetailsActions,
+} from '@e2eSrc/helpers/common-actions'
 
 describe('Actions with Key List', () => {
   let browser: VSBrowser
   let webView: WebView
   let keyDetailsView: StringKeyDetailsView
-  let keyTreeView: KeyTreeView
+  let treeView: TreeView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
     webView = new WebView()
     keyDetailsView = new StringKeyDetailsView()
-    keyTreeView = new KeyTreeView()
+    treeView = new TreeView()
 
-    await browser.waitForWorkbench(20_000)
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneConfig,
+    )
   })
   afterEach(async () => {
     await webView.switchBack()
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
 
   it('Verify that key deleted properly from the list', async function () {
@@ -41,15 +45,19 @@ describe('Actions with Key List', () => {
       },
       Config.ossStandaloneConfig.databaseName,
     )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
 
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
-    await webView.switchToFrame(Views.KeyTreeView)
-
-    let actualItemsArray = await keyTreeView.getAllKeysArray()
+    let actualItemsArray = await treeView.getAllKeysArray()
     expect(actualItemsArray).contains(keyName, 'Key added properly')
 
-    await keyTreeView.deleteKeyFromListByName(keyName)
-    expect(actualItemsArray.includes(keyName)).eql(false, 'Key deleted from the list properly')
+    await treeView.deleteKeyFromListByName(keyName)
+    expect(actualItemsArray.includes(keyName)).eql(
+      false,
+      'Key deleted from the list properly',
+    )
   })
 
   it('Verify that key deleted properly from details', async function () {
@@ -62,13 +70,18 @@ describe('Actions with Key List', () => {
       },
       Config.ossStandaloneConfig.databaseName,
     )
-
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    // Delete key from detailed view 
+    // Delete key from detailed view
     keyDetailsView.removeKeyFromDetailedView()
-    expect(!keyDetailsView?.keyStringValue).eql(true, 'Detailed view closed after deleting')
+    expect(!keyDetailsView?.keyStringValue).eql(
+      true,
+      'Detailed view closed after deleting',
+    )
   })
 })

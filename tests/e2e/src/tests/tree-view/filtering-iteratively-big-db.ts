@@ -2,16 +2,11 @@ import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import { VSBrowser } from 'vscode-extension-tester'
 import { WebView, TreeView } from '@e2eSrc/page-objects/components'
-import { Common } from '@e2eSrc/helpers/Common'
-import {
-  KeyAPIRequests,
-  CliAPIRequests,
-  DatabaseAPIRequests,
-} from '@e2eSrc/helpers/api'
+import { KeyAPIRequests, DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
 
-describe('Filtering iteratively in Tree view', () => {
+describe('Filtering iteratively in Tree view for Big database', () => {
   let browser: VSBrowser
   let webView: WebView
   let treeView: TreeView
@@ -23,7 +18,7 @@ describe('Filtering iteratively in Tree view', () => {
     treeView = new TreeView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
-      Config.ossStandaloneConfig,
+      Config.ossStandaloneBigConfig,
     )
   })
   afterEach(async () => {
@@ -31,18 +26,12 @@ describe('Filtering iteratively in Tree view', () => {
     for (const keyName of keys) {
       await KeyAPIRequests.deleteKeyIfExistsApi(
         keyName,
-        Config.ossStandaloneConfig.databaseName,
+        Config.ossStandaloneBigConfig.databaseName,
       )
     }
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
-  it('Verify that user can search iteratively via Scan more for search pattern and selected data type', async function () {
-    // Create new keys
-    keys = await Common.createArrayWithKeyValue(1000)
-    await CliAPIRequests.sendRedisCliCommandApi(
-      `MSET ${keys.join(' ')}`,
-      Config.ossStandaloneConfig,
-    )
+  it('Verify that user use Scan More in DB with 10-50 millions of keys (when search by pattern/)', async function () {
     // TODO Search all string keys - add tests after search and filter will be implemented
 
     // Verify that scan more button is shown
@@ -51,6 +40,7 @@ describe('Filtering iteratively in Tree view', () => {
       'Scan more is not shown',
     )
     await ButtonActions.clickElement(treeView.scanMoreBtn)
+    const regExp = new RegExp('1 0' + '.')
     // TODO Verify that number of results is 1000 - add tests when total number of keys is implemented
   })
 })

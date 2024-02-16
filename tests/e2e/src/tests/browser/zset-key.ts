@@ -1,25 +1,25 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, VSBrowser, Workbench } from 'vscode-extension-tester'
+import { VSBrowser, Workbench } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
   SortedSetKeyDetailsView,
-  KeyTreeView,
+  TreeView,
   CliViewPanel,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
+  DatabasesActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
-import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { SortedSetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 import { KeyActions } from '@e2eSrc/helpers/KeysActions'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
-import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 
 let keyName: string
 
@@ -28,7 +28,7 @@ describe('ZSet Key fields verification', () => {
   let webView: WebView
   let bottomBar: BottomBar
   let keyDetailsView: SortedSetKeyDetailsView
-  let keyTreeView: KeyTreeView
+  let treeView: TreeView
   let cliViewPanel: CliViewPanel
 
   beforeEach(async () => {
@@ -36,9 +36,11 @@ describe('ZSet Key fields verification', () => {
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new SortedSetKeyDetailsView()
-    keyTreeView = new KeyTreeView()
+    treeView = new TreeView()
 
-    await browser.waitForWorkbench(20_000)
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneConfig,
+    )
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -46,6 +48,7 @@ describe('ZSet Key fields verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search and delete by member in Zset', async function () {
     keyName = Common.generateWord(10)
@@ -77,9 +80,13 @@ describe('ZSet Key fields verification', () => {
       keyToAddParameters,
     )
 
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
     // Check the search result
     let result = await (
@@ -120,6 +127,7 @@ describe('ZSet Key fields verification', () => {
     const arr = await Common.createArray(100)
     let command = `ZADD ${keyName} ${arr.join(' ')}`
 
+    await webView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
     await webView.switchToFrame(Views.CliViewPanel)
     await cliViewPanel.executeCommand(command)
@@ -128,8 +136,12 @@ describe('ZSet Key fields verification', () => {
     // should be removed when iframe get unic locator
     await bottomBar.toggle(false)
 
+    // Refresh database
+    await webView.switchToFrame(Views.TreeView)
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     await ButtonActions.clickElement(keyDetailsView.scoreButton)

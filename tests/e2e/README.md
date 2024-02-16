@@ -4,9 +4,8 @@
 
 ```bash
 yarn install
-yarn install:deps
-yarn install:chrome-driver
 yarn install:vs-code
+yarn install:extension
 ```
 
 

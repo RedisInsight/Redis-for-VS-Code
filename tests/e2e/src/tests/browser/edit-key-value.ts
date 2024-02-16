@@ -1,22 +1,25 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, VSBrowser, Workbench } from 'vscode-extension-tester'
+import { VSBrowser, Workbench } from 'vscode-extension-tester'
 import {
   WebView,
   HashKeyDetailsView,
-  KeyTreeView,
+  TreeView,
   SortedSetKeyDetailsView,
   ListKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
   HashKeyParameters,
   ListKeyParameters,
   SortedSetKeyParameters,
 } from '@e2eSrc/helpers/types/types'
-import { KeyDetailsActions } from '@e2eSrc/helpers/common-actions'
+import {
+  DatabasesActions,
+  KeyDetailsActions,
+} from '@e2eSrc/helpers/common-actions'
 
 let keyName: string
 
@@ -27,8 +30,8 @@ describe('Edit Key values verification', () => {
   let browser: VSBrowser
   let webView: WebView
   let hashKeyDetailsView: HashKeyDetailsView
-  let keyTreeView: KeyTreeView
-  let workbeanch: Workbench
+  let treeView: TreeView
+  let workbench: Workbench
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
   let listKeyDetailsView: ListKeyDetailsView
 
@@ -36,12 +39,14 @@ describe('Edit Key values verification', () => {
     browser = VSBrowser.instance
     webView = new WebView()
     hashKeyDetailsView = new HashKeyDetailsView()
-    keyTreeView = new KeyTreeView()
-    workbeanch = new Workbench()
+    treeView = new TreeView()
+    workbench = new Workbench()
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
     listKeyDetailsView = new ListKeyDetailsView()
 
-    await browser.waitForWorkbench(20_000)
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneConfig,
+    )
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -49,6 +54,7 @@ describe('Edit Key values verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can edit Hash Key field', async function () {
     const fieldName = 'test'
@@ -67,8 +73,11 @@ describe('Edit Key values verification', () => {
       hashKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     await hashKeyDetailsView.editHashKeyValue(keyValueAfter, fieldName)
@@ -95,8 +104,11 @@ describe('Edit Key values verification', () => {
       sortedSetKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     await sortedSetKeyDetailsView.editSortedSetKeyValue(
@@ -121,8 +133,11 @@ describe('Edit Key values verification', () => {
       listKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     await listKeyDetailsView.editListKeyValue(keyValueAfter, '0')
@@ -149,8 +164,11 @@ describe('Edit Key values verification', () => {
       sortedSetKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     await sortedSetKeyDetailsView.editSortedSetKeyValue(

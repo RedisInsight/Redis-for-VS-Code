@@ -4,9 +4,9 @@ import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
 import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 
 /**
- * key tree list view
+ * Tree list view with databases and keys
  */
-export class KeyTreeView extends BaseComponent {
+export class TreeView extends BaseComponent {
   treeViewPage = By.xpath(`//div[@data-testid='tree-view-page']`)
   scanMoreBtn = By.xpath(`//vscode-button[@data-testid='scan-more']`)
   treeViewKey = By.xpath(
@@ -18,24 +18,24 @@ export class KeyTreeView extends BaseComponent {
   sortKeysBtn = By.xpath(`//vscode-button[@data-testid = 'sort-keys']`)
   addDatabaseBtn = By.xpath(`//li[@title='Add Redis database']`)
   editDatabaseBtn = By.xpath(`//vscode-button[@data-testid='edit-database']`)
-  // mask
-  keyMask = '//*[@data-testid="key-$name"]'
   deleteKeyInListBtn = By.xpath(
     `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
   )
   submitDeleteKeyButton = By.xpath(
     `//div[@class='popup-content ']${this.deleteKeyInListBtn}`,
   )
-  getItemDeleteButton = (keyName: string) =>
+  // mask
+  keyMask = '//*[@data-testid="key-$name"]'
+  getItemDeleteButton = (keyName: string): Locator =>
     By.xpath(
       `//vscode-button[starts-with(@data-testid, 'remove-key-${keyName}')]`,
     )
 
-  getTreeViewItemByIndex = (index: number) =>
+  getTreeViewItemByIndex = (index: number): Locator =>
     By.xpath(
       `(//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')])[${index}]`,
     )
-  getKey = (base: string) =>
+  getKey = (base: string): Locator =>
     By.xpath(`//div[starts-with(@data-testid, '${base}')]`)
 
   getFolderSelectorByName = (folderName: string): Locator => {
@@ -43,7 +43,6 @@ export class KeyTreeView extends BaseComponent {
       `//div[starts-with(@data-testid, 'node-item_${folderName}')]`,
     )
   }
-
   getFolderNameSelectorByNameAndIndex = (
     folderName: string,
     index: number,
@@ -53,8 +52,26 @@ export class KeyTreeView extends BaseComponent {
     )
   }
 
+  getDatabaseByName = (name: string): Locator =>
+    By.xpath(
+      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..`,
+    )
+
+  getEditDatabaseBtnByName = (name: string): Locator =>
+    By.xpath(
+      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid='edit-database']`,
+    )
+
+  getRefreshDatabaseBtnByName = (name: string): Locator =>
+    By.xpath(
+      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid = 'refresh-keys']`,
+    )
+
+  getKeySelectorByName = (name: string): Locator =>
+    By.xpath(`//*[@data-testid="key-${name}"]`)
+
   constructor() {
-    super(By.xpath(ViewLocators[Views.KeyTreeView]))
+    super(By.xpath(ViewLocators[Views.TreeView]))
   }
 
   /**
@@ -62,11 +79,8 @@ export class KeyTreeView extends BaseComponent {
    * @param keyName The name of the key
    */
   async openKeyDetailsByKeyName(name: string): Promise<void> {
-    const keyNameInTheListLocator = By.xpath(
-      this.keyMask.replace(/\$name/g, name),
-    )
     const keyNameInTheListElement = await this.getElement(
-      keyNameInTheListLocator,
+      this.getKeySelectorByName(name),
     )
     await keyNameInTheListElement.click()
   }
@@ -139,11 +153,48 @@ export class KeyTreeView extends BaseComponent {
   }
 
   /**
-  * Delete first Key in list after Hovering
-  */
+   * Delete first Key in list after Hovering
+   */
   async deleteKeyFromListByName(keyName: string): Promise<void> {
     await ButtonActions.hoverElement(this.treeViewKey)
     await (await this.getElement(this.getItemDeleteButton(keyName))).click()
     await (await this.getElement(this.submitDeleteKeyButton)).click()
+  }
+
+  /**
+   * Click on database in list by name to expand or collapse it
+   * @param databaseName The name of the database
+   */
+  async clickDatabaseByName(databaseName: string): Promise<void> {
+    await ButtonActions.clickElement(this.getDatabaseByName(databaseName))
+  }
+
+  /**
+   * Click on edit database in list by its name
+   * @param databaseName The name of the database
+   */
+  async editDatabaseByName(databaseName: string): Promise<void> {
+    await ButtonActions.clickElement(
+      this.getEditDatabaseBtnByName(databaseName),
+    )
+  }
+
+  /**
+   * Click on refresh database in list by its name
+   * @param databaseName The name of the database
+   */
+  async refreshDatabaseByName(databaseName: string): Promise<void> {
+    await ButtonActions.clickElement(
+      this.getRefreshDatabaseBtnByName(databaseName),
+    )
+  }
+
+  /**
+   * Verifying if the Key is in the List of keys
+   * @param keyName The name of the key
+   */
+  async isKeyIsDisplayedInTheList(keyName: string): Promise<boolean> {
+    const keyNameInTheList = this.getKeySelectorByName(keyName)
+    return await this.isElementDisplayed(keyNameInTheList)
   }
 }
