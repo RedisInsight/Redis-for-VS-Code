@@ -9,4 +9,9 @@ describe('SetDetails', () => {
   it('should render', () => {
     expect(render(<SetDetails {...instance(mockedProps)} />)).toBeTruthy()
   })
+  it('should render add members btn', () => {
+    const { getByTestId } = render(<SetDetails {...instance(mockedProps)} />)
+
+    expect(getByTestId('add-key-value-items-btn')).toBeInTheDocument()
+  })
 })

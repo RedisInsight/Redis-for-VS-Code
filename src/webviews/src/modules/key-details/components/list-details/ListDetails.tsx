@@ -13,7 +13,7 @@ import styles from './styles.module.scss'
 
 export interface Props extends KeyDetailsHeaderProps {
   onOpenAddItemPanel: () => void
-  onCloseAddItemPanel: () => void
+  onCloseAddItemPanel: (isCancelled: boolean) => void
 }
 
 const ListDetails = (props: Props) => {
@@ -30,9 +30,9 @@ const ListDetails = (props: Props) => {
     onOpenAddItemPanel()
   }
 
-  const closeAddItemPanel = () => {
+  const closeAddItemPanel = (isCancelled = false) => {
     setIsAddItemPanelOpen(false)
-    onCloseAddItemPanel()
+    onCloseAddItemPanel(isCancelled)
   }
 
   const closeRemoveItemPanel = () => {

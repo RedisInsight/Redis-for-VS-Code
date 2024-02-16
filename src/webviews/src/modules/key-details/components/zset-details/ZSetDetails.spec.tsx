@@ -9,4 +9,9 @@ describe('ZSetDetails', () => {
   it('should render', () => {
     expect(render(<ZSetDetails {...instance(mockedProps)} />)).toBeTruthy()
   })
+  it('should render add members btn', () => {
+    const { getByTestId } = render(<ZSetDetails {...instance(mockedProps)} />)
+
+    expect(getByTestId('add-key-value-items-btn')).toBeInTheDocument()
+  })
 })

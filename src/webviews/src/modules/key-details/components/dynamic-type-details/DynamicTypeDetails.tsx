@@ -14,7 +14,7 @@ import { SetDetails } from '../set-details/SetDetails'
 
 export interface Props extends KeyDetailsHeaderProps {
   onOpenAddItemPanel: () => void
-  onCloseAddItemPanel: () => void
+  onCloseAddItemPanel: (isCancelled: boolean) => void
 }
 
 const DynamicTypeDetails = (props: Props) => {
