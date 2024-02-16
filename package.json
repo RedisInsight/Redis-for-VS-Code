@@ -105,7 +105,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
     "test:watch": "vitest watch --dir ./src/webviews/src",
-    "test:watch:ui": "vitest watch --ui --dir ./src/webviews/src",
+    "test:watch:ui": "vitest watch --ui --coverage.enabled=true --dir ./src/webviews/src",
     "test:cov": "vitest run --silent --coverage ./src/webviews/src",
     "package:prod": "vsce package --yarn",
     "package:stage": "vsce package --pre-release --yarn",

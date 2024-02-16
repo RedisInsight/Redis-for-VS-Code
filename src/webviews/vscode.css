@@ -14,52 +14,6 @@ html, body, #root {
 body {
   padding: 0 !important;
 }
-/*
-@layer components {
-  input[type='radio'],
-  input[type='checkbox'] {
-    @apply rounded-none;
-    @apply appearance-none;
-    @apply p-0;
-    @apply h-4;
-    @apply w-4;
-
-    &:checked {
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      box-shadow: 0 0 0 1px var(--vscode-settings-dropdownListBorder);
-    }
-
-    @apply bg-vscode-settings-checkboxBackground;
-    @apply text-vscode-settings-checkboxForeground;
-    @apply border-vscode-settings-checkboxBorder;
-
-    &:checked {
-      @apply bg-vscode-settings-checkboxBackground;
-      @apply text-vscode-settings-checkboxForeground;
-    }
-
-    &:active,
-    &:checked:active {
-      @apply bg-vscode-inputOption-activeBackground;
-    }
-
-    &:focus,
-    &:checked:focus {
-      @apply bg-vscode-settings-checkboxBackground;
-    }
-
-    &:hover,
-    &:checked:hover,
-    &:focus:hover {
-      @apply bg-vscode-inputOption-activeBackground;
-    }
-  }
-} */
 
 h4 {
   @apply normal-case pb-2;
@@ -74,6 +28,14 @@ vscode-button::part(control) {
     width: calc(100% + 80px);
     margin-right: -100px;
     z-index: 2;
+  }
+
+  .key-add-items-container {
+    @apply pt-4 pl-10 pr-4 mb-12 overflow-auto max-h-[calc(100vh-178px)];
+
+    input {
+      @apply h-11;
+    }
   }
 }
 

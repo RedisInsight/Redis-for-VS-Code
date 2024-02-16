@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 import { CellMeasurerCache } from 'react-virtualized'
@@ -49,7 +48,7 @@ const cellCache = new CellMeasurerCache({
 
 export interface Props {
   isFooterOpen: boolean
-  onRemoveKey: () => void
+  onRemoveKey?: () => void
 }
 
 export const SetDetailsTable = (props: Props) => {
@@ -109,7 +108,7 @@ export const SetDetailsTable = (props: Props) => {
   }
 
   const onSuccessRemoved = (newTotal: number) => {
-    newTotal === 0 && onRemoveKey()
+    newTotal === 0 && onRemoveKey?.()
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_REMOVED,
       eventData: {

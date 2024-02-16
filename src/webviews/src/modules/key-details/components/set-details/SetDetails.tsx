@@ -5,13 +5,12 @@ import { KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
 import { useSelectedKeyStore } from 'uiSrc/store'
 import { SetDetailsTable } from './set-details-table'
-// import { AddHashFields } from './add-hash-fields'
+import { AddSetMembers } from './add-set-members'
 import { AddItemsAction } from '../key-details-actions'
 
 export interface Props extends KeyDetailsHeaderProps {
-  onRemoveKey: () => void
   onOpenAddItemPanel: () => void
-  onCloseAddItemPanel: () => void
+  onCloseAddItemPanel: (isCancelled: boolean) => void
 }
 
 export const SetDetails = (props: Props) => {
@@ -27,9 +26,9 @@ export const SetDetails = (props: Props) => {
     onOpenAddItemPanel()
   }
 
-  const closeAddItemPanel = () => {
+  const closeAddItemPanel = (isCancelled = false) => {
     setIsAddItemPanelOpen(false)
-    onCloseAddItemPanel()
+    onCloseAddItemPanel(isCancelled)
   }
 
   const Actions = () => (
@@ -42,7 +41,7 @@ export const SetDetails = (props: Props) => {
         {...props}
         key="key-details-header"
         keyType={keyType}
-        // Actions={Actions}
+        Actions={Actions}
       />
       <div className="key-details-body" key="key-details-body">
         {!loading && (
@@ -52,7 +51,7 @@ export const SetDetails = (props: Props) => {
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            {/* <AddHashFields onCancel={closeAddItemPanel} /> */}
+            <AddSetMembers closePanel={closeAddItemPanel} />
           </div>
         )}
       </div>

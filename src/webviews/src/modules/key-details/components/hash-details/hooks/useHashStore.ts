@@ -100,10 +100,8 @@ export const fetchHashFields = (
       useSelectedKeyStore.getState().updateSelectedKeyRefreshTime(Date.now())
       onSuccess?.(data)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processHashFinal()
   }
@@ -135,10 +133,8 @@ export const fetchHashMoreFields = (
       state.processHashMoreSuccess(data, match)
       onSuccess?.(data)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processHashFinal()
   }
@@ -173,17 +169,12 @@ export const deleteHashFields = (
         )
         fetchKeyInfo({ key: key! }, false)
       } else {
-        // todo: connection between webviews
-        // dispatch(deleteSelectedKeySuccess())
-        // dispatch(deleteKeyFromList(key))
         showInformationMessage(successMessages.DELETED_KEY(key!).title)
       }
       onSuccess?.(newTotalValue)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processHashFinal()
   }
@@ -209,10 +200,8 @@ export const updateHashFieldsAction = (
       onSuccess?.()
       refreshKeyInfo(data.keyName, fetchKeyValue)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
     onFail?.()
   } finally {
     state.processHashFinal()

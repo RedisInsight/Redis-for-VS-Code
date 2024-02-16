@@ -123,7 +123,7 @@ export interface DatabaseRedisCloud {
   account: Nullable<RedisCloudAccount>
   host: string
   port: number
-  uid: number;
+  uid: number
   name: string
   id?: number
   dnsName: string
@@ -504,7 +504,7 @@ export enum DatabaseType {
 }
 
 export interface AdditionalRedisModule {
-  name: string;
-  version?: number;
-  semanticVersion?: string;
+  name: string
+  version?: number
+  semanticVersion?: string
 }

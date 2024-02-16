@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 
@@ -22,11 +21,11 @@ import { AddFieldsToHashDto } from '../hooks/interface'
 import { updateHashFieldsAction, useHashStore } from '../hooks/useHashStore'
 
 export interface Props {
-  onCancel: (isCancelled?: boolean) => void;
+  closePanel: (isCancelled?: boolean) => void
 }
 
 const AddHashFields = (props: Props) => {
-  const { onCancel } = props
+  const { closePanel } = props
   const { loading, resetUpdateValue } = useHashStore((state) => ({
     loading: state.updateValue.loading,
     resetUpdateValue: state.resetUpdateValue,
@@ -48,7 +47,7 @@ const AddHashFields = (props: Props) => {
   }, [fields.length])
 
   const onSuccessAdded = () => {
-    onCancel()
+    closePanel()
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_ADDED,
       eventData: {
@@ -75,7 +74,7 @@ const AddHashFields = (props: Props) => {
 
   return (
     <>
-      <div className="pt-4 pl-10 pr-4 mb-12 overflow-auto max-h-[calc(100vh-212px)]" data-testid="add-hash-field-panel">
+      <div className="key-add-items-container" data-testid="add-hash-field-panel">
         {fields.map((item, index) => (
           <div key={item.id}>
             <div className="flex items-center mb-3">
@@ -87,7 +86,6 @@ const AddHashFields = (props: Props) => {
                     placeholder={l10n.t('Enter Field')}
                     value={item.fieldName}
                     disabled={loading}
-                    className="h-11"
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setFields(handleItemChange(fields, 'fieldName', item.id, e.target.value))}
                     inputRef={index === fields.length - 1 ? lastAddedFieldName : null}
@@ -101,7 +99,6 @@ const AddHashFields = (props: Props) => {
                     placeholder={l10n.t('Enter Value')}
                     value={item.fieldValue}
                     disabled={loading}
-                    className="h-11"
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setFields(handleItemChange(fields, 'fieldValue', item.id, e.target.value))}
                     data-testid={`hash-value-${index}`}
@@ -131,7 +128,7 @@ const AddHashFields = (props: Props) => {
         <div className="flex justify-end">
           <VSCodeButton
             appearance="secondary"
-            onClick={() => onCancel(true)}
+            onClick={() => closePanel(true)}
             className="mr-3"
             data-testid="cancel-fields-btn"
           >

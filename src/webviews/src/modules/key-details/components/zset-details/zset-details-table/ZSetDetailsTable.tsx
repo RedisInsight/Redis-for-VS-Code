@@ -61,7 +61,7 @@ const cellCache = new CellMeasurerCache({
 })
 
 interface IZsetMember extends ZSetMember {
-  editing: boolean;
+  editing: boolean
 }
 
 export interface Props {

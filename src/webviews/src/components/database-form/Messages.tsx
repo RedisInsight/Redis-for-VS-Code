@@ -21,23 +21,6 @@ const MessageStandalone = () => (
   </div>
 )
 
-const MessageSentinel = () => (
-  <div className={styles.message} data-testid="summary">
-    {l10n.t('You can automatically discover and add primary groups from your Redis Sentinel. Enter Host and Port of your Redis Sentinel to automatically discover your primary groups and add them to ')}
-    {APPLICATION_NAME}
-    . &nbsp;
-    <Link
-      color="text"
-      href="https://redis.io/docs/management/sentinel/"
-      className={styles.link}
-      target="_blank"
-    >
-      {l10n.t('Learn more here.')}
-    </Link>
-  </div>
-)
-
 export {
   MessageStandalone,
-  MessageSentinel,
 }

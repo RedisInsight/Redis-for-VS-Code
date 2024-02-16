@@ -12,11 +12,11 @@ const { MOCK_COMMANDS_SPEC } = await vi.importActual<{ [key: string]: any }>('ui
 const ALL_REDIS_COMMANDS: ICommands = MOCK_COMMANDS_SPEC
 
 interface IMockedCommands {
-  matchedCommand: string;
-  argStr?: string;
-  argsNamesWithEnumsMock?: string[];
-  argsNamesMock?: (string | string[])[];
-  complexityShortMock?: string;
+  matchedCommand: string
+  argStr?: string
+  argsNamesWithEnumsMock?: string[]
+  argsNamesMock?: (string | string[])[]
+  complexityShortMock?: string
 }
 
 beforeEach(() => {

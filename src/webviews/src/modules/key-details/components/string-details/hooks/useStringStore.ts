@@ -59,10 +59,8 @@ export const fetchString = (key?: RedisString, args: IFetchKeyArgs = {}) =>
       if (isStatusSuccessful(status)) {
         state.processStringSuccess(data)
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       state.processStringFinal()
     }

@@ -52,7 +52,7 @@ const HashDetails = (props: Props) => {
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            <AddHashFields onCancel={closeAddItemPanel} />
+            <AddHashFields closePanel={closeAddItemPanel} />
           </div>
         )}
       </div>

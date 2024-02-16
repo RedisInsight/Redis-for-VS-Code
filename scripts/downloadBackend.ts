@@ -5,7 +5,12 @@ import * as cp from 'child_process'
 import * as dotenv from 'dotenv'
 import { parse as parseUrl } from 'url'
 
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
+dotenv.config({
+  path: [
+    path.join(__dirname, '..', '.env.local'),
+    path.join(__dirname, '..', '.env'),
+  ]
+})
 const cdnPath = process.env.RI_CDN_PATH
 const backendPath = path.join(__dirname, '..', 'dist', 'redis-backend')
 const tempWindowsDistPath = process.env.RI_TEMP_WINDOWS_DIST_PATH as string

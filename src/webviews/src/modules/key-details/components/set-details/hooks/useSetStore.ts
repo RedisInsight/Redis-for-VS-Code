@@ -16,14 +16,14 @@ import {
   showErrorMessage,
   showInformationMessage,
 } from 'uiSrc/utils'
-import { fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
-
+import { fetchKeyInfo, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { RedisString } from 'uiSrc/interfaces'
+
 import {
-  AddMembersToSetDto,
   GetSetMembersResponse,
   SetState,
   SetActions,
+  AddMembersToSetDto,
 } from './interface'
 
 export const initialState: SetState = {
@@ -42,8 +42,8 @@ export const useSetStore = create<SetState & SetActions>()(
   immer(devtools(persist((set) => ({
     ...initialState,
     // actions
-    processSetRequest: () => set(() => ({ loading: true })),
-    processSetResponse: () => set(() => ({ loading: false })),
+    processSet: () => set(() => ({ loading: true })),
+    processSetFinal: () => set(() => ({ loading: false })),
     loadSetMembersSuccess: (data) => set((state) => ({
       data: {
         ...state.data,
@@ -77,7 +77,7 @@ export const fetchSetMembers = (
   match: string,
   onSuccess?: (data: GetSetMembersResponse) => void,
 ) => useSetStore.setState(async (state) => {
-  state.processSetRequest()
+  state.processSet()
 
   try {
     const { data, status } = await apiService.post<GetSetMembersResponse>(
@@ -96,12 +96,10 @@ export const fetchSetMembers = (
       useSelectedKeyStore.getState().updateSelectedKeyRefreshTime(Date.now())
       onSuccess?.(data)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
-    state.processSetResponse()
+    state.processSetFinal()
   }
 })
 
@@ -112,7 +110,7 @@ export const fetchMoreSetMembers = (
   count: number,
   match: string,
 ) => useSetStore.setState(async (state) => {
-  state.processSetRequest()
+  state.processSet()
 
   try {
     const { data, status } = await apiService.post<GetSetMembersResponse>(
@@ -129,12 +127,10 @@ export const fetchMoreSetMembers = (
     if (isStatusSuccessful(status)) {
       state.loadMoreSetMembersSuccess(data)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
-    state.processSetResponse()
+    state.processSetFinal()
   }
 })
 
@@ -144,7 +140,7 @@ export const deleteSetMembers = (
   members: RedisString[],
   onSuccessAction?: (newTotal: number) => void,
 ) => useSetStore.setState(async (state) => {
-  state.processSetRequest()
+  state.processSet()
 
   try {
     const { data, status } = await apiService.delete(
@@ -171,17 +167,39 @@ export const deleteSetMembers = (
         )
         fetchKeyInfo({ key: key! }, false)
       } else {
-        // dispatch(deleteSelectedKeySuccess())
-        // dispatch(deleteKeyFromList(key))
         showInformationMessage(successMessages.DELETED_KEY(key!).title)
       }
       onSuccessAction?.(newTotalValue)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
-    state.processSetResponse()
+    state.processSetFinal()
+  }
+})
+
+export const addSetMembersAction = (
+  data: AddMembersToSetDto,
+  onSuccess?: () => void,
+  onFail?: () => void,
+) => useSetStore.setState(async (state) => {
+  state.processSet()
+
+  try {
+    const { status } = await apiService.put(
+      getUrl(ApiEndpoints.SET),
+      data,
+      { params: { encoding: getEncoding() } },
+    )
+
+    if (isStatusSuccessful(status)) {
+      onSuccess?.()
+      refreshKeyInfo(data.keyName)
+    }
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
+    onFail?.()
+  } finally {
+    state.processSetFinal()
   }
 })

@@ -80,10 +80,8 @@ export function fetchAppInfo(onSuccessAction?: () => void, onFailAction?: () => 
         dispatch(getUserConfigSettingsSuccess(data))
         onSuccessAction?.()
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      dispatch(getUserConfigSettingsFailure(errorMessage))
+    } catch (error) {
+      dispatch(getUserConfigSettingsFailure(getApiErrorMessage(error as AxiosError)))
       onFailAction?.()
     }
   }
@@ -101,10 +99,8 @@ export function fetchUserConfigSettings(onSuccessAction?: () => void, onFailActi
         dispatch(getUserConfigSettingsSuccess(data))
         onSuccessAction?.()
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      dispatch(getUserConfigSettingsFailure(errorMessage))
+    } catch (error) {
+      dispatch(getUserConfigSettingsFailure(getApiErrorMessage(error as AxiosError)))
       onFailAction?.()
     }
   }
@@ -124,10 +120,8 @@ export function fetchUserSettingsSpec(onSuccessAction?: () => void, onFailAction
         dispatch(getUserSettingsSpecSuccess(data))
         onSuccessAction?.()
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      dispatch(getUserSettingsSpecFailure(errorMessage))
+    } catch (error) {
+      dispatch(getUserSettingsSpecFailure(getApiErrorMessage(error as AxiosError)))
       onFailAction?.()
     }
   }
