@@ -7,7 +7,7 @@ import * as l10n from '@vscode/l10n'
 import { useShallow } from 'zustand/react/shallow'
 
 import { sessionStorageService, vscodeApi } from 'uiSrc/services'
-import { SelectedKeyActionType, SortOrder, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
+import { POPOVER_WINDOW_BORDER_WIDTH, SelectedKeyActionType, SortOrder, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import {
   TelemetryEvent,
   formatLongName,
@@ -66,6 +66,10 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   }, [selectedKeyAction])
 
   const handleCheckConnectToDatabase = ({ id, provider, modules }: Database) => {
+    if (showTree) {
+      setShowTree(false)
+      return
+    }
     const modulesSummary = getRedisModulesSummary(modules)
     sendEventTelemetry({
       event: TelemetryEvent.CONFIG_DATABASES_OPEN_DATABASE,
@@ -182,6 +186,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
               header={formatLongName(name, 50, 10, '...')}
               text={l10n.t('will be deleted from RedisInsight.')}
               item={id}
+              maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}
               updateLoading={false}
               handleDeleteItem={() => deleteDatabaseHandle()}
               handleButtonClick={() => clickDeleteDatabaseHandle()}

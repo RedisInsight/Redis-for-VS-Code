@@ -8,6 +8,10 @@ export interface IVSCodeApi {
   postMessage: (message: PostMessage) => void
 }
 
+export interface ResetSelectedKeyAction {
+  action: VscodeMessageAction.ResetSelectedKey
+}
+
 export interface SelectKeyAction {
   action: VscodeMessageAction.SelectKey
   data: { key: RedisString, databaseId: string }
@@ -43,4 +47,10 @@ export interface CloseAddKeyAction {
 }
 
 export type PostMessage =
-  SelectKeyAction | DatabaseAction | InformationMessageAction | SelectedKeyAction | NoDataAction | CloseAddKeyAction
+  SelectKeyAction |
+  DatabaseAction |
+  InformationMessageAction |
+  SelectedKeyAction |
+  NoDataAction |
+  CloseAddKeyAction |
+  ResetSelectedKeyAction

@@ -58,6 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorageService.set(StorageItem.databaseId, message?.data?.id)
         useDatabasesStore.getState().setConnectedDatabase(message?.data as Database)
         break
+      case VscodeMessageAction.ResetSelectedKey:
+        useSelectedKeyStore.getState().resetSelectedKeyStore()
+        break
       case VscodeMessageAction.AddCli:
       case VscodeMessageAction.OpenCli:
         const database = message?.data as Database
