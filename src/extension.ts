@@ -27,11 +27,8 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.window.registerWebviewViewProvider('ri-sidebar', sidebarProvider),
     vscode.window.registerWebviewViewProvider('ri-panel', panelProvider, { webviewOptions: { retainContextWhenHidden: true } }),
 
-    vscode.commands.registerCommand('RedisInsight.cliOpen', (args) => {
-      vscode.commands.executeCommand('ri-panel.focus')
-    }),
-
     vscode.commands.registerCommand('RedisInsight.addCli', (args) => {
+      vscode.commands.executeCommand('setContext', 'RedisInsight.showCliPanel', true)
       vscode.commands.executeCommand('ri-panel.focus')
       setTimeout(() => {
         panelProvider.view?.webview.postMessage({ action: 'AddCli', data: args.data })
@@ -105,6 +102,10 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('RedisInsight.closeKeyAndRefresh', (args) => {
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
       WebviewPanel.getInstance({ viewId: ViewId.Key })?.dispose()
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.resetSelectedKey', () => {
+      sidebarProvider.view?.webview.postMessage({ action: 'ResetSelectedKey' })
     }),
   )
 }

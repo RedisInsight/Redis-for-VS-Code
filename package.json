@@ -43,7 +43,8 @@
         {
           "type": "webview",
           "id": "ri-panel",
-          "name": "CLI"
+          "when": "RedisInsight.showCliPanel",
+          "name": "RedisInsight CLI"
         }
       ]
     },
@@ -51,11 +52,6 @@
       {
         "command": "RedisInsight.openPage",
         "title": "Open RedisInsight",
-        "category": "RedisInsight"
-      },
-      {
-        "command": "RedisInsight.cliOpen",
-        "title": "Open RedisInsight CLI",
         "category": "RedisInsight"
       },
       {
