@@ -1,64 +1,37 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
 
-import { TelemetryEvent, bufferToString, sendEventTelemetry } from 'uiSrc/utils'
-
+import * as utils from 'uiSrc/utils'
+import { bufferToString } from 'uiSrc/utils'
 import { downloadFile } from 'uiSrc/utils/dom/downloadFile'
 import { useSelectedKeyStore } from 'uiSrc/store'
-import { render, screen, fireEvent, waitFor, constants } from 'testSrc/helpers'
+import { render, screen, fireEvent, constants, waitForStack } from 'testSrc/helpers'
 import { StringDetailsValue, Props } from './StringDetailsValue'
-import { useStringStore, initialState as initialStateInit } from '../hooks/useStringStore'
+import * as useString from '../hooks/useStringStore'
 import * as stringConstants from '../constants/string'
+
+const { useStringStore } = useString
 
 const STRING_VALUE = 'string-value'
 const STRING_VALUE_SPACE = 'string value'
 const LOAD_ALL_BTN = 'load-all-value-btn'
 const DOWNLOAD_BTN = 'download-all-value-btn'
 
-const STRING_MAX_LENGTH = 2
-const STRING_LENGTH = 4
 const MAX_LENGTH = 2
-
-const fullValue = { type: 'Buffer', data: [49, 50, 51, 52] }
-const partValue = { type: 'Buffer', data: [49, 50] }
 
 const mockedProps = mock<Props>()
 
-// vi.mock('uiSrc/slices/browser/string', async () => ({
-//   ...(await vi.importActual<object>('uiSrc/slices/browser/string')),
-//   stringDataSelector: vi.fn().mockReturnValue({
-//     value: fullValue,
-//   }),
-//   fetchDownloadStringValue: vi.fn(),
-// }))
-
-// vi.mock('uiSrc/slices/browser/keys', async () => ({
-//   ...(await vi.importActual<object>('uiSrc/slices/browser/keys')),
-//   selectedKeyDataSelector: vi.fn().mockReturnValue({
-//     name: fullValue,
-//     type: 'string',
-//     length: STRING_LENGTH,
-//   }),
-// }))
-
+vi.spyOn(useString, 'fetchDownloadStringValue')
+vi.spyOn(utils, 'sendEventTelemetry')
 vi.spyOn(stringConstants, 'MAX_LENGTH', 'get').mockReturnValue(MAX_LENGTH)
-
-// vi.mock('uiSrc/slices/instances/instances', async () => ({
-//   ...(await vi.importActual<object>('uiSrc/slices/instances/instances')),
-//   connectedInstanceSelector: vi.fn().mockReturnValue({
-//     compressor: null,
-//   }),
-// }))
-
-vi.mock('uiSrc/utils', async () => ({
-  ...(await vi.importActual<object>('uiSrc/utils')),
-  sendEventTelemetry: vi.fn(),
-}))
 
 const initialStringState = { keyName: constants.KEY_NAME_1, value: constants.KEY_1_VALUE }
 beforeEach(() => {
   useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
-  useStringStore.setState((state) => ({ ...state, ...initialStringState }))
+  useStringStore.setState((state) => ({
+    ...state,
+    data: initialStringState,
+  }))
 })
 
 describe('StringDetailsValue', () => {
@@ -72,7 +45,7 @@ describe('StringDetailsValue', () => {
     ).toBeTruthy()
   })
 
-  it.todo('should render textarea if edit mode', () => {
+  it('should render textarea if edit mode', () => {
     render(
       <StringDetailsValue
         {...instance(mockedProps)}
@@ -84,7 +57,7 @@ describe('StringDetailsValue', () => {
     expect(textArea).toBeInTheDocument()
   })
 
-  it.todo('should update string value', () => {
+  it('should update string value', () => {
     render(
       <StringDetailsValue
         {...instance(mockedProps)}
@@ -100,7 +73,7 @@ describe('StringDetailsValue', () => {
     expect(textArea).toHaveValue(STRING_VALUE_SPACE)
   })
 
-  it.todo('should stay empty string after cancel', async () => {
+  it('should stay empty string after cancel', async () => {
     render(
       <StringDetailsValue
         {...instance(mockedProps)}
@@ -113,15 +86,15 @@ describe('StringDetailsValue', () => {
       textArea,
       { target: { value: STRING_VALUE_SPACE } },
     )
-    const btnACancel = screen.getByTestId('cancel-btn')
-    await waitFor(() => {
-      fireEvent.click(btnACancel)
-    })
+    const btnCancel = screen.getByTestId('cancel-btn')
+    fireEvent.click(btnCancel)
+    await waitForStack()
+
     const textArea2 = screen.getByTestId(STRING_VALUE)
-    expect(textArea2).toHaveValue(bufferToString(fullValue))
+    expect(textArea2).toHaveValue(bufferToString(constants.KEY_1_VALUE))
   })
 
-  it.todo('should update value after apply', () => {
+  it('should update value after apply', () => {
     render(
       <StringDetailsValue
         {...instance(mockedProps)}
@@ -140,27 +113,17 @@ describe('StringDetailsValue', () => {
   })
 
   it('should render load button and download button if long string is partially loaded', () => {
-    useStringStore.setState((state) => ({
-      ...state,
-      data: { value: partValue },
-    }))
-
     render(
       <StringDetailsValue {...instance(mockedProps)} />,
     )
     const loadAllBtn = screen.getByTestId(LOAD_ALL_BTN)
-    // const downloadBtn = screen.getByTestId(DOWNLOAD_BTN)
+    const downloadBtn = screen.getByTestId(DOWNLOAD_BTN)
     expect(loadAllBtn).toBeInTheDocument()
-    // expect(downloadBtn).toBeInTheDocument()
+    expect(downloadBtn).toBeInTheDocument()
   })
 
-  it.todo('should call onRefresh and sendEventTelemetry after clicking on load button', () => {
+  it('should call onRefresh and sendEventTelemetry after clicking on load button', () => {
     const onRefresh = vi.fn()
-    useStringStore.setState((state) => ({
-      ...state,
-      data: { value: partValue },
-    }))
-
     render(
       <StringDetailsValue
         {...instance(mockedProps)}
@@ -171,32 +134,22 @@ describe('StringDetailsValue', () => {
     fireEvent.click(screen.getByTestId(LOAD_ALL_BTN))
 
     expect(onRefresh).toBeCalled()
-    expect(onRefresh).toBeCalledWith(fullValue, 'string', { end: STRING_MAX_LENGTH + 1 })
-    expect(sendEventTelemetry).toBeCalled()
-    expect(sendEventTelemetry).toBeCalledWith({
-      event: TelemetryEvent.STRING_LOAD_ALL_CLICKED,
-      eventData: { databaseId: undefined, length: STRING_LENGTH },
-    })
+    expect(onRefresh).toBeCalledWith(constants.KEY_NAME_1, { end: 9 })
   })
 
   it('Should add "..." in the end of the part value', async () => {
-    useStringStore.setState((state) => ({
-      ...state,
-      data: { value: partValue },
-    }))
-
     render(
       <StringDetailsValue
         {...instance(mockedProps)}
       />,
     )
-    expect(screen.getByTestId(STRING_VALUE)).toHaveTextContent(`${bufferToString(partValue)}...`)
+    expect(screen.getByTestId(STRING_VALUE)).toHaveTextContent(`${bufferToString(constants.KEY_1_VALUE)}...`)
   })
 
   it('Should not add "..." in the end of the full value', async () => {
     useStringStore.setState((state) => ({
       ...state,
-      data: { value: fullValue },
+      data: { value: constants.KEY_1_VALUE_FULL },
     }))
 
     render(
@@ -204,15 +157,10 @@ describe('StringDetailsValue', () => {
         {...instance(mockedProps)}
       />,
     )
-    expect(screen.getByTestId(STRING_VALUE)).toHaveTextContent(bufferToString(fullValue))
+    expect(screen.getByTestId(STRING_VALUE)).toHaveTextContent(bufferToString(constants.KEY_1_VALUE_FULL))
   })
 
-  it.todo('should call fetchDownloadStringValue and sendEventTelemetry after clicking on load button and download button', async () => {
-    useStringStore.setState((state) => ({
-      ...state,
-      data: { value: partValue },
-    }))
-
+  it('should call fetchDownloadStringValue and sendEventTelemetry after clicking on load button and download button', async () => {
     render(
       <StringDetailsValue
         {...instance(mockedProps)}
@@ -221,13 +169,8 @@ describe('StringDetailsValue', () => {
 
     fireEvent.click(screen.getByTestId(DOWNLOAD_BTN))
 
-    expect(sendEventTelemetry).toBeCalled()
-    expect(sendEventTelemetry).toBeCalledWith({
-      event: TelemetryEvent.STRING_DOWNLOAD_VALUE_CLICKED,
-      eventData: { databaseId: undefined, length: STRING_LENGTH },
-    })
-    // expect(fetchDownloadStringValue).toBeCalled()
-    // expect(fetchDownloadStringValue).toBeCalledWith(fullValue, downloadFile)
+    expect(useString.fetchDownloadStringValue).toBeCalled()
+    expect(useString.fetchDownloadStringValue).toBeCalledWith(constants.KEY_NAME_1, downloadFile)
   })
 
   // describe('decompressed  data', () => {

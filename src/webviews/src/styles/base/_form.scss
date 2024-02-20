@@ -5,3 +5,7 @@
     @apply border-vscode-button-background border-b-[1px];
   }
 }
+
+input:focus, textarea:focus {
+  outline: none;
+}

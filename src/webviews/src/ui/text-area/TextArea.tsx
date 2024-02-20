@@ -1,10 +1,10 @@
-import React, { FC, InputHTMLAttributes } from 'react'
+import React, { FC, TextareaHTMLAttributes } from 'react'
 import cx from 'classnames'
 import { omit } from 'lodash'
 
 import styles from './styles.module.scss'
 
-export interface Props extends InputHTMLAttributes<HTMLTextAreaElement> {
+export interface Props extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   inputRef?: React.Ref<HTMLTextAreaElement>
   label?: {
     text?: string

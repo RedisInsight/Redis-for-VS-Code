@@ -6,7 +6,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { KeyTypes, SelectedKeyActionType, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { sessionStorageService, vscodeApi } from 'uiSrc/services'
 import { DynamicTypeDetails } from './components/dynamic-type-details'
 
@@ -35,7 +35,7 @@ const KeyDetails = (props: Props) => {
   const databaseId = useKeysInContext(useShallow((state) => state.databaseId))
   const keysApi = useKeysApi()
 
-  const { type: keyType = KeyTypes.String, name: keyName, length: keyLength } = data ?? { }
+  const { type: keyType = KeyTypes.String, name: keyName, length: keyLength } = data ?? {}
 
   useEffect(() => {
     if (!isUndefined(keyName)) {

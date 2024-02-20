@@ -15,6 +15,7 @@ import { VscCheck, VscError } from 'react-icons/vsc'
 import { RxCross1 } from 'react-icons/rx'
 import Popup from 'reactjs-popup'
 import { capitalize } from 'lodash'
+import { PopupActions } from 'reactjs-popup/dist/types'
 
 import { VSCodeToolkitEvent } from 'uiSrc/interfaces'
 import { InputText } from 'uiSrc/ui'
@@ -85,10 +86,10 @@ const InlineEditor = memo((props: Props) => {
 
   const containerEl: Ref<HTMLDivElement> = useRef(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const popupRef = useRef<PopupActions>(null)
   const [value, setValue] = useState<string>(initialValue)
   const [isError, setIsError] = useState<boolean>(false)
   const [isActive, setIsActive] = useState(isActiveProp)
-  const [isShowApprovePopover, setIsShowApprovePopover] = useState(false)
 
   const handleClickOutside = (event: any) => {
     if (preventOutsideClick) return
@@ -135,9 +136,10 @@ const InlineEditor = memo((props: Props) => {
 
   const handleApplyClick = (event: MouseEvent | KeyboardEvent) => {
     if (approveByValidation && !approveByValidation?.(value)) {
-      setIsShowApprovePopover(true)
+      popupRef.current?.open()
     } else {
       handleFormSubmit(event)
+      popupRef.current?.close()
     }
   }
 
@@ -215,7 +217,6 @@ const InlineEditor = memo((props: Props) => {
             </div>
             <div
               className={cx(
-                'InlineEditor__controls',
                 styles.controls,
                 styles[`controls${capitalize(controlsPosition)}`],
                 controlsClassName,
@@ -239,19 +240,15 @@ const InlineEditor = memo((props: Props) => {
                 { controlsPosition === 'bottom' ? <RxCross1 /> : <VscError />}
               </VSCodeButton>
 
-              {!approveByValidation && ApplyBtn}
+              {ApplyBtn}
               {approveByValidation && (
               <Popup
                 closeOnEscape
                 closeOnDocumentClick
                 repositionOnResize
+                ref={popupRef}
                 position="left center"
-                onClose={() => setIsShowApprovePopover(false)}
-                    // onOpen={() => {
-                    //   showPopover(item)
-                    //   handleButtonClick?.()
-                    // }}
-                trigger={ApplyBtn}
+                trigger={<div />}
               >
                 <div className={styles.popover} data-testid="approve-popover">
                   <div>

@@ -1,29 +1,19 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
-import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
+import { TelemetryEvent } from 'uiSrc/utils'
 import { SubmitBtnText } from 'uiSrc/constants'
-import {
-  ManualConnectionFormProps,
-  ManualConnectionForm,
-} from 'uiSrc/modules/manual-connection/manual-connection-form'
+import * as utils from 'uiSrc/utils'
+import * as manualConnection from 'uiSrc/modules/manual-connection/manual-connection-form'
 import { fireEvent, render, screen, waitFor } from 'testSrc/helpers'
 import { ManualConnection, Props } from './ManualConnection'
 
 const mockedProps = mock<Props>()
 
-vi.mock('uiSrc/modules/manual-connection/manual-connection-form', async () => ({
-  // ...(await vi.importActual<object>('uiSrc/modules/manual-connection/manual-connection-form')),
-  // ManualConnectionForm: vi.fn().mockImplementation(mockManualConnectionForm),
-  ManualConnectionForm: vi.fn(),
-}))
+vi.spyOn(manualConnection, 'ManualConnectionForm')
+vi.spyOn(utils, 'sendEventTelemetry')
 
-vi.mock('uiSrc/utils', async () => ({
-  ...(await vi.importActual<object>('uiSrc/utils')),
-  sendEventTelemetry: vi.fn(),
-}))
-
-const mockManualConnectionForm = (props: ManualConnectionFormProps) => (
+const mockManualConnectionForm = (props: manualConnection.ManualConnectionFormProps) => (
   <div>
     <button
       type="button"
@@ -34,7 +24,7 @@ const mockManualConnectionForm = (props: ManualConnectionFormProps) => (
     </button>
     <button
       type="button"
-      onClick={() => props.onClose()}
+      onClick={() => props.onClose?.()}
       data-testid="onClose-btn"
     >
       onClose
@@ -42,7 +32,7 @@ const mockManualConnectionForm = (props: ManualConnectionFormProps) => (
     <button
       type="submit"
       data-testid="btn-submit"
-      onClick={() => props.onSubmit({})}
+      onClick={() => props.onSubmit({} as any)}
     >
       {props.submitButtonText}
     </button>
@@ -58,7 +48,7 @@ const mockManualConnectionForm = (props: ManualConnectionFormProps) => (
 
 describe('ManualConnection', () => {
   beforeAll(() => {
-    ManualConnectionForm.mockImplementation(mockManualConnectionForm)
+    vi.mocked(manualConnection.ManualConnectionForm).mockImplementation(mockManualConnectionForm)
   })
   it('should render', () => {
     expect(
@@ -66,7 +56,7 @@ describe('ManualConnection', () => {
     ).toBeTruthy()
   })
 
-  it.only('should call onHostNamePaste', () => {
+  it('should call onHostNamePaste', () => {
     const component = render(<ManualConnection {...instance(mockedProps)} />)
     fireEvent.click(screen.getByTestId('onHostNamePaste-btn'))
     expect(component).toBeTruthy()
@@ -98,27 +88,17 @@ describe('ManualConnection', () => {
   })
 
   it('should call proper telemetry event on Add database', () => {
-    const sendEventTelemetryMock = vi.fn()
-
-    sendEventTelemetry.mockImplementation(() => sendEventTelemetryMock)
-
-    sendEventTelemetry.mockRestore()
     render(<ManualConnection {...instance(mockedProps)} />)
     waitFor(() => {
       fireEvent.click(screen.getByTestId('btn-submit'))
     })
 
-    expect(sendEventTelemetry).toBeCalledWith({
+    expect(utils.sendEventTelemetry).toBeCalledWith({
       event: TelemetryEvent.CONFIG_DATABASES_MANUALLY_SUBMITTED,
     })
   })
 
   it('should call proper telemetry event on Clone database', () => {
-    const sendEventTelemetryMock = vi.fn()
-
-    sendEventTelemetry.mockImplementation(() => sendEventTelemetryMock)
-
-    sendEventTelemetry.mockRestore()
     render(<ManualConnection {...instance(mockedProps)} editMode />)
     waitFor(() => {
       fireEvent.click(screen.getByTestId('onClone-btn'))
@@ -127,7 +107,7 @@ describe('ManualConnection', () => {
       fireEvent.click(screen.getByTestId('onClose-btn'))
     })
 
-    expect(sendEventTelemetry).toBeCalledWith({
+    expect(utils.sendEventTelemetry).toBeCalledWith({
       event: TelemetryEvent.CONFIG_DATABASES_DATABASE_CLONE_CANCELLED,
       eventData: { databaseId: undefined },
     })

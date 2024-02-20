@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 
-import { useSelector } from 'react-redux'
 import {
   KeyTypes,
   STRING_MAX_LENGTH,
@@ -42,7 +41,7 @@ const StringDetails = (props: Props) => {
   const isEditable = !isStringCompressed && isFormatEditable(viewFormat)
   const isStringEditable = isFullStringLoaded(keyValue?.data?.length, length)
   const noEditableText = isStringCompressed ? TEXT_DISABLED_COMPRESSED_VALUE : TEXT_DISABLED_FORMATTER_EDITING
-  const editToolTip = !isEditable ? noEditableText : (!isStringEditable ? TEXT_DISABLED_STRING_EDITING : '')
+  const editToolTip = !isEditable ? noEditableText : (!isStringEditable ? `\n${TEXT_DISABLED_STRING_EDITING}` : '')
 
   const [editItem, setEditItem] = useState<boolean>(false)
 
@@ -87,9 +86,8 @@ const StringDetails = (props: Props) => {
 
   const Actions = () => (
     <EditItemAction
-      title="Edit Value"
-      tooltipContent={editToolTip}
-      isEditable={isStringEditable}
+      title={`${l10n.t('Edit Value')}${editToolTip}`}
+      isEditable={isStringEditable && isEditable}
       onEditItem={() => setEditItem(!editItem)}
     />
   )

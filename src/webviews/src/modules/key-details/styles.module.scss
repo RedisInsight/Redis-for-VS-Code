@@ -12,7 +12,6 @@
 
 .content {
   @apply h-full relative;
-  /* background-color: var(--euiColorEmptyShade); */
   > div {
     @apply h-full
   }
@@ -30,23 +29,13 @@
 :global(.key-details-body) {
   @apply relative;
   height: calc(100% - 85px);
-  //min-height: 300px;
 }
 
 :global(.key-details-footer) {
-  @apply mx-4 my-0;
-  padding: 16px 0 20px 0;
-  /* border-top: 1px solid var(--euiColorLightShade); */
+  @apply mx-4 my-0 py-3;
 }
 
 .actionBtn {
   @apply relative mr-3;
   z-index: 2;
-
-  &.withText {
-    /* color: var(--divSubduedColor) !important; */
-    /* :global(.euiButton__text) {
-      font: normal normal normal 12px/18px Graphik !important;
-    } */
-  }
 }
