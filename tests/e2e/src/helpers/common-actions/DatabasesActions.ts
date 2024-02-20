@@ -1,25 +1,22 @@
 import { expect } from 'chai'
 import {
   ActivityBar,
-  By,
   Locator,
   VSBrowser,
-  Workbench,
   until,
 } from 'vscode-extension-tester'
 import { CommonDriverExtension } from '../CommonDriverExtension'
 import {
-  DatabaseDetailsView,
-  EditDatabaseView,
   TreeView,
 } from '@e2eSrc/page-objects/components'
 import {
-  ViewElements,
   Views,
   WebView,
 } from '@e2eSrc/page-objects/components/WebView'
 import { AddNewDatabaseParameters } from '../types/types'
 import { DatabaseAPIRequests } from '../api'
+import { NotificationActions } from './actions'
+import { KeyDetailsActions } from './KeyDetailsActions'
 
 /**
  * Database details actions
@@ -42,20 +39,12 @@ export class DatabasesActions extends CommonDriverExtension {
    */
   static async verifyDatabaseAdded(): Promise<void> {
     await CommonDriverExtension.driverSleep(1000)
-    let notifications = await new Workbench().getNotifications()
-    let notification = notifications[0]
     // Check the notification message
-    let message = await notification.getMessage()
-    expect(message).eqls(
+    await NotificationActions.checkNotificationMessage(
       `Database has been added`,
-      'The notification is not displayed',
     )
     // Verify that panel is closed
-    expect(
-      await new DatabaseDetailsView().isElementDisplayed(
-        By.xpath(ViewElements[Views.DatabaseDetailsView]),
-      ),
-    ).false
+    KeyDetailsActions.verifyDetailsPanelClosed()
   }
 
   /**
@@ -63,20 +52,12 @@ export class DatabasesActions extends CommonDriverExtension {
    */
   static async verifyDatabaseEdited(): Promise<void> {
     await CommonDriverExtension.driverSleep(1000)
-    let notifications = await new Workbench().getNotifications()
-    let notification = notifications[0]
     // Check the notification message
-    let message = await notification.getMessage()
-    expect(message).eqls(
+    await NotificationActions.checkNotificationMessage(
       `Database has been edited`,
-      'The notification is not displayed',
     )
     // Verify that panel is closed
-    expect(
-      await new EditDatabaseView().isElementDisplayed(
-        By.xpath(ViewElements[Views.DatabaseDetailsView]),
-      ),
-    ).false
+    KeyDetailsActions.verifyDetailsPanelClosed()
   }
 
   /**

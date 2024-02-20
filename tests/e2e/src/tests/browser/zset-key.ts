@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser, Workbench } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -13,6 +13,7 @@ import {
   ButtonActions,
   DatabasesActions,
   KeyDetailsActions,
+  NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
@@ -94,8 +95,7 @@ describe('ZSet Key fields verification', () => {
     )[0].getText()
     expect(result).contains(keyFieldValue)
     expect(result.length).eqls(1)
-    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
-    await ButtonActions.clickElement(keyDetailsView.keyRefresh)
+    await keyDetailsView.clearSearchInKeyDetails()
 
     // Verify that user can remove member from ZSet
     await keyDetailsView.removeRowByField(KeyTypesShort.ZSet, keyFieldValue)
@@ -104,22 +104,18 @@ describe('ZSet Key fields verification', () => {
       keyFieldValue,
     )
     await webView.switchBack()
-
-    let notifications = await new Workbench().getNotifications()
-    let notification = notifications[0]
-    // get the message
-    let message = await notification.getMessage()
-    expect(message).eqls(`${keyFieldValue} has been removed from ${keyName}`)
+    // Check the notification message that field deleted
+    await NotificationActions.checkNotificationMessage(`${keyFieldValue} has been removed from ${keyName}`)
 
     await webView.switchToFrame(Views.KeyDetailsView)
     await keyDetailsView.removeFirstRow(KeyTypesShort.ZSet)
     await webView.switchBack()
 
-    notifications = await new Workbench().getNotifications()
-    notification = notifications[1]
-    // get the message
-    message = await notification.getMessage()
-    expect(message).eqls(`Member has been deleted.`)
+    // Check the notification message that key deleted
+    await NotificationActions.checkNotificationMessage(`${keyName} has been deleted.`)
+
+    // Verify that details panel is closed for zset key after deletion
+    KeyDetailsActions.verifyDetailsPanelClosed()
   })
 
   it('Verify that user can sort Zset members by score by DESC and ASC', async function () {

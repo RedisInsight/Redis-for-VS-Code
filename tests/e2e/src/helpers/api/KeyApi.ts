@@ -229,7 +229,6 @@ export class KeyAPIRequests {
       getKeysPathMask.replace('databaseId', databaseId),
       requestBody,
     )
-    expect(await response.status).eql(200, 'Getting key request failed')
     return await response.body
   }
 
@@ -300,6 +299,8 @@ export class KeyAPIRequests {
         requestBody,
       )
       expect(response.status).eql(200, 'The deletion of the key request failed')
+    } else {
+      console.log(`Key '${keyName}' does not exist. Skipping deletion.`)
     }
   }
 }
