@@ -111,7 +111,6 @@ describe('Hash Key fields verification', () => {
     )
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
-
     // Add field to the hash key
     await keyDetailsView.addFieldToHash(keyFieldValue, keyValue)
     // Search the added field

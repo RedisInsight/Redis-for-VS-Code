@@ -50,23 +50,12 @@ describe('Set Key fields verification', () => {
     const keyFieldValue = 'setField11111'
     const setKeyParameters: SetKeyParameters = {
       keyName: keyName,
-      members: [keyFieldValue],
-    }
-    const keyToAddParameters = {
-      fieldsCount: 1,
-      keyName,
-      fieldStartWith: 'setField',
+      members: ['setField'],
     }
 
     await KeyAPIRequests.addSetKeyApi(
       setKeyParameters,
       Config.ossStandaloneConfig.databaseName,
-    )
-    // Add fields to the Set key
-    await KeyActions.populateSetWithMembers(
-      Config.ossStandaloneConfig.host,
-      Config.ossStandaloneConfig.port,
-      keyToAddParameters,
     )
     // Refresh database
     await treeView.refreshDatabaseByName(
@@ -74,7 +63,9 @@ describe('Set Key fields verification', () => {
     )
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
-
+    // Verify that user can add member to Set
+    await keyDetailsView.addMemberToSet(keyFieldValue)
+    // Search the added member
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
     // Check the search result
     let result = await (
@@ -91,14 +82,18 @@ describe('Set Key fields verification', () => {
     )
     await webView.switchBack()
     // Check the notification message that field deleted
-    await NotificationActions.checkNotificationMessage(`${keyFieldValue} has been removed from ${keyName}`)
+    await NotificationActions.checkNotificationMessage(
+      `${keyFieldValue} has been removed from ${keyName}`,
+    )
 
     await webView.switchToFrame(Views.KeyDetailsView)
     await keyDetailsView.removeFirstRow(KeyTypesShort.Set)
     await webView.switchBack()
 
     // Check the notification message that key deleted
-    await NotificationActions.checkNotificationMessage(`${keyName} has been deleted.`)
+    await NotificationActions.checkNotificationMessage(
+      `${keyName} has been deleted.`,
+    )
 
     // Verify that details panel is closed for set key after deletion
     KeyDetailsActions.verifyDetailsPanelClosed()

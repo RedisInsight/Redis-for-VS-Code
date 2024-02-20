@@ -19,7 +19,6 @@ import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { SortedSetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
-import { KeyActions } from '@e2eSrc/helpers/KeysActions'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
 let keyName: string
@@ -53,48 +52,41 @@ describe('ZSet Key fields verification', () => {
   })
   it('Verify that user can search and delete by member in Zset', async function () {
     keyName = Common.generateWord(10)
-    const keyFieldValue = 'zsetField11111'
-    const keyValue = 0
+    const keyFieldValue = 'sortedSetField'
+    const score = 1
     const zsetKeyParameters: SortedSetKeyParameters = {
       keyName: keyName,
       members: [
         {
-          name: keyFieldValue,
-          score: keyValue,
+          name: 'zsetField11111',
+          score: 0,
         },
       ],
-    }
-    const keyToAddParameters = {
-      fieldsCount: 1,
-      keyName,
-      fieldStartWith: 'sortedSetField',
     }
 
     await KeyAPIRequests.addSortedSetKeyApi(
       zsetKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    // Add fields to the hash key
-    await KeyActions.populateZSetWithMembers(
-      Config.ossStandaloneConfig.host,
-      Config.ossStandaloneConfig.port,
-      keyToAddParameters,
-    )
-
     // Refresh database
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
-
+    // Verify that user can add members to Zset
+    await keyDetailsView.addMemberToZSet(keyFieldValue, score)
+    // Search the added member
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
     // Check the search result
     let result = await (
       await keyDetailsView.getElements(keyDetailsView.sortedSetFieldsList)
     )[0].getText()
+    let value = await (
+      await keyDetailsView.getElements(keyDetailsView.scoreSortedSetFieldsList)
+    )[0].getText()
     expect(result).contains(keyFieldValue)
-    expect(result.length).eqls(1)
+    expect(value).eqls(`${score}`)
     await keyDetailsView.clearSearchInKeyDetails()
 
     // Verify that user can remove member from ZSet
@@ -105,14 +97,18 @@ describe('ZSet Key fields verification', () => {
     )
     await webView.switchBack()
     // Check the notification message that field deleted
-    await NotificationActions.checkNotificationMessage(`${keyFieldValue} has been removed from ${keyName}`)
+    await NotificationActions.checkNotificationMessage(
+      `${keyFieldValue} has been removed from ${keyName}`,
+    )
 
     await webView.switchToFrame(Views.KeyDetailsView)
     await keyDetailsView.removeFirstRow(KeyTypesShort.ZSet)
     await webView.switchBack()
 
     // Check the notification message that key deleted
-    await NotificationActions.checkNotificationMessage(`${keyName} has been deleted.`)
+    await NotificationActions.checkNotificationMessage(
+      `${keyName} has been deleted.`,
+    )
 
     // Verify that details panel is closed for zset key after deletion
     KeyDetailsActions.verifyDetailsPanelClosed()
