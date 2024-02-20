@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser, Workbench } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import {
   WebView,
   SetKeyDetailsView,
@@ -8,9 +8,9 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
-  ButtonActions,
   DatabasesActions,
   KeyDetailsActions,
+  NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
@@ -81,8 +81,7 @@ describe('Set Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.setFieldsList)
     )[0].getText()
     expect(result).contains(keyFieldValue)
-    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
-    await ButtonActions.clickElement(keyDetailsView.keyRefresh)
+    await keyDetailsView.clearSearchInKeyDetails()
 
     // Verify that user can remove member from Set
     await keyDetailsView.removeRowByField(KeyTypesShort.Set, keyFieldValue)
@@ -91,20 +90,17 @@ describe('Set Key fields verification', () => {
       keyFieldValue,
     )
     await webView.switchBack()
-    let notifications = await new Workbench().getNotifications()
-    let notification = notifications[0]
-    // get the message
-    let message = await notification.getMessage()
-    expect(message).eqls(`Member has been deleted`)
+    // Check the notification message that field deleted
+    await NotificationActions.checkNotificationMessage(`${keyFieldValue} has been removed from ${keyName}`)
 
     await webView.switchToFrame(Views.KeyDetailsView)
     await keyDetailsView.removeFirstRow(KeyTypesShort.Set)
     await webView.switchBack()
 
-    notifications = await new Workbench().getNotifications()
-    notification = notifications[0]
-    // get the message
-    message = await notification.getMessage()
-    expect(message).eqls(`${keyName} has been deleted.`)
+    // Check the notification message that key deleted
+    await NotificationActions.checkNotificationMessage(`${keyName} has been deleted.`)
+
+    // Verify that details panel is closed for set key after deletion
+    KeyDetailsActions.verifyDetailsPanelClosed()
   })
 })

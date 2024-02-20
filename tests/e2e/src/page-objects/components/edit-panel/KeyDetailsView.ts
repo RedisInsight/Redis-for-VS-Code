@@ -28,20 +28,26 @@ export class KeyDetailsView extends BaseComponent {
     )
 
   commonTrashIcon = (keyType: string): By =>
-    By.xpath(`//*[contains(@data-testid,"${keyType}-remove-btn-")]`)
+    By.xpath(
+      `//*[contains(@data-testid,"${keyType}-remove-btn-")] | //*[contains(@data-testid,"${keyType}-remove-button-")]`,
+    )
   commonRemoveButton = (keyType: string): By =>
     By.xpath(
-      `//*[contains(@data-testid, "${keyType}-remove-btn-") and not(contains(@data-testid, "-icon"))]`,
+      `//*[contains(@data-testid, "${keyType}-remove-btn-") and not(contains(@data-testid, "-icon"))] | //*[contains(@data-testid, "${keyType}-remove-button-") and not(contains(@data-testid, "-icon"))]`,
     )
 
-  copyButton = By.xpath(`//vscode-button[starts-with(@data-testid, 'copy-name-button')]`)
+  copyButton = By.xpath(
+    `//vscode-button[starts-with(@data-testid, 'copy-name-button')]`,
+  )
 
   removeButton = (keyType: string, name: string): By =>
     By.xpath(
-      `, //*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"]]`,
+      `//*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"]`,
     )
 
-  detailsDeleteKeyButton = By.xpath(`//vscode-button[starts-with(@data-testid, 'remove-key-')]`)
+  detailsDeleteKeyButton = By.xpath(
+    `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
+  )
   submitDetailsDeleteKeyButton = By.xpath(
     `//div[@class='popup-content ']${this.detailsDeleteKeyButton}`,
   )
@@ -77,6 +83,7 @@ export class KeyDetailsView extends BaseComponent {
     const keySizeText = await this.getElement(this.ttlField)
     return await keySizeText.getAttribute('value')
   }
+
   /**
    * Search by the value in the key details
    * @param value The value of the search parameter
@@ -90,6 +97,22 @@ export class KeyDetailsView extends BaseComponent {
     }
     const inputField = await this.getElement(this.searchInput)
     await InputActions.typeText(this.searchInput, value)
+    await InputActions.pressKey(inputField, 'enter')
+    await CommonDriverExtension.driverSleep(1000)
+  }
+
+  /**
+   * Clear search input in key details table
+   */
+  async clearSearchInKeyDetails(): Promise<void> {
+    if (!(await this.isElementDisplayed(this.searchInput))) {
+      await ButtonActions.clickAndWaitForElement(
+        this.searchButtonInKeyDetails,
+        this.searchInput,
+      )
+    }
+    const inputField = await this.getElement(this.searchInput)
+    await ButtonActions.clickElement(this.clearSearchInput)
     await InputActions.pressKey(inputField, 'enter')
     await CommonDriverExtension.driverSleep(1000)
   }
@@ -111,8 +134,7 @@ export class KeyDetailsView extends BaseComponent {
   /**
    * Click on copy button
    */
-  async clickCopyKeyName(
-  ): Promise<void> {
+  async clickCopyKeyName(): Promise<void> {
     const element = await this.getElement(this.copyButton)
     await element.click()
   }
