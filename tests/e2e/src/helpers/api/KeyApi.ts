@@ -273,7 +273,6 @@ export class KeyAPIRequests {
       getKeysPathMask.replace('databaseId', databaseId),
       requestBody,
     )
-    console.log(await response.status)
     if ((await response.status) === 200) {
       return { success: true, value: response.body }
     } else {
