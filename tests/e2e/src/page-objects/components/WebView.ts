@@ -1,7 +1,5 @@
 import { By, WebElement, until, Locator } from 'selenium-webdriver'
 import { VSBrowser, WebDriver } from 'vscode-extension-tester'
-import { KeyTreeView } from '@e2eSrc/page-objects/components/key-view/KeyTreeView'
-import { KeyDetailsView } from '@e2eSrc/page-objects/components/edit-panel/KeyDetailsView'
 
 /**
  * Returns a class that has the ability to access a webview.
@@ -49,7 +47,10 @@ export class WebView {
     timeout: number = 10000,
   ): Promise<void> {
     const frameLocator = ViewLocators[switchView]
-    const view = await this.driver.findElement(By.xpath(frameLocator))
+    const view = await this.driver.wait(
+      until.elementLocated(By.xpath(frameLocator)),
+      timeout,
+    )
 
     await this.driver.switchTo().frame(view)
     await this.driver.switchTo().frame(0)
@@ -73,7 +74,7 @@ export class WebView {
 }
 
 export enum Views {
-  KeyTreeView,
+  TreeView,
   KeyDetailsView,
   CliViewPanel,
   AddKeyView,
@@ -81,7 +82,7 @@ export enum Views {
 }
 
 export const ViewLocators = {
-  [Views.KeyTreeView]:
+  [Views.TreeView]:
     "//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]",
   [Views.KeyDetailsView]:
     "//div[contains(@data-parent-flow-to-element-id, 'webview-editor-element')]/iframe",
@@ -89,12 +90,12 @@ export const ViewLocators = {
     "//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]",
   [Views.AddKeyView]:
     "//div[contains(@data-parent-flow-to-element-id, 'webview-editor-element')]/iframe",
-    [Views.DatabaseDetailsView]:
+  [Views.DatabaseDetailsView]:
     "//div[contains(@data-parent-flow-to-element-id, 'webview-editor-element')]/iframe",
 }
 
 export const ViewElements = {
-  [Views.KeyTreeView]: `//div[@data-testid='tree-view-page']`,
+  [Views.TreeView]: `//div[@data-testid='tree-view-page']`,
   [Views.KeyDetailsView]: `//*[@data-testid='key-details-page']`,
   [Views.CliViewPanel]: `//*[@data-testid='panel-view-page']`,
   [Views.AddKeyView]: `//*[@data-testid='select-key-type']`,

@@ -30,7 +30,7 @@ export const ScanMore: FC<Props> = ({
           appearance="secondary"
           disabled={loading}
           data-testid="scan-more"
-          className="absolute right-0 z-10"
+          className="absolute right-0 z-10 mt-6"
           onClick={loadMoreItems}
         >
           {l10n.t('Scan more')}

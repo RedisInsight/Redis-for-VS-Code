@@ -102,10 +102,8 @@ export const fetchZSetMembers = (
       useSelectedKeyStore.getState().updateSelectedKeyRefreshTime(Date.now())
       onSuccess?.(data)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processZSetFinal()
   }
@@ -140,10 +138,8 @@ export const fetchZSetMoreMembers = (
       state.processZSetMoreSuccess(data, match)
       onSuccess?.(data)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processZSetFinal()
   }
@@ -176,19 +172,14 @@ export const deleteZSetMembers = (
             l10n.t('Member'),
           ).message,
         )
-        fetchKeyInfo(key!, false)
+        fetchKeyInfo({ key: key! }, false)
       } else {
-        // todo: connection between webviews
-        // dispatch(deleteSelectedKeySuccess())
-        // dispatch(deleteKeyFromList(key))
         showInformationMessage(successMessages.DELETED_KEY(key!).title)
       }
-      onSuccess?.(data)
+      onSuccess?.(newTotalValue)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
   } finally {
     state.processZSetFinal()
   }
@@ -213,10 +204,34 @@ export const updateZSetMembersAction = (
       state.updateMembers(data)
       refreshKeyInfo(data.keyName, false)
     }
-  } catch (_err) {
-    const error = _err as AxiosError
-    const errorMessage = getApiErrorMessage(error)
-    showErrorMessage(errorMessage)
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
+    onFail?.()
+  } finally {
+    state.processZSetFinal()
+  }
+})
+
+export const addZSetMembersAction = (
+  data: AddMembersToZSetDto,
+  onSuccess?: () => void,
+  onFail?: () => void,
+) => useZSetStore.setState(async (state) => {
+  state.processZSet()
+
+  try {
+    const { status } = await apiService.put(
+      getUrl(ApiEndpoints.ZSET),
+      data,
+      { params: { encoding: getEncoding() } },
+    )
+
+    if (isStatusSuccessful(status)) {
+      onSuccess?.()
+      refreshKeyInfo(data.keyName)
+    }
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
     onFail?.()
   } finally {
     state.processZSetFinal()

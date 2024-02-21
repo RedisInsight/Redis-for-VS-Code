@@ -15,11 +15,11 @@ import { AppDispatch } from 'uiSrc/store'
 import styles from './styles.module.scss'
 
 export interface Props {
-  data: (string | JSX.Element)[];
-  command: string;
-  error: string;
-  setCommand: (command: string) => void;
-  onSubmit: () => void;
+  data: (string | JSX.Element)[]
+  command: string
+  error: string
+  setCommand: (command: string) => void
+  onSubmit: () => void
 }
 
 const commandTabPosInit = 0

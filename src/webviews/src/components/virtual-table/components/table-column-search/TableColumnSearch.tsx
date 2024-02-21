@@ -5,11 +5,11 @@ import { InputText } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {
-  appliedValue: string;
-  fieldName: string;
-  prependSearchName: string;
-  onApply?: (value: string) => void;
-  searchValidation?: Maybe<(value: string) => string>;
+  appliedValue: string
+  fieldName: string
+  prependSearchName: string
+  onApply?: (value: string) => void
+  searchValidation?: Maybe<(value: string) => string>
 }
 
 const TableColumnSearch = (props: Props) => {

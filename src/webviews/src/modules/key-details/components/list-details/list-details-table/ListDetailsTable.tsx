@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import { get, isNull, isString, isUndefined } from 'lodash'
 import { CellMeasurerCache } from 'react-virtualized'
@@ -17,12 +16,9 @@ import { SCAN_COUNT_DEFAULT,
   KeyTypes,
   OVER_RENDER_BUFFER_COUNT,
   TableCellAlignment,
-  TEXT_INVALID_VALUE,
   TEXT_DISABLED_FORMATTER_EDITING,
   TEXT_UNPRINTABLE_CHARACTERS,
   TEXT_DISABLED_COMPRESSED_VALUE,
-  TEXT_FAILED_CONVENT_FORMATTER,
-  DEFAULT_SEARCH_MATCH,
   NoResultsFoundText,
 } from 'uiSrc/constants'
 import {
@@ -46,15 +42,9 @@ import { StopPropagation } from 'uiSrc/components/virtual-table'
 // import { getColumnWidth } from 'uiSrc/components/virtual-grid'
 // import { decompressingBuffer } from 'uiSrc/utils/decompressors'
 
-import { useSelectedKeyStore } from 'uiSrc/store'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
-// import {
-//   SetListElementDto,
-//   SetListElementResponse,
-// } from 'apiSrc/modules/browser/dto'
+import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { appContextBrowserKeyDetails, updateKeyDetailsSizes } from 'uiSrc/slices/app/context/context.slice'
 import { fetchListElements, fetchListMoreElements, fetchSearchingListElement, updateListElementsAction, useListStore } from '../hooks/useListStore'
 import { ListElement, SetListElementDto } from '../hooks/interface'
 import styles from './styles.module.scss'
@@ -76,8 +66,8 @@ export interface Props {
 const ListDetailsTable = (props: Props) => {
   const { isFooterOpen } = props
 
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
-  const { [KeyTypes.List]: listSizes } = useSelector(appContextBrowserKeyDetails)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
+  const { [KeyTypes.List]: listSizes } = useContextInContext((state) => state.browser.keyDetailsSizes)
 
   const { viewFormatProp, key } = useSelectedKeyStore(useShallow((state) => ({
     viewFormatProp: state.viewFormat,
@@ -103,7 +93,7 @@ const ListDetailsTable = (props: Props) => {
   const formattedLastIndexRef = useRef(OVER_RENDER_BUFFER_COUNT)
   const textAreaRef: React.Ref<HTMLTextAreaElement> = useRef(null)
 
-  const dispatch = useDispatch()
+  const contextApi = useContextApi()
 
   useEffect(() => {
     setElements(loadedElements)
@@ -224,10 +214,10 @@ const ListDetailsTable = (props: Props) => {
   }
 
   const onColResizeEnd = (sizes: RelativeWidthSizes) => {
-    dispatch(updateKeyDetailsSizes({
+    contextApi.updateKeyDetailsSizes({
       type: KeyTypes.List,
       sizes,
-    }))
+    })
   }
 
   const resetExpandedCache = () => {

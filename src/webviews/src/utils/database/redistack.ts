@@ -1,7 +1,7 @@
 import { isArray, map, concat, remove, find } from 'lodash'
 import { RedisDefaultModules } from 'uiSrc/constants'
 import { Nullable } from 'uiSrc/interfaces'
-import { Database } from 'uiSrc/slices/connections/databases/interface'
+import { Database } from 'uiSrc/store'
 import { isVersionHigherOrEquals } from 'uiSrc/utils'
 
 const REDISTACK_VERSION = '6.2.5'

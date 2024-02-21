@@ -30,7 +30,7 @@ export const successMessages = {
     message: (
       <>
         <b>{formatNameShort(databaseName)}</b>
-        {l10n.t(' has been added to RedisInsight.')}
+        {l10n.t(' has been deleted to RedisInsight.')}
       </>
     ),
   }),

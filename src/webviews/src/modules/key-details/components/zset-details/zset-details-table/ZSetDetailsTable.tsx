@@ -1,6 +1,5 @@
 import cx from 'classnames'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { CellMeasurerCache } from 'react-virtualized'
 import { VscEdit } from 'react-icons/vsc'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
@@ -32,21 +31,15 @@ import {
   KeyTypes,
   OVER_RENDER_BUFFER_COUNT,
   TableCellAlignment,
-  TEXT_DISABLED_COMPRESSED_VALUE,
-  TEXT_DISABLED_FORMATTER_EDITING,
   TEXT_FAILED_CONVENT_FORMATTER,
-  TEXT_INVALID_VALUE,
-  TEXT_UNPRINTABLE_CHARACTERS,
   SCAN_COUNT_DEFAULT,
   helpTexts,
   NoResultsFoundText,
   SortOrder,
   DEFAULT_SEARCH_MATCH,
 } from 'uiSrc/constants'
-import { appContextBrowserKeyDetails, updateKeyDetailsSizes } from 'uiSrc/slices/app/context/context.slice'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 
 import {
   deleteZSetMembers,
@@ -68,18 +61,18 @@ const cellCache = new CellMeasurerCache({
 })
 
 interface IZsetMember extends ZSetMember {
-  editing: boolean;
+  editing: boolean
 }
 
 export interface Props {
   isFooterOpen: boolean
-  onRemoveKey: () => void
+  onRemoveKey?: () => void
 }
 
 const ZSetDetailsTable = (props: Props) => {
   const { isFooterOpen, onRemoveKey } = props
 
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
   const { viewFormatProp, length, key } = useSelectedKeyStore(useShallow((state) => ({
     viewFormatProp: state.viewFormat,
@@ -96,7 +89,8 @@ const ZSetDetailsTable = (props: Props) => {
     updateLoading: state.updateValue.loading,
     resetMembers: state.resetZSetMembersStore,
   })))
-  const { [KeyTypes.ZSet]: ZSetSizes } = useSelector(appContextBrowserKeyDetails)
+
+  const { [KeyTypes.ZSet]: ZSetSizes } = useContextInContext((state) => state.browser.keyDetailsSizes)
 
   const [match, setMatch] = useState<string>('')
   const [deleting, setDeleting] = useState('')
@@ -108,7 +102,7 @@ const ZSetDetailsTable = (props: Props) => {
   const [sortedColumnOrder, setSortedColumnOrder] = useState(SortOrder.ASC)
   const [editingIndex, setEditingIndex] = useState<Nullable<number>>(null)
 
-  const dispatch = useDispatch()
+  const contextApi = useContextApi()
 
   const formattedLastIndexRef = useRef(OVER_RENDER_BUFFER_COUNT)
 
@@ -145,7 +139,7 @@ const ZSetDetailsTable = (props: Props) => {
   }, [])
 
   const onSuccessRemoved = (newTotal: number) => {
-    newTotal === 0 && onRemoveKey()
+    newTotal === 0 && onRemoveKey?.()
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_REMOVED,
       eventData: {
@@ -255,10 +249,10 @@ const ZSetDetailsTable = (props: Props) => {
   }
 
   const onColResizeEnd = (sizes: RelativeWidthSizes) => {
-    dispatch(updateKeyDetailsSizes({
+    contextApi.updateKeyDetailsSizes({
       type: KeyTypes.ZSet,
       sizes,
-    }))
+    })
   }
 
   const columns:ITableColumn[] = [

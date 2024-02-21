@@ -1,7 +1,6 @@
 import cx from 'classnames'
 import { isNull } from 'lodash'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
@@ -13,7 +12,7 @@ import {
   KeyTypes,
   TEXT_UNPRINTABLE_CHARACTERS,
 } from 'uiSrc/constants'
-import { RedisResponseBuffer } from 'uiSrc/interfaces'
+import { RedisString } from 'uiSrc/interfaces'
 import {
   TelemetryEvent,
   formatLongName,
@@ -22,17 +21,16 @@ import {
   sendEventTelemetry,
   stringToBuffer,
 } from 'uiSrc/utils'
-import { useSelectedKeyStore } from 'uiSrc/store'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { InlineEditor } from 'uiSrc/components'
 import styles from './styles.module.scss'
 
 export interface Props {
-  onEditKey: (key: RedisResponseBuffer, newKey: RedisResponseBuffer, onFailure?: () => void) => void
+  onEditKey: (key: RedisString, newKey: RedisString, onFailure?: () => void) => void
 }
 
 const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
   const { loading, data } = useSelectedKeyStore(useShallow((state) => ({
     loading: state.loading,
     data: state.data,
@@ -47,7 +45,7 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
 
   useEffect(() => {
     setKey(keyProp)
-    setKeyIsEditable(isEqualBuffers(keyBuffer as RedisResponseBuffer, stringToBuffer(keyProp || '')))
+    setKeyIsEditable(isEqualBuffers(keyBuffer, stringToBuffer(keyProp || '')))
   }, [keyProp, ttlProp, keyBuffer])
 
   const onClickKey = () => {
@@ -63,8 +61,8 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
 
     const newKeyBuffer = stringToBuffer(key || '')
 
-    if (keyBuffer && !isEqualBuffers(keyBuffer as RedisResponseBuffer, newKeyBuffer) && !isNull(keyProp)) {
-      onEditKey(keyBuffer as RedisResponseBuffer, newKeyBuffer, () => setKey(keyProp))
+    if (keyBuffer && !isEqualBuffers(keyBuffer, newKeyBuffer) && !isNull(keyProp)) {
+      onEditKey(keyBuffer, newKeyBuffer, () => setKey(keyProp))
     }
   }
 

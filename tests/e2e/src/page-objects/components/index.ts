@@ -7,7 +7,7 @@ import { CliViewPanel } from './bottom-bar/CliViewPanel'
 import { DatabaseDetailsView } from './edit-panel/DatabaseDetailsView'
 import { EditDatabaseView } from './edit-panel/EditDatabaseView'
 import { KeyDetailsView } from './edit-panel/KeyDetailsView'
-import { KeyTreeView } from './key-view/KeyTreeView'
+import { TreeView } from './tree-view/TreeView'
 import { HashKeyDetailsView } from './edit-panel/HashKeyDetailsView'
 import { ListKeyDetailsView } from './edit-panel/ListKeyDetailsView'
 import { StringKeyDetailsView } from './edit-panel/StringKeyDetailsView'
@@ -22,7 +22,7 @@ export {
   DatabaseDetailsView,
   EditDatabaseView,
   KeyDetailsView,
-  KeyTreeView,
+  TreeView,
   HashKeyDetailsView,
   ListKeyDetailsView,
   StringKeyDetailsView,

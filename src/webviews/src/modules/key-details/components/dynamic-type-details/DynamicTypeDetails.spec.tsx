@@ -11,7 +11,7 @@ const DynamicTypeDetailsTypeTests: any[] = [
   [KeyTypes.Hash, 'hash-details'],
   [KeyTypes.ZSet, 'zset-details'],
   [KeyTypes.List, 'list-details'],
-  // [KeyTypes.Set, 'set-details'],
+  [KeyTypes.Set, 'set-details'],
   // [KeyTypes.Stream, 'stream-details'],
   // [KeyTypes.ReJSON, 'json-details'],
   // [ModulesKeyTypes.Graph, 'modules-type-details'],

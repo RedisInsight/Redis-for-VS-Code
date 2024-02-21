@@ -1,6 +1,5 @@
 import cx from 'classnames'
 import React, { ChangeEvent, Ref, useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { CellMeasurerCache } from 'react-virtualized'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VscEdit } from 'react-icons/vsc'
@@ -39,18 +38,15 @@ import {
   TEXT_DISABLED_COMPRESSED_VALUE,
   TEXT_DISABLED_FORMATTER_EDITING,
   TEXT_FAILED_CONVENT_FORMATTER,
-  TEXT_INVALID_VALUE,
   TEXT_UNPRINTABLE_CHARACTERS,
   SCAN_COUNT_DEFAULT,
   helpTexts,
   NoResultsFoundText,
   DEFAULT_SEARCH_MATCH,
 } from 'uiSrc/constants'
-import { appContextBrowserKeyDetails, updateKeyDetailsSizes } from 'uiSrc/slices/app/context/context.slice'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
 import { stringToBuffer } from 'uiSrc/utils/formatters/bufferFormatters'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { TextArea } from 'uiSrc/ui'
 import { AddFieldsToHashDto, GetHashFieldsResponse, HashField } from '../hooks/interface'
 
@@ -82,7 +78,7 @@ export interface Props {
 const HashDetailsTable = (props: Props) => {
   const { isFooterOpen, onRemoveKey } = props
 
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
   const { viewFormatProp, length, key } = useSelectedKeyStore(useShallow((state) => ({
     viewFormatProp: state.viewFormat,
@@ -98,7 +94,7 @@ const HashDetailsTable = (props: Props) => {
     updateLoading: state.updateValue.loading,
   }))
 
-  const { [KeyTypes.Hash]: hashSizes } = useSelector(appContextBrowserKeyDetails)
+  const { [KeyTypes.Hash]: hashSizes } = useContextInContext((state) => state.browser.keyDetailsSizes)
 
   const [match, setMatch] = useState<Nullable<string>>(DEFAULT_SEARCH_MATCH)
   const [deleting, setDeleting] = useState('')
@@ -113,7 +109,7 @@ const HashDetailsTable = (props: Props) => {
   const formattedLastIndexRef = useRef(OVER_RENDER_BUFFER_COUNT)
   const textAreaRef: Ref<HTMLTextAreaElement> = useRef(null)
 
-  const dispatch = useDispatch()
+  const contextApi = useContextApi()
 
   useEffect(() => {
     setFields(loadedFields)
@@ -278,10 +274,10 @@ const HashDetailsTable = (props: Props) => {
   }
 
   const onColResizeEnd = (sizes: RelativeWidthSizes) => {
-    dispatch(updateKeyDetailsSizes({
+    contextApi.updateKeyDetailsSizes({
       type: KeyTypes.Hash,
       sizes,
-    }))
+    })
   }
 
   const columns: ITableColumn[] = [

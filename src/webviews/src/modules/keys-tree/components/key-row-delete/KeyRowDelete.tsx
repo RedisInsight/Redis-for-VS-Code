@@ -5,6 +5,7 @@ import cx from 'classnames'
 import { RedisString } from 'uiSrc/interfaces'
 import { PopoverDelete } from 'uiSrc/components'
 import { formatLongName } from 'uiSrc/utils'
+import { POPOVER_WINDOW_BORDER_WIDTH } from 'uiSrc/constants'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -27,6 +28,7 @@ export const KeyRowDelete = (props: Props) => {
         text={`${l10n.t(' will be deleted.')}`}
         approveTextBtn={l10n.t('Delete')}
         triggerClassName={cx(styles.trigger, 'group-hover:block')}
+        maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}
         handleDeleteItem={handleDelete}
         handleButtonClick={handleDeletePopoverOpen}
       />

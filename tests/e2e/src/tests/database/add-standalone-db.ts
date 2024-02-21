@@ -3,14 +3,16 @@ import { ActivityBar, By, VSBrowser, Workbench } from 'vscode-extension-tester'
 import { ViewElements, Views } from '@e2eSrc/page-objects/components/WebView'
 import {
   WebView,
-  KeyTreeView,
+  TreeView,
   DatabaseDetailsView,
   KeyDetailsView,
   AddDatabaseView,
+  EditDatabaseView,
 } from '@e2eSrc/page-objects/components'
 import {
   ButtonActions,
   CheckboxActions,
+  DatabasesActions,
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
@@ -37,32 +39,20 @@ const sshDbPasscode = {
   ...Config.ossStandaloneForSSHConfig,
   databaseName: `SSH_${Common.generateWord(5)}`,
 }
-const verifyDatabaseAdded = async (): Promise<void> => {
-  await new WebView().switchBack()
-  await CommonDriverExtension.driverSleep(1000)
-  let notifications = await new Workbench().getNotifications()
-  let notification = notifications[0]
-  // Check the notification message
-  let message = await notification.getMessage()
-  expect(message).eqls(
-    `Database has been added`,
-    'The notification is not displayed',
-  )
-  // Verify that panel is closed
-  expect(
-    await new DatabaseDetailsView().isElementDisplayed(
-      By.xpath(ViewElements[Views.DatabaseDetailsView]),
-    ),
-  ).false
+const sshWithPassphrase = {
+  ...sshParams,
+  sshPrivateKey: sshPrivateKeyWithPasscode,
+  sshPassphrase: 'test',
 }
 
 describe('Add database', () => {
   let browser: VSBrowser
   let webView: WebView
   let keyDetailsView: KeyDetailsView
-  let keyTreeView: KeyTreeView
+  let treeView: TreeView
   let databaseDetailsView: DatabaseDetailsView
   let addDatabaseView: AddDatabaseView
+  let editDatabaseView: EditDatabaseView
 
   let databaseName = `test_standalone-${Common.generateString(10)}`
 
@@ -70,13 +60,14 @@ describe('Add database', () => {
     browser = VSBrowser.instance
     webView = new WebView()
     keyDetailsView = new KeyDetailsView()
-    keyTreeView = new KeyTreeView()
+    treeView = new TreeView()
     databaseDetailsView = new DatabaseDetailsView()
     addDatabaseView = new AddDatabaseView()
+    editDatabaseView = new EditDatabaseView()
 
     await browser.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
-    await ButtonActions.clickElement(keyTreeView.addDatabaseBtn)
+    await ButtonActions.clickElement(treeView.addDatabaseBtn)
     await webView.switchBack()
     await webView.switchToFrame(Views.DatabaseDetailsView)
   })
@@ -110,9 +101,15 @@ describe('Add database', () => {
       connectionTimeout,
     )
     await ButtonActions.clickElement(databaseDetailsView.saveDatabaseButton)
-    await verifyDatabaseAdded()
-    // TODO:
-    // Wait for database to be exist
+    await webView.switchBack()
+    await DatabasesActions.verifyDatabaseAdded()
+    // Wait for database to be in the list
+    await webView.switchToFrame(Views.TreeView)
+    expect(
+      await databaseDetailsView.isElementDisplayed(
+        treeView.getDatabaseByName(databaseName),
+      ),
+    ).true(`${databaseName} not added to database list`)
     // Verify that user can see an indicator of databases that are added manually and not opened yet
     // Verify that user can't see an indicator of databases that were opened
     // Verify that connection timeout value saved
@@ -120,8 +117,19 @@ describe('Add database', () => {
   it('Verify that user can add OSS Cluster DB', async function () {
     await addDatabaseView.addOssClusterDatabase(Config.ossClusterConfig)
     // Check for info message that DB was added
-    await verifyDatabaseAdded()
-    // TODO Wait for database to be exist
+    await webView.switchBack()
+    await DatabasesActions.verifyDatabaseAdded()
+    // Wait for database to be in the list
+    await webView.switchToFrame(Views.TreeView)
+    expect(
+      await databaseDetailsView.isElementDisplayed(
+        treeView.getDatabaseByName(
+          Config.ossClusterConfig.ossClusterDatabaseName,
+        ),
+      ),
+    ).true(
+      `${Config.ossClusterConfig.ossClusterDatabaseName} not added to database list`,
+    )
     // TODO Verify new connection badge for OSS cluster
   })
   it('Fields to add database prepopulation', async function () {
@@ -152,9 +160,18 @@ describe('Add database', () => {
     }
 
     await addDatabaseView.addStandaloneSSHDatabase(sshDbPass, sshWithPass)
-    await verifyDatabaseAdded()
+    await webView.switchBack()
+    await DatabasesActions.verifyDatabaseAdded()
+    // Wait for database to be in the list
+    await webView.switchToFrame(Views.TreeView)
+    expect(
+      await databaseDetailsView.isElementDisplayed(
+        treeView.getDatabaseByName(databaseName),
+      ),
+    ).true(`${databaseName} not added to database list`)
   })
   it('Verify that user can add SSH tunnel with Private Key', async function () {
+    const hiddenPass = '••••••••••••'
     const sshWithPrivateKey = {
       ...sshParams,
       sshPrivateKey: sshPrivateKey,
@@ -164,20 +181,60 @@ describe('Add database', () => {
       sshDbPrivateKey,
       sshWithPrivateKey,
     )
-    await verifyDatabaseAdded()
+    await webView.switchBack()
+    await DatabasesActions.verifyDatabaseAdded()
+    // Wait for database to be in the list
+    await webView.switchToFrame(Views.TreeView)
+    expect(
+      await databaseDetailsView.isElementDisplayed(
+        treeView.getDatabaseByName(databaseName),
+      ),
+    ).true(`${databaseName} not added to database list`)
+
+    await treeView.clickDatabaseByName(databaseName)
+    await treeView.editDatabaseByName(databaseName)
+    await webView.switchBack()
+    await webView.switchToFrame(Views.DatabaseDetailsView)
+
+    // Verify that user can edit SSH parameters for existing database connections
+    await InputActions.typeText(
+      editDatabaseView.sshPrivateKeyInput,
+      sshWithPassphrase.sshPrivateKey,
+    )
+    InputActions.typeText(
+      editDatabaseView.sshPassphraseInput,
+      sshWithPassphrase.sshPassphrase,
+    )
+    await ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
+    await webView.switchBack()
+    await DatabasesActions.verifyDatabaseEdited()
+
+    // Verify that password, passphrase and private key are hidden for SSH option
+    await webView.switchToFrame(Views.TreeView)
+    await treeView.editDatabaseByName(databaseName)
+    await webView.switchBack()
+    await webView.switchToFrame(Views.DatabaseDetailsView)
+    expect(
+      await InputActions.getInputValue(editDatabaseView.sshPrivateKeyInput),
+    ).eql(hiddenPass, 'Private Key not hidden for SSH on edit')
+    expect(
+      await InputActions.getInputValue(editDatabaseView.sshPassphraseInput),
+    ).eql(hiddenPass, 'Passphrase not hidden for SSH on edit')
   })
   it('Verify that user can add SSH tunnel with Passcode', async function () {
-    const sshWithPassphrase = {
-      ...sshParams,
-      sshPrivateKey: sshPrivateKeyWithPasscode,
-      sshPassphrase: 'test',
-    }
-
     await addDatabaseView.addStandaloneSSHDatabase(
       sshDbPasscode,
       sshWithPassphrase,
     )
-    await verifyDatabaseAdded()
+    await webView.switchBack()
+    await DatabasesActions.verifyDatabaseAdded()
+    // Wait for database to be in the list
+    await webView.switchToFrame(Views.TreeView)
+    expect(
+      await databaseDetailsView.isElementDisplayed(
+        treeView.getDatabaseByName(databaseName),
+      ),
+    ).true(`${databaseName} not added to database list`)
   })
   it('Verify that Add database button disabled when mandatory ssh fields not specified', async function () {
     await CheckboxActions.toggleCheckbox(databaseDetailsView.useSSHCheckbox)

@@ -9,13 +9,13 @@ import { InputText } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {
-  isOpen: boolean;
-  appliedValue: string;
-  initialValue?: string;
-  handleOpenState: (isOpen: boolean) => void;
-  fieldName: string;
-  onApply?: (value: string) => void;
-  searchValidation?: Maybe<(value: string) => string>;
+  isOpen: boolean
+  appliedValue: string
+  initialValue?: string
+  handleOpenState: (isOpen: boolean) => void
+  fieldName: string
+  onApply?: (value: string) => void
+  searchValidation?: Maybe<(value: string) => string>
 }
 
 const TableColumnSearchTrigger = (props: Props) => {

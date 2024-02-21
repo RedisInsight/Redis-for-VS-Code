@@ -6,7 +6,6 @@ import { KeyTypes } from 'uiSrc/constants'
 import { render, screen, fireEvent, waitForStack } from 'testSrc/helpers'
 import { Node } from './Node'
 import { TreeData } from '../virtual-tree/interfaces'
-import * as useKeys from '../../hooks/useKeys'
 // import { mockVirtualTreeResult } from '../virtual-tree/VirtualTree.spec'
 
 const mockDataFullName = 'test'
@@ -28,8 +27,6 @@ const mockedDataWithMetadata = {
   ttl: 123,
   size: 123,
 }
-
-vi.spyOn(useKeys, 'deleteKeyAction')
 
 describe('Node', () => {
   it('should render', () => {

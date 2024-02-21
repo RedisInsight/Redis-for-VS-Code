@@ -1,11 +1,10 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import {
-  BottomBar,
   WebView,
   SortedSetKeyDetailsView,
-  KeyTreeView,
+  TreeView,
   ListKeyDetailsView,
   HashKeyDetailsView,
   SetKeyDetailsView,
@@ -13,9 +12,10 @@ import {
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
+  DatabasesActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
-import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
   ListKeyParameters,
@@ -23,31 +23,30 @@ import {
   SortedSetKeyParameters,
   SetKeyParameters,
 } from '@e2eSrc/helpers/types/types'
-import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 
 let keyName: string
 
 describe('Large key details verification', () => {
   let browser: VSBrowser
   let webView: WebView
-  let bottomBar: BottomBar
   let sortedsetKeyDetailsView: SortedSetKeyDetailsView
   let hashKeyDetailsView: HashKeyDetailsView
-  let keyTreeView: KeyTreeView
+  let treeView: TreeView
   let listKeyDetailsView: ListKeyDetailsView
   let setKeyDetailsView: SetKeyDetailsView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    bottomBar = new BottomBar()
     webView = new WebView()
     sortedsetKeyDetailsView = new SortedSetKeyDetailsView()
     hashKeyDetailsView = new HashKeyDetailsView()
-    keyTreeView = new KeyTreeView()
+    treeView = new TreeView()
     listKeyDetailsView = new ListKeyDetailsView()
     setKeyDetailsView = new SetKeyDetailsView()
 
-    await browser.waitForWorkbench(20_000)
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneConfig,
+    )
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -55,6 +54,7 @@ describe('Large key details verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can expand/collapse for sorted set data type', async function () {
     keyName = Common.generateWord(20)
@@ -73,9 +73,11 @@ describe('Large key details verification', () => {
       sortedSetKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     const memberValueCell = await sortedsetKeyDetailsView.getElement(
@@ -120,8 +122,11 @@ describe('Large key details verification', () => {
       hashKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     const memberValueCell = await hashKeyDetailsView.getElement(
@@ -160,9 +165,11 @@ describe('Large key details verification', () => {
       listKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     const elementValueCell = await listKeyDetailsView.getElement(
@@ -202,10 +209,13 @@ describe('Large key details verification', () => {
       setKeyParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
     const memberValueCell = await setKeyDetailsView.getElement(
       setKeyDetailsView.setFieldsList,
     )

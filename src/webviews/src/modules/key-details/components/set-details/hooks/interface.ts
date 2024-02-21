@@ -29,8 +29,8 @@ export interface AddMembersToSetDto extends KeyDto {
 }
 
 export interface SetActions {
-  processSetRequest: () => void
-  processSetResponse: () => void
+  processSet: () => void
+  processSetFinal: () => void
   loadSetMembersSuccess: (data: GetSetMembersResponse) => void
   loadMoreSetMembersSuccess: (data: GetSetMembersResponse) => void
   removeMembersFromList: (members: RedisString[]) => void

@@ -4,7 +4,7 @@ import { constants } from 'testSrc/helpers'
 import { waitForStack } from 'testSrc/helpers/testUtils'
 import {
   useSelectedKeyStore,
-  initialState as initialStateInit,
+  initialSelectedKeyState as initialStateInit,
   fetchKeyInfo,
   editKeyTTL,
   refreshKeyInfo,
@@ -88,7 +88,7 @@ describe('async', () => {
       nameString: constants.KEY_NAME_STRING_1,
     }
 
-    fetchKeyInfo(constants.KEY_NAME_1)
+    fetchKeyInfo({ key: constants.KEY_NAME_1 })
     await waitForStack()
 
     expect(useSelectedKeyStore.getState().data).toEqual(expectedData)

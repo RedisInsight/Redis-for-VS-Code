@@ -153,7 +153,10 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
 
     // Listen for when the panel is disposed
     // This happens when the user closes the panel or when the panel is closed programmatically
-    this.panel.onDidDispose(() => this.dispose(), null, this._disposables)
+    this.panel.onDidDispose(() => {
+      vscode.commands.executeCommand('RedisInsight.resetSelectedKey')
+      this.dispose()
+    }, null, this._disposables)
 
     // todo: connection between webviews
     if (opts.message) {

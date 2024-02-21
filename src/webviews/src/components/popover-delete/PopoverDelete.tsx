@@ -7,6 +7,7 @@ import cx from 'classnames'
 import { PopupActions, PopupPosition } from 'reactjs-popup/dist/types'
 
 import { RedisString } from 'uiSrc/interfaces'
+import { DEFAULT_POPOVER_MAX_WIDTH } from 'uiSrc/constants'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -25,6 +26,7 @@ export interface Props {
   handleDeleteItem?: (item: RedisString) => void
   handleButtonClick?: () => void
   appendInfo?: JSX.Element | string | null
+  maxWidth?: number
   testid?: string
 }
 
@@ -46,6 +48,7 @@ const PopoverDelete = (props: Props) => {
     triggerClassName = '',
     approveTextBtn = l10n.t('Remove'),
     testid = '',
+    maxWidth = DEFAULT_POPOVER_MAX_WIDTH,
   } = props
 
   const ref = useRef<PopupActions>(null)
@@ -63,6 +66,7 @@ const PopoverDelete = (props: Props) => {
       closeOnEscape
       closeOnDocumentClick
       repositionOnResize
+      keepTooltipInside
       position={position}
       onClose={() => closePopover?.()}
       onOpen={() => {
@@ -81,7 +85,10 @@ const PopoverDelete = (props: Props) => {
         </VSCodeButton>
       )}
     >
-      <div className={styles.popover}>
+      <div
+        className={styles.popover}
+        style={{ maxWidth: maxWidth < DEFAULT_POPOVER_MAX_WIDTH ? maxWidth : DEFAULT_POPOVER_MAX_WIDTH }}
+      >
         <span>
           {!!header && (
           <h4>

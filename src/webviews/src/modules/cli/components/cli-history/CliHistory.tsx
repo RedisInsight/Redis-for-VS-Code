@@ -30,7 +30,7 @@ export const CliHistory = (props: Props) => {
           >
             <button type="button" onClick={() => cliClickHandle(item)} data-testid={`cli-select-row-${item.id}`}>
               <VscTerminal />
-              <span>{`${item.host}:${item.port}`}</span>
+              <span>{item.name}</span>
             </button>
             <VSCodeButton
               appearance="icon"

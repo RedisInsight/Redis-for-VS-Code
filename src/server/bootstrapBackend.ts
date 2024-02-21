@@ -36,11 +36,11 @@ export async function startBackend(context: vscode.ExtensionContext): Promise<an
           '-NonInteractive',
           '-NoLogo',
           '-Command',
-          `$env:APP_FOLDER_NAME=${apiFolder};`
-          + `$env:APP_PORT=${port};`
+          `$env:RI_APP_FOLDER_NAME=${apiFolder};`
+          + `$env:RI_APP_PORT=${port};`
           + '$env:NODE_ENV="production";'
-          + '$env:STDOUT_LOGGER="true";'
-          + '$env:BUILD_TYPE="DOCKER_ON_PREMISE";'
+          + '$env:RI_STDOUT_LOGGER="true";'
+          + '$env:RI_BUILD_TYPE="DOCKER_ON_PREMISE";'
           + `node ${backendSrcPath}`,
         ])
       } else {
@@ -49,11 +49,11 @@ export async function startBackend(context: vscode.ExtensionContext): Promise<an
           {
             env:
             {
-              APP_FOLDER_NAME: apiFolder,
-              APP_PORT: port,
+              RI_APP_FOLDER_NAME: apiFolder,
+              RI_APP_PORT: port,
               NODE_ENV: 'production',
-              STDOUT_LOGGER: 'true',
-              BUILD_TYPE: 'DOCKER_ON_PREMISE',
+              RI_STDOUT_LOGGER: 'true',
+              RI_BUILD_TYPE: 'DOCKER_ON_PREMISE',
               PATH: process.env.PATH,
             },
           },

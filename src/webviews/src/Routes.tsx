@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 import {
-  KeysTreePage,
+  SidebarPage,
   CliPage,
   DatabasePage,
   AddKeyPage,
@@ -26,7 +26,7 @@ export const AppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="tree" element={<KeysTreePage />} />
+      <Route path="sidebar" element={<SidebarPage />} />
       <Route path="cli" element={<CliPage />} />
       <Route path="main" element={<DatabasePage />}>
         <Route path="key" element={<KeyDetailsPage />} />

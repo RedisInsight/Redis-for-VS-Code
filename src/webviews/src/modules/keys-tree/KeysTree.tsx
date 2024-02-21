@@ -1,25 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import * as l10n from '@vscode/l10n'
-
 import { useParams } from 'react-router-dom'
-import {
-  appContextKeysTree,
-  resetKeysTree,
-  appContextDbConfig,
-  setKeysTreeNodesOpen,
-} from 'uiSrc/slices/app/context/context.slice'
+
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
-import { ExecuteCommand, AllKeyTypes, SCAN_TREE_COUNT_DEFAULT, VscodeMessageAction } from 'uiSrc/constants'
-import { TelemetryEvent, executeCommand, sendEventTelemetry } from 'uiSrc/utils'
+import { AllKeyTypes, VscodeMessageAction } from 'uiSrc/constants'
+import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
 import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString } from 'uiSrc/utils/formatters'
-import { AppDispatch, checkKey, fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
-
+import { fetchKeyInfo, useContextApi, useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
 import { vscodeApi } from 'uiSrc/services'
+
 import { constructKeysToTree } from './utils/constructKeysToTree'
-import VirtualTree from './components/virtual-tree'
-import { deleteKeyAction, fetchPatternKeysAction, useKeysStore } from './hooks/useKeys'
+import { VirtualTree } from './components/virtual-tree'
+import { useKeysApi, useKeysInContext } from './hooks/useKeys'
 import styles from './styles.module.scss'
 
 const parseKeyNames = (keys: KeyInfo[] = []) =>
@@ -27,26 +20,28 @@ const parseKeyNames = (keys: KeyInfo[] = []) =>
     ({ ...item, nameString: item.nameString ?? bufferToString(item.name) }))
 
 export const KeysTree = () => {
-  const { databaseId } = useParams<{ databaseId: string }>()
-  const { openNodes } = useSelector(appContextKeysTree)
-  const { treeViewDelimiter: delimiter = '', treeViewSort: sorting } = useSelector(appContextDbConfig)
+  const openNodes = useContextInContext((state) => state.keys.tree.openNodes)
+  const delimiter = useContextInContext((state) => state.dbConfig.treeViewDelimiter) || ''
+  const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
 
   const selectedKeyName = useSelectedKeyStore((state) => state.data?.nameString) || ''
 
-  const { keysState, loading } = useKeysStore((state) => ({
-    keysState: state.data,
-    loading: state.loading,
-  }))
+  const keysState = useKeysInContext((state) => state.data)
+  const loading = useKeysInContext((state) => state.loading)
+  const databaseId = useKeysInContext((state) => state.databaseId) || ''
+
+  const keysApi = useKeysApi()
+  const contextApi = useContextApi()
 
   const [statusOpen, setStatusOpen] = useState(openNodes)
   const [constructingTree, setConstructingTree] = useState<boolean>(false)
   const [firstDataLoaded, setFirstDataLoaded] = useState<boolean>(!!keysState.keys?.length)
   const [items, setItems] = useState<KeyInfo[]>(parseKeyNames(keysState.keys ?? []))
 
-  const dispatch = useDispatch<AppDispatch>()
-
   useEffect(() => {
-    fetchPatternKeysAction()
+    if (!firstDataLoaded) {
+      keysApi.fetchPatternKeysAction()
+    }
     openSelectedKey(selectedKeyName)
   }, [])
 
@@ -86,7 +81,7 @@ export const KeysTree = () => {
 
   // select default leaf "Keys" after each change delimiter, filter or search
   const updateSelectedKeys = () => {
-    dispatch(resetKeysTree())
+    contextApi.resetKeysTree()
     openSelectedKey(selectedKeyName)
   }
 
@@ -100,19 +95,22 @@ export const KeysTree = () => {
         newState[name] = value
       }
 
-      dispatch(setKeysTreeNodesOpen(newState))
+      contextApi.setKeysTreeNodesOpen(newState)
       return newState
     })
   }
 
   const handleStatusSelected = (name: RedisString) => {
-    fetchKeyInfo(name, false, () => {
-      vscodeApi.postMessage({ action: VscodeMessageAction.SelectKey, data: name })
+    fetchKeyInfo({ key: name, databaseId }, false, () => {
+      vscodeApi.postMessage({
+        action: VscodeMessageAction.SelectKey,
+        data: { key: name, databaseId },
+      })
     })
   }
 
   const handleDeleteLeaf = (key: RedisString) => {
-    deleteKeyAction(key)
+    keysApi.deleteKeyAction(key)
   }
 
   const handleDeleteClicked = (type: AllKeyTypes) => {

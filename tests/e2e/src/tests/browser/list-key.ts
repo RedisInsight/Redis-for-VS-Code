@@ -1,41 +1,40 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, VSBrowser, Workbench } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import {
-  BottomBar,
   WebView,
-  KeyTreeView,
+  TreeView,
   ListKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
-  ButtonActions,
+  DatabasesActions,
   KeyDetailsActions,
+  NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
-import { KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ListKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyActions } from '@e2eSrc/helpers/KeysActions'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
 let keyName: string
-const deleteMessage = 'Key has been deleted'
 
 describe('List Key verification', () => {
   let browser: VSBrowser
   let webView: WebView
-  let bottomBar: BottomBar
   let listKeyDetailsView: ListKeyDetailsView
-  let keyTreeView: KeyTreeView
+  let treeView: TreeView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    bottomBar = new BottomBar()
     webView = new WebView()
     listKeyDetailsView = new ListKeyDetailsView()
-    keyTreeView = new KeyTreeView()
+    treeView = new TreeView()
 
-    await browser.waitForWorkbench(20_000)
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneConfig,
+    )
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -43,6 +42,7 @@ describe('List Key verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search List element by index', async function () {
     keyName = Common.generateWord(10)
@@ -82,9 +82,11 @@ describe('List Key verification', () => {
       Config.ossStandaloneConfig.port,
       keyToAddParameters2,
     )
-
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Open key details iframe
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     // Search List element by index
@@ -95,8 +97,7 @@ describe('List Key verification', () => {
       await listKeyDetailsView.getElements(listKeyDetailsView.elementsList)
     )[0].getText()
     expect(result).contains(elements[1])
-
-    await ButtonActions.clickElement(listKeyDetailsView.clearSearchInput)
+    await listKeyDetailsView.clearSearchInKeyDetails()
 
     // Verify that list key deleted when all elements deleted
     await listKeyDetailsView.removeRowsByFieldValues(
@@ -104,11 +105,9 @@ describe('List Key verification', () => {
       elements,
     )
     await webView.switchBack()
+    await NotificationActions.checkNotificationMessage(`${keyName} has been deleted.`)
 
-    const notifications = await new Workbench().getNotifications()
-    const notification = notifications[0]
-    // get the message
-    const message = await notification.getMessage()
-    expect(message).eqls(deleteMessage)
+    // Verify that details panel is closed for list key after deletion
+     KeyDetailsActions.verifyDetailsPanelClosed()
   })
 })

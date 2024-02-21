@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 import { CellMeasurerCache } from 'react-virtualized'
@@ -28,8 +27,7 @@ import {
 } from 'uiSrc/constants'
 import { PopoverDelete, VirtualTable } from 'uiSrc/components'
 import { IColumnSearchState, ITableColumn } from 'uiSrc/components/virtual-table/interfaces'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import {
   deleteSetMembers,
   fetchSetMembers,
@@ -50,13 +48,13 @@ const cellCache = new CellMeasurerCache({
 
 export interface Props {
   isFooterOpen: boolean
-  onRemoveKey: () => void
+  onRemoveKey?: () => void
 }
 
 export const SetDetailsTable = (props: Props) => {
   const { isFooterOpen, onRemoveKey } = props
 
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
   const { viewFormatProp, length, key } = useSelectedKeyStore(useShallow((state) => ({
     viewFormatProp: state.viewFormat,
@@ -110,7 +108,7 @@ export const SetDetailsTable = (props: Props) => {
   }
 
   const onSuccessRemoved = (newTotal: number) => {
-    newTotal === 0 && onRemoveKey()
+    newTotal === 0 && onRemoveKey?.()
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_REMOVED,
       eventData: {
@@ -255,6 +253,7 @@ export const SetDetailsTable = (props: Props) => {
 
   return (
     <div
+      data-testid="set-details"
       className={
         cx(
           'key-details-table',

@@ -1,44 +1,111 @@
-import React, { FC, PropsWithChildren, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import cx from 'classnames'
-import { VscChevronRight, VscChevronDown, VscDatabase, VscTerminal, VscAdd, VscRefresh, VscEdit } from 'react-icons/vsc'
+import { VscChevronRight, VscChevronDown, VscTerminal, VscAdd, VscRefresh, VscEdit } from 'react-icons/vsc'
 import { BiSortDown, BiSortUp } from 'react-icons/bi'
-import { useDispatch, useSelector } from 'react-redux'
 import * as l10n from '@vscode/l10n'
-import { find } from 'lodash'
-import { vscodeApi } from 'uiSrc/services'
-import { DEFAULT_TREE_SORTING, SortOrder, VscodeMessageAction } from 'uiSrc/constants'
-import { appContextDbConfig, resetKeysTree, setKeysTreeSort } from 'uiSrc/slices/app/context/context.slice'
-import { TelemetryEvent, getDatabaseId, sendEventTelemetry } from 'uiSrc/utils'
+import { useShallow } from 'zustand/react/shallow'
 
-import { connectedDatabaseSelector, databasesSelector } from 'uiSrc/slices/connections/databases/databases.slice'
-import { fetchPatternKeysAction } from '../../hooks/useKeys'
+import { sessionStorageService, vscodeApi } from 'uiSrc/services'
+import { POPOVER_WINDOW_BORDER_WIDTH, SelectedKeyActionType, SortOrder, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
+import {
+  TelemetryEvent,
+  formatLongName,
+  getDatabaseId,
+  getDbIndex,
+  getRedisModulesSummary,
+  sendEventTelemetry,
+} from 'uiSrc/utils'
+import { Database, checkConnectToDatabase, deleteDatabases, useContextApi, useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
+import DatabaseOfflineIconSvg from 'uiSrc/assets/database/database_icon_offline.svg?react'
+import DatabaseActiveIconSvg from 'uiSrc/assets/database/database_icon_active.svg?react'
+import { PopoverDelete } from 'uiSrc/components'
+import { useKeysApi } from '../../hooks/useKeys'
+
 import styles from './styles.module.scss'
 
-export const DatabaseWrapper: FC<any> = ({ children }: PropsWithChildren<any>) => {
-  const { data: databases } = useSelector(databasesSelector)
-  const { id } = useSelector(connectedDatabaseSelector)
-  const { treeViewSort: sorting = DEFAULT_TREE_SORTING } = useSelector(appContextDbConfig)
-  const [showTree, setShowTree] = useState<boolean>(true)
+export interface Props {
+  database: Database
+  children: React.ReactNode
+}
 
-  const dispatch = useDispatch()
+export const DatabaseWrapper = ({ children, database }: Props) => {
+  const { id, name } = database
+  const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
+
+  const { selectedKeyAction, setSelectedKeyAction } = useSelectedKeyStore(useShallow((state) => ({
+    selectedKeyAction: state.action,
+    setSelectedKeyAction: state.setSelectedKeyAction,
+  })))
+
+  const [showTree, setShowTree] = useState<boolean>(false)
+
+  const keysApi = useKeysApi()
+  const contextApi = useContextApi()
 
   const isSortingASC = sorting === SortOrder.ASC
-  const showTreeToggle = () => setShowTree(!showTree)
+
+  useEffect(() => {
+    const { type, key, keyType, databaseId } = selectedKeyAction || {}
+
+    if (!type || databaseId !== database.id) {
+      return
+    }
+
+    switch (type) {
+      case SelectedKeyActionType.Added:
+        keysApi.addKeyIntoTree(key!, keyType!)
+        break
+      case SelectedKeyActionType.Removed:
+        keysApi.deleteKeyFromTree(key!)
+        setSelectedKeyAction(null)
+        break
+      default:
+        break
+    }
+  }, [selectedKeyAction])
+
+  const handleCheckConnectToDatabase = ({ id, provider, modules }: Database) => {
+    if (showTree) {
+      setShowTree(false)
+      return
+    }
+    const modulesSummary = getRedisModulesSummary(modules)
+    sendEventTelemetry({
+      event: TelemetryEvent.CONFIG_DATABASES_OPEN_DATABASE,
+      eventData: {
+        databaseId: id,
+        provider,
+        ...modulesSummary,
+      },
+    })
+
+    checkConnectToDatabase(id, connectToInstance)
+  }
+
+  const connectToInstance = (id = '') => {
+    keysApi.setDatabaseId(id)
+
+    // todo: fix for cli first open
+    sessionStorageService.set(StorageItem.databaseId, database.id)
+    sessionStorageService.set(StorageItem.cliDatabase, database)
+    // contextApi.setDatabaseId(id)
+    setShowTree(!showTree)
+  }
 
   const addKeyClickHandle = () => {
-    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey })
+    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey, data: database })
   }
 
   const openCliClickHandle = () => {
-    vscodeApi.postMessage({ action: VscodeMessageAction.OpenCli })
+    vscodeApi.postMessage({ action: VscodeMessageAction.AddCli, data: database })
   }
 
   const changeSortHandle = () => {
     const newSorting = isSortingASC ? SortOrder.DESC : SortOrder.ASC
 
-    dispatch(setKeysTreeSort(newSorting))
-    dispatch(resetKeysTree())
+    contextApi.setKeysTreeSort(id, newSorting)
+    contextApi.resetKeysTree()
 
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEYS_SORTED,
@@ -57,51 +124,79 @@ export const DatabaseWrapper: FC<any> = ({ children }: PropsWithChildren<any>) =
       },
     })
 
-    vscodeApi.postMessage({ action: VscodeMessageAction.EditDatabase, data: find(databases, { id }) })
+    vscodeApi.postMessage({ action: VscodeMessageAction.EditDatabase, data: database })
+  }
+
+  const deleteDatabaseHandle = () => {
+    deleteDatabases([database])
+  }
+
+  const clickDeleteDatabaseHandle = () => {
+    sendEventTelemetry({
+      event: TelemetryEvent.CONFIG_DATABASES_SINGLE_DATABASE_DELETE_CLICKED,
+      eventData: {
+        databaseId: id,
+      },
+    })
   }
 
   const refreshHandle = () => {
-    fetchPatternKeysAction()
+    keysApi.fetchPatternKeysAction()
   }
 
   return (
-    <div className="w-full">
-      <div className="flex justify-between pt-px">
+    <div className={cx('flex w-full flex-col')}>
+      <div className={cx('flex justify-between pt-px flex-row flex-1 max-h-[22px]', { 'flex-col pr-3': !showTree })}>
         <div
-          onClick={showTreeToggle}
+          onClick={() => handleCheckConnectToDatabase(database)}
           role="button"
           aria-hidden="true"
           className={styles.databaseNameWrapper}
+          data-testid={`database-${id}`}
         >
           {showTree && (<VscChevronDown className={cx(styles.icon, styles.iconNested)} />)}
+          {showTree && (<DatabaseActiveIconSvg className={styles.icon} />)}
           {!showTree && (<VscChevronRight className={cx(styles.icon, styles.iconNested)} />)}
-          <VscDatabase className={styles.icon} />
-          <span className={styles.databaseName}>
-            Redis database
-          </span>
+          {!showTree && (<DatabaseOfflineIconSvg className={styles.icon} />)}
+          <div className={styles.databaseName}>
+            <div className="truncate">{name}</div>
+            <div>{getDbIndex(database.db)}</div>
+          </div>
         </div>
-        <div className="flex pr-3.5">
-          <VSCodeButton
-            appearance="icon"
-            title={l10n.t('Sort by key names displayed')}
-            onClick={changeSortHandle}
-            data-testid="sort-keys"
-          >
-            {isSortingASC ? <BiSortDown /> : <BiSortUp />}
-          </VSCodeButton>
-          <VSCodeButton appearance="icon" onClick={refreshHandle} data-testid="refresh-keys">
-            <VscRefresh />
-          </VSCodeButton>
-          <VSCodeButton appearance="icon" onClick={editHandle} data-testid="edit-database">
-            <VscEdit />
-          </VSCodeButton>
-          <VSCodeButton appearance="icon" onClick={addKeyClickHandle} data-testid="add-key-button">
-            <VscAdd />
-          </VSCodeButton>
-          <VSCodeButton appearance="icon" onClick={openCliClickHandle} data-testid="terminal-button">
-            <VscTerminal />
-          </VSCodeButton>
-        </div>
+        {showTree && (
+          <div className="flex pr-3.5">
+            <VSCodeButton
+              appearance="icon"
+              title={l10n.t('Sort by key names displayed')}
+              onClick={changeSortHandle}
+              data-testid="sort-keys"
+            >
+              {isSortingASC ? <BiSortDown /> : <BiSortUp />}
+            </VSCodeButton>
+            <VSCodeButton appearance="icon" onClick={refreshHandle} data-testid="refresh-keys">
+              <VscRefresh />
+            </VSCodeButton>
+            <VSCodeButton appearance="icon" onClick={editHandle} data-testid="edit-database">
+              <VscEdit />
+            </VSCodeButton>
+            <VSCodeButton appearance="icon" onClick={addKeyClickHandle} data-testid="add-key-button">
+              <VscAdd />
+            </VSCodeButton>
+            <PopoverDelete
+              header={formatLongName(name, 50, 10, '...')}
+              text={l10n.t('will be deleted from RedisInsight.')}
+              item={id}
+              maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}
+              updateLoading={false}
+              handleDeleteItem={() => deleteDatabaseHandle()}
+              handleButtonClick={() => clickDeleteDatabaseHandle()}
+              testid={`delete-database-${id}`}
+            />
+            <VSCodeButton appearance="icon" onClick={openCliClickHandle} data-testid="terminal-button">
+              <VscTerminal />
+            </VSCodeButton>
+          </div>
+        )}
       </div>
       {showTree && children}
     </div>

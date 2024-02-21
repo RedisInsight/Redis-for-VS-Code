@@ -7,7 +7,7 @@ import {
   AdditionalRedisModule,
 } from 'uiSrc/interfaces'
 import modulesInit from 'uiSrc/constants/allRedisModules.json'
-import { Database } from 'uiSrc/slices/connections/databases/interface'
+import { Database } from 'uiSrc/store'
 
 export interface IDatabaseModule {
   abbreviation: string

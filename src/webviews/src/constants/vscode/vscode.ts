@@ -19,5 +19,10 @@ export enum VscodeMessageAction {
   CloseAddDatabase = 'CloseAddDatabase',
   CloseEditDatabase = 'CloseEditDatabase',
   CloseAddKey = 'CloseAddKey',
-  CloseAddRefreshKey = 'CloseAddRefreshKey',
+  CloseAddKeyAndRefresh = 'CloseAddKeyAndRefresh',
+  ResetSelectedKey = 'ResetSelectedKey',
+}
+
+export enum VscodeStateItem {
+  CliDatabase = 'CliDatabase',
 }

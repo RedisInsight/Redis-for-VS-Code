@@ -1,34 +1,31 @@
 import React, { FormEvent, useState, useEffect, ChangeEvent, useRef, Ref } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import * as l10n from '@vscode/l10n'
-
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+
 import { stringToBuffer } from 'uiSrc/utils'
 import { Maybe, RedisResponseBuffer } from 'uiSrc/interfaces'
+import { TextArea } from 'uiSrc/ui'
+import { SetStringWithExpire } from 'uiSrc/modules/keys-tree/hooks/interface'
+import { useKeysApi, useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
+import { KeyTypes } from 'uiSrc/constants'
 
-import { addKeyStateSelector, addStringKey } from 'uiSrc/slices/browser/keys.slice'
-
-import { SetStringWithExpire } from 'uiSrc/slices/browser/interface'
-import { InputText, TextArea } from 'uiSrc/ui'
-
-import { AppDispatch } from 'uiSrc/store'
 import styles from './styles.module.scss'
 
 export interface Props {
   keyName: string
   keyTTL: Maybe<number>
-  onCancel: (isCancelled?: boolean) => void
+  onCancel: (isCancelled?: boolean, keyType?: KeyTypes) => void
 }
 
 const AddKeyString = (props: Props) => {
   const { keyName = '', keyTTL, onCancel } = props
-  const { loading } = useSelector(addKeyStateSelector)
+  const keysApi = useKeysApi()
+  const loading = useKeysInContext((state) => state.addKeyLoading)
+
   const [value, setValue] = useState<string>('')
   const [isFormValid, setIsFormValid] = useState<boolean>(false)
 
   const textAreaRef: Ref<HTMLTextAreaElement> = useRef(null)
-
-  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
     setIsFormValid(keyName.length > 0)
@@ -49,7 +46,7 @@ const AddKeyString = (props: Props) => {
     if (keyTTL !== undefined) {
       data.expire = keyTTL
     }
-    dispatch(addStringKey(data, onCancel))
+    keysApi.addStringKey(data, () => onCancel(false, KeyTypes.String))
   }
 
   const getTooltip = (): string => {

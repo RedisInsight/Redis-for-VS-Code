@@ -10,10 +10,10 @@ import { AppDispatch } from 'uiSrc/store'
 import styles from './styles.module.scss'
 
 export interface Props {
-  provider: string;
-  commandName: string;
-  wordsTyped: number;
-  arguments?: ICommandArg[];
+  provider: string
+  commandName: string
+  wordsTyped: number
+  arguments?: ICommandArg[]
 }
 
 export const CliAutocomplete = (props: Props) => {

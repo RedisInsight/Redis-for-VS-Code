@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react'
-import { isNull, isUndefined } from 'lodash'
+import { isUndefined } from 'lodash'
 import cx from 'classnames'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useSelector } from 'react-redux'
-import { KeyTypes, VscodeMessageAction } from 'uiSrc/constants'
+import { KeyTypes, SelectedKeyActionType, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
-import { connectedDatabaseSelector } from 'uiSrc/slices/connections/databases/databases.slice'
-import { vscodeApi } from 'uiSrc/services'
+import { useSelectedKeyStore } from 'uiSrc/store'
+import { sessionStorageService, vscodeApi } from 'uiSrc/services'
 import { DynamicTypeDetails } from './components/dynamic-type-details'
 
+import { useKeysApi, useKeysInContext } from '../keys-tree/hooks/useKeys'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -28,27 +27,19 @@ const KeyDetails = (props: Props) => {
     keyProp,
   } = props
 
-  const { id: databaseId } = useSelector(connectedDatabaseSelector)
-
   const { loading, data } = useSelectedKeyStore(useShallow((state) => ({
     loading: state.loading,
     data: state.data,
   })))
 
-  const isKeySelected = !isNull(data)
+  const databaseId = useKeysInContext(useShallow((state) => state.databaseId))
+  const keysApi = useKeysApi()
+
   const { type: keyType = KeyTypes.String, name: keyName, length: keyLength } = data ?? { }
 
   useEffect(() => {
-    if (keyProp === null) {
-      return
-    }
-    // Restore key details from context in future
-    // (selectedKey.data?.name !== keyProp)
-    fetchKeyInfo(keyProp)
-  }, [])
-
-  useEffect(() => {
     if (!isUndefined(keyName)) {
+      keysApi.setDatabaseId(sessionStorageService.get(StorageItem.databaseId))
       sendEventTelemetry({
         event: TelemetryEvent.TREE_VIEW_KEY_VALUE_VIEWED,
         eventData: {
@@ -83,7 +74,10 @@ const KeyDetails = (props: Props) => {
   }
 
   const onRemoveKey = () => {
-    vscodeApi.postMessage({ action: VscodeMessageAction.CloseKeyAndRefresh, data: { keyName } })
+    vscodeApi.postMessage({
+      action: VscodeMessageAction.CloseKeyAndRefresh,
+      data: { key: keyName, type: SelectedKeyActionType.Removed, databaseId: databaseId! },
+    })
   }
 
   return (

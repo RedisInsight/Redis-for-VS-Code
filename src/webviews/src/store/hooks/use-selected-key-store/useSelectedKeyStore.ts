@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { devtools, persist } from 'zustand/middleware'
+import { createJSONStorage, devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { isNull } from 'lodash'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
@@ -15,7 +15,7 @@ import {
   SortOrder,
   StorageItem,
 } from 'uiSrc/constants'
-import { bufferToString, getApiErrorMessage, getEncoding, getUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
+import { bufferToString, getApiErrorMessage, getEncoding, getUrl, getDatabaseUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { fetchString } from 'uiSrc/modules'
 import { fetchHashFields } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
 import { fetchZSetMembers } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
@@ -27,20 +27,21 @@ import {
 import { fetchSetMembers } from 'uiSrc/modules/key-details/components/set-details/hooks/useSetStore'
 import { SelectedKeyActions, SelectedKeyStore } from './interface'
 
-export const initialState: SelectedKeyStore = {
+export const initialSelectedKeyState: SelectedKeyStore = {
   loading: false,
   refreshing: false,
   lastRefreshTime: null,
   data: null,
   viewFormat: localStorageService?.get(StorageItem.viewFormat) ?? DEFAULT_VIEW_FORMAT,
   compressor: null,
+  action: null,
 }
 
 export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>()(
   immer(devtools(persist((set) => ({
-    ...initialState,
+    ...initialSelectedKeyState,
     // actions
-    resetSelectedKeyStore: () => set(initialState),
+    resetSelectedKeyStore: () => set(initialSelectedKeyState),
     processSelectedKey: () => set({ loading: true }),
     processSelectedKeyFinal: () => set({ loading: false }),
     processSelectedKeySuccess: (data: KeyInfo) =>
@@ -50,18 +51,27 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
     // delete selected key
     // deleteSelectedKey: () => set({ data: null }),
     // update selected key
-    updateSelectedKeyRefreshTime: (lastRefreshTime: number) => set({ lastRefreshTime }),
+    updateSelectedKeyRefreshTime: (lastRefreshTime) => set({ lastRefreshTime }),
+
+    setSelectedKeyAction: (action) => set({ action }),
   }),
-  { name: 'selectedKey' }))),
+  {
+    name: 'selectedKey',
+    storage: createJSONStorage(() => sessionStorage),
+  }))),
 )
 
 // Asynchronous thunk action
-export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true, onSuccess?: () => void) => {
+export const fetchKeyInfo = (
+  { key, databaseId }: { key: RedisString, databaseId?: string },
+  fetchKeyValue = true,
+  onSuccess?: () => void,
+) => {
   useSelectedKeyStore.setState(async (state) => {
     state.processSelectedKey()
     try {
       const { data, status } = await apiService.post<KeyInfo>(
-        getUrl(ApiEndpoints.KEY_INFO),
+        databaseId ? getDatabaseUrl(databaseId, ApiEndpoints.KEY_INFO) : getUrl(ApiEndpoints.KEY_INFO),
         { keyName: key },
         { params: { encoding: getEncoding() } },
       )
@@ -75,10 +85,8 @@ export const fetchKeyInfo = (key: RedisString, fetchKeyValue = true, onSuccess?:
           fetchKeyValueByType(key, data.type)
         }
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       state.processSelectedKeyFinal()
     }
@@ -103,10 +111,8 @@ export const refreshKeyInfo = (key: RedisString, fetchKeyValue = true) => {
           fetchKeyValueByType(key, data.type)
         }
       }
-    } catch (_err) {
-      const error = _err as AxiosError
-      const errorMessage = getApiErrorMessage(error)
-      showErrorMessage(errorMessage)
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       state.refreshSelectedKeyFinal()
     }
@@ -132,14 +138,13 @@ export function editKeyTTL(
         onSuccess?.(ttl, state.data?.ttl)
 
         if (ttl !== 0) {
-          fetchKeyInfo(key)
+          fetchKeyInfo({ key })
         } else {
           // state.deleteSelectedKey()
           // dispatch<any>(deleteKeyFromList(key))
         }
       }
-    } catch (_err) {
-      const error = _err as AxiosError
+    } catch (error) {
       console.debug({ error })
     } finally {
       state.processSelectedKeyFinal()

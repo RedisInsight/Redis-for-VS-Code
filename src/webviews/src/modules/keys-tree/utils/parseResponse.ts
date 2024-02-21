@@ -1,10 +1,6 @@
 import { omit, forEach, isNull } from 'lodash'
 import { KeyInfo } from 'uiSrc/interfaces'
-import {
-  GetKeysWithDetailsResponse,
-  GetKeysWithDetailsShardResponse,
-  KeysStoreData,
-} from '../../../slices/browser/interface'
+import { GetKeysWithDetailsResponse, GetKeysWithDetailsShardResponse, KeysStoreData } from '../hooks/interface'
 
 const DEFAULT_NODE_ID = 'standalone'
 

@@ -8,9 +8,8 @@ import { VscInfo } from 'react-icons/vsc'
 import Popup from 'reactjs-popup'
 import { ConnectionType, Nullable } from 'uiSrc/interfaces'
 import { appInfoSelector } from 'uiSrc/slices/app/info/info.slice'
-import { AdditionalRedisModule, Endpoint } from 'uiSrc/slices/connections/databases/interface'
+import { AdditionalRedisModule, Endpoint } from 'uiSrc/store'
 import { DatabaseModules } from 'uiSrc/components'
-
 import styles from './styles.module.scss'
 
 export interface Props {

@@ -1,6 +1,7 @@
 import React from 'react'
 import { mock } from 'ts-mockito'
 import { cloneDeep } from 'lodash'
+import { Mock } from 'vitest'
 import { KeyTypes } from 'uiSrc/constants'
 import { useSelectedKeyStore, initialCertsState as initialSelectedKeyState } from 'uiSrc/store'
 import { bufferToString } from 'uiSrc/utils'
@@ -13,14 +14,20 @@ const mockedProps = mock<KeyDetailsHeaderProps>()
 const KEY_INPUT_TEST_ID = 'edit-key-input'
 const KEY_BTN_TEST_ID = 'edit-key-btn'
 const TTL_INPUT_TEST_ID = 'inline-item-editor'
+const KEY_COPY_TEST_ID = 'copy-name-button'
 const supportedKeyTypes = [
   KeyTypes.Hash,
   KeyTypes.List,
   KeyTypes.ZSet,
   KeyTypes.String,
+  KeyTypes.Set,
 ]
 
-vi.spyOn(useKeys, 'deleteKeyAction')
+const deleteKeyActionMock = vi.fn();
+(vi.spyOn(useKeys, 'useKeysApi') as Mock).mockImplementation(() => ({
+  deleteKeyAction: deleteKeyActionMock,
+}))
+
 let store: typeof mockedStore
 beforeEach(() => {
   cleanup()
@@ -46,20 +53,10 @@ describe('KeyDetailsHeader', () => {
     expect(screen.getByTestId(KEY_INPUT_TEST_ID)).toHaveValue('key')
   })
 
-  it.todo('should be able to copy key', () => {
+  it('should be able to copy key', () => {
     render(<KeyDetailsHeader {...mockedProps} />)
 
-    fireEvent.mouseOver(
-      screen.getByTestId(KEY_BTN_TEST_ID),
-    )
-
-    fireEvent.mouseEnter(
-      screen.getByTestId(KEY_BTN_TEST_ID),
-    )
-
-    expect(screen.getByLabelText(/Copy key name/i)).toBeInTheDocument()
-
-    fireEvent.click(screen.getByLabelText(/Copy key name/i))
+    expect(screen.getByTestId(KEY_COPY_TEST_ID)).toBeInTheDocument()
   })
 
   it('should change ttl properly', async () => {
@@ -77,7 +74,7 @@ describe('KeyDetailsHeader', () => {
     expect(screen.getByTestId(TTL_INPUT_TEST_ID)).toHaveValue('100')
   })
 
-  describe.todo('should call onRefresh', () => {
+  describe('should call onRefresh', () => {
     test.each(supportedKeyTypes)('should call onRefresh for keyType: %s', (keyType) => {
       const component = render(<KeyDetailsHeader {...mockedProps} keyType={keyType} />)
       fireEvent.click(screen.getByTestId('refresh-key-btn'))
@@ -95,7 +92,7 @@ describe('KeyDetailsHeader', () => {
       expect(component).toBeTruthy()
       fireEvent.click(screen.getByTestId(`remove-key-${nameString}-icon`))
       fireEvent.click(screen.getByTestId(`remove-key-${nameString}`))
-      expect(useKeys.deleteKeyAction).toBeCalled()
+      expect(useKeys.useKeysApi().deleteKeyAction).toBeCalled()
     })
   })
 })
