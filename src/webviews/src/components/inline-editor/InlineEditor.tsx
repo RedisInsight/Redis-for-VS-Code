@@ -242,39 +242,39 @@ const InlineEditor = memo((props: Props) => {
 
               {ApplyBtn}
               {approveByValidation && (
-              <Popup
-                closeOnEscape
-                closeOnDocumentClick
-                repositionOnResize
-                ref={popupRef}
-                position="left center"
-                trigger={<div />}
-              >
-                <div className={styles.popover} data-testid="approve-popover">
-                  <div>
-                    {!!approveText?.title && (
-                    <h4>
-                      <b>{approveText?.title}</b>
-                    </h4>
-                    )}
-                    <div className={styles.approveText}>
-                      {approveText?.text}
+                <Popup
+                  closeOnEscape
+                  closeOnDocumentClick
+                  repositionOnResize
+                  ref={popupRef}
+                  position="left center"
+                  trigger={<div />}
+                >
+                  <div className={styles.popover} data-testid="approve-popover">
+                    <div>
+                      {!!approveText?.title && (
+                      <h4>
+                        <b>{approveText?.title}</b>
+                      </h4>
+                      )}
+                      <div className={styles.approveText}>
+                        {approveText?.text}
+                      </div>
+                    </div>
+                    <div className={styles.popoverFooter}>
+                      <VSCodeButton
+                        appearance="primary"
+                        disabled={isDisabledApply()}
+                        data-testid="save-btn"
+                        className={cx(styles.btn, styles.saveBtn)}
+                        onClick={handleFormSubmit}
+                      >
+                        {l10n.t('Save')}
+                      </VSCodeButton>
                     </div>
                   </div>
-                  <div className={styles.popoverFooter}>
-                    <VSCodeButton
-                      appearance="primary"
-                      disabled={isDisabledApply()}
-                      data-testid="save-btn"
-                      className={cx(styles.btn, styles.saveBtn)}
-                      onClick={handleFormSubmit}
-                    >
-                      {l10n.t('Save')}
-                    </VSCodeButton>
-                  </div>
-                </div>
 
-              </Popup>
+                </Popup>
               )}
             </div>
           </div>
