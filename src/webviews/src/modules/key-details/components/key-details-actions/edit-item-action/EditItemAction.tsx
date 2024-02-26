@@ -14,7 +14,7 @@ const EditItemAction = ({ title, isEditable, onEditItem }: Props) => (
   <VSCodeButton
     appearance="icon"
     disabled={!isEditable}
-    className={cx(styles.actionBtn, 'mt-[3px]')}
+    className={cx(styles.actionBtn)}
     onClick={onEditItem}
     title={title}
     aria-label={title}

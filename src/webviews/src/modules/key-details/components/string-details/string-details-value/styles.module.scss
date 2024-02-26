@@ -23,7 +23,7 @@ $outer-height: 146px;
 }
 
 .stringTextArea {
-  @apply resize-none w-full h-full p-3 min-h-full;
+  @apply resize-none w-full h-full pt-3 pl-3 pr-11 pb-9 min-h-full scroll-pb-7;
   max-height: calc(100vh - #{$outer-height} - 40px);
 
   &.areaWarning {
