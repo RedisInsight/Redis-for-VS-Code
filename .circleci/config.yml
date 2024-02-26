@@ -21,7 +21,7 @@ jobs:
       - run:
           name: Unit tests UI
           command: |
-            yarn test:cov --silent
+            yarn test:cov
       - save_cache:
           <<: *uiDepsCacheKey
           paths:
