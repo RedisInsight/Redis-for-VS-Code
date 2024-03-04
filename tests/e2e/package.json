@@ -3,8 +3,8 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
     "compile": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
-    "install:vs-code": "extest get-vscode -c 1.82.0",
-    "install:chrome-driver": "extest get-chromedriver -c 1.82.0",
+    "install:vs-code": "extest get-vscode -c 1.82.0 -s ./test-resources",
+    "install:chrome-driver": "extest get-chromedriver -c 1.82.0 -s ./test-resources",
     "install:deps": "yarn install:vs-code && yarn install:chrome-driver",
     "install:extension": "extest install-vsix -f redisinsight-vsc-plugin-0.0.1.vsix -e ./test-extensions",
     "test": "yarn run compile && extest run-tests dist/setup.js dist/tests/**/*.js --code_settings settings.json -r . --extensions_dir ./test-extensions"
