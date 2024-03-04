@@ -1,6 +1,6 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import * as useSelectedKeyStore from 'uiSrc/store/hooks/use-selected-key-store/useSelectedKeyStore'
 import { render, screen, fireEvent, constants } from 'testSrc/helpers'
 import { ZSetDetailsTable, Props } from './ZSetDetailsTable'
 import { useZSetStore } from '../hooks/useZSetStore'
@@ -9,7 +9,7 @@ const mockedProps = mock<Props>()
 
 const initialZSetState = { data: constants.ZSET_DATA }
 beforeEach(() => {
-  useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
+  useSelectedKeyStore.useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
   useZSetStore.setState((state) => ({ ...state, ...initialZSetState }))
 })
 
@@ -56,6 +56,18 @@ describe('ZSetDetailsTable', () => {
     expect(screen.getByTestId('inline-item-editor')).toBeInTheDocument()
     fireEvent.change(screen.getByTestId('inline-item-editor'), { target: { value: '123' } })
     expect(screen.getByTestId('inline-item-editor')).toHaveValue('123')
+  })
+
+  it('should call setSelectedKeyRefreshDisabled after click edit button', () => {
+    const setSelectedKeyRefreshDisabledMock = vi.fn()
+    const spy = vi.spyOn(useSelectedKeyStore, 'useSelectedKeyStore').mockImplementation(() => ({
+      setRefreshDisabled: setSelectedKeyRefreshDisabledMock,
+    }))
+
+    render(<ZSetDetailsTable {...instance(mockedProps)} />)
+    fireEvent.click(screen.getAllByTestId(/zset-edit-button-member/)[0])
+    expect(setSelectedKeyRefreshDisabledMock).toBeCalledWith(true)
+    spy.mockRestore()
   })
 
   it('should render resize trigger for name column', () => {

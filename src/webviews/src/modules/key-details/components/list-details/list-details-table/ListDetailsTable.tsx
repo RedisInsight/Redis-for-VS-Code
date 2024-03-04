@@ -69,9 +69,10 @@ const ListDetailsTable = (props: Props) => {
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
   const { [KeyTypes.List]: listSizes } = useContextInContext((state) => state.browser.keyDetailsSizes)
 
-  const { viewFormatProp, key } = useSelectedKeyStore(useShallow((state) => ({
+  const { viewFormatProp, key, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     viewFormatProp: state.viewFormat,
     key: state.data?.name,
+    setRefreshDisabled: state.setSelectedKeyRefreshDisabled,
   })))
 
   const { searchedIndex, loading, loadedElements, updateLoading, total } = useListStore((state) => ({
@@ -106,6 +107,7 @@ const ListDetailsTable = (props: Props) => {
       setExpandedRows([])
       setViewFormat(viewFormatProp)
       setEditingIndex(null)
+      setRefreshDisabled(false)
 
       clearCache()
     }
@@ -122,6 +124,7 @@ const ListDetailsTable = (props: Props) => {
     valueItem?: RedisString,
   ) => {
     setEditingIndex(editing ? index : null)
+    setRefreshDisabled(editing)
 
     if (editing) {
       const value = bufferToSerializedFormat(viewFormat, valueItem, 4)

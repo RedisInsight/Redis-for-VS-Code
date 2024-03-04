@@ -4,6 +4,7 @@ import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 export interface SelectedKeyStore {
   loading: boolean
   refreshing: boolean
+  refreshDisabled: boolean
   lastRefreshTime: Nullable<number>
   data: Nullable<KeyInfo>
   viewFormat: KeyValueFormat
@@ -33,4 +34,5 @@ export interface SelectedKeyActions {
   // update selected key
   updateSelectedKeyRefreshTime: (data: number) => void
   setSelectedKeyAction: (data: Nullable<SelectedKeyAction>) => void
+  setSelectedKeyRefreshDisabled: (data: boolean) => void
 }
