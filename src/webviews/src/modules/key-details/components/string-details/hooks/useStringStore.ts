@@ -73,8 +73,6 @@ export const updateStringValueAction = (
   onSuccess?: () => void,
 ) =>
   useStringStore.setState(async (state) => {
-    state.processString()
-
     try {
       const { data, status } = await apiService.put(
         getUrl(ApiEndpoints.STRING),
@@ -89,8 +87,6 @@ export const updateStringValueAction = (
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))
-    } finally {
-      state.processStringFinal()
     }
   })
 

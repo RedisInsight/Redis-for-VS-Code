@@ -1,8 +1,8 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
-import { useSelectedKeyStore } from 'uiSrc/store'
 import * as utils from 'uiSrc/utils'
 import { TelemetryEvent } from 'uiSrc/utils'
+import * as useSelectedKeyStore from 'uiSrc/store/hooks/use-selected-key-store/useSelectedKeyStore'
 import { constants, fireEvent, render, screen } from 'testSrc/helpers'
 import { Props, StringDetails } from './StringDetails'
 import { useStringStore, initialState as initialStateInit } from './hooks/useStringStore'
@@ -31,7 +31,7 @@ describe('StringDetails', () => {
   })
 
   it('should be able to change value (long string fully load)', () => {
-    useSelectedKeyStore.setState((state) => ({
+    useSelectedKeyStore.useSelectedKeyStore.setState((state) => ({
       ...state,
       data: {
         ...state.data,
@@ -71,12 +71,24 @@ describe('StringDetails', () => {
 
   it('"edit-key-value-btn" should render', () => {
     const { queryByTestId } = render(<StringDetails {...instance(mockedProps)} />)
-    expect(queryByTestId('edit-key-value-btn')).toBeInTheDocument()
+    expect(queryByTestId(EDIT_VALUE_BTN_TEST_ID)).toBeInTheDocument()
+  })
+
+  it('should call setSelectedKeyRefreshDisabled after click edit button', () => {
+    const setSelectedKeyRefreshDisabledMock = vi.fn()
+    const spy = vi.spyOn(useSelectedKeyStore, 'useSelectedKeyStore').mockImplementation(() => ({
+      setRefreshDisabled: setSelectedKeyRefreshDisabledMock,
+    }))
+
+    render(<StringDetails {...instance(mockedProps)} />)
+    fireEvent.click(screen.getByTestId(EDIT_VALUE_BTN_TEST_ID)!)
+    expect(setSelectedKeyRefreshDisabledMock).toBeCalledWith(true)
+    spy.mockRestore()
   })
 
   describe('telemetry', () => {
     beforeEach(() => {
-      useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
+      useSelectedKeyStore.useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
       useStringStore.setState((state) => ({
         ...state,
         data: stringData,

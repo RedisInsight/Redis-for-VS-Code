@@ -30,6 +30,7 @@ import { SelectedKeyActions, SelectedKeyStore } from './interface'
 export const initialSelectedKeyState: SelectedKeyStore = {
   loading: false,
   refreshing: false,
+  refreshDisabled: false,
   lastRefreshTime: null,
   data: null,
   viewFormat: localStorageService?.get(StorageItem.viewFormat) ?? DEFAULT_VIEW_FORMAT,
@@ -54,6 +55,7 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
     updateSelectedKeyRefreshTime: (lastRefreshTime) => set({ lastRefreshTime }),
 
     setSelectedKeyAction: (action) => set({ action }),
+    setSelectedKeyRefreshDisabled: (refreshDisabled: boolean) => set({ refreshDisabled }),
   }),
   {
     name: 'selectedKey',

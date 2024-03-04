@@ -32,10 +32,11 @@ const StringDetails = (props: Props) => {
     resetStringStore: state.resetStringStore,
   })))
 
-  const { viewFormat, loading, length } = useSelectedKeyStore(useShallow((state) => ({
+  const { viewFormat, loading, length, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     loading: state.loading,
     viewFormat: state.viewFormat,
     length: state.data?.length,
+    setRefreshDisabled: state.setSelectedKeyRefreshDisabled,
   })))
 
   const isEditable = !isStringCompressed && isFormatEditable(viewFormat)
@@ -88,7 +89,10 @@ const StringDetails = (props: Props) => {
     <EditItemAction
       title={`${l10n.t('Edit Value')}${editToolTip}`}
       isEditable={isStringEditable && isEditable}
-      onEditItem={() => setEditItem(!editItem)}
+      onEditItem={() => {
+        setRefreshDisabled(!editItem)
+        setEditItem(!editItem)
+      }}
     />
   )
 
@@ -106,7 +110,10 @@ const StringDetails = (props: Props) => {
           <div className="flex flex-col h-full">
             <StringDetailsValue
               isEditItem={editItem}
-              setIsEdit={(isEdit: boolean) => setEditItem(isEdit)}
+              setIsEdit={(isEdit: boolean) => {
+                setEditItem(isEdit)
+                setRefreshDisabled(isEdit)
+              }}
               onRefresh={handleRefreshKey}
               onUpdated={handleUpdated}
               onDownloaded={handleDownloaded}
