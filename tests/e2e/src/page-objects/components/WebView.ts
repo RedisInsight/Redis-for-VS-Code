@@ -44,16 +44,28 @@ export class WebView {
    */
   async switchToFrame(
     switchView: Views,
+    switchSecondView?: Views,
     timeout: number = 10000,
   ): Promise<void> {
     const frameLocator = ViewLocators[switchView]
-    const view = await this.driver.wait(
+    await this.driver.wait(
       until.elementLocated(By.xpath(frameLocator)),
       timeout,
     )
+    const firstView = await this.findWebElement(By.xpath(frameLocator))
+    await this.driver.switchTo().frame(firstView)
 
-    await this.driver.switchTo().frame(view)
-    await this.driver.switchTo().frame(0)
+    if (switchSecondView) {
+      const secondFrameLocator = ViewLocators[switchSecondView]
+      await this.driver.wait(
+        until.elementLocated(By.xpath(secondFrameLocator)),
+        timeout,
+      )
+      const secondView = await this.findWebElement(By.xpath(secondFrameLocator))
+      await this.driver.switchTo().frame(secondView)
+    } else {
+      await this.driver.switchTo().frame(0)
+    }
 
     const elementLocator = ViewElements[switchView]
     await this.driver.wait(
@@ -76,6 +88,7 @@ export class WebView {
 export enum Views {
   TreeView,
   KeyDetailsView,
+  KeyDetailsSecondView,
   CliViewPanel,
   AddKeyView,
   DatabaseDetailsView,
@@ -86,6 +99,7 @@ export const ViewLocators = {
     "//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]",
   [Views.KeyDetailsView]:
     "//div[contains(@data-parent-flow-to-element-id, 'webview-editor-element')]/iframe",
+  [Views.KeyDetailsSecondView]: "//iframe[@title='RedisInsight - Key details']",
   [Views.CliViewPanel]:
     "//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]",
   [Views.AddKeyView]:
@@ -97,6 +111,7 @@ export const ViewLocators = {
 export const ViewElements = {
   [Views.TreeView]: `//div[@data-testid='tree-view-page']`,
   [Views.KeyDetailsView]: `//*[@data-testid='key-details-page']`,
+  [Views.KeyDetailsSecondView]: `//*[@data-testid='key-details-page']`,
   [Views.CliViewPanel]: `//*[@data-testid='panel-view-page']`,
   [Views.AddKeyView]: `//*[@data-testid='select-key-type']`,
   [Views.DatabaseDetailsView]: `//*[contains(@data-testid,  'database-') and contains(@data-testid,  '-page')]`,

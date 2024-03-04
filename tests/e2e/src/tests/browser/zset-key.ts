@@ -95,7 +95,7 @@ describe('ZSet Key fields verification', () => {
     expect(result).contains(keyFieldValue)
     expect(result.length).eqls(1)
     await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
-    await ButtonActions.clickElement(keyDetailsView.keyRefresh)
+    await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
 
     // Verify that user can remove member from ZSet
     await keyDetailsView.removeRowByField(KeyTypesShort.ZSet, keyFieldValue)

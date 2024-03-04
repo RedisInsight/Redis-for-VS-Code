@@ -15,8 +15,10 @@ export class KeyDetailsView extends BaseComponent {
   keyName = By.xpath(`//div[@data-testid='key-name-text']/b`)
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
   keyLength = By.xpath(`//div[@data-testid='key-length-text']`)
-  keyRefresh = By.xpath(`//*[@data-testid='refresh-key-btn']`)
-
+  refreshKeyButton = By.xpath(`//*[@data-testid='refresh-key-btn']`)
+  applyBtn = By.xpath(
+    `//*[@class='key-details-body']//*[@data-testid='apply-btn']`,
+  )
   searchInput = By.xpath(`//*[@data-testid='search']`)
   searchButtonInKeyDetails = By.xpath(
     `//vscode-button[@data-testid='search-button']`,
@@ -34,14 +36,18 @@ export class KeyDetailsView extends BaseComponent {
       `//*[contains(@data-testid, "${keyType}-remove-btn-") and not(contains(@data-testid, "-icon"))]`,
     )
 
-  copyButton = By.xpath(`//vscode-button[starts-with(@data-testid, 'copy-name-button')]`)
+  copyButton = By.xpath(
+    `//vscode-button[starts-with(@data-testid, 'copy-name-button')]`,
+  )
 
   removeButton = (keyType: string, name: string): By =>
     By.xpath(
       `, //*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"]]`,
     )
 
-  detailsDeleteKeyButton = By.xpath(`//vscode-button[starts-with(@data-testid, 'remove-key-')]`)
+  detailsDeleteKeyButton = By.xpath(
+    `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
+  )
   submitDetailsDeleteKeyButton = By.xpath(
     `//div[@class='popup-content ']${this.detailsDeleteKeyButton}`,
   )
@@ -77,6 +83,7 @@ export class KeyDetailsView extends BaseComponent {
     const keySizeText = await this.getElement(this.ttlField)
     return await keySizeText.getAttribute('value')
   }
+
   /**
    * Search by the value in the key details
    * @param value The value of the search parameter
@@ -111,8 +118,7 @@ export class KeyDetailsView extends BaseComponent {
   /**
    * Click on copy button
    */
-  async clickCopyKeyName(
-  ): Promise<void> {
+  async clickCopyKeyName(): Promise<void> {
     const element = await this.getElement(this.copyButton)
     await element.click()
   }

@@ -69,7 +69,7 @@ describe('Set TTL for Key', () => {
     await InputActions.slowType(inputField, ttlValue)
     await ButtonActions.clickElement(keyDetailsView.saveTtl)
 
-    await ButtonActions.clickElement(keyDetailsView.keyRefresh)
+    await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
 
     const newTtlValue = Number(await keyDetailsView.getKeyTtl())
     expect(Number(ttlValue)).gt(newTtlValue)
