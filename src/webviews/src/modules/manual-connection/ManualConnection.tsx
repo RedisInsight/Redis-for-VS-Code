@@ -20,9 +20,8 @@ import { ConnectionType, DbType,
   VscodeMessageAction,
 } from 'uiSrc/constants'
 import { Database, fetchCerts, createDatabaseStandalone, updateDatabase, useDatabasesStore } from 'uiSrc/store'
-// import { ManualConnectionForm } from './manual-connection-form'
-import { ManualConnectionForm } from 'uiSrc/modules/manual-connection/manual-connection-form'
 import { vscodeApi } from 'uiSrc/services'
+import { ManualConnectionForm } from './manual-connection-form'
 
 export interface Props {
   editMode?: boolean

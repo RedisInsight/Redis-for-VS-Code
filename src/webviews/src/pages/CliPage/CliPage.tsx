@@ -15,7 +15,7 @@ export const CliPage: FC<any> = () => {
 
   useEffect(() => {
     const database = localStorageService.get(StorageItem.cliDatabase)
-    sessionStorageService.set(StorageItem.databaseId, database.id)
+    sessionStorageService.set(StorageItem.databaseId, database?.id)
 
     setConnectedDatabase(database)
   }, [])

@@ -1,14 +1,17 @@
 import React, {
+  ChangeEvent,
   Ref,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
+import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
-
 import { useShallow } from 'zustand/react/shallow'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+
 import {
   bufferToSerializedFormat,
   bufferToString,
@@ -18,21 +21,25 @@ import {
   isFormatEditable,
   stringToBuffer,
   isFullStringLoaded,
+  stringToSerializedBufferFormat,
 } from 'uiSrc/utils'
 import {
   TEXT_DISABLED_COMPRESSED_VALUE,
   TEXT_FAILED_CONVENT_FORMATTER,
-  // AddStringFormConfig as config,
+  TEXT_INVALID_VALUE,
+  TEXT_UNPRINTABLE_CHARACTERS,
+  AddStringFormConfig as config,
 } from 'uiSrc/constants'
 // import { decompressingBuffer } from 'uiSrc/utils/decompressors'
 import { downloadFile } from 'uiSrc/utils/dom/downloadFile'
 
 import { useSelectedKeyStore } from 'uiSrc/store'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
-import { fetchDownloadStringValue, useStringStore } from '../hooks/useStringStore'
-import { calculateTextareaLines } from '../utils/calculateTextareaLines'
+import { TextArea } from 'uiSrc/ui'
+import { InlineEditor } from 'uiSrc/components'
+import { fetchDownloadStringValue, updateStringValueAction, useStringStore } from '../hooks/useStringStore'
 import { useStringSelector } from '../utils/useStringSelector'
-import { APPROXIMATE_WIDTH_OF_SIGN, MAX_LENGTH, MAX_ROWS, MIN_ROWS } from '../constants/string'
+import { MAX_LENGTH } from '../constants/string'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -40,7 +47,7 @@ export interface Props {
   setIsEdit: (isEdit: boolean) => void
   onRefresh: (key?: RedisString, args?: IFetchKeyArgs) => void
   onUpdated: () => void
-  onDownloaded: () => void
+  onDownloaded?: () => void
   onLoadAll?: () => void
 }
 
@@ -51,7 +58,6 @@ const StringDetailsValue = (props: Props) => {
   const {
     loading,
     initialValue,
-    resetStringStore,
     setIsStringCompressed,
   } = useStringStore(useShallow(useStringSelector))
 
@@ -61,7 +67,6 @@ const StringDetailsValue = (props: Props) => {
     length: state.data?.length ?? 0,
   })))
 
-  const [rows, setRows] = useState<number>(5)
   const [value, setValue] = useState<JSX.Element | string>('')
   const [areaValue, setAreaValue] = useState<string>('')
   const [viewFormat, setViewFormat] = useState(viewFormatProp)
@@ -71,11 +76,10 @@ const StringDetailsValue = (props: Props) => {
   const [noEditableText, setNoEditableText] = useState<string>(TEXT_DISABLED_COMPRESSED_VALUE)
 
   const textAreaRef: Ref<HTMLTextAreaElement> = useRef(null)
-  const viewValueRef: Ref<HTMLPreElement> = useRef(null)
 
-  // useEffect(() => () => {
-  //   resetStringStore()
-  // }, [])
+  useEffect(() => {
+    setIsEdit?.(false)
+  }, [key])
 
   useEffect(() => {
     if (!initialValue) return
@@ -110,47 +114,29 @@ const StringDetailsValue = (props: Props) => {
     }
   }, [initialValue, viewFormatProp, compressor, length])
 
-  useEffect(() => {
-    // Approximate calculation of textarea rows by initialValue
-    if (!isEditItem || !textAreaRef.current || value === null) {
-      return
-    }
-    const calculatedRows = calculateTextareaLines(areaValue, textAreaRef.current.clientWidth, APPROXIMATE_WIDTH_OF_SIGN)
-
-    if (calculatedRows > MAX_ROWS) {
-      setRows(MAX_ROWS)
-      return
-    }
-    if (calculatedRows < MIN_ROWS) {
-      setRows(MIN_ROWS)
-      return
-    }
-    setRows(calculatedRows)
-  }, [viewValueRef, isEditItem])
-
   useMemo(() => {
     if (isEditItem && initialValue) {
       (document.activeElement as HTMLElement)?.blur()
-      // setAreaValue(bufferToSerializedFormat(viewFormat, initialValue, 4))
+      setAreaValue(bufferToSerializedFormat(viewFormat, initialValue, 4))
     }
   }, [isEditItem])
 
-  // const onApplyChanges = () => {
-  //   const data = stringToSerializedBufferFormat(viewFormat, areaValue)
-  //   const onSuccess = () => {
-  //     setIsEdit(false)
-  //     setValue(formattingBuffer(data, viewFormat, { expanded: true })?.value)
-  //     onUpdated()
-  //   }
-  //   updateStringValueAction(key, data, onSuccess)
-  // }
+  const onApplyChanges = () => {
+    const data = stringToSerializedBufferFormat(viewFormat, areaValue)
+    const onSuccess = () => {
+      setIsEdit(false)
+      setValue(formattingBuffer(data, viewFormat, { expanded: true })?.value)
+      onUpdated()
+    }
+    updateStringValueAction(key, data, onSuccess)
+  }
 
-  // const onDeclineChanges = useCallback(() => {
-  //   if (!initialValue) return
+  const onDeclineChanges = useCallback(() => {
+    if (!initialValue) return
 
-  //   setAreaValue(bufferToSerializedFormat(viewFormat, initialValue, 4))
-  //   setIsEdit(false)
-  // }, [initialValue])
+    setAreaValue(bufferToSerializedFormat(viewFormat, initialValue, 4))
+    setIsEdit(false)
+  }, [initialValue])
 
   const isLoading = loading || value === null
 
@@ -162,24 +148,21 @@ const StringDetailsValue = (props: Props) => {
 
   const handleDownloadString = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    // fetchDownloadStringValue(key, downloadFile)
-    onDownloaded()
+    fetchDownloadStringValue(key, downloadFile)
+    onDownloaded?.()
   }
 
   return (
     <>
       <div className={styles.container} data-testid="string-details">
-        {/* {isLoading && (
-          <span>loading...</span>
-        )} */}
         {!isEditItem && (
           <div
-            // onMouseUp={() => isEditable && setIsEdit(true)}
             className="whitespace-break-spaces"
             data-testid="string-value"
             role="textbox"
             onKeyDown={() => { }}
             tabIndex={0}
+            onMouseUp={() => isEditable && setIsEdit(true)}
           >
             {areaValue !== ''
               ? (isValid
@@ -194,15 +177,17 @@ const StringDetailsValue = (props: Props) => {
                   </div>
                 )
               )
-              : (!isLoading && (<span style={{ fontStyle: 'italic' }}>{l10n.t('Empty')}</span>))}
+              : (!isLoading && (<span className="italic">{l10n.t('Empty')}</span>))}
           </div>
         )}
-        {/* {isEditItem && (
-          <InlineItemEditor
-            controlsPosition="bottom"
-            placeholder="Enter Value"
-            fieldName="value"
+        {isEditItem && (
+          <InlineEditor
             expandable
+            isActive
+            controlsPosition="bottom"
+            placeholder={l10n.t('Enter Value')}
+            fieldName="value"
+            preventOutsideClick
             isLoading={false}
             isDisabled={isDisabled}
             disabledTooltipText={TEXT_UNPRINTABLE_CHARACTERS}
@@ -217,11 +202,9 @@ const StringDetailsValue = (props: Props) => {
               )?.isValid}
           >
             <TextArea
-              fullWidth
+              autoFocus
               name="value"
               id="value"
-              rows={rows}
-              resize="vertical"
               placeholder={config.value.placeholder}
               value={areaValue}
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -232,8 +215,11 @@ const StringDetailsValue = (props: Props) => {
               className={cx(styles.stringTextArea, { [styles.areaWarning]: isDisabled })}
               data-testid="string-value"
             />
-          </InlineItemEditor>
-        )} */}
+          </InlineEditor>
+        )}
+        {isLoading && (
+          <span>{l10n.t('loading...')}</span>
+        )}
       </div>
 
       {length > MAX_LENGTH && (
@@ -252,17 +238,17 @@ const StringDetailsValue = (props: Props) => {
                 </VSCodeButton>
               )}
             </div>
-            {/* <div>
+            <div>
               <VSCodeButton
                 appearance="secondary"
                 disabled={loading}
                 className={styles.stringFooterBtn}
                 data-testid="download-all-value-btn"
-                // onClick={handleDownloadString}
+                onClick={handleDownloadString}
               >
                 {l10n.t('Download')}
               </VSCodeButton>
-            </div> */}
+            </div>
           </div>
         </div>
       )}

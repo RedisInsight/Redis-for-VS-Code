@@ -15,6 +15,7 @@ const KEY_INPUT_TEST_ID = 'edit-key-input'
 const KEY_BTN_TEST_ID = 'edit-key-btn'
 const TTL_INPUT_TEST_ID = 'inline-item-editor'
 const KEY_COPY_TEST_ID = 'copy-name-button'
+const REFRESH_TEST_ID = 'refresh-key-btn'
 const supportedKeyTypes = [
   KeyTypes.Hash,
   KeyTypes.List,
@@ -77,7 +78,7 @@ describe('KeyDetailsHeader', () => {
   describe('should call onRefresh', () => {
     test.each(supportedKeyTypes)('should call onRefresh for keyType: %s', (keyType) => {
       const component = render(<KeyDetailsHeader {...mockedProps} keyType={keyType} />)
-      fireEvent.click(screen.getByTestId('refresh-key-btn'))
+      fireEvent.click(screen.getByTestId(REFRESH_TEST_ID))
       expect(component).toBeTruthy()
     })
   })
@@ -94,5 +95,13 @@ describe('KeyDetailsHeader', () => {
       fireEvent.click(screen.getByTestId(`remove-key-${nameString}`))
       expect(useKeys.useKeysApi().deleteKeyAction).toBeCalled()
     })
+  })
+
+  it('refresh btn should be disabled for refreshDisabled state', () => {
+    useSelectedKeyStore.setState(() => ({ ...initialSelectedKeyState, refreshDisabled: true }))
+
+    render(<KeyDetailsHeader {...mockedProps} />)
+
+    expect(screen.getByTestId(REFRESH_TEST_ID)?.lastChild).toBeDisabled()
   })
 })

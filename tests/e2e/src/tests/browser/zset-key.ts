@@ -86,8 +86,10 @@ describe('ZSet Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.scoreSortedSetFieldsList)
     )[0].getText()
     expect(result).contains(keyFieldValue)
+    expect(result.length).eqls(1)
     expect(value).eqls(`${score}`)
-    await keyDetailsView.clearSearchInKeyDetails()
+    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
+    await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
 
     // Verify that user can remove member from ZSet
     await keyDetailsView.removeRowByField(KeyTypesShort.ZSet, keyFieldValue)

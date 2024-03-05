@@ -8,6 +8,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
+  ButtonActions,
   DatabasesActions,
   KeyDetailsActions,
   NotificationActions,
@@ -72,7 +73,8 @@ describe('Set Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.setFieldsList)
     )[0].getText()
     expect(result).contains(keyFieldValue)
-    await keyDetailsView.clearSearchInKeyDetails()
+    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
+    await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
 
     // Verify that user can remove member from Set
     await keyDetailsView.removeRowByField(KeyTypesShort.Set, keyFieldValue)

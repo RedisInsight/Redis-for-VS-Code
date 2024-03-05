@@ -67,8 +67,6 @@ const formattingBuffer = (
   format: KeyValueFormat,
   props?: FormattingProps,
 ): { value: JSX.Element | string, isValid: boolean } => {
-  console.debug({ props })
-
   switch (format) {
     case KeyValueFormat.ASCII: return { value: bufferToASCII(reply), isValid: true }
     case KeyValueFormat.HEX: return { value: bufferToHex(reply), isValid: true }

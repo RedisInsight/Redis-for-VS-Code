@@ -14,9 +14,10 @@ export class KeyDetailsView extends BaseComponent {
   keyName = By.xpath(`//div[@data-testid='key-name-text']/b`)
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
   keyLength = By.xpath(`//div[@data-testid='key-length-text']`)
-  keyRefresh = By.xpath(`//*[@data-testid='refresh-key-btn']`)
-
-  // INPUTS
+  refreshKeyButton = By.xpath(`//*[@data-testid='refresh-key-btn']`)
+  applyBtn = By.xpath(
+    `//*[@class='key-details-body']//*[@data-testid='apply-btn']`,
+  )
   searchInput = By.xpath(`//*[@data-testid='search']`)
   clearSearchInput = By.xpath(`//*[@data-testid='decline-search-button']`)
   setMemberInput = By.xpath(`//*[@data-testid='member-name']`)

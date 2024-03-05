@@ -1,16 +1,8 @@
-
-$outer-height: 170px;
-$outer-height-mobile: 340px;
+$outer-height: 146px;
 
 .container {
-  @apply flex-1 relative overflow-y-auto overflow-x-hidden break-words;
-  
-  padding: 20px 16px 20px;
+  @apply flex-1 relative overflow-y-auto overflow-x-hidden break-words p-4;
   max-height: calc(100vh - #{$outer-height});
-
-  @media only screen and (max-width: 767px) {
-    /* max-height: calc(100vh - #{$outer-height-mobile}); */
-  }
 
   > div {
     @apply max-h-full;
@@ -31,13 +23,12 @@ $outer-height-mobile: 340px;
 }
 
 .stringTextArea {
-  max-height: calc(100vh - #{$outer-height} - 55px);
-  @media only screen and (max-width: 767px) {
-    /* max-height: calc(100vh - #{$outer-height-mobile} - 55px); */
-  }
+  @apply resize-none w-full h-full pt-3 pl-3 pr-11 pb-9 min-h-full scroll-pb-7;
+  max-height: calc(100vh - #{$outer-height} - 40px);
 
   &.areaWarning {
-    /* border-color: var(--euiColorWarningLight) !important; */
+    @apply border-vscode-list-warningForeground focus:border-vscode-list-warningForeground;
+    border-width: 1px;
     background-image: none !important;
   }
 }

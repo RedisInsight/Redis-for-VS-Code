@@ -5,7 +5,7 @@ export interface StringState {
   error: string
   isCompressed: boolean
   data: {
-    key: string
+    key: RedisString
     value: Nullable<RedisResponseBuffer>
   }
 }

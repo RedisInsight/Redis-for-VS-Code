@@ -115,7 +115,7 @@ describe('Key Details verifications', () => {
     const keyLength = await stringKeyDetailsView.getKeyLength()
     const keyTtl = Number(await stringKeyDetailsView.getKeyTtl())
     const keyValue = await stringKeyDetailsView.getElementText(
-      stringKeyDetailsView.keyStringValue,
+      stringKeyDetailsView.stringKeyValueInput,
     )
 
     await stringKeyDetailsView.clickCopyKeyName()

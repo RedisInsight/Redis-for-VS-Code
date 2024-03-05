@@ -1,5 +1,8 @@
+$controls-height: 22px;
+$controls-padding-y: 10px;
+
 .container {
-  @apply w-full h-full flex flex-row flex-grow items-stretch bg-vscode-input-background;
+  @apply w-full h-full flex flex-row flex-grow items-stretch bg-vscode-input-background relative;
 
   &:hover .controls{
     @apply flex;
@@ -22,10 +25,10 @@
   z-index: 3;
 
   &Bottom {
-    @apply items-end pb-3 mr-3;
+    @apply absolute right-3 top-[calc(100%-#{$controls-height+$controls-padding-y})];
 
     .applyBtn {
-      @apply h-[22px];
+      @apply h-[#{$controls-height}];
     }
   }
 

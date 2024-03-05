@@ -80,10 +80,11 @@ const HashDetailsTable = (props: Props) => {
 
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
-  const { viewFormatProp, length, key } = useSelectedKeyStore(useShallow((state) => ({
+  const { viewFormatProp, length, key, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     viewFormatProp: state.viewFormat,
     length: state.data?.length,
     key: state.data?.name,
+    setRefreshDisabled: state.setSelectedKeyRefreshDisabled,
   })))
 
   const { nextCursor, loading, loadedFields, updateLoading, total } = useHashStore((state) => ({
@@ -122,6 +123,7 @@ const HashDetailsTable = (props: Props) => {
       setExpandedRows([])
       setViewFormat(viewFormatProp)
       setEditingIndex(null)
+      setRefreshDisabled(false)
 
       clearCache()
     }
@@ -162,6 +164,7 @@ const HashDetailsTable = (props: Props) => {
     editing: boolean,
     valueItem?: RedisString,
   ) => {
+    setRefreshDisabled(editing)
     setEditingIndex(editing ? rowIndex : null)
 
     if (editing) {

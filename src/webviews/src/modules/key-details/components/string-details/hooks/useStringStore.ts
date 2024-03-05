@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponseHeaders } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
@@ -12,6 +12,7 @@ import {
   isStatusSuccessful,
   showErrorMessage,
 } from 'uiSrc/utils'
+import { refreshKeyInfo } from 'uiSrc/store'
 import { StringActions, StringState } from './interface'
 
 export const initialState: StringState = {
@@ -66,55 +67,49 @@ export const fetchString = (key?: RedisString, args: IFetchKeyArgs = {}) =>
     }
   })
 
-// export const updateStringValueAction = (
-//   key?: RedisString,
-//   value?: RedisResponseBuffer,
-//   onSuccess?: () => void,
-// ) =>
-//   useStringStore.setState(async (state) => {
-//     state.processString()
+export const updateStringValueAction = (
+  key?: RedisString,
+  value?: RedisString,
+  onSuccess?: () => void,
+) =>
+  useStringStore.setState(async (state) => {
+    try {
+      const { data, status } = await apiService.put(
+        getUrl(ApiEndpoints.STRING),
+        { keyName: key, value },
+        { params: { encoding: getEncoding() } },
+      )
 
-//     try {
-//       const { data, status } = await apiService.put(
-//         getUrl(ApiEndpoints.STRING_VALUE),
-//         { keyName: key, value },
-//         { params: { encoding: getEncoding() } },
-//       )
+      if (isStatusSuccessful(status)) {
+        state.processStringSuccess(data)
+        refreshKeyInfo(key!)
+        onSuccess?.()
+      }
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
+    }
+  })
 
-//       if (isStatusSuccessful(status)) {
-//         state.processStringSuccess(data)
-//         onSuccess?.()
-//       }
-//     } catch (_err) {
-//       const error = _err as AxiosError
-//       console.debug({ error })
-//     } finally {
-//       state.processStringFinal()
-//     }
-//   })
+export const fetchDownloadStringValue = (
+  key?: RedisString,
+  onSuccess?: (data: string, headers: AxiosResponseHeaders) => void,
+) =>
+  useStringStore.setState(async (state) => {
+    state.processString()
 
-// export const fetchDownloadStringValue = (
-//   key?: RedisString,
-//   onSuccess?: (data: string, headers: AxiosResponseHeaders) => void,
-// ) =>
-//   useStringStore.setState(async (state) => {
-//     state.processString()
+    try {
+      const { data, status, headers } = await apiService.post(
+        getUrl(ApiEndpoints.STRING_VALUE_DOWNLOAD),
+        { keyName: key },
+        { responseType: 'arraybuffer' },
+      )
 
-//     try {
-//       const { data, status, headers } = await apiService.post(
-//         getUrl(ApiEndpoints.STRING_VALUE_DOWNLOAD),
-//         { keyName: key },
-//         { responseType: 'arraybuffer' },
-//       )
-
-//       if (isStatusSuccessful(status)) {
-//         // state.processStringSuccess(data)
-//         onSuccess?.(data, headers as AxiosResponseHeaders)
-//       }
-//     } catch (_err) {
-//       const error = _err as AxiosError
-//       console.debug({ error })
-//     } finally {
-//       state.processStringFinal()
-//     }
-//   })
+      if (isStatusSuccessful(status)) {
+        onSuccess?.(data, headers as AxiosResponseHeaders)
+      }
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
+    } finally {
+      state.processStringFinal()
+    }
+  })

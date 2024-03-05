@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import { expect } from 'chai'
 import {
   ActivityBar,
@@ -72,5 +73,46 @@ export class DatabasesActions extends CommonDriverExtension {
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await new WebView().switchToFrame(Views.TreeView)
     await new TreeView().clickDatabaseByName(databaseParameters.databaseName!)
+  }
+
+  /**
+   * Find files by they name starts from directory
+   * @param dir The path directory of file
+   * @param fileStarts The file name should start from
+   */
+  static async findFilesByFileStarts(
+    dir: string,
+    fileStarts: string,
+  ): Promise<string[]> {
+    const matchedFiles: string[] = []
+    const files = fs.readdirSync(dir)
+
+    if (fs.existsSync(dir)) {
+      for (const file of files) {
+        if (file.startsWith(fileStarts)) {
+          matchedFiles.push(file)
+        }
+      }
+    }
+    return matchedFiles
+  }
+
+  /**
+   * Get files count by name starts from directory
+   * @param dir The path directory of file
+   * @param fileStarts The file name should start from
+   */
+  static async getFileCount(dir: string, fileStarts: string): Promise<number> {
+    if (fs.existsSync(dir)) {
+      const matchedFiles: string[] = []
+      const files = fs.readdirSync(dir)
+      for (const file of files) {
+        if (file.startsWith(fileStarts)) {
+          matchedFiles.push(file)
+        }
+      }
+      return matchedFiles.length
+    }
+    return 0
   }
 }

@@ -61,10 +61,19 @@ export default defineConfig({
     testTimeout: 20000,
     setupFiles: ['./src/webviews/test/setup.ts'],
     coverage: {
-      statements: 80,
-      lines: 80,
-      branches: 70,
-      functions: 60,
+      include: ['src/webviews/src/**'],
+      exclude: [
+        'src/webviews/src/**/index.ts',
+        'src/webviews/src/**/*.d.ts',
+        'src/webviews/src/**/interface.ts',
+        'src/webviews/src/**/*.stories.*',
+      ],
+      thresholds: {
+        statements: 80,
+        lines: 80,
+        branches: 70,
+        functions: 60,
+      },
     },
   },
 })

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { DEFAULT_SEARCH_MATCH, KeyTypes } from 'uiSrc/constants'
+import { DEFAULT_ERROR_MESSAGE, DEFAULT_SEARCH_MATCH, KeyTypes } from 'uiSrc/constants'
 import { KeyInfo } from 'uiSrc/interfaces'
 import { Certificate } from 'uiSrc/store/hooks/use-certificates-store/interface'
 import { UTF8ToArray, stringToBuffer } from 'uiSrc/utils'
@@ -47,9 +47,10 @@ export const constants = {
   KEY_NAME_1: UTF8ToArray('key1'),
   KEY_TYPE_1: KeyTypes.String,
   KEY_TTL_1: -1,
-  KEY_LENGTH_1: 5,
+  KEY_LENGTH_1: 10,
   KEY_SIZE_1: 1_000,
   KEY_1_VALUE: UTF8ToArray('value'),
+  KEY_1_VALUE_FULL: UTF8ToArray('value_full'),
   KEY_1_VALUE_2: UTF8ToArray('value2'),
 
   // key 2 hash
@@ -135,6 +136,13 @@ export const constants = {
 
   get DATABASE() {
     return DATABASE
+  },
+
+  AXIOS_ERROR: {
+    response: {
+      status: 500,
+      data: { message: DEFAULT_ERROR_MESSAGE },
+    },
   },
 }
 

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 
-import { useSelector } from 'react-redux'
 import {
   KeyTypes,
   STRING_MAX_LENGTH,
@@ -33,16 +32,17 @@ const StringDetails = (props: Props) => {
     resetStringStore: state.resetStringStore,
   })))
 
-  const { viewFormat, loading, length } = useSelectedKeyStore(useShallow((state) => ({
+  const { viewFormat, loading, length, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     loading: state.loading,
     viewFormat: state.viewFormat,
     length: state.data?.length,
+    setRefreshDisabled: state.setSelectedKeyRefreshDisabled,
   })))
 
   const isEditable = !isStringCompressed && isFormatEditable(viewFormat)
   const isStringEditable = isFullStringLoaded(keyValue?.data?.length, length)
   const noEditableText = isStringCompressed ? TEXT_DISABLED_COMPRESSED_VALUE : TEXT_DISABLED_FORMATTER_EDITING
-  const editToolTip = !isEditable ? noEditableText : (!isStringEditable ? TEXT_DISABLED_STRING_EDITING : '')
+  const editToolTip = !isEditable ? noEditableText : (!isStringEditable ? `\n${TEXT_DISABLED_STRING_EDITING}` : '')
 
   const [editItem, setEditItem] = useState<boolean>(false)
 
@@ -87,10 +87,12 @@ const StringDetails = (props: Props) => {
 
   const Actions = () => (
     <EditItemAction
-      title="Edit Value"
-      tooltipContent={editToolTip}
-      isEditable={isStringEditable}
-      onEditItem={() => setEditItem(!editItem)}
+      title={`${l10n.t('Edit Value')}${editToolTip}`}
+      isEditable={isStringEditable && isEditable}
+      onEditItem={() => {
+        setRefreshDisabled(!editItem)
+        setEditItem(!editItem)
+      }}
     />
   )
 
@@ -108,7 +110,10 @@ const StringDetails = (props: Props) => {
           <div className="flex flex-col h-full">
             <StringDetailsValue
               isEditItem={editItem}
-              setIsEdit={(isEdit: boolean) => setEditItem(isEdit)}
+              setIsEdit={(isEdit: boolean) => {
+                setEditItem(isEdit)
+                setRefreshDisabled(isEdit)
+              }}
               onRefresh={handleRefreshKey}
               onUpdated={handleUpdated}
               onDownloaded={handleDownloaded}

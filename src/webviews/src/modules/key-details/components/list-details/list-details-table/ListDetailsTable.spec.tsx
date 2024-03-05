@@ -1,6 +1,6 @@
 import React from 'react'
 import { mock } from 'ts-mockito'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import * as useSelectedKeyStore from 'uiSrc/store/hooks/use-selected-key-store/useSelectedKeyStore'
 import { waitFor, constants, fireEvent, render, screen } from 'testSrc/helpers'
 import { ListDetailsTable, Props } from './ListDetailsTable'
 import { useListStore } from '../hooks/useListStore'
@@ -9,7 +9,7 @@ const mockedProps = mock<Props>()
 
 const initialListState = { data: constants.LIST_DATA }
 beforeEach(() => {
-  useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
+  useSelectedKeyStore.useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
   useListStore.setState((state) => ({ ...state, ...initialListState }))
 })
 
@@ -46,6 +46,18 @@ describe('ListDetailsTable', () => {
 
     debug()
     expect(screen.getByTestId('element-value-editor')).toBeInTheDocument()
+  })
+
+  it('should call setSelectedKeyRefreshDisabled after click edit button', () => {
+    const setSelectedKeyRefreshDisabledMock = vi.fn()
+    const spy = vi.spyOn(useSelectedKeyStore, 'useSelectedKeyStore').mockImplementation(() => ({
+      setRefreshDisabled: setSelectedKeyRefreshDisabledMock,
+    }))
+
+    render(<ListDetailsTable {...mockedProps} />)
+    fireEvent.click(screen.getAllByTestId(/edit-list-button/)[0])
+    expect(setSelectedKeyRefreshDisabledMock).toBeCalledWith(true)
+    spy.mockRestore()
   })
 
   it('should render resize trigger for index column', () => {

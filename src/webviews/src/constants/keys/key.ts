@@ -3,7 +3,7 @@ import { KeyValueFormat } from './formatters'
 
 export const TEXT_UNPRINTABLE_CHARACTERS = {
   title: l10n.t('Non-printable characters have been detected'),
-  text: l10n.t('Use Workbench or CLI to edit without data loss.'),
+  text: l10n.t('Use CLI to edit without data loss.'),
 }
 export const TEXT_DISABLED_FORMATTER_EDITING = l10n.t('Cannot edit the value in this format')
 export const TEXT_DISABLED_STRING_EDITING = l10n.t('Load the entire value to edit it')
