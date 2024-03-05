@@ -4,14 +4,14 @@
 
 ```bash
 yarn install
-yarn install:vs-code
+yarn install:deps
 yarn install:extension
 ```
 
 
 ### Run tests locally from the tests/e2e folder
 
-- to run tests in Chrome browser run
+- to run e2e tests run
 
 ```bash
 yarn test

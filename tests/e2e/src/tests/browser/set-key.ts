@@ -82,7 +82,7 @@ describe('Set Key fields verification', () => {
     )[0].getText()
     expect(result).contains(keyFieldValue)
     await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
-    await ButtonActions.clickElement(keyDetailsView.keyRefresh)
+    await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
 
     // Verify that user can remove member from Set
     await keyDetailsView.removeRowByField(KeyTypesShort.Set, keyFieldValue)

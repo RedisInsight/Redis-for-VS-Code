@@ -7,6 +7,7 @@ import {
   TreeView,
   SortedSetKeyDetailsView,
   ListKeyDetailsView,
+  StringKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -15,11 +16,15 @@ import {
   HashKeyParameters,
   ListKeyParameters,
   SortedSetKeyParameters,
+  StringKeyParameters,
 } from '@e2eSrc/helpers/types/types'
 import {
+  ButtonActions,
   DatabasesActions,
+  InputActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 let keyName: string
 
@@ -34,6 +39,7 @@ describe('Edit Key values verification', () => {
   let workbench: Workbench
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
   let listKeyDetailsView: ListKeyDetailsView
+  let stringKeyDetailsView: StringKeyDetailsView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -43,6 +49,7 @@ describe('Edit Key values verification', () => {
     workbench = new Workbench()
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
     listKeyDetailsView = new ListKeyDetailsView()
+    stringKeyDetailsView = new StringKeyDetailsView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -181,5 +188,50 @@ describe('Edit Key values verification', () => {
       )
     )[0].getText()
     expect(resultValue).eqls(scoreAfter)
+  })
+  it('Verify that user can edit String value', async function () {
+    keyName = Common.generateWord(10)
+    const stringKeyParameters: StringKeyParameters = {
+      keyName: keyName,
+      value: keyValueBefore,
+    }
+    await KeyAPIRequests.addStringKeyApi(
+      stringKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Open key details iframe
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    // Check the key value before edit
+    let keyValue = await stringKeyDetailsView.getStringKeyValue()
+    expect(keyValue).contains(keyValueBefore, 'The String value is incorrect')
+
+    // Edit String key value
+    await (
+      await stringKeyDetailsView.getElement(
+        stringKeyDetailsView.stringKeyValueInput,
+      )
+    ).click()
+    await InputActions.typeText(
+      stringKeyDetailsView.stringKeyValueInput,
+      keyValueAfter,
+    )
+
+    // Verify that refresh is disabled for String key when editing value
+    expect(
+      await stringKeyDetailsView.isElementDisabled(
+        stringKeyDetailsView.refreshKeyButton,
+        'class',
+      ),
+    ).ok('Refresh button not disabled')
+
+    await ButtonActions.clickElement(stringKeyDetailsView.applyBtn)
+    // Check the key value after edit
+    keyValue = await stringKeyDetailsView.getStringKeyValue()
+    expect(keyValue).contains(keyValueAfter, 'Edited String value is incorrect')
   })
 })
