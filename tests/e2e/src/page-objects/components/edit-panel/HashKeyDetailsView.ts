@@ -17,9 +17,6 @@ export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
   truncatedValue = By.xpath(
     `//*[contains(@data-testid, 'hash-field-value-')]//*[@class = 'truncate']`,
   )
-  addKeyValueItemsButton = By.xpath(
-    `//*[@data-testid = 'add-key-value-items-btn']`,
-  )
   addHashFieldPanel = By.xpath(`//*[@data-testid = 'add-hash-field-panel']`)
   hashFieldInput = By.xpath(
     `//*[@data-testid = 'add-hash-field-panel']//*[contains(@data-testid, 'hash-field-')]`,

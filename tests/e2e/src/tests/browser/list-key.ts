@@ -1,17 +1,16 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser, Workbench } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import {
-  BottomBar,
   WebView,
   TreeView,
   ListKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
-  ButtonActions,
   DatabasesActions,
   KeyDetailsActions,
+  NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
@@ -20,18 +19,15 @@ import { KeyActions } from '@e2eSrc/helpers/KeysActions'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
 let keyName: string
-const deleteMessage = 'Key has been deleted'
 
 describe('List Key verification', () => {
   let browser: VSBrowser
   let webView: WebView
-  let bottomBar: BottomBar
   let listKeyDetailsView: ListKeyDetailsView
   let treeView: TreeView
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    bottomBar = new BottomBar()
     webView = new WebView()
     listKeyDetailsView = new ListKeyDetailsView()
     treeView = new TreeView()
@@ -101,8 +97,7 @@ describe('List Key verification', () => {
       await listKeyDetailsView.getElements(listKeyDetailsView.elementsList)
     )[0].getText()
     expect(result).contains(elements[1])
-
-    await ButtonActions.clickElement(listKeyDetailsView.clearSearchInput)
+    await listKeyDetailsView.clearSearchInKeyDetails()
 
     // Verify that list key deleted when all elements deleted
     await listKeyDetailsView.removeRowsByFieldValues(
@@ -110,11 +105,9 @@ describe('List Key verification', () => {
       elements,
     )
     await webView.switchBack()
+    await NotificationActions.checkNotificationMessage(`${keyName} has been deleted.`)
 
-    const notifications = await new Workbench().getNotifications()
-    const notification = notifications[0]
-    // get the message
-    const message = await notification.getMessage()
-    expect(message).eqls(deleteMessage)
+    // Verify that details panel is closed for list key after deletion
+     KeyDetailsActions.verifyDetailsPanelClosed()
   })
 })

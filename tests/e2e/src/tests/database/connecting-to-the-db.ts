@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, VSBrowser, Workbench } from 'vscode-extension-tester'
+import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
 import {
   WebView,
   TreeView,
@@ -10,7 +10,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
-import { ButtonActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions, NotificationActions } from '@e2eSrc/helpers/common-actions'
 import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 describe('Connecting to the databases verifications', () => {
@@ -20,7 +20,6 @@ describe('Connecting to the databases verifications', () => {
   let treeView: TreeView
   let databaseDetailsView: DatabaseDetailsView
   let addDatabaseView: AddDatabaseView
-  let workbench: Workbench
 
   beforeEach(async () => {
     browser = VSBrowser.instance
@@ -29,7 +28,6 @@ describe('Connecting to the databases verifications', () => {
     treeView = new TreeView()
     databaseDetailsView = new DatabaseDetailsView()
     addDatabaseView = new AddDatabaseView()
-    workbench = new Workbench()
 
     await browser.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
@@ -55,11 +53,7 @@ describe('Connecting to the databases verifications', () => {
     await new WebView().switchBack()
     // Check the notification message
     await CommonDriverExtension.driverSleep(2000)
-    let notifications = await workbench.getNotifications()
-    let notification = notifications[0]
-
-    let message = await notification.getMessage()
-    expect(message).eqls(errorMessage, 'The notification is not displayed')
+    await NotificationActions.checkNotificationMessage(errorMessage)
     await webView.switchToFrame(Views.TreeView)
     // Verify that the database is not in the list
     expect(

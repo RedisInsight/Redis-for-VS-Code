@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser, Workbench } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import {
   WebView,
   SetKeyDetailsView,
@@ -11,6 +11,7 @@ import {
   ButtonActions,
   DatabasesActions,
   KeyDetailsActions,
+  NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
@@ -50,23 +51,12 @@ describe('Set Key fields verification', () => {
     const keyFieldValue = 'setField11111'
     const setKeyParameters: SetKeyParameters = {
       keyName: keyName,
-      members: [keyFieldValue],
-    }
-    const keyToAddParameters = {
-      fieldsCount: 1,
-      keyName,
-      fieldStartWith: 'setField',
+      members: ['setField'],
     }
 
     await KeyAPIRequests.addSetKeyApi(
       setKeyParameters,
       Config.ossStandaloneConfig.databaseName,
-    )
-    // Add fields to the Set key
-    await KeyActions.populateSetWithMembers(
-      Config.ossStandaloneConfig.host,
-      Config.ossStandaloneConfig.port,
-      keyToAddParameters,
     )
     // Refresh database
     await treeView.refreshDatabaseByName(
@@ -74,7 +64,9 @@ describe('Set Key fields verification', () => {
     )
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
-
+    // Verify that user can add member to Set
+    await keyDetailsView.addMemberToSet(keyFieldValue)
+    // Search the added member
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
     // Check the search result
     let result = await (
@@ -91,20 +83,21 @@ describe('Set Key fields verification', () => {
       keyFieldValue,
     )
     await webView.switchBack()
-    let notifications = await new Workbench().getNotifications()
-    let notification = notifications[0]
-    // get the message
-    let message = await notification.getMessage()
-    expect(message).eqls(`Member has been deleted`)
+    // Check the notification message that field deleted
+    await NotificationActions.checkNotificationMessage(
+      `${keyFieldValue} has been removed from ${keyName}`,
+    )
 
     await webView.switchToFrame(Views.KeyDetailsView)
     await keyDetailsView.removeFirstRow(KeyTypesShort.Set)
     await webView.switchBack()
 
-    notifications = await new Workbench().getNotifications()
-    notification = notifications[0]
-    // get the message
-    message = await notification.getMessage()
-    expect(message).eqls(`${keyName} has been deleted.`)
+    // Check the notification message that key deleted
+    await NotificationActions.checkNotificationMessage(
+      `${keyName} has been deleted.`,
+    )
+
+    // Verify that details panel is closed for set key after deletion
+    KeyDetailsActions.verifyDetailsPanelClosed()
   })
 })
