@@ -15,7 +15,7 @@ export class KeyDetailsActions extends CommonDriverExtension {
     await this.driverSleep(1000)
     await new TreeView().openKeyDetailsByKeyName(name)
     await webView.switchBack()
-    await webView.switchToFrame(Views.KeyDetailsView, Views.KeyDetailsSecondView)
+    await webView.switchToFrame(Views.KeyDetailsView, Views.KeyDetailsInnerView)
     await this.driverSleep(1000)
   }
 }
