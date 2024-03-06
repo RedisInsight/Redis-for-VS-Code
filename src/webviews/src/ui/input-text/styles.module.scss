@@ -7,3 +7,11 @@ $inputMinWidth: 100px;
   border-color: transparent;
   min-width: $inputMinWidth;
 }
+
+.withAppend {
+  @apply pl-12;
+}
+
+.append {
+  @apply absolute h-full;
+}

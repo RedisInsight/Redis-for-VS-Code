@@ -39,9 +39,9 @@ const KeyDetailsHeader = ({
   keyType,
   Actions,
 }: KeyDetailsHeaderProps) => {
-  const { loading, data } = useSelectedKeyStore(useShallow((state) => ({
-    loading: state.loading,
+  const { data, refreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     data: state.data,
+    refreshDisabled: state.refreshDisabled || state.loading,
   })))
 
   const { type = KeyTypes.String, name: keyBuffer, nameString: keyProp, length } = data ?? {}
@@ -143,7 +143,7 @@ const KeyDetailsHeader = ({
                 <div className={styles.subtitleActionBtns}>
                   <VSCodeButton
                     appearance="icon"
-                    disabled={loading}
+                    disabled={refreshDisabled}
                     className={styles.actionBtn}
                     onClick={handleRefreshKey}
                     aria-label="refresh key"

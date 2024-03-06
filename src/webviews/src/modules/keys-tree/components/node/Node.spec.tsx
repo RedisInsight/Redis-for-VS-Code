@@ -153,7 +153,7 @@ describe('Node', () => {
 
     render(<Node {...instance(mockedProps)} data={mockData} />)
 
-    fireEvent.click(screen.getByTestId(`remove-key-${mockDataFullName}-icon`))
+    fireEvent.click(screen.getByTestId(`remove-key-${mockDataFullName}-trigger`))
     fireEvent.click(screen.getByTestId(`remove-key-${mockDataFullName}`))
     await waitForStack()
     expect(mockDeleteClicked).toBeCalled()

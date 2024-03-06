@@ -20,6 +20,6 @@ describe('KeyRowDelete', () => {
       />,
     )
 
-    expect(queryByTestId(`remove-key-${constants.KEY_NAME_STRING_1}-icon`)).toBeInTheDocument()
+    expect(queryByTestId(`remove-key-${constants.KEY_NAME_STRING_1}-trigger`)).toBeInTheDocument()
   })
 })

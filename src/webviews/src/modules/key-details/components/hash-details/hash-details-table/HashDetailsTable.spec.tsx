@@ -1,12 +1,13 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
+import { Mock } from 'vitest'
 import { KeyValueCompressor, TEXT_DISABLED_COMPRESSED_VALUE } from 'uiSrc/constants'
 import { connectedInstanceSelector } from 'uiSrc/slices/instances/instances'
 import { RedisResponseBufferType } from 'uiSrc/slices/interfaces'
 import { anyToBuffer, bufferToString } from 'uiSrc/utils'
 // import { GZIP_COMPRESSED_VALUE_1, GZIP_COMPRESSED_VALUE_2, DECOMPRESSED_VALUE_STR_1, DECOMPRESSED_VALUE_STR_2 } from 'uiSrc/utils/tests/decompressors'
-import { useSelectedKeyStore } from 'uiSrc/store'
-import { waitFor, constants, fireEvent, render, screen } from 'testSrc/helpers'
+import * as useSelectedKeyStore from 'uiSrc/store/hooks/use-selected-key-store/useSelectedKeyStore'
+import { constants, fireEvent, render, screen } from 'testSrc/helpers'
 import { HashDetailsTable, Props } from './HashDetailsTable'
 import { useHashStore } from '../hooks/useHashStore'
 
@@ -14,7 +15,7 @@ const mockedProps = mock<Props>()
 
 const initialHashState = { data: constants.HASH_DATA }
 beforeEach(() => {
-  useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
+  useSelectedKeyStore.useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
   useHashStore.setState((state) => ({ ...state, ...initialHashState }))
 })
 
@@ -48,7 +49,7 @@ describe('HashDetailsTable', () => {
     render(<HashDetailsTable {...instance(mockedProps)} />)
     fireEvent.click(screen.getAllByTestId(/remove-hash-button/)[0])
     const popupEl = screen.getByTestId(
-      `remove-hash-button-${bufferToString(initialHashState.data?.fields[0].field)}-icon`,
+      `remove-hash-button-${bufferToString(initialHashState.data?.fields[0].field)}-trigger`,
     )
     expect(popupEl).toBeInTheDocument()
   })
@@ -57,6 +58,18 @@ describe('HashDetailsTable', () => {
     render(<HashDetailsTable {...instance(mockedProps)} />)
     fireEvent.click(screen.getAllByTestId(/edit-hash-button/)[0])
     expect(screen.getByTestId('hash-value-editor')).toBeInTheDocument()
+  })
+
+  it('should call setSelectedKeyRefreshDisabled after click edit button', () => {
+    const setSelectedKeyRefreshDisabledMock = vi.fn()
+    const spy = vi.spyOn(useSelectedKeyStore, 'useSelectedKeyStore').mockImplementation(() => ({
+      setRefreshDisabled: setSelectedKeyRefreshDisabledMock,
+    }))
+
+    render(<HashDetailsTable {...instance(mockedProps)} />)
+    fireEvent.click(screen.getAllByTestId(/edit-hash-button/)[0])
+    expect(setSelectedKeyRefreshDisabledMock).toBeCalledWith(true)
+    spy.mockRestore()
   })
 
   it('should render resize trigger for field column', () => {

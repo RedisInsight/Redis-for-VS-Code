@@ -112,7 +112,7 @@ describe('PopoverDelete', () => {
 
     // open popover
     await waitFor(() => {
-      fireEvent.click(queryByTestId(`${testId}-icon`)!)
+      fireEvent.click(queryByTestId(`${testId}-trigger`)!)
     })
     await waitForStack()
 

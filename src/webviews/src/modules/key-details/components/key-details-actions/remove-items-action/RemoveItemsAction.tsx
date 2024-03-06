@@ -1,25 +1,25 @@
 import React from 'react'
 import cx from 'classnames'
-import { VscDiffAdded } from 'react-icons/vsc'
+import { VscDiffRemoved } from 'react-icons/vsc'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 
 import styles from '../styles.module.scss'
 
 export interface Props {
   title: string
-  openAddItemPanel: () => void
+  openRemoveItemPanel: () => void
 }
 
-const AddItemsAction = ({ title, openAddItemPanel }: Props) => (
+const RemoveItemsAction = ({ title, openRemoveItemPanel }: Props) => (
   <VSCodeButton
     appearance="icon"
     className={cx(styles.actionBtn, 'mt-[3px]')}
-    onClick={openAddItemPanel}
+    onClick={openRemoveItemPanel}
     aria-label={title}
     title={title}
   >
-    <VscDiffAdded data-testid="add-key-value-items-btn" />
+    <VscDiffRemoved data-testid="remove-key-value-items-btn" />
   </VSCodeButton>
 )
 
-export { AddItemsAction }
+export { RemoveItemsAction }

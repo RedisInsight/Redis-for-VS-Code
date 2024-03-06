@@ -7,6 +7,7 @@ export interface DatabasesStore {
   connectedDatabase: Nullable<Database>
   editDatabase: Nullable<Database>
   freeDatabases: Database[]
+  databaseOverview: DatabaseOverview
 }
 
 export interface Database {
@@ -47,6 +48,17 @@ export interface Database {
   loading?: boolean
   isFreeDb?: boolean
   nodes?: Endpoint[]
+}
+
+export interface DatabaseOverview {
+  version: string
+  totalKeys?: Nullable<number>
+  usedMemory?: Nullable<number>
+  connectedClients?: Nullable<number>
+  opsPerSecond?: Nullable<number>
+  networkInKbps?: Nullable<number>
+  networkOutKbps?: Nullable<number>
+  cpuUsagePercentage?: Nullable<number>
 }
 
 export interface AdditionalRedisModule {
@@ -95,4 +107,5 @@ export interface DatabasesActions {
   setEditDatabase: (data: Database) => void
   setConnectedDatabase: (data: Database) => void
   resetConnectedDatabase: () => void
+  getDatabaseOverviewSuccess: (data: DatabaseOverview) => void
 }

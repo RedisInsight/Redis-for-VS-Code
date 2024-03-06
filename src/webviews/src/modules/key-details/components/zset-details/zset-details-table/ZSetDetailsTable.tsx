@@ -74,10 +74,11 @@ const ZSetDetailsTable = (props: Props) => {
 
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
-  const { viewFormatProp, length, key } = useSelectedKeyStore(useShallow((state) => ({
+  const { viewFormatProp, length, key, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     viewFormatProp: state.viewFormat,
     length: state.data?.length,
     key: state.data?.name,
+    setRefreshDisabled: state.setSelectedKeyRefreshDisabled,
   })))
 
   const { loading, searching, loadedMembers, updateLoading, total, nextCursor, resetMembers } = useZSetStore(useShallow((state) => ({
@@ -122,6 +123,7 @@ const ZSetDetailsTable = (props: Props) => {
       setExpandedRows([])
       setViewFormat(viewFormatProp)
       setEditingIndex(null)
+      setRefreshDisabled(false)
 
       cellCache.clearAll()
       setTimeout(() => {
@@ -157,6 +159,7 @@ const ZSetDetailsTable = (props: Props) => {
 
   const handleEditMember = (rowIndex: Nullable<number> = null, name: RedisString, editing: boolean) => {
     setEditingIndex(editing ? rowIndex : null)
+    setRefreshDisabled(editing)
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_EDITED,
       eventData: {
@@ -388,7 +391,7 @@ const ZSetDetailsTable = (props: Props) => {
                 suffix={suffix}
                 deleting={deleting}
                 closePopover={closePopover}
-                updateLoading={false}
+                disabled={false}
                 showPopover={showPopover}
                 handleDeleteItem={handleDeleteMember}
                 handleButtonClick={handleRemoveIconClick}

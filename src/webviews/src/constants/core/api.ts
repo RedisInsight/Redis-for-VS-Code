@@ -5,6 +5,7 @@ enum ApiEndpoints {
   DATABASES_IMPORT = 'databases/import',
   DATABASES_TEST_CONNECTION = 'databases/test',
   DATABASES_EXPORT = 'databases/export',
+  OVERVIEW = 'overview',
 
   BULK_ACTIONS_IMPORT = 'bulk-actions/import',
   BULK_ACTIONS_IMPORT_TUTORIAL_DATA = 'bulk-actions/import/tutorial-data',
