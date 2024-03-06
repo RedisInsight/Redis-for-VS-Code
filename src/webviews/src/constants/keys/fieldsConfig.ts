@@ -110,7 +110,7 @@ export const AddListFormConfig: IAddListFormConfig = {
     name: 'count',
     isRequire: true,
     label: l10n.t('Count'),
-    placeholder: l10n.t('Enter Count'),
+    placeholder: l10n.t('Enter Count*'),
   },
 }
 

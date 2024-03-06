@@ -19,3 +19,11 @@ export const TEXT_DISABLED_COMPRESSED_VALUE: string = l10n.t('Cannot edit the de
 export const TEXT_FAILED_CONVENT_FORMATTER = (format: KeyValueFormat) => l10n.t('Failed to convert to {0}', format)
 
 export const STRING_MAX_LENGTH = 4999
+
+export enum ListElementDestination {
+  Tail = 'TAIL',
+  Head = 'HEAD',
+}
+
+export const TAIL_DESTINATION: ListElementDestination = ListElementDestination.Tail
+export const HEAD_DESTINATION: ListElementDestination = ListElementDestination.Head

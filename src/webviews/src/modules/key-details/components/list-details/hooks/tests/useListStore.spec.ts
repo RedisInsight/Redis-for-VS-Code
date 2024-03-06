@@ -8,7 +8,13 @@ import {
   fetchListMoreElements,
   updateListElementsAction,
   fetchSearchingListElement,
+  insertListElementsAction,
+  deleteListElementsAction,
 } from '../useListStore'
+import { ListElementDestination } from 'uiSrc/constants'
+import * as store from 'uiSrc/store'
+
+vi.spyOn(store, 'refreshKeyInfo')
 
 beforeEach(() => {
   useListStore.setState(initialStateInit)
@@ -149,6 +155,40 @@ describe('async', () => {
     expect(useListStore.getState().data.keyName).toEqual(constants.KEY_NAME_4)
     expect(useListStore.getState().data.elements?.[1].element).toEqual(constants.KEY_4_ELEMENT)
     expect(useListStore.getState().data.elements?.[1].index).toEqual(constants.KEY_4_INDEX_2)
+    expect(useListStore.getState().loading).toEqual(false)
+  })
+
+  it('insertListElementsAction', async () => {
+    useListStore.setState(({ ...initialStateInit, data: constants.LIST_DATA}))
+    const responsePayload = { status: 200 }
+    apiService.put = vi.fn().mockResolvedValue(responsePayload)
+
+    insertListElementsAction({
+      keyName: constants.KEY_NAME_4,
+      element: constants.KEY_4_ELEMENT,
+      destination: ListElementDestination.Head,
+    })
+    await waitForStack()
+
+    expect(useListStore.getState().data.keyName).toEqual(constants.KEY_NAME_4)
+    expect(store.refreshKeyInfo).toBeCalledWith(constants.KEY_NAME_4, true)
+    expect(useListStore.getState().loading).toEqual(false)
+  })
+
+  it('deleteListElementsAction', async () => {
+    useListStore.setState(({ ...initialStateInit, data: constants.LIST_DATA}))
+    const responsePayload = { data: {}, status: 200 }
+    apiService.delete = vi.fn().mockResolvedValue(responsePayload)
+
+    deleteListElementsAction({
+      keyName: constants.KEY_NAME_4,
+      count: 2,
+      destination: ListElementDestination.Head,
+    })
+    await waitForStack()
+
+    expect(useListStore.getState().data.keyName).toEqual(constants.KEY_NAME_4)
+    expect(store.refreshKeyInfo).toBeCalledWith(constants.KEY_NAME_4, true)
     expect(useListStore.getState().loading).toEqual(false)
   })
 })

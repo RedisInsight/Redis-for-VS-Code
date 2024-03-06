@@ -6,6 +6,10 @@
   }
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, a:focus {
   outline: none;
+}
+
+input:disabled {
+  @apply cursor-not-allowed;
 }

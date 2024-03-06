@@ -60,7 +60,7 @@ const AddSetMembers = (props: Props) => {
 
   return (
     <>
-      <div className="key-add-items-container" data-testid="add-set-field-panel">
+      <div className="key-footer-items-container" data-testid="add-set-field-panel">
         {members.map((item, index) => (
           <div key={item.id}>
             <div className="flex items-center mb-3">

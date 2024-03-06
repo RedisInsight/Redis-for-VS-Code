@@ -391,7 +391,7 @@ const ZSetDetailsTable = (props: Props) => {
                 suffix={suffix}
                 deleting={deleting}
                 closePopover={closePopover}
-                updateLoading={false}
+                disabled={false}
                 showPopover={showPopover}
                 handleDeleteItem={handleDeleteMember}
                 handleButtonClick={handleRemoveIconClick}

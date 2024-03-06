@@ -49,7 +49,7 @@ describe('HashDetailsTable', () => {
     render(<HashDetailsTable {...instance(mockedProps)} />)
     fireEvent.click(screen.getAllByTestId(/remove-hash-button/)[0])
     const popupEl = screen.getByTestId(
-      `remove-hash-button-${bufferToString(initialHashState.data?.fields[0].field)}-icon`,
+      `remove-hash-button-${bufferToString(initialHashState.data?.fields[0].field)}-trigger`,
     )
     expect(popupEl).toBeInTheDocument()
   })

@@ -187,7 +187,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
               text={l10n.t('will be deleted from RedisInsight.')}
               item={id}
               maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}
-              updateLoading={false}
+              disabled={false}
               handleDeleteItem={() => deleteDatabaseHandle()}
               handleButtonClick={() => clickDeleteDatabaseHandle()}
               testid={`delete-database-${id}`}

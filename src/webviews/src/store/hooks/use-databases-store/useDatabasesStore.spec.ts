@@ -17,6 +17,7 @@ import {
   updateDatabase,
   checkConnectToDatabase,
   deleteDatabases,
+  fetchDatabaseOverview,
 } from './useDatabasesStore'
 
 let store: typeof mockedStore
@@ -25,6 +26,7 @@ let databases: any[]
 vi.spyOn(utils, 'showErrorMessage')
 vi.spyOn(utils, 'showInformationMessage')
 
+const versionMock = '123'
 const errorMessage = 'Could not connect to aoeu:123, please check the connection details.'
 const errorResponsePayload = {
   response: {
@@ -325,6 +327,37 @@ describe('useDatabasesStore', () => {
 
         // Assert
         expect(useDatabasesStore.getState().data).toEqual([])
+        expect(useDatabasesStore.getState().loading).toEqual(false)
+        expect(utils.showErrorMessage).toBeCalled()
+      })
+    })
+
+    describe('fetchDatabaseOverview', () => {
+      it('call fetchDatabaseOverview when fetch is successed', async () => {
+        // Arrange
+        const responseGetPayload = { status: 200, data: { version: versionMock } }
+
+        apiService.get = vi.fn().mockResolvedValue(responseGetPayload)
+
+        // Act
+        fetchDatabaseOverview()
+        await waitForStack()
+
+        expect(useDatabasesStore.getState().databaseOverview.version).toEqual(versionMock)
+      })
+
+      it('when fetch is fail version should be previous', async () => {
+        // Arrange
+        useDatabasesStore.setState((state) => ({ ...state, data: [] }))
+
+        apiService.get = vi.fn().mockRejectedValueOnce(errorResponsePayload)
+
+        // Act
+        fetchDatabaseOverview()
+        await waitForStack()
+
+        // Assert
+        expect(useDatabasesStore.getState().databaseOverview.version).toEqual(versionMock)
         expect(useDatabasesStore.getState().loading).toEqual(false)
         expect(utils.showErrorMessage).toBeCalled()
       })

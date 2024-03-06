@@ -469,7 +469,7 @@ const HashDetailsTable = (props: Props) => {
                 suffix={suffix}
                 deleting={deleting}
                 closePopover={closePopover}
-                updateLoading={updateLoading}
+                disabled={updateLoading}
                 showPopover={showPopover}
                 testid={`remove-hash-button-${field}`}
                 handleDeleteItem={handleDeleteField}
