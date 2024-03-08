@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser, Workbench } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 import {
   WebView,
   HashKeyDetailsView,
@@ -11,11 +11,13 @@ import {
   ButtonActions,
   DatabasesActions,
   KeyDetailsActions,
+  NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 
@@ -86,7 +88,7 @@ describe('Hash Key fields verification', () => {
       expect(result.length).eqls(1)
     }
   })
-  it('Verify that user can add field to Hash', async t => {
+  it('Verify that user can add field to Hash', async function () {
     keyName = Common.generateWord(10)
     const keyFieldValue = 'hashField11111'
     const keyValue = 'hashValue11111!'
@@ -94,8 +96,8 @@ describe('Hash Key fields verification', () => {
       keyName: keyName,
       fields: [
         {
-          field: keyFieldValue,
-          value: keyValue,
+          field: 'field',
+          value: 'value'
         },
       ],
     }
@@ -109,7 +111,6 @@ describe('Hash Key fields verification', () => {
     )
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
-
     // Add field to the hash key
     await keyDetailsView.addFieldToHash(keyFieldValue, keyValue)
     // Search the added field
@@ -123,6 +124,7 @@ describe('Hash Key fields verification', () => {
     // Check the added field
     expect(fieldValue).contains(keyFieldValue, 'The field is not displayed')
     expect(value).contains(keyValue, 'The value is not displayed')
+    await keyDetailsView.clearSearchInKeyDetails()
 
     // Verify that user can remove field from Hash
     await keyDetailsView.removeRowByField(KeyTypesShort.Hash, keyFieldValue)
@@ -131,14 +133,21 @@ describe('Hash Key fields verification', () => {
       keyFieldValue,
     )
     await webView.switchBack()
+    // Check the notification message that field deleted
+    await NotificationActions.checkNotificationMessage(`${keyFieldValue} has been removed from ${keyName}`)
 
-    let notifications = await new Workbench().getNotifications()
-    let notification = notifications[0]
-    // Check the notification message
-    let message = await notification.getMessage()
-    expect(message).eqls(
-      `${keyFieldValue} has been removed from ${keyName}`,
-      'The notification is not displayed',
+    await webView.switchToFrame(Views.KeyDetailsView)
+    // Verify that hash key deleted when all fields deleted
+    await keyDetailsView.removeRowByField(KeyTypesShort.Hash, hashKeyParameters.fields[0].field)
+    await keyDetailsView.clickRemoveRowButtonByField(
+      KeyTypesShort.Hash,
+      hashKeyParameters.fields[0].field,
     )
+    await webView.switchBack()
+    // Check the notification message that key deleted
+    await NotificationActions.checkNotificationMessage(`${keyName} has been deleted.`)
+
+    // Verify that details panel is closed for hash key after deletion
+    KeyDetailsActions.verifyDetailsPanelClosed()
   })
 })

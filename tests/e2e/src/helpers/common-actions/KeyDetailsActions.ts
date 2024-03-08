@@ -1,5 +1,11 @@
-import { WebView, TreeView } from '@e2eSrc/page-objects/components'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { expect } from 'chai'
+import { By } from 'vscode-extension-tester'
+import {
+  WebView,
+  TreeView,
+  DatabaseDetailsView,
+} from '@e2eSrc/page-objects/components'
+import { ViewElements, Views } from '@e2eSrc/page-objects/components/WebView'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 
 /**
@@ -12,10 +18,21 @@ export class KeyDetailsActions extends CommonDriverExtension {
    */
   static async openKeyDetailsByKeyNameInIframe(name: string): Promise<void> {
     let webView = new WebView()
-    let treeView = new TreeView()
     await this.driverSleep(1000)
-    await treeView.openKeyDetailsByKeyName(name)
+    await new TreeView().openKeyDetailsByKeyName(name)
     await webView.switchBack()
-    await webView.switchToFrame(Views.KeyDetailsView)
+    await webView.switchToFrame(Views.KeyDetailsView, Views.KeyDetailsInnerView)
+    await this.driverSleep(1000)
+  }
+
+  /**
+   * Verify that details panel is closed
+   */
+  static async verifyDetailsPanelClosed(): Promise<void> {
+    expect(
+      await new DatabaseDetailsView().isElementDisplayed(
+        By.xpath(ViewElements[Views.DatabaseDetailsView]),
+      ),
+    ).false
   }
 }

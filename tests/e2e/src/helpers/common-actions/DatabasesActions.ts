@@ -1,25 +1,23 @@
+import * as fs from 'fs'
 import { expect } from 'chai'
 import {
   ActivityBar,
-  By,
   Locator,
   VSBrowser,
-  Workbench,
   until,
 } from 'vscode-extension-tester'
 import { CommonDriverExtension } from '../CommonDriverExtension'
 import {
-  DatabaseDetailsView,
-  EditDatabaseView,
   TreeView,
 } from '@e2eSrc/page-objects/components'
 import {
-  ViewElements,
   Views,
   WebView,
 } from '@e2eSrc/page-objects/components/WebView'
 import { AddNewDatabaseParameters } from '../types/types'
 import { DatabaseAPIRequests } from '../api'
+import { NotificationActions } from './actions'
+import { KeyDetailsActions } from './KeyDetailsActions'
 
 /**
  * Database details actions
@@ -42,20 +40,12 @@ export class DatabasesActions extends CommonDriverExtension {
    */
   static async verifyDatabaseAdded(): Promise<void> {
     await CommonDriverExtension.driverSleep(1000)
-    let notifications = await new Workbench().getNotifications()
-    let notification = notifications[0]
     // Check the notification message
-    let message = await notification.getMessage()
-    expect(message).eqls(
+    await NotificationActions.checkNotificationMessage(
       `Database has been added`,
-      'The notification is not displayed',
     )
     // Verify that panel is closed
-    expect(
-      await new DatabaseDetailsView().isElementDisplayed(
-        By.xpath(ViewElements[Views.DatabaseDetailsView]),
-      ),
-    ).false
+    KeyDetailsActions.verifyDetailsPanelClosed()
   }
 
   /**
@@ -63,20 +53,12 @@ export class DatabasesActions extends CommonDriverExtension {
    */
   static async verifyDatabaseEdited(): Promise<void> {
     await CommonDriverExtension.driverSleep(1000)
-    let notifications = await new Workbench().getNotifications()
-    let notification = notifications[0]
     // Check the notification message
-    let message = await notification.getMessage()
-    expect(message).eqls(
+    await NotificationActions.checkNotificationMessage(
       `Database has been edited`,
-      'The notification is not displayed',
     )
     // Verify that panel is closed
-    expect(
-      await new EditDatabaseView().isElementDisplayed(
-        By.xpath(ViewElements[Views.DatabaseDetailsView]),
-      ),
-    ).false
+    KeyDetailsActions.verifyDetailsPanelClosed()
   }
 
   /**
@@ -91,5 +73,46 @@ export class DatabasesActions extends CommonDriverExtension {
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await new WebView().switchToFrame(Views.TreeView)
     await new TreeView().clickDatabaseByName(databaseParameters.databaseName!)
+  }
+
+  /**
+   * Find files by they name starts from directory
+   * @param dir The path directory of file
+   * @param fileStarts The file name should start from
+   */
+  static async findFilesByFileStarts(
+    dir: string,
+    fileStarts: string,
+  ): Promise<string[]> {
+    const matchedFiles: string[] = []
+    const files = fs.readdirSync(dir)
+
+    if (fs.existsSync(dir)) {
+      for (const file of files) {
+        if (file.startsWith(fileStarts)) {
+          matchedFiles.push(file)
+        }
+      }
+    }
+    return matchedFiles
+  }
+
+  /**
+   * Get files count by name starts from directory
+   * @param dir The path directory of file
+   * @param fileStarts The file name should start from
+   */
+  static async getFileCount(dir: string, fileStarts: string): Promise<number> {
+    if (fs.existsSync(dir)) {
+      const matchedFiles: string[] = []
+      const files = fs.readdirSync(dir)
+      for (const file of files) {
+        if (file.startsWith(fileStarts)) {
+          matchedFiles.push(file)
+        }
+      }
+      return matchedFiles.length
+    }
+    return 0
   }
 }

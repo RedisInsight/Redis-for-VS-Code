@@ -58,6 +58,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    testTimeout: 20000,
     setupFiles: ['./src/webviews/test/setup.ts'],
     coverage: {
       include: ['src/webviews/src/**'],

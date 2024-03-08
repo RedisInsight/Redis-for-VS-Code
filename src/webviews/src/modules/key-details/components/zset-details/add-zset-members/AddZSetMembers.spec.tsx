@@ -5,6 +5,7 @@ import { AddZSetMembers, Props } from './AddZSetMembers'
 
 const MEMBER_NAME = 'member-name'
 const ADD_NEW_ITEM = 'add-new-item'
+const MEMBER_SCORE = 'member-score'
 
 const mockedProps = mock<Props>()
 
@@ -47,15 +48,44 @@ describe('AddZSetMembers', () => {
     expect(screen.getAllByTestId(MEMBER_NAME)).toHaveLength(1)
   })
 
-  it('should clear member after click clear button', () => {
+  it('should clear member and score after click clear button', () => {
+    render(<AddZSetMembers {...instance(mockedProps)} />)
+    const memberInput = screen.getByTestId(MEMBER_NAME)
+    const scoreInput = screen.getByTestId(MEMBER_SCORE)
+    fireEvent.change(
+      memberInput,
+      { target: { value: 'member' } },
+    )
+    fireEvent.change(
+      scoreInput,
+      { target: { value: '1' } },
+    )
+    fireEvent.click(screen.getByLabelText(/clear item/i))
+
+    expect(memberInput).toHaveValue('')
+    expect(scoreInput).toHaveValue('')
+  })
+
+  it('should set by blur score value properly if input wrong value', () => {
+    render(<AddZSetMembers {...instance(mockedProps)} />)
+    const scoreInput = screen.getByTestId(MEMBER_SCORE)
+    fireEvent.change(
+      scoreInput,
+      { target: { value: '.1' } },
+    )
+    fireEvent.focusOut(
+      scoreInput,
+    )
+    expect(scoreInput).toHaveValue('0.1')
+  })
+
+  it('add new item should be disabled if no score', () => {
     render(<AddZSetMembers {...instance(mockedProps)} />)
     const memberInput = screen.getByTestId(MEMBER_NAME)
     fireEvent.change(
       memberInput,
       { target: { value: 'member' } },
     )
-    fireEvent.click(screen.getByLabelText(/clear item/i))
-
-    expect(memberInput).toHaveValue('')
+    expect((screen.getByTestId(ADD_NEW_ITEM) as HTMLButtonElement).disabled).toEqual(true)
   })
 })

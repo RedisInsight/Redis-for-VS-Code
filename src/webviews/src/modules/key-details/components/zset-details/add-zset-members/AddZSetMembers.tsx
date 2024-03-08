@@ -84,7 +84,31 @@ const AddZSetMembers = (props: Props) => {
     addZSetMembersAction(data, onSuccessAdded)
   }
 
-  const isClearDisabled = (item: IZsetMemberState): boolean => members.length === 1 && !item.name.length
+  const handleScoreBlur = (item: IZsetMemberState) => {
+    const { score } = item
+    const newState = members.map((currentItem) => {
+      if (currentItem.id !== item.id) {
+        return currentItem
+      }
+      if (isNaNConvertedString(score)) {
+        return {
+          ...currentItem,
+          score: '',
+        }
+      }
+      if (score.length) {
+        return {
+          ...currentItem,
+          score: toNumber(score).toString(),
+        }
+      }
+      return currentItem
+    })
+    setMembers(newState)
+  }
+
+  const isClearDisabled = (item: IZsetMemberState): boolean =>
+    members.length === 1 && !(item.name.length || item.score.length)
 
   return (
     <>
@@ -114,7 +138,9 @@ const AddZSetMembers = (props: Props) => {
                     value={item.score}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setMembers(handleItemChange(members, 'score', item.id, validateScore(e.target.value)))}
-                    inputRef={index === members.length - 1 ? lastAddedMemberName : null}
+                    onBlur={() => {
+                      handleScoreBlur(item)
+                    }}
                     disabled={loading}
                     data-testid="member-score"
                   />
@@ -126,11 +152,13 @@ const AddZSetMembers = (props: Props) => {
                   loading={loading}
                   removeItem={(id) => setMembers(removeItem(members, id))}
                   addItem={() => setMembers(addNewItem(members, INITIAL_ZSET_MEMBER_STATE))}
+                  addItemIsDisabled={members.some((item) => !item.score.length)}
                   clearIsDisabled={isClearDisabled(item)}
                   clearItemValues={(id) =>
                     setMembers(setEmptyItemById(members, id, {
                       ...item,
                       name: '',
+                      score: '',
                     }))}
                 />
               </div>

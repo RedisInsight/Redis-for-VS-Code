@@ -40,7 +40,7 @@ describe('Tree view verifications', () => {
       'Tree view Scan more button not displayed for big database',
     )
   })
-  it('Verify that when user deletes the key he can see the key is removed from the folder', async t => {
+  it('Verify that when user deletes the key he can see the key is removed from the folder', async function () {
     const mainFolder = treeView.getFolderSelectorByName('device')
     await treeView.getElement(mainFolder)
     expect(await treeView.isElementDisplayed(mainFolder)).eql(

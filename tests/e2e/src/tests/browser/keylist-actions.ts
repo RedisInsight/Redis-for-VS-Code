@@ -79,7 +79,7 @@ describe('Actions with Key List', () => {
 
     // Delete key from detailed view
     keyDetailsView.removeKeyFromDetailedView()
-    expect(!keyDetailsView?.keyStringValue).eql(
+    expect(!keyDetailsView?.stringKeyValueInput).eql(
       true,
       'Detailed view closed after deleting',
     )
