@@ -23,9 +23,11 @@ export class AddStringKeyView extends AddKeyView {
   }
   /**
    * Create string key
+   * @param name The name of the key
    * @param value The type of the key
+   * @param ttl The ttl of the key
    */
-  async createStringKey(
+  async addStringKey(
     name: string,
     value: string = '',
     ttl: string = '',

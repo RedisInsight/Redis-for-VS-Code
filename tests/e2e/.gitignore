@@ -15,3 +15,4 @@ test-resources
 report
 results
 remote
+mochawesome-report

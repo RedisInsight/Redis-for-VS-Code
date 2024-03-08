@@ -1,4 +1,4 @@
-import { Eula } from './helpers/api/Eula';
+import { Eula } from '../helpers/api/Eula';
 
 describe('Setup tests', () => {
   it('Setup Eula accepted', async () => {
