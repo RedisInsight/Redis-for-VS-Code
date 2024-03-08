@@ -6,9 +6,10 @@ import * as utils from 'uiSrc/utils'
 import { apiService } from 'uiSrc/services'
 import { constants, mockedStore, waitForStack } from 'testSrc/helpers'
 import * as useKeys from '../useKeys'
-import { KeysActions, KeysStore, KeysStoreData, KeysThunks } from '../interface'
+import { CreateSetWithExpireDto, KeysActions, KeysStore, KeysStoreData, KeysThunks } from '../interface'
 import { createKeysActionsSlice, initialKeysState as initialStateInit } from '../useKeysActions'
 import { createKeysThunksSlice } from '../useKeysThunks'
+import { successMessages } from 'uiSrc/constants'
 
 const { stringToBuffer } = utils
 let store: typeof mockedStore
@@ -424,6 +425,25 @@ describe('useKeys', () => {
         // Assert
         expect(utils.showErrorMessage).toBeCalledWith(responsePayload.response.data.message)
         expect(useKeysStore.getState().deleting).toEqual(false)
+      })
+    })
+
+    describe('addSetKey', () => {
+      it('success to add key', async () => {
+        // Arrange
+        const data: CreateSetWithExpireDto = {
+          keyName: 'keyName',
+          members: ['member'],
+        }
+        const responsePayload = { data, status: 200 }
+
+        apiService.post = vi.fn().mockResolvedValue(responsePayload)
+
+        // Act
+        useKeysStore.getState().addSetKey(data)
+        await waitForStack()
+        // Assert
+        expect(utils.showInformationMessage).toBeCalledWith(successMessages.ADDED_NEW_KEY(data.keyName).title)
       })
     })
   })

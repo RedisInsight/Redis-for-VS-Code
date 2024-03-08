@@ -123,7 +123,7 @@ const AddZSetMembers = (props: Props) => {
                   id={item.id}
                   index={index}
                   length={members.length}
-                  loading={loading}
+                  disabled={loading}
                   removeItem={(id) => setMembers(removeItem(members, id))}
                   addItem={() => setMembers(addNewItem(members, INITIAL_ZSET_MEMBER_STATE))}
                   clearIsDisabled={isClearDisabled(item)}

@@ -1,5 +1,5 @@
 .formFooterBar {
-  @apply bg-vscode-tab-activeBackground absolute bottom-0 border-solid border-t-[1px] w-full max-h-full overflow-y-auto z-[3];
+  @apply bg-vscode-tab-activeBackground absolute bottom-0 border-solid border-t-[1px] w-full max-h-full overflow-y-auto z-[3] p-4;
 
   &.contentActive {
     @apply border-vscode-button-background border-b-[1px];
