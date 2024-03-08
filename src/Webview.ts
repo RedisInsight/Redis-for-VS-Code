@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
-import { nanoid } from 'nanoid'
-import { handleMessage } from './utils'
+import { getNonce, handleMessage } from './utils'
 
 type WebviewOptions = {
   context?: vscode.ExtensionContext
@@ -27,7 +26,7 @@ abstract class Webview {
         options.context?.extensionUri as vscode.Uri,
         'dist/webviews/style.css',
       ),
-      nonce: nanoid(),
+      nonce: getNonce(),
       handleMessage,
       ...options,
     }

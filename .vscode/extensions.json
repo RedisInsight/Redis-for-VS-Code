@@ -8,6 +8,5 @@
     "csstools.postcss",
     "esbenp.prettier-vscode",
     "bradlc.vscode-tailwindcss",
-    "ZixuanChen.vitest-explorer",
   ]
 }
