@@ -248,7 +248,7 @@ export const deleteListElementsAction = (
             responseData.elements,
           ).title,
         )
-        fetchKeyInfo({ key: key! }, true)
+        refreshKeyInfo(key, true)
       } else {
         showInformationMessage(successMessages.DELETED_KEY(key!).title)
       }
