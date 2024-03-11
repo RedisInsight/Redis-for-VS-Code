@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import * as tcpPortUsed from 'tcp-port-used'
+import * as getPort from 'detect-port'
 import * as path from 'path'
 import * as cp from 'child_process'
 import * as fs from 'fs'
@@ -16,7 +16,7 @@ const backendPath = path.join(__dirname, '..', 'redis-backend')
 let PSinst: ChildProcessWithoutNullStreams
 
 export async function startBackend(context: vscode.ExtensionContext): Promise<any> {
-  const port = (await getAvailablePort())?.toString() as string
+  const port = await (await getPort.default(+apiPort!)).toString()
   console.debug(`Starting at port: ${port}`)
   context.globalState.update('API_PORT', port)
 
@@ -84,19 +84,6 @@ export function closeBackend() {
     PSinst.stderr.destroy()
     PSinst.kill('SIGINT')
   }
-}
-
-async function getAvailablePort(port?: number): Promise<number | undefined> {
-  const portToCheck = port || Number(apiPort)
-  try {
-    const portCheck = await tcpPortUsed.check(Number(portToCheck), '127.0.0.1')
-    if (!portCheck && portToCheck < 65_535) {
-      return portToCheck
-    } return await getAvailablePort(portToCheck + 1)
-  } catch (err) {
-    console.debug(err)
-  }
-  return undefined
 }
 
 function checkServerReady(port: string, callback: () => void) {

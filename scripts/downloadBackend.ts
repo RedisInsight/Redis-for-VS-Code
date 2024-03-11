@@ -13,6 +13,7 @@ dotenv.config({
 })
 const cdnPath = process.env.RI_CDN_PATH
 const backendPath = path.join(__dirname, '..', 'dist', 'redis-backend')
+const staticPath = path.join(backendPath, 'static')
 const tempWindowsDistPath = process.env.RI_TEMP_WINDOWS_DIST_PATH as string
 
 const downloadBackend = async () => {
@@ -113,7 +114,10 @@ function unzipRedisServer(redisInsideArchivePath: string, extractDir: string) {
     }
     cp.spawnSync('tar', ['-xzf', redisInsideArchivePath, '-C', extractDir, '--strip-components', '2', 'api/dist'])
     // Temporary: there's no some dependencies in current dist's, starting re-install
-    cp.spawnSync('yarn', ['--cwd', extractDir, 'install'])
+    cp.spawnSync('yarn', ['--cwd', extractDir, 'install', '--production'])
+
+    // remove plugins
+    fs.rmSync(staticPath, { recursive: true, force: true });
   }
 }
 

@@ -246,6 +246,7 @@
     "connection-string": "^4.4.0",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
+    "detect-port": "^1.5.1",
     "file-saver": "^2.0.5",
     "formik": "^2.4.5",
     "helmet": "^7.0.0",
@@ -253,7 +254,6 @@
     "html-react-parser": "^5.0.6",
     "is-glob": "^4.0.3",
     "lodash": "^4.17.21",
-    "nanoid": "^3.3.6",
     "react": "^18.2.0",
     "react-contenteditable": "^3.3.7",
     "react-detect-click-outside": "^1.1.7",
@@ -273,7 +273,6 @@
     "redux-thunk": "^2.4.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "tcp-port-used": "^1.0.2",
     "ws": "^8.13.0",
     "zustand": "^4.4.7"
   }
