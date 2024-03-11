@@ -1,6 +1,5 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser } from 'vscode-extension-tester'
 import {
   WebView,
   HashKeyDetailsView,
@@ -22,13 +21,11 @@ import { Views } from '@e2eSrc/page-objects/components/WebView'
 let keyName: string
 
 describe('Hash Key fields verification', () => {
-  let browser: VSBrowser
   let webView: WebView
   let keyDetailsView: HashKeyDetailsView
   let treeView: TreeView
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     webView = new WebView()
     keyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
@@ -148,6 +145,6 @@ describe('Hash Key fields verification', () => {
     await NotificationActions.checkNotificationMessage(`${keyName} has been deleted.`)
 
     // Verify that details panel is closed for hash key after deletion
-    KeyDetailsActions.verifyDetailsPanelClosed()
+    await KeyDetailsActions.verifyDetailsPanelClosed()
   })
 })

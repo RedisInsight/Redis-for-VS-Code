@@ -89,9 +89,16 @@ export class BaseComponent extends WebElement {
     locator: Locator,
     attribute: string,
   ): Promise<boolean> {
-    const element = await this.getDriver().findElement(locator)
-    const value = await element.getAttribute(attribute)
-    return value.includes('disabled')
+    const element: WebElement = await this.getDriver().findElement(locator)
+    const isEnabled: boolean = await element.isEnabled()
+
+    if (isEnabled) {
+      const value: string | null = await element.getAttribute(attribute)
+      return value ? value.includes('disabled') : false
+    } else {
+      // If the element is not enabled, it's considered disabled
+      return true
+    }
   }
 
   /**
@@ -101,5 +108,56 @@ export class BaseComponent extends WebElement {
    */
   async getElementText(locator: Locator): Promise<string> {
     return await (await this.getElement(locator)).getText()
+  }
+
+  /**
+   * Wait for the element to be visible and return it
+   * @param locator Webdriver locator to search by
+   * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @returns WebElement
+   */
+  async waitElementToBeVisible(
+    locator: Locator,
+    timeout: number = 5000,
+  ): Promise<WebElement> {
+    const element = await this.getDriver().wait(
+      until.elementLocated(locator),
+      timeout,
+    )
+    return await this.getDriver().wait(until.elementIsVisible(element), timeout)
+  }
+
+  /**
+   * Wait for the element to be not visible
+   * @param locator Webdriver locator to search by
+   * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @returns WebElement
+   */
+  async waitUntilElementNotDisplayed(
+    locator: Locator,
+    timeout: number,
+  ): Promise<boolean> {
+    const endTime = Date.now() + timeout
+    while (Date.now() < endTime) {
+      try {
+        const elements: WebElement[] =
+          await this.getDriver().findElements(locator)
+        if (elements.length === 0) {
+          // Element not found, consider it not displayed
+          return true
+        }
+        // Check if the first element is not displayed
+        const isNotDisplayed = !(await elements[0].isDisplayed())
+        if (isNotDisplayed) {
+          return true
+        }
+      } catch (error) {
+        // ignore stale element errors
+      }
+      // Wait for a short interval before re-checking
+      await this.getDriver().sleep(500)
+    }
+    // Timeout reached, element may still be displayed
+    return false
   }
 }

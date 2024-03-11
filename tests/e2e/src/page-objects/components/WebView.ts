@@ -37,41 +37,58 @@ export class WebView {
   }
 
   /**
+   * Wait for the element to be found by locator and return it
+   * @param locator Webdriver locator to search by
+   * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @returns WebElement
+   */
+  async getWebElement(
+    locator: Locator,
+    timeout: number = 5000,
+  ): Promise<WebElement> {
+    return this.driver.wait(until.elementLocated(locator), timeout)
+  }
+
+  /**
+   * Wait for the element to be visible and return it
+   * @param locator Webdriver locator to search by
+   * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @returns WebElement
+   */
+    async waitWebElementToBeVisible(
+      locator: Locator,
+      timeout: number = 5000,
+    ): Promise<WebElement> {
+      const element = await this.getWebElement(locator)
+      return this.driver.wait(until.elementIsVisible(element), timeout)
+    }
+
+  /**
    * Switch the underlying webdriver context to the webview iframe.
-   * @param locator webdriver locator to search by
+   * @param switchView webdriver iframe view
+   * @param switchInnerView webdriver iframe inner view
    * @param timeout optional maximum time to wait for completion in milliseconds, 0 for unlimited
    * @returns Promise resolving when switched to WebView iframe
    */
   async switchToFrame(
     switchView: Views,
-    switchSecondView?: Views,
-    timeout: number = 10000,
+    switchInnerView?: InnerViews,
   ): Promise<void> {
-    const frameLocator = ViewLocators[switchView]
-    await this.driver.wait(
-      until.elementLocated(By.xpath(frameLocator)),
-      timeout,
-    )
-    const firstView = await this.findWebElement(By.xpath(frameLocator))
+    const frameLocator = By.xpath(ViewLocators[switchView])
+    const firstView = await this.waitWebElementToBeVisible(frameLocator)
     await this.driver.switchTo().frame(firstView)
 
-    if (switchSecondView) {
-      const secondFrameLocator = ViewLocators[switchSecondView]
-      await this.driver.wait(
-        until.elementLocated(By.xpath(secondFrameLocator)),
-        timeout,
-      )
-      const secondView = await this.findWebElement(By.xpath(secondFrameLocator))
-      await this.driver.switchTo().frame(secondView)
+    if (switchInnerView) {
+      const innerFrameLocator = By.xpath(InnerViewLocators[switchInnerView])
+      await this.waitWebElementToBeVisible(innerFrameLocator)
+      const innerView = await this.waitWebElementToBeVisible(innerFrameLocator)
+      await this.driver.switchTo().frame(innerView)
     } else {
       await this.driver.switchTo().frame(0)
     }
 
-    const elementLocator = ViewElements[switchView]
-    await this.driver.wait(
-      until.elementLocated(By.xpath(elementLocator)),
-      timeout,
-    )
+    const elementLocator = By.xpath(ViewElements[switchView])
+    await this.waitWebElementToBeVisible(elementLocator)
   }
 
   /**
@@ -88,7 +105,6 @@ export class WebView {
 export enum Views {
   TreeView,
   KeyDetailsView,
-  KeyDetailsInnerView,
   CliViewPanel,
   AddKeyView,
   DatabaseDetailsView,
@@ -99,7 +115,6 @@ export const ViewLocators = {
     "//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]",
   [Views.KeyDetailsView]:
     "//div[contains(@data-parent-flow-to-element-id, 'webview-editor-element')]/iframe",
-  [Views.KeyDetailsInnerView]: "//iframe[@title='RedisInsight - Key details']",
   [Views.CliViewPanel]:
     "//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]",
   [Views.AddKeyView]:
@@ -111,8 +126,17 @@ export const ViewLocators = {
 export const ViewElements = {
   [Views.TreeView]: `//div[@data-testid='tree-view-page']`,
   [Views.KeyDetailsView]: `//*[@data-testid='key-details-page']`,
-  [Views.KeyDetailsInnerView]: `//*[@data-testid='key-details-page']`,
   [Views.CliViewPanel]: `//*[@data-testid='panel-view-page']`,
   [Views.AddKeyView]: `//*[@data-testid='select-key-type']`,
   [Views.DatabaseDetailsView]: `//*[contains(@data-testid,  'database-') and contains(@data-testid,  '-page')]`,
+}
+
+export enum InnerViews {
+  KeyListInnerView,
+  KeyDetailsInnerView,
+}
+
+export const InnerViewLocators = {
+  [InnerViews.KeyListInnerView]: "//iframe[@title='RedisInsight']",
+  [InnerViews.KeyDetailsInnerView]: "//iframe[@title='RedisInsight - Key details']",
 }

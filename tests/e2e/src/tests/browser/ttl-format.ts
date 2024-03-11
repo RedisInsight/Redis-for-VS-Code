@@ -1,6 +1,5 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -29,7 +28,6 @@ const ttlForSet = [59, 800, 20000, 2000000, 31000000, 2147483647]
 const ttlValues = ['s', '13 min', '5 h', '23 d', '11 mo', '68 yr']
 
 describe('TTL values in Keys Table', () => {
-  let browser: VSBrowser
   let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
@@ -37,7 +35,6 @@ describe('TTL values in Keys Table', () => {
   let treeView: TreeView
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new KeyDetailsView()

@@ -1,10 +1,8 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser } from 'vscode-extension-tester'
 import {
   WebView,
   TreeView,
-  StringKeyDetailsView,
   HashKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
@@ -20,13 +18,11 @@ import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
 let keyName: string
 
 describe('Cases with large data', () => {
-  let browser: VSBrowser
   let webView: WebView
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     webView = new WebView()
     hashKeyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()

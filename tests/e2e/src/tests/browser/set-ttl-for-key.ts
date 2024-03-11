@@ -1,6 +1,5 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   CliViewPanel,
@@ -21,7 +20,6 @@ import { Config } from '@e2eSrc/helpers'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 
 describe('Set TTL for Key', () => {
-  let browser: VSBrowser
   let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
@@ -29,7 +27,6 @@ describe('Set TTL for Key', () => {
   let treeView: TreeView
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new KeyDetailsView()

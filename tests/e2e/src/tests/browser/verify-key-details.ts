@@ -1,6 +1,5 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -30,7 +29,6 @@ const expectedTTL = /214747612*/
 let keyName: string
 
 describe('Key Details verifications', () => {
-  let browser: VSBrowser
   let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
@@ -44,7 +42,6 @@ describe('Key Details verifications', () => {
   let addStringKeyView: AddStringKeyView
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new StringKeyDetailsView()

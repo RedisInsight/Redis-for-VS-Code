@@ -18,7 +18,7 @@ export class KeyActions {
     keyArguments: AddKeyArguments,
   ): Promise<void> {
     const dbConf = { url: `redis://${host}:${port}` }
-    const client = await createClient(dbConf)
+    const client = createClient(dbConf)
 
     await client
       .on('error', err => console.error('Redis Client Error', err))
@@ -51,11 +51,12 @@ export class KeyActions {
     let maxScoreValue = 10
     const members: Array<ZMember> = []
     const dbConf = { url: `redis://${host}:${port}` }
-    const client = await createClient(dbConf)
+    const client = createClient(dbConf)
 
     await client
       .on('error', err => console.error('Redis Client Error', err))
       .connect()
+
     if (keyArguments.fieldsCount) {
       for (let i = 0; i < keyArguments.fieldsCount; i++) {
         const memberName = `${
@@ -74,6 +75,7 @@ export class KeyActions {
 
     await client.quit()
   }
+
   /**
    * Populate set key with members
    * @param host The host of database
@@ -86,7 +88,7 @@ export class KeyActions {
     keyArguments: AddKeyArguments,
   ): Promise<void> {
     const dbConf = { url: `redis://${host}:${port}` }
-    const client = await createClient(dbConf)
+    const client = createClient(dbConf)
 
     await client
       .on('error', err => console.error('Redis Client Error', err))
@@ -99,6 +101,35 @@ export class KeyActions {
         )}`
         await client.sAdd(keyArguments.keyName as string, member)
       }
+    }
+    await client.quit()
+  }
+
+  /**
+   * Populate list key with elements
+   * @param host The host of database
+   * @param port The port of database
+   * @param keyArguments The arguments of key and its members
+   */
+  static async populateListWithElements(
+    host: string,
+    port: string,
+    keyArguments: AddKeyArguments,
+  ): Promise<void> {
+    const dbConf = { url: `redis://${host}:${port}` }
+    const client = createClient(dbConf)
+    const elements: string[] = []
+
+    await client
+      .on('error', err => console.error('Redis Client Error', err))
+      .connect()
+
+    if (keyArguments.elementsCount) {
+      for (let i = 0; i < keyArguments.elementsCount; i++) {
+        const element = `${keyArguments.elementStartWith}${Common.generateWord(10)}`
+        elements.push(element)
+      }
+      await client.lPush(keyArguments.keyName as string, elements)
     }
     await client.quit()
   }
@@ -115,13 +146,3 @@ export const keyTypes = [
   { textType: KeyTypesTexts.Graph, keyName: 'graph' },
   { textType: KeyTypesTexts.TimeSeries, keyName: 'timeSeries' },
 ]
-
-/**
- * String key parameters
- * @param keyName The name of the key
- * @param value The value in the string
- */
-export type StringKeyParameters = {
-  keyName: string
-  value: string
-}
