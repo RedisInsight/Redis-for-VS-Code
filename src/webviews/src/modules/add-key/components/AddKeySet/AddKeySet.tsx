@@ -11,7 +11,7 @@ import { AddMembersToSetDto } from 'uiSrc/modules/key-details/components/set-det
 export interface Props {
   keyName: string
   keyTTL: Maybe<number>
-  onCancel: (isCancelled?: boolean) => void;
+  onCancel: (isCancelled?: boolean) => void
 }
 
 const AddKeySet = (props: Props) => {
