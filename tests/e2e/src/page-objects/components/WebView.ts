@@ -56,7 +56,7 @@ export class WebView {
    * @param stateOfDisplayed state of wait (Visible or not Visible)
    * @returns WebElement
    */
-  async waitUntilWebElementDisplaying(
+  async waitForWebElementVisibility(
     locator: Locator,
     timeout: number = 5000,
     stateOfDisplayed: boolean = true,
@@ -80,20 +80,20 @@ export class WebView {
     switchInnerView?: InnerViews,
   ): Promise<void> {
     const frameLocator = By.xpath(ViewLocators[switchView])
-    const firstView = await this.waitUntilWebElementDisplaying(frameLocator)
+    const firstView = await this.waitForWebElementVisibility(frameLocator)
     await this.driver.switchTo().frame(firstView)
 
     if (switchInnerView) {
       const innerFrameLocator = By.xpath(InnerViewLocators[switchInnerView])
-      await this.waitUntilWebElementDisplaying(innerFrameLocator)
-      const innerView = await this.waitUntilWebElementDisplaying(innerFrameLocator)
+      await this.waitForWebElementVisibility(innerFrameLocator)
+      const innerView = await this.waitForWebElementVisibility(innerFrameLocator)
       await this.driver.switchTo().frame(innerView)
     } else {
       await this.driver.switchTo().frame(0)
     }
 
     const elementLocator = By.xpath(ViewElements[switchView])
-    await this.waitUntilWebElementDisplaying(elementLocator)
+    await this.waitForWebElementVisibility(elementLocator)
   }
 
   /**
