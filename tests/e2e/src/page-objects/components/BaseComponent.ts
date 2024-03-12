@@ -117,27 +117,32 @@ export class BaseComponent extends WebElement {
     timeout: number,
     stateOfDisplayed: boolean = true,
   ): Promise<boolean> {
-    const endTime = Date.now() + timeout
-    while (Date.now() < endTime) {
+    if (stateOfDisplayed) {
       try {
-        const elements: WebElement[] =
-          await this.getDriver().findElements(locator)
-        if (
-          (stateOfDisplayed &&
-            elements.length > 0 &&
-            (await elements[0].isDisplayed())) ||
-          (!stateOfDisplayed && elements.length === 0)
-        ) {
-          // Element is in the expected state
-          return true
-        }
-      } catch (error) {
-        // ignore stale element errors
+        await this.getDriver().wait(until.elementLocated(locator), timeout)
+        return true
+      } catch (e) {
+        // Element not visible during timeout
+        return false
       }
-      // Wait for a short interval before re-checking
-      await this.getDriver().sleep(500)
+    } else {
+      try {
+        let element = await this.getDriver().wait(
+          until.elementLocated(locator),
+          0,
+        )
+        const isVisible = await element.isDisplayed()
+        if (isVisible) {
+          await this.getDriver().wait(
+            until.elementIsNotVisible(element),
+            timeout,
+          )
+        }
+        return true
+      } catch (e) {
+        // Return true, if element not found and not visible
+        return true
+      }
     }
-    // Timeout reached, element may still be in the opposite state
-    return false
   }
 }

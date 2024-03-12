@@ -50,22 +50,35 @@ export class WebView {
   }
 
   /**
-   * Wait for the element inside the webview iframe to be visible/not visible and return it
+   * Wait for the element inside the webview iframe to be visible/not visible
    * @param locator Webdriver locator to search by
    * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
    * @param stateOfDisplayed state of wait (Visible or not Visible)
-   * @returns WebElement
    */
   async waitForWebElementVisibility(
     locator: Locator,
     timeout: number = 5000,
     stateOfDisplayed: boolean = true,
-  ): Promise<WebElement> {
-    const webElement = await this.getWebElement(locator)
-    const condition = stateOfDisplayed
-      ? until.elementIsVisible(webElement)
-      : until.elementIsNotVisible(webElement)
-    return await this.driver.wait(condition, timeout)
+  ): Promise<void> {
+    if (stateOfDisplayed) {
+      try {
+        await this.driver.wait(
+          until.elementLocated(locator),
+          timeout,
+        )
+      } catch (e) {
+        // Do nothing
+      }
+    } else {
+      try {
+        let element = await this.driver.wait(until.elementLocated(locator), 0)
+        const isVisible = await element.isDisplayed()
+        if (isVisible) {
+          await this.driver.wait(until.elementIsNotVisible(element), timeout)
+        }
+      } catch (e) {}
+      // Do nothing
+    }
   }
 
   /**
@@ -80,13 +93,14 @@ export class WebView {
     switchInnerView?: InnerViews,
   ): Promise<void> {
     const frameLocator = By.xpath(ViewLocators[switchView])
-    const firstView = await this.waitForWebElementVisibility(frameLocator)
+    await this.waitForWebElementVisibility(frameLocator)
+    const firstView = await this.getWebElement(frameLocator)
     await this.driver.switchTo().frame(firstView)
 
     if (switchInnerView) {
       const innerFrameLocator = By.xpath(InnerViewLocators[switchInnerView])
       await this.waitForWebElementVisibility(innerFrameLocator)
-      const innerView = await this.waitForWebElementVisibility(innerFrameLocator)
+      const innerView = await this.getWebElement(innerFrameLocator)
       await this.driver.switchTo().frame(innerView)
     } else {
       await this.driver.switchTo().frame(0)
