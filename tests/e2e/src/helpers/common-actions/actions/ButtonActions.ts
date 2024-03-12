@@ -33,6 +33,12 @@ export class ButtonActions {
         until.elementLocated(locatorToDisplayed),
         timeout,
       )
+      await ButtonActions.driver.wait(
+        until.elementIsVisible(
+          await ButtonActions.driver.findElement(locatorToDisplayed),
+        ),
+        timeout,
+      )
     } else {
       const elementToWait = await ButtonActions.driver.wait(
         until.elementLocated(locatorToDisplayed),

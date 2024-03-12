@@ -84,14 +84,16 @@ export class BaseComponent extends WebElement {
    * Is the element disabled
    * @param locator locator to check
    * @param attribute attribute to check if has disabled
+   * @returns true if element disabled
    */
   async isElementDisabled(
     locator: Locator,
     attribute: string,
   ): Promise<boolean> {
     const element = await this.getDriver().findElement(locator)
+    const isEnabled = await element.isEnabled()
     const value = await element.getAttribute(attribute)
-    return value.includes('disabled')
+    return value.includes('disabled') || !isEnabled
   }
 
   /**
@@ -101,5 +103,46 @@ export class BaseComponent extends WebElement {
    */
   async getElementText(locator: Locator): Promise<string> {
     return await (await this.getElement(locator)).getText()
+  }
+
+  /**
+   * Wait for the element to be visible or not visible
+   * @param locator Webdriver locator to search by
+   * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @param stateOfDisplayed state of wait (Visible or not Visible)
+   * @returns Boolean
+   */
+  async waitForElementVisibility(
+    locator: Locator,
+    timeout: number,
+    stateOfDisplayed: boolean = true,
+  ): Promise<boolean> {
+    if (stateOfDisplayed) {
+      try {
+        await this.getDriver().wait(until.elementLocated(locator), timeout)
+        return true
+      } catch (e) {
+        // Element not visible during timeout
+        return false
+      }
+    } else {
+      try {
+        let element = await this.getDriver().wait(
+          until.elementLocated(locator),
+          0,
+        )
+        const isVisible = await element.isDisplayed()
+        if (isVisible) {
+          await this.getDriver().wait(
+            until.elementIsNotVisible(element),
+            timeout,
+          )
+        }
+        return true
+      } catch (e) {
+        // Return true, if element not found and not visible
+        return true
+      }
+    }
   }
 }

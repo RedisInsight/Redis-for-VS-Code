@@ -9,7 +9,7 @@ export const KeyDetailsPage: FC = () => {
 
   useEffect(() => {
     fetchDatabaseOverview()
-  }, [])
+  }, [selectedKey])
 
   return (
     <div className="h-full" data-testid="key-details-page">

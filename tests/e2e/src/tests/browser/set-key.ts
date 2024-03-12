@@ -1,6 +1,5 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser } from 'vscode-extension-tester'
 import {
   WebView,
   SetKeyDetailsView,
@@ -16,20 +15,17 @@ import {
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { SetKeyParameters } from '@e2eSrc/helpers/types/types'
-import { KeyActions } from '@e2eSrc/helpers/KeysActions'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 
 describe('Set Key fields verification', () => {
-  let browser: VSBrowser
   let webView: WebView
   let keyDetailsView: SetKeyDetailsView
   let treeView: TreeView
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     webView = new WebView()
     keyDetailsView = new SetKeyDetailsView()
     treeView = new TreeView()
@@ -98,6 +94,6 @@ describe('Set Key fields verification', () => {
     )
 
     // Verify that details panel is closed for set key after deletion
-    KeyDetailsActions.verifyDetailsPanelClosed()
+    await KeyDetailsActions.verifyDetailsPanelClosed()
   })
 })

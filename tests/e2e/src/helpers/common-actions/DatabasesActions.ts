@@ -1,16 +1,10 @@
 import * as fs from 'fs'
 import { expect } from 'chai'
-import {
-  ActivityBar,
-  Locator,
-  VSBrowser,
-  until,
-} from 'vscode-extension-tester'
+import { ActivityBar, Locator, VSBrowser, until } from 'vscode-extension-tester'
 import { CommonDriverExtension } from '../CommonDriverExtension'
+import { TreeView } from '@e2eSrc/page-objects/components'
 import {
-  TreeView,
-} from '@e2eSrc/page-objects/components'
-import {
+  InnerViews,
   Views,
   WebView,
 } from '@e2eSrc/page-objects/components/WebView'
@@ -29,6 +23,7 @@ export class DatabasesActions extends CommonDriverExtension {
    */
   static async checkModulesOnPage(moduleList: Locator[]): Promise<void> {
     for (const item of moduleList) {
+      await this.initializeDriver()
       expect(await this.driver.wait(until.elementLocated(item), 5000)).eql(
         true,
         `${item} icon not found`,
@@ -39,26 +34,26 @@ export class DatabasesActions extends CommonDriverExtension {
    * Verify that success notification displayed when adding database
    */
   static async verifyDatabaseAdded(): Promise<void> {
-    await CommonDriverExtension.driverSleep(1000)
+    await this.driverSleep(1000)
     // Check the notification message
     await NotificationActions.checkNotificationMessage(
       `Database has been added`,
     )
     // Verify that panel is closed
-    KeyDetailsActions.verifyDetailsPanelClosed()
+    await KeyDetailsActions.verifyDetailsPanelClosed()
   }
 
   /**
    * Verify that success notification displayed when editing database
    */
   static async verifyDatabaseEdited(): Promise<void> {
-    await CommonDriverExtension.driverSleep(1000)
+    await this.driverSleep(1000)
     // Check the notification message
     await NotificationActions.checkNotificationMessage(
       `Database has been edited`,
     )
     // Verify that panel is closed
-    KeyDetailsActions.verifyDetailsPanelClosed()
+    await KeyDetailsActions.verifyDetailsPanelClosed()
   }
 
   /**
@@ -70,8 +65,14 @@ export class DatabasesActions extends CommonDriverExtension {
   ): Promise<void> {
     await DatabaseAPIRequests.addNewStandaloneDatabaseApi(databaseParameters)
     await VSBrowser.instance.waitForWorkbench(20_000)
+    // TODO For now need to reopen tab to load all keys when driver opens vscode
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
-    await new WebView().switchToFrame(Views.TreeView)
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.closeView()
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await new WebView().switchToFrame(
+      Views.TreeView,
+      InnerViews.KeyListInnerView,
+    )
     await new TreeView().clickDatabaseByName(databaseParameters.databaseName!)
   }
 

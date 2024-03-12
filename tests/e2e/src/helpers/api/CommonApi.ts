@@ -77,4 +77,23 @@ export class CommonAPIRequests {
 
     return requestEndpoint
   }
+
+  /**
+   * Send PUT request using API
+   * @param resourcePath URI path segment
+   * @param body Request body
+   */
+  static async sendPutRequest(
+    resourcePath: string,
+    body?: Record<string, unknown>,
+  ): Promise<any> {
+    let requestEndpoint: any
+
+    requestEndpoint = request(endpoint)
+      .put(resourcePath)
+      .send(body)
+      .set('Accept', jsonType)
+
+    return requestEndpoint
+  }
 }
