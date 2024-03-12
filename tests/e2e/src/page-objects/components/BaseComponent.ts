@@ -112,7 +112,7 @@ export class BaseComponent extends WebElement {
    * @param stateOfDisplayed state of wait (Visible or not Visible)
    * @returns Boolean
    */
-  async waitUntilElementDisplaying(
+  async waitForElementVisibility(
     locator: Locator,
     timeout: number,
     stateOfDisplayed: boolean = true,

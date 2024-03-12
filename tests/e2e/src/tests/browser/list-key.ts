@@ -203,7 +203,7 @@ describe('List Key verification for db with version <6.2', () => {
     // Check the removed element is not in the list
 
     expect(
-      await listKeyDetailsView.waitUntilElementDisplaying(
+      await listKeyDetailsView.waitForElementVisibility(
         listKeyDetailsView.elementValueByText(elements[2]),
         3000,
         false,
