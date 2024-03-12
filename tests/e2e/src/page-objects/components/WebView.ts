@@ -46,22 +46,27 @@ export class WebView {
     locator: Locator,
     timeout: number = 5000,
   ): Promise<WebElement> {
-    return this.driver.wait(until.elementLocated(locator), timeout)
+    return await this.driver.wait(until.elementLocated(locator), timeout)
   }
 
   /**
-   * Wait for the element to be visible and return it
+   * Wait for the element inside the webview iframe to be visible/not visible and return it
    * @param locator Webdriver locator to search by
    * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * @param stateOfDisplayed state of wait (Visible or not Visible)
    * @returns WebElement
    */
-    async waitWebElementToBeVisible(
-      locator: Locator,
-      timeout: number = 5000,
-    ): Promise<WebElement> {
-      const element = await this.getWebElement(locator)
-      return this.driver.wait(until.elementIsVisible(element), timeout)
-    }
+  async waitUntilWebElementDisplaying(
+    locator: Locator,
+    timeout: number = 5000,
+    stateOfDisplayed: boolean = true,
+  ): Promise<WebElement> {
+    const webElement = await this.getWebElement(locator)
+    const condition = stateOfDisplayed
+      ? until.elementIsVisible(webElement)
+      : until.elementIsNotVisible(webElement)
+    return await this.driver.wait(condition, timeout)
+  }
 
   /**
    * Switch the underlying webdriver context to the webview iframe.
@@ -75,20 +80,20 @@ export class WebView {
     switchInnerView?: InnerViews,
   ): Promise<void> {
     const frameLocator = By.xpath(ViewLocators[switchView])
-    const firstView = await this.waitWebElementToBeVisible(frameLocator)
+    const firstView = await this.waitUntilWebElementDisplaying(frameLocator)
     await this.driver.switchTo().frame(firstView)
 
     if (switchInnerView) {
       const innerFrameLocator = By.xpath(InnerViewLocators[switchInnerView])
-      await this.waitWebElementToBeVisible(innerFrameLocator)
-      const innerView = await this.waitWebElementToBeVisible(innerFrameLocator)
+      await this.waitUntilWebElementDisplaying(innerFrameLocator)
+      const innerView = await this.waitUntilWebElementDisplaying(innerFrameLocator)
       await this.driver.switchTo().frame(innerView)
     } else {
       await this.driver.switchTo().frame(0)
     }
 
     const elementLocator = By.xpath(ViewElements[switchView])
-    await this.waitWebElementToBeVisible(elementLocator)
+    await this.waitUntilWebElementDisplaying(elementLocator)
   }
 
   /**
@@ -138,5 +143,6 @@ export enum InnerViews {
 
 export const InnerViewLocators = {
   [InnerViews.KeyListInnerView]: "//iframe[@title='RedisInsight']",
-  [InnerViews.KeyDetailsInnerView]: "//iframe[@title='RedisInsight - Key details']",
+  [InnerViews.KeyDetailsInnerView]:
+    "//iframe[@title='RedisInsight - Key details']",
 }

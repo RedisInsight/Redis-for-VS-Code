@@ -2,7 +2,7 @@ import { By } from 'selenium-webdriver'
 import { expect } from 'chai'
 import { DoubleColumnKeyDetailsView } from '@e2eSrc/page-objects/components/edit-panel/DoubleColumnKeyDetailsView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
-import { InputActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 
 /**
  * List Key details view
@@ -27,8 +27,8 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
   confirmRemoveListElementButton = By.xpath(
     `//*[@data-testid='remove-elements-btn']`,
   )
-  removeElementFromListSelect = By.xpath(`//vscode-dropdown[@role='combobox']`)
-  removeFromHeadSelection = By.xpath(`//*[@data-testid='HEAD']`)
+  destinationSelect = By.xpath(`//vscode-dropdown[@role='combobox']`)
+  fromHeadSelection = By.xpath(`//*[@data-testid='HEAD']`)
   countInput = By.xpath(`//*[@data-testid='count-input']`)
 
   elementValueByText = (text: string): By =>
@@ -66,9 +66,11 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
    */
   async addListElementToHead(element: string): Promise<void> {
     await (await this.getElement(this.addKeyValueItemsButton)).click()
-    await (await this.getElement(this.removeElementFromListSelect)).click()
-    await this.waitElementToBeVisible(this.removeFromHeadSelection)
-    await (await this.getElement(this.removeFromHeadSelection)).click()
+    await ButtonActions.clickAndWaitForElement(
+      this.destinationSelect,
+      this.fromHeadSelection,
+    )
+    await (await this.getElement(this.fromHeadSelection)).click()
     await InputActions.typeText(this.addListKeyElementInput, element)
     await (await this.getElement(this.saveElementButton)).click()
   }
@@ -96,9 +98,11 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
       'Count Input not disabled',
     )
     //Select Remove from head selection
-    await (await this.getElement(this.removeElementFromListSelect)).click()
-    await this.waitElementToBeVisible(this.removeFromHeadSelection)
-    await (await this.getElement(this.removeFromHeadSelection)).click()
+    await ButtonActions.clickAndWaitForElement(
+      this.destinationSelect,
+      this.fromHeadSelection,
+    )
+    await (await this.getElement(this.fromHeadSelection)).click()
     //Confirm removing
     await (await this.getElement(this.removeElementFromListButton)).click()
     await (await this.getElement(this.confirmRemoveListElementButton)).click()
@@ -124,9 +128,11 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
     //Enter count of the removing elements
     await InputActions.typeText(this.countInput, count)
     //Select Remove from head selection
-    await (await this.getElement(this.removeElementFromListSelect)).click()
-    await this.waitElementToBeVisible(this.removeFromHeadSelection)
-    await (await this.getElement(this.removeFromHeadSelection)).click()
+    await ButtonActions.clickAndWaitForElement(
+      this.destinationSelect,
+      this.fromHeadSelection,
+    )
+    await (await this.getElement(this.fromHeadSelection)).click()
     //Confirm removing
     await (await this.getElement(this.removeElementFromListButton)).click()
     await (await this.getElement(this.confirmRemoveListElementButton)).click()
