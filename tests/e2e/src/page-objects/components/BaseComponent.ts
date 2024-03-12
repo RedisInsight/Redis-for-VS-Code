@@ -93,7 +93,7 @@ export class BaseComponent extends WebElement {
     const element = await this.getDriver().findElement(locator)
     const isEnabled = await element.isEnabled()
     const value = await element.getAttribute(attribute)
-    return value.includes('disabled') || isEnabled
+    return value.includes('disabled') || !isEnabled
   }
 
   /**
