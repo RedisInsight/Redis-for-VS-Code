@@ -1,3 +1,4 @@
+import { ListElementDestination } from 'uiSrc/constants'
 import { KeyDto, KeyResponse, Nullable, RedisString } from 'uiSrc/interfaces'
 
 export interface ListState {
@@ -52,4 +53,18 @@ export interface AddElementsToListDto extends KeyDto {
 export interface SetListElementDto extends KeyDto {
   element: RedisString
   index: number
+}
+
+export interface DeleteListElementsDto extends KeyDto {
+  destination: ListElementDestination
+  count: number
+}
+
+export interface PushElementToListDto extends KeyDto {
+  element: RedisString
+  destination: ListElementDestination
+}
+
+export interface DeleteListElementsResponse extends KeyDto {
+  elements: RedisString[]
 }

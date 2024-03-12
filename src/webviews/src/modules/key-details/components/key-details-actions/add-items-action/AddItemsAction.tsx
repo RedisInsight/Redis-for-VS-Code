@@ -6,7 +6,6 @@ import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import styles from '../styles.module.scss'
 
 export interface Props {
-  // width: number
   title: string
   openAddItemPanel: () => void
 }
@@ -19,9 +18,7 @@ const AddItemsAction = ({ title, openAddItemPanel }: Props) => (
     aria-label={title}
     title={title}
   >
-    <VscDiffAdded
-      data-testid="add-key-value-items-btn"
-    />
+    <VscDiffAdded data-testid="add-key-value-items-btn" />
   </VSCodeButton>
 )
 

@@ -1,6 +1,5 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -24,7 +23,6 @@ import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 let keyName: string
 
 describe('ZSet Key fields verification', () => {
-  let browser: VSBrowser
   let webView: WebView
   let bottomBar: BottomBar
   let keyDetailsView: SortedSetKeyDetailsView
@@ -32,7 +30,6 @@ describe('ZSet Key fields verification', () => {
   let cliViewPanel: CliViewPanel
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new SortedSetKeyDetailsView()
@@ -113,7 +110,7 @@ describe('ZSet Key fields verification', () => {
     )
 
     // Verify that details panel is closed for zset key after deletion
-    KeyDetailsActions.verifyDetailsPanelClosed()
+    await KeyDetailsActions.verifyDetailsPanelClosed()
   })
 
   it('Verify that user can sort Zset members by score by DESC and ASC', async function () {

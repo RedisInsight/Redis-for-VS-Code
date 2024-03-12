@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { ActivityBar, By, VSBrowser, Workbench } from 'vscode-extension-tester'
-import { ViewElements, Views } from '@e2eSrc/page-objects/components/WebView'
+import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 import {
   WebView,
   TreeView,
@@ -16,7 +16,7 @@ import {
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
-import { Common, CommonDriverExtension, Config } from '@e2eSrc/helpers'
+import { Common, Config } from '@e2eSrc/helpers'
 import {
   sshPrivateKey,
   sshPrivateKeyWithPasscode,

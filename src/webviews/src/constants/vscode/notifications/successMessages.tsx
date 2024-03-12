@@ -90,7 +90,7 @@ export const successMessages = {
   ) => {
     const limitShowRemovedElements = 10
     return {
-      title: l10n.t('Elements have been removed'),
+      title: l10n.t('{0} Element(s) removed from {1}', numberOfElements, formatNameShort(bufferToString(keyName))),
       message: (
         <>
           <span>

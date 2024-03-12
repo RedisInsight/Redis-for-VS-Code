@@ -12,11 +12,12 @@ import {
 import {
   checkRediStack,
   getApiErrorMessage,
+  getUrl,
   isStatusSuccessful,
   showErrorMessage,
   showInformationMessage,
 } from 'uiSrc/utils'
-import { Database, DatabasesActions, DatabasesStore } from './interface'
+import { Database, DatabaseOverview, DatabasesActions, DatabasesStore } from './interface'
 
 export const initialDatabasesState: DatabasesStore = {
   loading: false,
@@ -24,10 +25,13 @@ export const initialDatabasesState: DatabasesStore = {
   freeDatabases: [],
   editDatabase: null,
   connectedDatabase: null,
+  databaseOverview: {
+    version: '',
+  },
 }
 
 export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
-  immer(devtools((set) => ({
+  immer(devtools((set, get) => ({
     ...initialDatabasesState,
     // actions
     processDatabase: () => set({ loading: true }),
@@ -45,6 +49,13 @@ export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
     setEditDatabase: (editDatabase: Database) => set({ editDatabase }),
     setConnectedDatabase: (connectedDatabase: Database) => set({ connectedDatabase }),
     resetConnectedDatabase: () => set({ connectedDatabase: cloneDeep(initialDatabasesState.connectedDatabase) }),
+
+    getDatabaseOverviewSuccess: (data: DatabaseOverview) => set({
+      databaseOverview: {
+        ...data,
+        version: data?.version || get().databaseOverview.version || '',
+      },
+    }),
   }))),
 )
 
@@ -119,12 +130,12 @@ export const createDatabaseStandalone = (
   })
 }
 
-export const fetchEditedDatabase = (instance: Database, onSuccess?: () => void) => {
+export const fetchEditedDatabase = (database: Database, onSuccess?: () => void) => {
   useDatabasesStore.setState(async (state) => {
     state.processDatabase()
-    state.setEditDatabase(instance)
+    state.setEditDatabase(database)
     try {
-      const { data, status } = await apiService.get<Database>(`${ApiEndpoints.DATABASES}/${instance.id}`)
+      const { data, status } = await apiService.get<Database>(`${ApiEndpoints.DATABASES}/${database.id}`)
 
       if (isStatusSuccessful(status)) {
         state.setEditDatabase(data)
@@ -196,6 +207,20 @@ export const deleteDatabases = (databases: Database[], onSuccess?: () => void) =
       showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       state.processDatabaseFinal()
+    }
+  })
+}
+
+export const fetchDatabaseOverview = () => {
+  useDatabasesStore.setState(async (state) => {
+    try {
+      const { data, status } = await apiService.get<DatabaseOverview>(getUrl(ApiEndpoints.OVERVIEW))
+
+      if (isStatusSuccessful(status)) {
+        state.getDatabaseOverviewSuccess(data)
+      }
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     }
   })
 }

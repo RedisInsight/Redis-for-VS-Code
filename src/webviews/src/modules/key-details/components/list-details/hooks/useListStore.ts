@@ -3,16 +3,19 @@ import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
-import { refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
+import { fetchKeyInfo, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
-import { ApiEndpoints } from 'uiSrc/constants'
+import { ApiEndpoints, successMessages } from 'uiSrc/constants'
 import {
+  bufferToString,
+  formatNameShort,
   getApiErrorMessage,
   getEncoding,
   getUrl,
   isStatusSuccessful,
   showErrorMessage,
+  showInformationMessage,
 } from 'uiSrc/utils'
 import {
   SetListElementDto,
@@ -20,6 +23,9 @@ import {
   ListActions,
   ListState,
   SearchListElementResponse,
+  DeleteListElementsDto,
+  PushElementToListDto,
+  DeleteListElementsResponse,
 } from './interface'
 
 export const initialState: ListState = {
@@ -188,6 +194,69 @@ export const updateListElementsAction = (
   } catch (error) {
     showErrorMessage(getApiErrorMessage(error as AxiosError))
     onFail?.()
+  } finally {
+    state.processListFinal()
+  }
+})
+
+// Asynchronous thunk action
+export const insertListElementsAction = (
+  data: PushElementToListDto,
+  onSuccessAction?: () => void,
+  onFailAction?: () => void,
+) => useListStore.setState(async (state) => {
+  state.processList()
+  try {
+    const { status } = await apiService.put<PushElementToListDto>(
+      getUrl(ApiEndpoints.LIST),
+      data,
+      { params: { encoding: getEncoding() } },
+    )
+    if (isStatusSuccessful(status)) {
+      onSuccessAction?.()
+      refreshKeyInfo(data.keyName, true)
+    }
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
+    onFailAction?.()
+  } finally {
+    state.processListFinal()
+  }
+})
+
+// Asynchronous thunk action
+export const deleteListElementsAction = (
+  data: DeleteListElementsDto,
+  onSuccessAction?: (newTotal: number) => void,
+  onFailAction?: () => void,
+) => useListStore.setState(async (state) => {
+  state.processList()
+  try {
+    const { keyName: key } = data
+    const { status, data: responseData } = await apiService.delete<DeleteListElementsResponse>(
+      getUrl(ApiEndpoints.LIST_DELETE_ELEMENTS),
+      { data, params: { encoding: getEncoding() } },
+    )
+    if (isStatusSuccessful(status)) {
+      const newTotal = state.data.total - data.count
+
+      if (newTotal > 0) {
+        showInformationMessage(
+          successMessages.REMOVED_LIST_ELEMENTS(
+            data.keyName,
+            data.count,
+            responseData.elements,
+          ).title,
+        )
+        refreshKeyInfo(key, true)
+      } else {
+        showInformationMessage(successMessages.DELETED_KEY(key!).title)
+      }
+      onSuccessAction?.(newTotal)
+    }
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
+    onFailAction?.()
   } finally {
     state.processListFinal()
   }

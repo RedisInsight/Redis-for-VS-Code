@@ -80,10 +80,11 @@ const HashDetailsTable = (props: Props) => {
 
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
-  const { viewFormatProp, length, key, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
+  const { viewFormatProp, length, key, lastRefreshTime, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     viewFormatProp: state.viewFormat,
     length: state.data?.length,
     key: state.data?.name,
+    lastRefreshTime: state.lastRefreshTime,
     setRefreshDisabled: state.setSelectedKeyRefreshDisabled,
   })))
 
@@ -113,6 +114,10 @@ const HashDetailsTable = (props: Props) => {
   const contextApi = useContextApi()
 
   useEffect(() => {
+    resetStates()
+  }, [lastRefreshTime])
+
+  useEffect(() => {
     setFields(loadedFields)
 
     if (loadedFields?.length < fields.length) {
@@ -120,14 +125,18 @@ const HashDetailsTable = (props: Props) => {
     }
 
     if (viewFormat !== viewFormatProp) {
-      setExpandedRows([])
-      setViewFormat(viewFormatProp)
-      setEditingIndex(null)
-      setRefreshDisabled(false)
-
-      clearCache()
+      resetStates()
     }
   }, [loadedFields, viewFormatProp])
+
+  const resetStates = () => {
+    setExpandedRows([])
+    setViewFormat(viewFormatProp)
+    setEditingIndex(null)
+    setRefreshDisabled(false)
+
+    clearCache()
+  }
 
   const clearCache = () => setTimeout(() => {
     cellCache.clearAll()
@@ -469,7 +478,7 @@ const HashDetailsTable = (props: Props) => {
                 suffix={suffix}
                 deleting={deleting}
                 closePopover={closePopover}
-                updateLoading={updateLoading}
+                disabled={updateLoading}
                 showPopover={showPopover}
                 testid={`remove-hash-button-${field}`}
                 handleDeleteItem={handleDeleteField}

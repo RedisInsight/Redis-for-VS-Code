@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { VSCodeOption, VSCodeDropdown } from '@vscode/webview-ui-toolkit/react'
+import { VSCodeOption } from '@vscode/webview-ui-toolkit/react'
 import cx from 'classnames'
 
 import { Nullable } from 'uiSrc/interfaces'
@@ -17,16 +17,19 @@ export interface Props {
   idSelected?: Nullable<string>
   containerClassName?: string
   itemClassName?: string
+  position?: 'above' | 'below'
   testid?: string
 }
 
 export const Select: FC<Props> = (props) => {
-  const { options, onChange, idSelected, containerClassName, itemClassName, testid } = props
+  const { options, onChange, idSelected, containerClassName, itemClassName, testid, position = 'below' } = props
 
   return (
-    <VSCodeDropdown
+    // React component doesn't work with "position" prop
+    <vscode-dropdown
+      position={position}
+      class={cx(styles.container, containerClassName)}
       data-testid={testid}
-      className={cx(styles.container, containerClassName)}
     >
       {options.map(({ value, label, testid }) => (
         <VSCodeOption
@@ -40,6 +43,6 @@ export const Select: FC<Props> = (props) => {
           {label}
         </VSCodeOption>
       ))}
-    </VSCodeDropdown>
+    </vscode-dropdown>
   )
 }

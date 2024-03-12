@@ -28,8 +28,6 @@ import {
 import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 let keyName: string
-let foundStringDownloadedFiles = 0
-const downloadedFile = 'string_value'
 
 describe('Large key details verification', () => {
   let webView: WebView
@@ -241,6 +239,8 @@ describe('Large key details verification', () => {
   })
   it('Verify that user can download String key value as txt file when it has > 5000 characters', async function () {
     keyName = Common.generateWord(10)
+    // let foundStringDownloadedFiles = 0
+    // const downloadedFile = 'string_value'
     const bigKeyName = Common.generateWord(10)
     // Create string key with 5000 characters
     const length = 5000

@@ -69,9 +69,10 @@ const ListDetailsTable = (props: Props) => {
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
   const { [KeyTypes.List]: listSizes } = useContextInContext((state) => state.browser.keyDetailsSizes)
 
-  const { viewFormatProp, key, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
+  const { viewFormatProp, key, lastRefreshTime, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     viewFormatProp: state.viewFormat,
     key: state.data?.name,
+    lastRefreshTime: state.lastRefreshTime,
     setRefreshDisabled: state.setSelectedKeyRefreshDisabled,
   })))
 
@@ -97,6 +98,10 @@ const ListDetailsTable = (props: Props) => {
   const contextApi = useContextApi()
 
   useEffect(() => {
+    resetStates()
+  }, [lastRefreshTime])
+
+  useEffect(() => {
     setElements(loadedElements)
 
     if (loadedElements.length < elements.length) {
@@ -104,14 +109,18 @@ const ListDetailsTable = (props: Props) => {
     }
 
     if (viewFormat !== viewFormatProp) {
-      setExpandedRows([])
-      setViewFormat(viewFormatProp)
-      setEditingIndex(null)
-      setRefreshDisabled(false)
-
-      clearCache()
+      resetStates()
     }
   }, [loadedElements, viewFormatProp])
+
+  const resetStates = () => {
+    setExpandedRows([])
+    setViewFormat(viewFormatProp)
+    setEditingIndex(null)
+    setRefreshDisabled(false)
+
+    clearCache()
+  }
 
   const clearCache = () => setTimeout(() => {
     cellCache.clearAll()

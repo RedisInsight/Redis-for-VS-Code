@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
+import * as l10n from '@vscode/l10n'
 
 import { KeyTypes } from 'uiSrc/constants'
-
-import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules/key-details-header'
 import { useSelectedKeyStore } from 'uiSrc/store'
-import { ListDetailsTable } from './list-details-table'
+import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules/key-details-header'
 
-// import { AddItemsAction, RemoveItemsAction } from '../key-details-actions'
-import { AddItemsAction } from '../key-details-actions'
-import styles from './styles.module.scss'
+import { ListDetailsTable } from './list-details-table'
+import { AddListElements } from './add-list-elements'
+import { RemoveListElements } from './remove-list-elements'
+import { AddItemsAction, RemoveItemsAction } from '../key-details-actions'
 
 export interface Props extends KeyDetailsHeaderProps {
   onOpenAddItemPanel: () => void
@@ -18,7 +18,7 @@ export interface Props extends KeyDetailsHeaderProps {
 
 const ListDetails = (props: Props) => {
   const keyType = KeyTypes.List
-  const { onOpenAddItemPanel, onCloseAddItemPanel } = props
+  const { onOpenAddItemPanel, onCloseAddItemPanel, onRemoveKey } = props
   const loading = useSelectedKeyStore((state) => state.loading)
 
   const [isRemoveItemPanelOpen, setIsRemoveItemPanelOpen] = useState<boolean>(false)
@@ -46,8 +46,8 @@ const ListDetails = (props: Props) => {
 
   const Actions = () => (
     <>
-      <AddItemsAction title="Add Elements" openAddItemPanel={openAddItemPanel} />
-      {/* <RemoveItemsAction title="Remove Elements" openRemoveItemPanel={openRemoveItemPanel} /> */}
+      <AddItemsAction title={l10n.t('Add Elements')} openAddItemPanel={openAddItemPanel} />
+      <RemoveItemsAction title={l10n.t('Remove Elements')} openRemoveItemPanel={openRemoveItemPanel} />
     </>
   )
 
@@ -57,22 +57,22 @@ const ListDetails = (props: Props) => {
         {...props}
         key="key-details-header"
         keyType={keyType}
-        // Actions={Actions}
+        Actions={Actions}
       />
       <div className="key-details-body" key="key-details-body">
         {!loading && (
           <div className="flex flex-1 h-full">
-            <ListDetailsTable isFooterOpen={isAddItemPanelOpen} />
+            <ListDetailsTable isFooterOpen={isAddItemPanelOpen || isRemoveItemPanelOpen} />
           </div>
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            {/* <AddListElements onCancel={closeAddItemPanel} /> */}
+            <AddListElements closePanel={closeAddItemPanel} />
           </div>
         )}
         {isRemoveItemPanelOpen && (
-          <div className={cx('formFooterBar', styles.contentActive)}>
-            {/* <RemoveListElements onCancel={closeRemoveItemPanel} onRemoveKey={onRemoveKey} /> */}
+          <div className={cx('formFooterBar', 'contentActive')}>
+            <RemoveListElements closePanel={closeRemoveItemPanel} onRemoveKey={onRemoveKey} />
           </div>
         )}
       </div>

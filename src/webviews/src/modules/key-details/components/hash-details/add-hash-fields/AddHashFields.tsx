@@ -74,7 +74,7 @@ const AddHashFields = (props: Props) => {
 
   return (
     <>
-      <div className="key-add-items-container" data-testid="add-hash-field-panel">
+      <div className="key-footer-items-container" data-testid="add-hash-field-panel">
         {fields.map((item, index) => (
           <div key={item.id}>
             <div className="flex items-center mb-3">

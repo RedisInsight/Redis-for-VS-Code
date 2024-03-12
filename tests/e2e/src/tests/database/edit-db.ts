@@ -1,5 +1,4 @@
 import { expect } from 'chai'
-import { VSBrowser } from 'vscode-extension-tester'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 import {
   WebView,
@@ -15,7 +14,6 @@ import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Common, CommonDriverExtension, Config } from '@e2eSrc/helpers'
 
 describe('Edit Databases', () => {
-  let browser: VSBrowser
   let webView: WebView
   let treeView: TreeView
   let editDatabaseView: EditDatabaseView
@@ -24,7 +22,6 @@ describe('Edit Databases', () => {
   const newDatabaseName = Common.generateWord(20)
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     webView = new WebView()
     treeView = new TreeView()
     editDatabaseView = new EditDatabaseView()
@@ -55,12 +52,8 @@ describe('Edit Databases', () => {
   it('Verify that user can edit Standalone DB', async function () {
     const connectionTimeout = '20'
     await CommonDriverExtension.driverSleep(10000)
-    const caCertFieldValue = await (
-      await editDatabaseView.getElement(editDatabaseView.caCertField)
-    ).getText()
-    const clientCertFieldValue = await (
-      await editDatabaseView.getElement(editDatabaseView.clientCertField)
-    ).getText()
+    const caCertFieldValue = await editDatabaseView.getElementText(editDatabaseView.caCertField)
+    const clientCertFieldValue = await editDatabaseView.getElementText(editDatabaseView.clientCertField)
 
     expect(caCertFieldValue).contains('ca', 'CA certificate is incorrect')
     expect(clientCertFieldValue).contains(

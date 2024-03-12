@@ -91,7 +91,7 @@ describe('KeyDetailsHeader', () => {
 
       const component = render(<KeyDetailsHeader {...mockedProps} keyType={keyType} />)
       expect(component).toBeTruthy()
-      fireEvent.click(screen.getByTestId(`remove-key-${nameString}-icon`))
+      fireEvent.click(screen.getByTestId(`remove-key-${nameString}-trigger`))
       fireEvent.click(screen.getByTestId(`remove-key-${nameString}`))
       expect(useKeys.useKeysApi().deleteKeyAction).toBeCalled()
     })

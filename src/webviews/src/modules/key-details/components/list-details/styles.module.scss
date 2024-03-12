@@ -1,3 +1,37 @@
 .contentActive {
   border-bottom-width: 1px !important;
 }
+
+.select {
+  @apply h-full w-full bg-vscode-dropdown-background ;
+
+  &::part(control) {
+    @apply border-vscode-dropdown-background;
+  }
+  &::part(listbox) {
+    @apply mt-4;
+  }
+}
+
+.selectOption {
+  @apply h-6 pl-2;
+  line-height: 24px;
+}
+
+
+.infoIcon {
+  @apply h-full w-10 px-2;
+}
+
+.appendInfo {
+  @apply flex pt-2;
+  font-size: 12px;
+}
+
+.select {
+  height: 43px !important;
+}
+
+.popover {
+  @apply w-[300px];
+}

@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser, Workbench } from 'vscode-extension-tester'
+import { Workbench } from 'vscode-extension-tester'
 import {
   WebView,
   HashKeyDetailsView,
@@ -24,7 +24,6 @@ import {
   InputActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
-import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 let keyName: string
 
@@ -32,7 +31,6 @@ const keyValueBefore = 'ValueBeforeEdit!'
 const keyValueAfter = 'ValueAfterEdit!'
 
 describe('Edit Key values verification', () => {
-  let browser: VSBrowser
   let webView: WebView
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
@@ -42,7 +40,6 @@ describe('Edit Key values verification', () => {
   let stringKeyDetailsView: StringKeyDetailsView
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     webView = new WebView()
     hashKeyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
