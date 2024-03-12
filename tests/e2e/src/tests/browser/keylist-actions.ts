@@ -2,7 +2,6 @@ import { expect } from 'chai'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Common } from '@e2eSrc/helpers/Common'
 import { Config } from '@e2eSrc/helpers/Conf'
-import { VSBrowser } from 'vscode-extension-tester'
 import {
   WebView,
   StringKeyDetailsView,
@@ -14,13 +13,11 @@ import {
 } from '@e2eSrc/helpers/common-actions'
 
 describe('Actions with Key List', () => {
-  let browser: VSBrowser
   let webView: WebView
   let keyDetailsView: StringKeyDetailsView
   let treeView: TreeView
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     webView = new WebView()
     keyDetailsView = new StringKeyDetailsView()
     treeView = new TreeView()

@@ -5,7 +5,11 @@ import {
   TreeView,
   DatabaseDetailsView,
 } from '@e2eSrc/page-objects/components'
-import { ViewElements, Views } from '@e2eSrc/page-objects/components/WebView'
+import {
+  InnerViews,
+  ViewElements,
+  Views,
+} from '@e2eSrc/page-objects/components/WebView'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 
 /**
@@ -21,7 +25,10 @@ export class KeyDetailsActions extends CommonDriverExtension {
     await this.driverSleep(1000)
     await new TreeView().openKeyDetailsByKeyName(name)
     await webView.switchBack()
-    await webView.switchToFrame(Views.KeyDetailsView, Views.KeyDetailsInnerView)
+    await webView.switchToFrame(
+      Views.KeyDetailsView,
+      InnerViews.KeyDetailsInnerView,
+    )
     await this.driverSleep(1000)
   }
 
@@ -33,6 +40,6 @@ export class KeyDetailsActions extends CommonDriverExtension {
       await new DatabaseDetailsView().isElementDisplayed(
         By.xpath(ViewElements[Views.DatabaseDetailsView]),
       ),
-    ).false
+    ).eql(false, 'Details panel not closed')
   }
 }

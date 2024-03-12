@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, SideBarView, VSBrowser } from 'vscode-extension-tester'
+import { ActivityBar, SideBarView } from 'vscode-extension-tester'
 import {
   BottomBar,
   WebView,
@@ -17,7 +17,6 @@ import { Views } from '@e2eSrc/page-objects/components/WebView'
 import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 
 describe('CLI critical', () => {
-  let browser: VSBrowser
   let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
@@ -27,7 +26,6 @@ describe('CLI critical', () => {
   let keyName = Common.generateWord(20)
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     bottomBar = new BottomBar()
     webView = new WebView()
     treeView = new TreeView()

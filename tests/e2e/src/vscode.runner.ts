@@ -1,10 +1,14 @@
-import { ExTester } from 'vscode-extension-tester'
+import {
+  DEFAULT_STORAGE_FOLDER,
+  ExTester,
+  ReleaseQuality,
+} from 'vscode-extension-tester'
 import { logging } from 'selenium-webdriver'
 import * as fs from 'fs'
 import path = require('path')
 import { Config } from './helpers/Conf'
 
-(async (): Promise<void> => {
+;(async (): Promise<void> => {
   try {
     // Delete mochawesome-report directory
     const reportDir = path.join(__dirname, '..', 'mochawesome-report')
@@ -12,7 +16,11 @@ import { Config } from './helpers/Conf'
       fs.rmSync(reportDir, { recursive: true })
     }
 
-    const exTester = new ExTester()
+    const exTester = new ExTester(
+      DEFAULT_STORAGE_FOLDER,
+      ReleaseQuality.Stable,
+      './test-extensions',
+    )
     const extensionDir = path.join(
       __dirname,
       '..',
@@ -25,13 +33,7 @@ import { Config } from './helpers/Conf'
     // Install vsix if not installed yet
     if (!fs.existsSync(extensionDir)) {
       await exTester.installVsix({
-        vsixFile: path.join(
-          __dirname,
-          '..',
-          '..',
-          '..',
-          Config.extensionName,
-        ),
+        vsixFile: path.join(__dirname, '..', '..', '..', Config.extensionName),
         useYarn: true,
         installDependencies: true,
       })

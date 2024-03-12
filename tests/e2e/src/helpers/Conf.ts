@@ -7,7 +7,7 @@ const chance = new Chance()
 export class Config {
   static commonUrl = process.env.COMMON_URL || 'http://localhost:8080'
   static apiUrl = process.env.API_URL || 'http://127.0.0.1:5541/api'
-  static vscodeVersion = process.env.VSCODE_VERSION || '1.82.0'
+  static vscodeVersion = process.env.VSCODE_VERSION || '1.84.0'
   static extensionName = process.env.EXTENSION_NAME || 'redisinsight-vsc-plugin-0.0.1.vsix'
 
   static workingDirectory =
@@ -17,8 +17,8 @@ export class Config {
   static uniqueId = chance.string({ length: 10 })
 
   static ossStandaloneConfig = {
-    host: process.env.OSS_STANDALONE_HOST || 'localhost',
-    port: process.env.OSS_STANDALONE_PORT || '8100',
+    host: process.env.OSS_STANDALONE_HOST || 'oss-standalone',
+    port: process.env.OSS_STANDALONE_PORT || '6379',
     databaseName: `${
       process.env.OSS_STANDALONE_DATABASE_NAME || 'test_standalone'
     }-${this.uniqueId}`,

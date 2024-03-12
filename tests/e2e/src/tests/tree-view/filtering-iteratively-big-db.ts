@@ -1,19 +1,16 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { VSBrowser } from 'vscode-extension-tester'
 import { WebView, TreeView } from '@e2eSrc/page-objects/components'
 import { KeyAPIRequests, DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
 
 describe('Filtering iteratively in Tree view for Big database', () => {
-  let browser: VSBrowser
   let webView: WebView
   let treeView: TreeView
   let keys: string[]
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     webView = new WebView()
     treeView = new TreeView()
 

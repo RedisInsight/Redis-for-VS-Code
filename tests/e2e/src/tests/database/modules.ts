@@ -1,4 +1,4 @@
-import { ActivityBar, Locator, VSBrowser } from 'vscode-extension-tester'
+import { Locator } from 'vscode-extension-tester'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 import {
   WebView,
@@ -12,7 +12,6 @@ import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Common, CommonDriverExtension, Config } from '@e2eSrc/helpers'
 
 describe('Database modules', () => {
-  let browser: VSBrowser
   let webView: WebView
   let treeView: TreeView
   let editDatabaseView: EditDatabaseView
@@ -24,7 +23,6 @@ describe('Database modules', () => {
   }
 
   beforeEach(async () => {
-    browser = VSBrowser.instance
     webView = new WebView()
     treeView = new TreeView()
 

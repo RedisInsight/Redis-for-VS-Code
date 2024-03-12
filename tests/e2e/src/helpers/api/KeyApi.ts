@@ -161,6 +161,32 @@ export class KeyAPIRequests {
   }
 
   /**
+   * Add Elements to List key
+   * @param keyParameters The key parameters
+   * @param databaseName The database name
+   * @param destination The database name
+   */
+  static async addElementsToListKeyApi(
+    keyParameters: ListKeyParameters,
+    databaseName: string,
+    destination: 'TAIL' | 'HEAD',
+  ): Promise<void> {
+    const databaseId =
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
+    const requestBody = {
+      destination,
+      keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
+      element: Buffer.from(keyParameters.element, 'utf-8'),
+    }
+    const response = await CommonAPIRequests.sendPutRequest(
+      `/databases/${databaseId}/list?encoding=buffer`,
+      requestBody,
+    )
+
+    expect(response.status).eql(200, 'The updating of List key request failed')
+  }
+
+  /**
    * Add String key
    * @param keyParameters The key parameters
    * @param databaseName The database name
