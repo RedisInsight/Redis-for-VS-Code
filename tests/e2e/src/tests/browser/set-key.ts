@@ -25,7 +25,7 @@ describe('Set Key fields verification', () => {
   let keyDetailsView: SetKeyDetailsView
   let treeView: TreeView
 
-  beforeEach(async () => {
+  before(async () => {
     webView = new WebView()
     keyDetailsView = new SetKeyDetailsView()
     treeView = new TreeView()
@@ -40,6 +40,10 @@ describe('Set Key fields verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await webView.switchToFrame(Views.TreeView)
+  })
+  after(async () => {
+    await webView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search and delete by member in Set', async function () {
