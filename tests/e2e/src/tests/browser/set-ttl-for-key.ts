@@ -36,12 +36,12 @@ describe('Set TTL for Key', () => {
       Config.ossStandaloneConfig,
     )
   })
-  afterEach(async () => {
+  after(async () => {
     await webView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
 
-  after(async () => {
+  afterEach(async () => {
     await webView.switchBack()
     await bottomBar.openTerminalView()
     cliViewPanel = await bottomBar.openCliViewPanel()
