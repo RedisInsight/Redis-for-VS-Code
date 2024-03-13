@@ -26,7 +26,7 @@ describe('Set TTL for Key', () => {
   let keyDetailsView: KeyDetailsView
   let treeView: TreeView
 
-  beforeEach(async () => {
+  before(async () => {
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new KeyDetailsView()
@@ -38,11 +38,15 @@ describe('Set TTL for Key', () => {
   })
   afterEach(async () => {
     await webView.switchBack()
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
+  })
+
+  after(async () => {
+    await webView.switchBack()
     await bottomBar.openTerminalView()
     cliViewPanel = await bottomBar.openCliViewPanel()
     await webView.switchToFrame(Views.CliViewPanel)
     await cliViewPanel.executeCommand(`FLUSHDB`)
-    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can specify TTL for Key', async function () {
     const ttlValue = '2147476121'
