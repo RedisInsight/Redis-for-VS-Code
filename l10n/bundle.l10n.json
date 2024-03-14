@@ -1,4 +1,7 @@
 {
+  "now": "now",
+  "< 1 min": "< 1 min",
+  "Last Refresh": "Last Refresh",
   "Page was not found": "Page was not found",
   "loading...": "loading...",
   "key(s)": "key(s)",

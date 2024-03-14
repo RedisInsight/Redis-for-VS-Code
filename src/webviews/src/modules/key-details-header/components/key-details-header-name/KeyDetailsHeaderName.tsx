@@ -1,12 +1,10 @@
-import cx from 'classnames'
 import { isNull } from 'lodash'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
-
-// import InlineItemEditor from 'uiSrc/components/inline-item-editor/InlineItemEditor'
 import { VscCopy } from 'react-icons/vsc'
+
 import {
   AddCommonFieldsFormConfig,
   KeyTypes,
@@ -40,7 +38,6 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
   const tooltipContent = formatLongName(keyProp || '')
 
   const [key, setKey] = useState(keyProp)
-  const [keyIsEditing, setKeyIsEditing] = useState(false)
   const [keyIsEditable, setKeyIsEditable] = useState(true)
 
   useEffect(() => {
@@ -48,17 +45,7 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
     setKeyIsEditable(isEqualBuffers(keyBuffer, stringToBuffer(keyProp || '')))
   }, [keyProp, ttlProp, keyBuffer])
 
-  const onClickKey = () => {
-    setKeyIsEditing(true)
-  }
-
-  const onChangeKey = ({ currentTarget: { value } }: ChangeEvent<HTMLInputElement>) => {
-    keyIsEditing && setKey(value)
-  }
-
   const applyEditKey = () => {
-    setKeyIsEditing(false)
-
     const newKeyBuffer = stringToBuffer(key || '')
 
     if (keyBuffer && !isEqualBuffers(keyBuffer, newKeyBuffer) && !isNull(keyProp)) {
@@ -72,7 +59,6 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
     //   return
     // }
     setKey(keyProp)
-    setKeyIsEditing(false)
 
     event?.stopPropagation()
   }
@@ -102,40 +88,29 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
 
   return (
     <div className={styles.container}>
-      <div
-        className={cx(
-          styles.keyFlexItem, // TODO with styles.keyFlexItemEditing
-        )}
-        data-testid="edit-key-btn"
-      >
-        {(keyIsEditing) && (
-          <div className={styles.classNameGridComponent}>
-            <div className={styles.flexItemKeyInput}>
-              <div
-                title={`${l10n.t('Key Name')}\n${tooltipContent}`}
-                className={styles.toolTipAnchorKey}
-              >
-                <InlineEditor
-                  onApply={() => applyEditKey()}
-                  isDisabled={!keyIsEditable}
-                  disabledTooltipText={TEXT_UNPRINTABLE_CHARACTERS}
-                  onDecline={(event) => cancelEditKey(event)}
-                  isLoading={loading}
-                  declineOnUnmount={false}
-                  placeholder={AddCommonFieldsFormConfig?.keyName?.placeholder}
-                />
-                <p className={styles.keyHiddenText}>{key}</p>
-              </div>
-            </div>
+      <div className="flex relative">
+        <div className="w-full flex-row">
+          <div
+            title={`${l10n.t('Key Name')}\n${tooltipContent}`}
+            className={styles.toolTipAnchorKey}
+          >
+            <InlineEditor
+              initialValue={key}
+              onChange={setKey}
+              onApply={() => applyEditKey()}
+              isDisabled={!keyIsEditable}
+              disabledTooltipText={TEXT_UNPRINTABLE_CHARACTERS}
+              onDecline={(event) => cancelEditKey(event)}
+              isLoading={loading}
+              inputClassName="pr-6"
+              placeholder={AddCommonFieldsFormConfig?.keyName?.placeholder}
+              inlineTestId="edit-key-input"
+            />
+            <p className={styles.keyHiddenText}>{key}</p>
           </div>
-        )}
-        <div className={cx(styles.key, { [styles.hidden]: keyIsEditing })} data-testid="key-name-text">
-          <b className="truncate" title={`${l10n.t('Key Name')}\n${tooltipContent}`}>
-            {replaceSpaces(keyProp?.substring(0, 200))}
-          </b>
         </div>
-
       </div>
+
       <VSCodeButton
         appearance="icon"
         disabled={loading}

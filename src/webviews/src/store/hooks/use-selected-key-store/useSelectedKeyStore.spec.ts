@@ -8,6 +8,7 @@ import {
   fetchKeyInfo,
   editKeyTTL,
   refreshKeyInfo,
+  editKey,
 } from './useSelectedKeyStore'
 
 vi.spyOn(modules, 'fetchString')
@@ -136,9 +137,28 @@ describe('async', () => {
     }
 
     const responsePayload = { data: { ...constants.KEY_INFO, ttl: constants.KEY_TTL_2 }, status: 200 }
-    apiService.post = vi.fn().mockResolvedValue(responsePayload)
+    apiService.patch = vi.fn().mockResolvedValue(responsePayload)
 
     editKeyTTL(constants.KEY_NAME_1, constants.KEY_TTL_2)
+
+    await waitForStack()
+
+    expect(useSelectedKeyStore.getState().data).toEqual(expectedData)
+    expect(useSelectedKeyStore.getState().loading).toEqual(false)
+  })
+
+  it('editKey', async () => {
+    useSelectedKeyStore.setState((state) => ({ ...state, data: constants.KEY_INFO }))
+    const expectedData = {
+      ...constants.KEY_INFO,
+      name: constants.KEY_NAME_2,
+      nameString: constants.KEY_NAME_HASH_2,
+    }
+
+    const responsePayload = { status: 200 }
+    apiService.patch = vi.fn().mockResolvedValue(responsePayload)
+
+    editKey(constants.KEY_NAME_1, constants.KEY_NAME_2)
 
     await waitForStack()
 

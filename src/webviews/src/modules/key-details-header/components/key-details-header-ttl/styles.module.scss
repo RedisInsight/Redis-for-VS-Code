@@ -25,7 +25,7 @@
 }
 
 .ttlGridComponent {
-  @apply flex flex-row items-center h-full;
+  @apply flex flex-row items-center h-full relative;
   line-height: 28px;
 }
 
@@ -35,11 +35,6 @@
   &.editing {
     width: 124px;
   }
-}
-
-.ttlGridComponent,
-.classNameGridComponent {
-  position: relative;
 }
 
 .hidden {

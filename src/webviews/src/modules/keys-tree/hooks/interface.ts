@@ -23,6 +23,7 @@ export interface KeysActions {
   deleteKeyFinal: () => void
   deleteKeyFromTree: (key: RedisString) => void
 
+  editKeyName: (key: RedisString, newKey: RedisString) => void
   // Add key
   addKey: () => void
   addKeyFinal: () => void

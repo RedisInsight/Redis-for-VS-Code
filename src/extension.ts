@@ -104,6 +104,10 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({ viewId: ViewId.Key })?.dispose()
     }),
 
+    vscode.commands.registerCommand('RedisInsight.editKeyName', (args) => {
+      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
+    }),
+
     vscode.commands.registerCommand('RedisInsight.resetSelectedKey', () => {
       sidebarProvider.view?.webview.postMessage({ action: 'ResetSelectedKey' })
     }),
