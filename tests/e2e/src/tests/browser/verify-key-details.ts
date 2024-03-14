@@ -41,7 +41,7 @@ describe('Key Details verifications', () => {
   let setKeyDetailsView: SetKeyDetailsView
   let addStringKeyView: AddStringKeyView
 
-  beforeEach(async () => {
+  before(async () => {
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new StringKeyDetailsView()
@@ -59,12 +59,18 @@ describe('Key Details verifications', () => {
   })
   afterEach(async () => {
     await webView.switchBack()
+    await webView.switchToFrame(Views.TreeView)
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+  })
+
+  after(async () => {
+    await webView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
+
   it('Verify that user can see string details', async function () {
     const ttlValue = '2147476121'
     const expectedTTL = /214747612*/

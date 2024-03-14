@@ -2,26 +2,34 @@ import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import { WebView, TreeView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { KeyAPIRequests, CliAPIRequests, DatabaseAPIRequests } from '@e2eSrc/helpers/api'
+import {
+  KeyAPIRequests,
+  CliAPIRequests,
+  DatabaseAPIRequests,
+} from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Tree view verifications', () => {
   let webView: WebView
   let treeView: TreeView
   let keyNames: string[] = []
 
-  beforeEach(async () => {
+  before(async () => {
     webView = new WebView()
     treeView = new TreeView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
+  })
+  beforeEach(async () => {
     await CliAPIRequests.sendRedisCliCommandApi(
       'flushdb',
       Config.ossStandaloneConfig,
     )
+    await webView.switchToFrame(Views.TreeView)
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -31,6 +39,9 @@ describe('Tree view verifications', () => {
         Config.ossStandaloneConfig.databaseName,
       )
     }
+  })
+  after(async () => {
+    await webView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that if there are keys without namespaces, they are displayed in the root directory after all folders by default in the Tree view', async function () {
@@ -75,7 +86,9 @@ describe('Tree view verifications', () => {
       )
     }
     // Refresh database
-    await treeView.refreshDatabaseByName(Config.ossStandaloneConfig.databaseName)
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
 
     // Verify that if there are keys without namespaces, they are displayed in the root directory after all folders by default in the Tree view
     await treeView.openTreeFolders([`${keyNames[0]}`.split(':')[0]])
@@ -100,7 +113,5 @@ describe('Tree view verifications', () => {
     )
   })
   // TODO Add checks once Edit the key name in details and search functionality is ready
-  it.skip('Verify that user can refresh Keys', async function () {
-
-  })
+  it.skip('Verify that user can refresh Keys', async function () {})
 })

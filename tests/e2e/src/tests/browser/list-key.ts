@@ -28,7 +28,7 @@ describe('List Key verification', () => {
   let listKeyDetailsView: ListKeyDetailsView
   let treeView: TreeView
 
-  beforeEach(async () => {
+  before(async () => {
     webView = new WebView()
     listKeyDetailsView = new ListKeyDetailsView()
     treeView = new TreeView()
@@ -79,6 +79,10 @@ describe('List Key verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await webView.switchToFrame(Views.TreeView)
+  })
+  after(async () => {
+    await webView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search List element by index', async function () {

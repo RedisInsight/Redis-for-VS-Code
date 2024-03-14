@@ -25,7 +25,7 @@ describe('CLI critical', () => {
 
   let keyName = Common.generateWord(20)
 
-  beforeEach(async () => {
+  before(async () => {
     bottomBar = new BottomBar()
     webView = new WebView()
     treeView = new TreeView()
@@ -33,6 +33,8 @@ describe('CLI critical', () => {
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
+  })
+  beforeEach(async () => {
     await webView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
     await webView.switchToFrame(Views.CliViewPanel)
@@ -44,6 +46,10 @@ describe('CLI critical', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+  })
+  after(async () => {
+    await webView.switchBack()
+
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that Redis returns error if command is not correct when user works with CLI', async function () {

@@ -28,8 +28,8 @@ import { Config } from './helpers/Conf'
       `undefined_publisher.${Config.extensionName.replace('.vsix', '')}`,
     )
     // Install VSCode and Chromedriver
-    await exTester.downloadCode(Config.vscodeVersion)
-    await exTester.downloadChromeDriver(Config.vscodeVersion)
+    await exTester.downloadCode()
+    await exTester.downloadChromeDriver()
     // Install vsix if not installed yet
     if (!fs.existsSync(extensionDir)) {
       await exTester.installVsix({
@@ -45,7 +45,6 @@ import { Config } from './helpers/Conf'
         path.join(__dirname, '..', 'dist', 'tests', '**', '*.js'),
       ],
       {
-        vscodeVersion: Config.vscodeVersion,
         settings: 'settings.json',
         logLevel: logging.Level.INFO,
         offline: false,

@@ -34,7 +34,7 @@ describe('TTL values in Keys Table', () => {
   let keyDetailsView: KeyDetailsView
   let treeView: TreeView
 
-  beforeEach(async () => {
+  before(async () => {
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new KeyDetailsView()
@@ -50,6 +50,10 @@ describe('TTL values in Keys Table', () => {
     cliViewPanel = await bottomBar.openCliViewPanel()
     await webView.switchToFrame(Views.CliViewPanel)
     await cliViewPanel.executeCommand(`FLUSHDB`)
+  })
+
+  after(async () => {
+    await webView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that Key is deleted if TTL finishes', async function () {

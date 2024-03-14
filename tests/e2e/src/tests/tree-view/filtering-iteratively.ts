@@ -15,13 +15,17 @@ describe('Filtering iteratively in Tree view', () => {
   let treeView: TreeView
   let keys: string[]
 
-  beforeEach(async () => {
+  before(async () => {
     webView = new WebView()
     treeView = new TreeView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
+  })
+  after(async () => {
+    await webView.switchBack()
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -31,7 +35,6 @@ describe('Filtering iteratively in Tree view', () => {
         Config.ossStandaloneConfig.databaseName,
       )
     }
-    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search iteratively via Scan more for search pattern and selected data type', async function () {
     // Create new keys
