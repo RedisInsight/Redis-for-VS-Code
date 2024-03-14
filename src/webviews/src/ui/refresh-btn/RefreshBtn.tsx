@@ -78,7 +78,6 @@ export const RefreshBtn: FC<Props> = (props) => {
           data-testid={triggerTestid}
         >
           <RefreshIcon />
-          {/* <VscRefresh /> */}
         </VSCodeButton>
       )}
     >
