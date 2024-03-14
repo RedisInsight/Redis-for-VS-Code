@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it, afterEach } from 'mocha'
 import { Workbench } from 'vscode-extension-tester'
 import {
   WebView,
@@ -24,6 +24,7 @@ import {
   InputActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 
@@ -39,7 +40,7 @@ describe('Edit Key values verification', () => {
   let listKeyDetailsView: ListKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
 
-  beforeEach(async () => {
+  before(async () => {
     webView = new WebView()
     hashKeyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
@@ -52,13 +53,17 @@ describe('Edit Key values verification', () => {
       Config.ossStandaloneConfig,
     )
   })
+  after(async () => {
+    await webView.switchBack()
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
+  })
   afterEach(async () => {
     await webView.switchBack()
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
-    await DatabaseAPIRequests.deleteAllDatabasesApi()
+    await webView.switchToFrame(Views.TreeView)
   })
   it('Verify that user can edit Hash Key field', async function () {
     const fieldName = 'test'

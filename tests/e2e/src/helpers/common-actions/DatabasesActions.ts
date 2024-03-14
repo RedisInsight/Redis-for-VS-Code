@@ -65,9 +65,6 @@ export class DatabasesActions extends CommonDriverExtension {
   ): Promise<void> {
     await DatabaseAPIRequests.addNewStandaloneDatabaseApi(databaseParameters)
     await VSBrowser.instance.waitForWorkbench(20_000)
-    // TODO For now need to reopen tab to load all keys when driver opens vscode
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.closeView()
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await new WebView().switchToFrame(
       Views.TreeView,

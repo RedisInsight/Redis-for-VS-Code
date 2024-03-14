@@ -11,13 +11,14 @@ import {
   DatabasesActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Actions with Key List', () => {
   let webView: WebView
   let keyDetailsView: StringKeyDetailsView
   let treeView: TreeView
 
-  beforeEach(async () => {
+  before(async () => {
     webView = new WebView()
     keyDetailsView = new StringKeyDetailsView()
     treeView = new TreeView()
@@ -26,9 +27,13 @@ describe('Actions with Key List', () => {
       Config.ossStandaloneConfig,
     )
   })
-  afterEach(async () => {
+  after(async () => {
     await webView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
+  })
+  afterEach(async () => {
+    await webView.switchBack()
+    await webView.switchToFrame(Views.TreeView)
   })
 
   it('Verify that key deleted properly from the list', async function () {
