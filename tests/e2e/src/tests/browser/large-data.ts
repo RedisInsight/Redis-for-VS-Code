@@ -14,6 +14,7 @@ import {
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 
@@ -22,7 +23,7 @@ describe('Cases with large data', () => {
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
 
-  beforeEach(async () => {
+  before(async () => {
     webView = new WebView()
     hashKeyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
@@ -32,6 +33,14 @@ describe('Cases with large data', () => {
     )
   })
   afterEach(async () => {
+    await webView.switchBack()
+    await webView.switchToFrame(Views.TreeView)
+    await KeyAPIRequests.deleteKeyByNameApi(
+      keyName,
+      Config.ossStandaloneConfig.databaseName,
+    )
+  })
+  after(async () => {
     await webView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })

@@ -4,19 +4,25 @@ import { WebView, TreeView } from '@e2eSrc/page-objects/components'
 import { KeyAPIRequests, DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
+import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Tree view verifications', () => {
   let webView: WebView
   let treeView: TreeView
   let keyNames: string[] = []
 
-  beforeEach(async () => {
+  before(async () => {
     webView = new WebView()
     treeView = new TreeView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneBigConfig,
     )
+  })
+  after(async () => {
+    await webView.switchBack()
+
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
     await webView.switchBack()
@@ -26,7 +32,7 @@ describe('Tree view verifications', () => {
         Config.ossStandaloneBigConfig.databaseName,
       )
     }
-    await DatabaseAPIRequests.deleteAllDatabasesApi()
+    await webView.switchToFrame(Views.TreeView)
   })
   // TODO unskip once filtering by key type implemented
   it.skip('Verify that user can see the total number of keys, the number of keys scanned, the “Scan more” control displayed at the top of Tree view', async function () {
