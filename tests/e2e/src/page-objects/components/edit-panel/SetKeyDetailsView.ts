@@ -1,6 +1,7 @@
 import { By } from 'selenium-webdriver'
 import { KeyDetailsView } from '@e2eSrc/page-objects/components'
 import { InputActions } from '@e2eSrc/helpers/common-actions'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 /**
  * Sorted Set Key details view

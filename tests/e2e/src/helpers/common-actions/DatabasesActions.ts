@@ -66,6 +66,8 @@ export class DatabasesActions extends CommonDriverExtension {
     await DatabaseAPIRequests.addNewStandaloneDatabaseApi(databaseParameters)
     await VSBrowser.instance.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.closeView()
+    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await new WebView().switchToFrame(
       Views.TreeView,
       InnerViews.KeyListInnerView,

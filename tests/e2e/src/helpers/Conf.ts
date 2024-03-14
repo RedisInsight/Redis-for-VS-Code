@@ -8,7 +8,8 @@ export class Config {
   static commonUrl = process.env.COMMON_URL || 'http://localhost:8080'
   static apiUrl = process.env.API_URL || 'http://127.0.0.1:5541/api'
   static vscodeVersion = process.env.VSCODE_VERSION || '1.87.2'
-  static extensionName = process.env.EXTENSION_NAME || 'redisinsight-vsc-plugin-0.0.1.vsix'
+  static extensionName =
+    process.env.EXTENSION_NAME || 'redisinsight-vsc-plugin-0.0.1.vsix'
 
   static workingDirectory =
     process.env.APP_FOLDER_ABSOLUTE_PATH ||
@@ -17,7 +18,7 @@ export class Config {
   static uniqueId = chance.string({ length: 10 })
 
   static ossStandaloneConfig = {
-    host: process.env.OSS_STANDALONE_HOST || 'oss-standalone',
+    host: process.env.OSS_STANDALONE_HOST || 'localhost',
     port: process.env.OSS_STANDALONE_PORT || '6379',
     databaseName: `${
       process.env.OSS_STANDALONE_DATABASE_NAME || 'test_standalone'
@@ -159,16 +160,25 @@ export class Config {
       name: `ca}-${this.uniqueId}`,
       certificate:
         process.env.E2E_CA_CRT ||
-        fs.readFileSync('./src/rte/oss-standalone-tls/certs/redisCA.crt', 'utf-8'),
+        fs.readFileSync(
+          './src/rte/oss-standalone-tls/certs/redisCA.crt',
+          'utf-8',
+        ),
     },
     clientCert: {
       name: `client}-${this.uniqueId}`,
       certificate:
         process.env.E2E_CLIENT_CRT ||
-        fs.readFileSync('./src/rte/oss-standalone-tls/certs/redis.crt', 'utf-8'),
+        fs.readFileSync(
+          './src/rte/oss-standalone-tls/certs/redis.crt',
+          'utf-8',
+        ),
       key:
         process.env.E2E_CLIENT_KEY ||
-        fs.readFileSync('./src/rte/oss-standalone-tls/certs/redis.key', 'utf-8'),
+        fs.readFileSync(
+          './src/rte/oss-standalone-tls/certs/redis.key',
+          'utf-8',
+        ),
     },
   }
 
