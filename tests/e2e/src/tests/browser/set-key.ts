@@ -9,6 +9,7 @@ import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
   DatabasesActions,
+  InputActions,
   KeyDetailsActions,
   NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
@@ -17,6 +18,7 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { SetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { AddSetKeyView } from '@e2eSrc/page-objects/components/edit-panel/AddSetView'
 
 let keyName: string
 
@@ -24,18 +26,22 @@ describe('Set Key fields verification', () => {
   let webView: WebView
   let keyDetailsView: SetKeyDetailsView
   let treeView: TreeView
+  let addSetKeyView: AddSetKeyView
 
   before(async () => {
     webView = new WebView()
     keyDetailsView = new SetKeyDetailsView()
     treeView = new TreeView()
+    addSetKeyView = new AddSetKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
   })
-  afterEach(async () => {
+  beforeEach(async () => {
     await webView.switchBack()
+  })
+  afterEach(async () => {
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
@@ -51,19 +57,16 @@ describe('Set Key fields verification', () => {
     const keyFieldValue = 'setField11111'
     const setKeyParameters: SetKeyParameters = {
       keyName: keyName,
-      members: ['setField'],
+      members: ['setField', 'setField2'],
     }
 
-    await KeyAPIRequests.addSetKeyApi(
-      setKeyParameters,
-      Config.ossStandaloneConfig.databaseName,
-    )
-    // Refresh database
-    await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
+    await addSetKeyView.addSetKey(
+      setKeyParameters.keyName,
+      setKeyParameters.members,
     )
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
     // Verify that user can add member to Set
     await keyDetailsView.addMemberToSet(keyFieldValue)
     // Search the added member
@@ -99,5 +102,23 @@ describe('Set Key fields verification', () => {
 
     // Verify that details panel is closed for set key after deletion
     await KeyDetailsActions.verifyDetailsPanelClosed()
+  })
+
+  it('Verify that add button is disabled in Set', async function () {
+    keyName = Common.generateWord(10)
+
+    await NotificationActions.closeAllNotifications()
+
+    await webView.switchToFrame(Views.TreeView)
+    await ButtonActions.clickElement(treeView.addKeyButton)
+    expect(
+      await addSetKeyView.isElementDisabled(addSetKeyView.addButton, 'class'),
+    ).eql(true, 'add button is not disabled if name in not entered')
+
+    await InputActions.typeText(addSetKeyView.keyNameInput, keyName)
+
+    expect(
+      await addSetKeyView.isElementDisabled(addSetKeyView.addButton, 'class'),
+    ).eql(false, 'add button is disabled if name in entered')
   })
 })
