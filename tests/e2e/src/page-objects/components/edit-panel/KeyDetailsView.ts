@@ -3,15 +3,14 @@ import { BaseComponent } from '../BaseComponent'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
+import { Input } from '../Input'
 
 /**
  * Key details view
  */
 export class KeyDetailsView extends BaseComponent {
-  ttlField = By.xpath(`//*[@data-testid='inline-item-editor']`)
-  saveTtl = By.xpath(`//*[@data-testid='apply-btn']`)
+  inlineItemEditor = By.xpath(`//*[@data-testid='inline-item-editor']`)
   keyType = By.xpath(`//div[contains(@class, '_keyFlexGroup')]`)
-  keyName = By.xpath(`//div[@data-testid='key-name-text']/b`)
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
   keyLength = By.xpath(`//div[@data-testid='key-length-text']`)
   refreshKeyButton = By.xpath(`//*[@data-testid='refresh-key-btn']`)
@@ -21,6 +20,7 @@ export class KeyDetailsView extends BaseComponent {
   searchInput = By.xpath(`//*[@data-testid='search']`)
   clearSearchInput = By.xpath(`//*[@data-testid='decline-search-button']`)
   setMemberInput = By.xpath(`//*[@data-testid='member-name']`)
+  keyNameInput = By.xpath(`//*[@data-testid='edit-key-input']`)
   // BUTTONS
   searchButtonInKeyDetails = By.xpath(
     `//vscode-button[@data-testid='search-button']`,
@@ -79,14 +79,6 @@ export class KeyDetailsView extends BaseComponent {
     const regex = /Length: (\d+)/
     const match = keyLengthText.match(regex)
     return match ? parseInt(match[1], 10) : NaN
-  }
-
-  /**
-   * get ttl value
-   */
-  async getKeyTtl(): Promise<string> {
-    const keySizeText = await this.getElement(this.ttlField)
-    return await keySizeText.getAttribute('value')
   }
 
   /**
@@ -182,8 +174,21 @@ export class KeyDetailsView extends BaseComponent {
     }
   }
 
+  /**
+   * Remove key from key details
+   */
   async removeKeyFromDetailedView(): Promise<void> {
     await (await this.getElement(this.detailsDeleteKeyButton)).click()
     await (await this.getElement(this.submitDetailsDeleteKeyButton)).click()
+  }
+
+  /**
+   * Edit key name from details
+   * @param keyName The name of the key
+   */
+  async editKeyName(keyName: string): Promise<void> {
+    await (await this.getElement(this.keyNameInput)).click()
+    await InputActions.slowType(this.keyNameInput, keyName)
+    await (await this.getElement(Input.applyInput)).click()
   }
 }
