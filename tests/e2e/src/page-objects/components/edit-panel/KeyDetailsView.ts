@@ -21,6 +21,7 @@ export class KeyDetailsView extends BaseComponent {
   clearSearchInput = By.xpath(`//*[@data-testid='decline-search-button']`)
   setMemberInput = By.xpath(`//*[@data-testid='member-name']`)
   keyNameInput = By.xpath(`//*[@data-testid='edit-key-input']`)
+  copyKeyNameBtn = By.xpath(`//*[@data-testid='copy-name-button']`)
   // BUTTONS
   searchButtonInKeyDetails = By.xpath(
     `//vscode-button[@data-testid='search-button']`,

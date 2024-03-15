@@ -64,11 +64,11 @@ export class DatabaseAPIRequests {
       ResourcePath.Databases,
       requestBody,
     )
+    expect(await response.status).eql(201)
     expect(await response.body.name).eql(
       databaseParameters.databaseName,
       `Database Name is not equal to ${databaseParameters.databaseName} in response`,
     )
-    expect(await response.status).eql(201)
   }
 
   /**
