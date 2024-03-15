@@ -28,6 +28,7 @@ export class NotificationActions {
     )
   }
 
+  // it does not work for now - can't find elements
   /**
    * close all notifications
    */
