@@ -7,7 +7,9 @@ import { ViewId } from './constants'
 
 let myStatusBarItem: vscode.StatusBarItem
 export async function activate(context: vscode.ExtensionContext) {
-  await startBackend(context)
+  if (process.env.RI_WITHOUT_BACKEND !== 'true') {
+    await startBackend(context)
+  }
   const sidebarProvider = new WebViewProvider('sidebar', context)
   const panelProvider = new WebViewProvider('cli', context)
 
