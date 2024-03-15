@@ -38,8 +38,10 @@ describe('Set Key fields verification', () => {
       Config.ossStandaloneConfig,
     )
   })
-  afterEach(async () => {
+  beforeEach(async () => {
     await webView.switchBack()
+  })
+  afterEach(async () => {
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
@@ -57,12 +59,6 @@ describe('Set Key fields verification', () => {
       keyName: keyName,
       members: ['setField', 'setField2'],
     }
-
-    // Refresh database
-    await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
-    )
-    await webView.switchBack()
 
     await addSetKeyView.addSetKey(
       setKeyParameters.keyName,
@@ -111,10 +107,6 @@ describe('Set Key fields verification', () => {
   it('Verify that add button is disabled in Set', async function () {
     keyName = Common.generateWord(10)
 
-    // Refresh database
-    await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
-    )
     await webView.switchBack()
 
     await NotificationActions.closeAllNotifications()
@@ -123,12 +115,12 @@ describe('Set Key fields verification', () => {
     await ButtonActions.clickElement(treeView.addKeyButton)
     expect(
       await addSetKeyView.isElementDisabled(addSetKeyView.addButton, 'class'),
-    ).true
+    ).eql(true, 'add button is not disabled if name in not entered')
 
     await InputActions.typeText(addSetKeyView.keyNameInput, keyName)
 
     expect(
       await addSetKeyView.isElementDisabled(addSetKeyView.addButton, 'class'),
-    ).false
+    ).eql(false, 'add button is disabled if name in entered')
   })
 })
