@@ -55,6 +55,7 @@ export class AddSetKeyView extends AddKeyView {
         for (const value of values) {
           await ButtonActions.clickElement(this.addMember)
           await InputActions.typeText(this.memberInputByIndex(i), value)
+          i++
         }
       }
     }
