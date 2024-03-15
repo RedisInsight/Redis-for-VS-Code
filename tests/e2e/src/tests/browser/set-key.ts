@@ -107,8 +107,6 @@ describe('Set Key fields verification', () => {
   it('Verify that add button is disabled in Set', async function () {
     keyName = Common.generateWord(10)
 
-    await webView.switchBack()
-
     await NotificationActions.closeAllNotifications()
 
     await webView.switchToFrame(Views.TreeView)
