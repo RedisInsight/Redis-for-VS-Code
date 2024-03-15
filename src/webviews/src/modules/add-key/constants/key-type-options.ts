@@ -9,10 +9,10 @@ export const ADD_KEY_TYPE_OPTIONS = [
   //   text: 'List',
   //   value: KeyTypes.List,
   // },
-  // {
-  //   text: 'Set',
-  //   value: KeyTypes.Set,
-  // },
+  {
+    text: 'Set',
+    value: KeyTypes.Set,
+  },
   // {
   //   text: 'Sorted Set',
   //   value: KeyTypes.ZSet,

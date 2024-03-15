@@ -31,7 +31,7 @@ vscode-button::part(control) {
   }
 
   .key-footer-items-container {
-    @apply pt-4 pl-10 pr-4 pb-12 overflow-auto max-h-[calc(100vh-178px)];
+    @apply pl-6 pb-12 overflow-auto max-h-[calc(100vh-178px)];
 
     input {
       @apply h-11;

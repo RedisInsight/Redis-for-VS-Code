@@ -18,7 +18,7 @@ import {
   getUrl,
 } from 'uiSrc/utils'
 import { useSelectedKeyStore } from 'uiSrc/store'
-import { GetKeysWithDetailsResponse, KeysStore, KeysActions, SetStringWithExpire, KeysThunks } from './interface'
+import { GetKeysWithDetailsResponse, KeysStore, KeysActions, SetStringWithExpire, KeysThunks, CreateSetWithExpireDto } from './interface'
 import { parseKeysListResponse } from '../utils'
 
 // eslint-disable-next-line import/no-mutable-exports
@@ -202,6 +202,13 @@ KeysThunks
     onFailAction?: () => void,
   ) => get().addTypedKey(data, KeyTypes.String, onSuccessAction, onFailAction),
 
+  // Asynchronous thunk action
+  addSetKey: async (
+    data: CreateSetWithExpireDto,
+    onSuccessAction?: () => void,
+    onFailAction?: () => void,
+  ) => get().addTypedKey(data, KeyTypes.Set, onSuccessAction, onFailAction),
+
   addTypedKey: async (
     data: any,
     keyType: KeyTypes,
@@ -218,7 +225,6 @@ KeysThunks
       )
       if (isStatusSuccessful(status)) {
         onSuccessAction?.()
-        // get().addKeyIntoList({ key: data.keyName, keyType })
         showInformationMessage(successMessages.ADDED_NEW_KEY(data.keyName).title)
       }
     } catch (error) {

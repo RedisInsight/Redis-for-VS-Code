@@ -5,6 +5,7 @@ import { AddSetMembers, Props } from './AddSetMembers'
 
 const MEMBER_NAME = 'member-name'
 const ADD_NEW_ITEM = 'add-new-item'
+const CANCEL_BTN = 'cancel-members-btn'
 
 const mockedProps = mock<Props>()
 
@@ -57,5 +58,11 @@ describe('AddSetMembers', () => {
     fireEvent.click(screen.getByLabelText(/clear item/i))
 
     expect(memberInput).toHaveValue('')
+  })
+
+  it('should not render cancel button for hideCancel prop', () => {
+    const { queryByTestId } = render(<AddSetMembers {...instance(mockedProps)} hideCancel />)
+
+    expect(queryByTestId(CANCEL_BTN)).not.toBeInTheDocument()
   })
 })
