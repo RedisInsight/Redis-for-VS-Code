@@ -2,7 +2,7 @@ $inputHeight: 28px;
 $inputMinWidth: 100px;
 
 .input {
-  @apply bg-vscode-input-background text-vscode-input-foreground border-vscode-input-border focus:border-vscode-inputOption-activeBorder w-full px-[6px] outline-none border-solid border rounded-none focus:outline-none;
+  @apply bg-vscode-input-background text-vscode-input-foreground border-vscode-input-border truncate w-full px-[6px] outline-none border-solid border rounded-none hover:cursor-pointer focus:cursor-text focus:outline-none focus:border-vscode-inputOption-activeBorder;
 
   border-color: transparent;
   min-width: $inputMinWidth;

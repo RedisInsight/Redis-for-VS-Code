@@ -36,13 +36,19 @@ export class InputActions {
    * @param delay to wait
    */
   static async slowType(
-    element: WebElement,
+    inputLocator: Locator,
     text: string,
     delay: number = 100,
+    timeout: number = 3000,
   ) {
     InputActions.initializeDriver()
+    const inputElement = await InputActions.driver.wait(
+      until.elementLocated(inputLocator),
+      timeout,
+    )
+    await inputElement.clear()
     for (const char of text) {
-      await element.sendKeys(char)
+      await inputElement.sendKeys(char)
       await InputActions.driver.sleep(delay)
     }
   }

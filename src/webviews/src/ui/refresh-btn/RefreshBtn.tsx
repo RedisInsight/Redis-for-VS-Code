@@ -4,7 +4,6 @@ import cx from 'classnames'
 import Popup from 'reactjs-popup'
 import * as l10n from '@vscode/l10n'
 import { PopupPosition } from 'reactjs-popup/dist/types'
-
 import { VscRefresh } from 'react-icons/vsc'
 
 import { Nullable } from 'uiSrc/interfaces'

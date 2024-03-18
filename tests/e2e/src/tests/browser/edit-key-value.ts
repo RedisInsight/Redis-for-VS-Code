@@ -1,6 +1,5 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
-import { Workbench } from 'vscode-extension-tester'
 import {
   WebView,
   HashKeyDetailsView,
@@ -27,7 +26,6 @@ import {
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
-
 const keyValueBefore = 'ValueBeforeEdit!'
 const keyValueAfter = 'ValueAfterEdit!'
 
@@ -35,7 +33,6 @@ describe('Edit Key values verification', () => {
   let webView: WebView
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
-  let workbench: Workbench
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
   let listKeyDetailsView: ListKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
@@ -44,7 +41,6 @@ describe('Edit Key values verification', () => {
     webView = new WebView()
     hashKeyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
-    workbench = new Workbench()
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
     listKeyDetailsView = new ListKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
@@ -95,7 +91,7 @@ describe('Edit Key values verification', () => {
     )[0].getText()
     expect(resultValue).eqls(keyValueAfter)
   })
-  it('Verify that user can edit Sorted Set Key field', async function () {
+  it('Verify that user can edit Zset Key member', async function () {
     keyName = Common.generateWord(10)
     const scoreBefore = 5
     const scoreAfter = '10'
@@ -154,42 +150,6 @@ describe('Edit Key values verification', () => {
       await listKeyDetailsView.getElements(listKeyDetailsView.elementsList)
     )[0].getText()
     expect(resultValue).eqls(keyValueAfter)
-  })
-  it('Verify that user can edit Sorted Set Key field', async function () {
-    keyName = Common.generateWord(10)
-    const scoreBefore = 5
-    const scoreAfter = '10'
-    const sortedSetKeyParameters: SortedSetKeyParameters = {
-      keyName: keyName,
-      members: [
-        {
-          name: keyValueBefore,
-          score: scoreBefore,
-        },
-      ],
-    }
-
-    await KeyAPIRequests.addSortedSetKeyApi(
-      sortedSetKeyParameters,
-      Config.ossStandaloneConfig.databaseName,
-    )
-    // Refresh database
-    await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
-    )
-    // Open key details iframe
-    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
-
-    await sortedSetKeyDetailsView.editSortedSetKeyValue(
-      scoreAfter,
-      keyValueBefore,
-    )
-    let resultValue = await (
-      await sortedSetKeyDetailsView.getElements(
-        sortedSetKeyDetailsView.scoreSortedSetFieldsList,
-      )
-    )[0].getText()
-    expect(resultValue).eqls(scoreAfter)
   })
   it('Verify that user can edit String value', async function () {
     keyName = Common.generateWord(10)

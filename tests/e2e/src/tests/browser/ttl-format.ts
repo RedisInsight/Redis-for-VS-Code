@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it, afterEach } from 'mocha'
 import {
   BottomBar,
   WebView,
@@ -14,6 +14,7 @@ import { keyTypes } from '@e2eSrc/helpers/KeysActions'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
 import {
   DatabasesActions,
+  InputActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { Config } from '@e2eSrc/helpers'
@@ -112,7 +113,7 @@ describe('TTL values in Keys Table', () => {
       await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(
         keysData[i].keyName,
       )
-      expect(await keyDetailsView.getKeyTtl()).contains(
+      expect(await InputActions.getInputValue(keyDetailsView.inlineItemEditor)).contains(
         ttlValues[i],
         `TTL value in keys table is not ${ttlValues[i]}`,
       )

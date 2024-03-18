@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it, afterEach } from 'mocha'
 import {
   WebView,
   TreeView,

@@ -114,6 +114,7 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
       <VSCodeButton
         appearance="icon"
         disabled={loading}
+        className={styles.copyBtn}
         data-testid="copy-name-button"
         onClick={(e) => handleCopy(e, replaceSpaces(keyProp?.substring(0, 200)))}
         aria-label="Copy Name"
