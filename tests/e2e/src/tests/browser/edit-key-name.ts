@@ -8,7 +8,7 @@ import {
   ListKeyDetailsView,
   StringKeyDetailsView,
   SetKeyDetailsView,
-  Input,
+  InputWithButtons,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -96,7 +96,7 @@ describe('Edit Key names verification', () => {
     // Verify that user can cancel editing key name
     await (await stringKeyDetailsView.getElement(stringKeyDetailsView.keyNameInput)).click()
     await InputActions.slowType(stringKeyDetailsView.keyNameInput, 'textToCancel')
-    await (await stringKeyDetailsView.getElement(Input.cancelInput)).click()
+    await (await stringKeyDetailsView.getElement(InputWithButtons.cancelInput)).click()
     expect(keyNameFromDetails).eql(
       keyNameBefore,
       'The String Key Name not editing not canceled',

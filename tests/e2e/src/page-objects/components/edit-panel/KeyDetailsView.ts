@@ -3,7 +3,7 @@ import { BaseComponent } from '../BaseComponent'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
-import { Input } from '../Input'
+import { InputWithButtons } from '../InputWithButtons'
 
 /**
  * Key details view
@@ -190,6 +190,6 @@ export class KeyDetailsView extends BaseComponent {
   async editKeyName(keyName: string): Promise<void> {
     await (await this.getElement(this.keyNameInput)).click()
     await InputActions.slowType(this.keyNameInput, keyName)
-    await (await this.getElement(Input.applyInput)).click()
+    await (await this.getElement(InputWithButtons.applyInput)).click()
   }
 }

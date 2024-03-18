@@ -3,7 +3,7 @@ import { describe, it, afterEach } from 'mocha'
 import {
   BottomBar,
   CliViewPanel,
-  Input,
+  InputWithButtons,
   KeyDetailsView,
   TreeView,
   WebView,
@@ -67,7 +67,7 @@ describe('Set TTL for Key', () => {
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
     await InputActions.slowType(keyDetailsView.inlineItemEditor, ttlValue)
-    await ButtonActions.clickElement(Input.applyInput)
+    await ButtonActions.clickElement(InputWithButtons.applyInput)
 
     await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
 

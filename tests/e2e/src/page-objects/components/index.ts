@@ -1,5 +1,5 @@
 import { BaseComponent } from './BaseComponent'
-import { Input } from './Input'
+import { InputWithButtons } from './InputWithButtons'
 import { Toast } from './Toast'
 import { WebView } from './WebView'
 
@@ -31,6 +31,6 @@ export {
   SortedSetKeyDetailsView,
   SetKeyDetailsView,
   WebView,
-  Input,
+  InputWithButtons,
   Toast,
 }
