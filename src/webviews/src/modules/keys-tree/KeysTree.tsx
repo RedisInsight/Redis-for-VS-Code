@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import * as l10n from '@vscode/l10n'
-import { useParams } from 'react-router-dom'
 
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { AllKeyTypes, VscodeMessageAction } from 'uiSrc/constants'
@@ -9,6 +8,7 @@ import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString } from 'uiSrc/utils/formatters'
 import { fetchKeyInfo, useContextApi, useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
 import { vscodeApi } from 'uiSrc/services'
+import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 
 import { constructKeysToTree } from './utils/constructKeysToTree'
 import { VirtualTree } from './components/virtual-tree'
@@ -20,8 +20,8 @@ const parseKeyNames = (keys: KeyInfo[] = []) =>
     ({ ...item, nameString: item.nameString ?? bufferToString(item.name) }))
 
 export const KeysTree = () => {
+  const delimiter = useAppInfoStore((state) => state.delimiter)
   const openNodes = useContextInContext((state) => state.keys.tree.openNodes)
-  const delimiter = useContextInContext((state) => state.dbConfig.treeViewDelimiter) || ''
   const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
 
   const selectedKeyName = useSelectedKeyStore((state) => state.data?.nameString) || ''

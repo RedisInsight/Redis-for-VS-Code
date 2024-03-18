@@ -7,7 +7,7 @@ import styles from './styles.module.scss'
 
 export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   inputRef?: React.Ref<HTMLInputElement>
-  labelText?: string
+  labelText?: string | JSX.Element | JSX.Element[]
 }
 
 export const Checkbox: FC<Props> = (props) => {
@@ -16,7 +16,7 @@ export const Checkbox: FC<Props> = (props) => {
   return (
     <VSCodeCheckbox
       {...omit(props, 'inputRef', 'labelText')}
-      className={cx('checkbox', className)}
+      className={cx(styles.checkbox, className)}
     >
       {labelText}
     </VSCodeCheckbox>

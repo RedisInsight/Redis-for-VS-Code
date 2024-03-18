@@ -1,5 +1,4 @@
 import React, { ChangeEvent } from 'react'
-import { useSelector } from 'react-redux'
 import { FormikProps } from 'formik'
 import * as l10n from '@vscode/l10n'
 import cx from 'classnames'
@@ -18,7 +17,6 @@ import {
   validateTimeoutNumber,
 } from 'uiSrc/utils'
 import { DbConnectionInfo } from 'uiSrc/interfaces'
-import { appInfoSelector } from 'uiSrc/slices/app/info/info.slice'
 import { InputText } from 'uiSrc/ui'
 
 import styles from './styles.module.scss'
@@ -46,8 +44,6 @@ const DatabaseForm = (props: Props) => {
     showFields,
     isEditMode,
   } = props
-
-  const { server } = useSelector(appInfoSelector)
 
   // const AppendHostName = () => (
   // <EuiToolTip
@@ -106,7 +102,7 @@ const DatabaseForm = (props: Props) => {
                   validateField(e.target.value.trim()),
                 )
               }}
-              onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => handlePasteHostName(onHostNamePaste, event)}
+              onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => handlePasteHostName(onHostNamePaste, event as any)}
               onFocus={selectOnFocus}
             />
           </div>

@@ -22,6 +22,7 @@ import { isEqualBuffers } from 'uiSrc/utils'
 import { StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
 import { localStorageService, sessionStorageService } from './services'
+import { useAppInfoStore } from './store/hooks/use-app-info-store/useAppInfoStore'
 
 import './styles/main.scss'
 import '../vscode.css'
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = event.data
 
     switch (message.action) {
+      // Key details
       case VscodeMessageAction.SelectKey:
         const { key, databaseId } = message?.data
         const prevKey = useSelectedKeyStore.getState().data?.name
@@ -44,6 +46,15 @@ document.addEventListener('DOMContentLoaded', () => {
         resetZustand()
         fetchKeyInfo({ key }, true)
         break
+      case VscodeMessageAction.AddKey:
+        sessionStorageService.set(StorageItem.databaseId, message?.data?.id)
+        useDatabasesStore.getState().setConnectedDatabase(message?.data as Database)
+        break
+      case VscodeMessageAction.ResetSelectedKey:
+        useSelectedKeyStore.getState().resetSelectedKeyStore()
+        break
+
+      // Sidebar
       case VscodeMessageAction.RefreshTree:
         if (message.data?.key) {
           useSelectedKeyStore.getState().setSelectedKeyAction(message.data)
@@ -54,13 +65,16 @@ document.addEventListener('DOMContentLoaded', () => {
       case VscodeMessageAction.EditDatabase:
         fetchEditedDatabase(message?.data as Database)
         break
-      case VscodeMessageAction.AddKey:
-        sessionStorageService.set(StorageItem.databaseId, message?.data?.id)
-        useDatabasesStore.getState().setConnectedDatabase(message?.data as Database)
+
+      // Settings
+      case VscodeMessageAction.UpdateSettings:
+        useAppInfoStore.getState().updateUserConfigSettingsSuccess(message.data)
         break
-      case VscodeMessageAction.ResetSelectedKey:
-        useSelectedKeyStore.getState().resetSelectedKeyStore()
+      case VscodeMessageAction.UpdateSettingsDelimiter:
+        useAppInfoStore.getState().setDelimiter(message.data)
         break
+
+      // CLI
       case VscodeMessageAction.AddCli:
       case VscodeMessageAction.OpenCli:
         const database = message?.data as Database

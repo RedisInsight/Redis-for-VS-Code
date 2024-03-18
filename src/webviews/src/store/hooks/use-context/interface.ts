@@ -5,12 +5,10 @@ import { Nullable } from 'uiSrc/interfaces'
 export interface AppContextStore {
   lastPage: string
   dbConfig: {
-    treeViewDelimiter: string
     treeViewSort: SortOrder
   }
   keys: {
     tree: {
-      delimiter: string
       openNodes: OpenNodes
       selectedLeaf: Nullable<string>
     }

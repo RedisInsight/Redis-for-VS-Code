@@ -9,9 +9,8 @@ import { ClearCommand, Keys } from 'uiSrc/constants'
 import { outputSelector } from 'uiSrc/modules/cli/slice/cli-output'
 import { cliSettingsSelector } from 'uiSrc/modules/cli/slice/cli-settings'
 import { CliInputWrapper } from 'uiSrc/modules/cli/components/cli-input'
-import { appRedisCommandsSelector } from 'uiSrc/slices/app/commands/redis-commands.slice'
-
 import { AppDispatch } from 'uiSrc/store'
+import { useRedisCommandsStore } from 'uiSrc/store/hooks/use-redis-commands-store/useRedisCommandsStore'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -37,7 +36,8 @@ export const CliBody = (props: Props) => {
   const [matchingCmds, setMatchingCmds] = useState<string[]>([])
   const { loading: settingsLoading } = useSelector(cliSettingsSelector)
   const { loading, commandHistory: commandHistoryStore } = useSelector(outputSelector)
-  const { commandsArray } = useSelector(appRedisCommandsSelector)
+
+  const commandsArray = useRedisCommandsStore((state) => state.commandsArray)
 
   const timerClickRef = useRef<NodeJS.Timeout>()
   const scrollDivRef: Ref<HTMLDivElement> = useRef(null)

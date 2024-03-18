@@ -10,6 +10,8 @@ module.exports = {
     'airbnb/hooks',
     'plugin:sonarjs/recommended',
     'plugin:storybook/recommended',
+    // TODO: in a separate pull request enable and fix all classes sorting issues for tailwind
+    // 'plugin:tailwindcss/recommended',
   ],
   plugins: ['@typescript-eslint', 'react-refresh'],
   parser: '@typescript-eslint/parser',

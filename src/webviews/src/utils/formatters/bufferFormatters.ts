@@ -12,7 +12,7 @@ const decoder = new TextDecoder('utf-8')
 const encoder = new TextEncoder()
 
 const isEqualBuffers = (a?: Nullable<RedisString>, b?: Nullable<RedisString>) =>
-  (isString(a) || isString(b) ? false : a?.data?.join(',') === b?.data?.join(','))
+  (isString(a) || isString(b) ? false : a?.data?.join?.(',') === b?.data?.join?.(','))
 
 // eslint-disable-next-line no-control-regex
 const IS_NON_PRINTABLE_ASCII_CHARACTER = /[^ -~\u0007\b\t\n\r]/
@@ -181,22 +181,6 @@ export {
   bufferToBinary,
   binaryToBuffer,
   UTF8ToArray,
-}
-
-window.ri = {
-  ...window.ri,
-  anyToBuffer,
-  bufferToUTF8,
-  bufferToASCII,
-  UTF8ToBuffer,
-  ASCIIToBuffer,
-  UintArrayToString,
-  stringToBuffer,
-  bufferToString,
-  bufferToHex,
-  hexToBuffer,
-  bufferToBinary,
-  binaryToBuffer,
 }
 
 // for BE libraries which work with Buffer

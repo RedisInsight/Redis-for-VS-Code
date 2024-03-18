@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as l10n from '@vscode/l10n'
 import { WebviewPanel } from './Webview'
 import { startBackend, closeBackend } from './server/bootstrapBackend'
 import { WebViewProvider } from './WebViewProvider'
@@ -7,7 +8,7 @@ import { ViewId } from './constants'
 
 let myStatusBarItem: vscode.StatusBarItem
 export async function activate(context: vscode.ExtensionContext) {
-  await startBackend(context)
+  // await startBackend(context)
   const sidebarProvider = new WebViewProvider('sidebar', context)
   const panelProvider = new WebViewProvider('cli', context)
 
@@ -39,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/key',
-        title: 'RedisInsight - Key details',
+        title: l10n.t('RedisInsight - Key details'),
         viewId: ViewId.Key,
         // todo: connection between webviews
         message: args,
@@ -50,7 +51,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/add_key',
-        title: 'RedisInsight - Add new key',
+        title: l10n.t('RedisInsight - Add new key'),
         viewId: ViewId.AddKey,
         handleMessage: (message) => handleMessage(message),
         message: args,
@@ -61,8 +62,19 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/add_database',
-        title: 'RedisInsight - Add Database connection',
+        title: l10n.t('RedisInsight - Add Database connection'),
         viewId: ViewId.AddDatabase,
+        handleMessage: (message) => handleMessage(message),
+        message: args,
+      })
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.openSettings', (args) => {
+      WebviewPanel.getInstance({
+        context,
+        route: 'settings',
+        title: l10n.t('RedisInsight - Settings'),
+        viewId: ViewId.Settings,
         handleMessage: (message) => handleMessage(message),
         message: args,
       })
@@ -72,7 +84,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/edit_database',
-        title: 'RedisInsight - Edit Database connection',
+        title: l10n.t('RedisInsight - Edit Database connection'),
         viewId: ViewId.EditDatabase,
         handleMessage: (message) => handleMessage(message),
         message: args,
@@ -110,6 +122,16 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisInsight.resetSelectedKey', () => {
       sidebarProvider.view?.webview.postMessage({ action: 'ResetSelectedKey' })
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.updateSettings', (args) => {
+      sidebarProvider.view?.webview.postMessage({ action: 'UpdateSettings', data: args.data })
+      panelProvider.view?.webview.postMessage({ action: 'UpdateSettings', data: args.data })
+      // WebviewPanel.getInstance({ viewId: ViewId.Key }).update()
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.updateSettingsDelimiter', (args) => {
+      sidebarProvider.view?.webview.postMessage({ action: 'UpdateSettingsDelimiter', data: args.data })
     }),
   )
 }

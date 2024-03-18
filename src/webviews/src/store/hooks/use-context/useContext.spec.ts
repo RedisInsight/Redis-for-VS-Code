@@ -62,7 +62,7 @@ describe('useContextStore', () => {
         keys: {
           ...state.keys,
           tree: {
-            openNodes, selectedLeaf, delimiter: ':',
+            openNodes, selectedLeaf,
           },
         },
       }))

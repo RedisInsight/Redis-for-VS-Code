@@ -10,7 +10,7 @@ import { immer } from 'zustand/middleware/immer'
 import { useStoreWithEqualityFn } from 'zustand/traditional'
 
 import { ExtractState, ZustandStore } from 'uiSrc/store'
-import { DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, KeyTypes, StorageItem } from 'uiSrc/constants'
+import { DEFAULT_TREE_SORTING, KeyTypes, StorageItem } from 'uiSrc/constants'
 import { localStorageService } from 'uiSrc/services'
 import { AppContextStore, AppContextActions } from './interface'
 import { createContextActions } from './useContextActions'
@@ -20,12 +20,10 @@ type StoreType = ZustandStore<AppContextStore & AppContextActions>
 export const initialContextState: AppContextStore = {
   lastPage: '',
   dbConfig: {
-    treeViewDelimiter: DEFAULT_DELIMITER,
     treeViewSort: DEFAULT_TREE_SORTING,
   },
   keys: {
     tree: {
-      delimiter: DEFAULT_DELIMITER,
       openNodes: {},
       selectedLeaf: null,
     },

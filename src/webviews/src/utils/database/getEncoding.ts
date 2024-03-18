@@ -1,6 +1,6 @@
 import { get } from 'lodash'
 import { RedisResponseEncoding } from 'uiSrc/interfaces'
-import { store } from 'uiSrc/store'
+import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 
 export const getEncoding = (): RedisResponseEncoding =>
-  get(store.getState(), 'app.info.encoding', RedisResponseEncoding.Buffer)
+  get(useAppInfoStore.getState(), 'encoding', RedisResponseEncoding.Buffer)

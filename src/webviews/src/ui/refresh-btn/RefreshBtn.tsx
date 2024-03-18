@@ -5,7 +5,7 @@ import Popup from 'reactjs-popup'
 import * as l10n from '@vscode/l10n'
 import { PopupPosition } from 'reactjs-popup/dist/types'
 
-import RefreshIcon from 'uiSrc/assets/icons/Refresh.svg?react'
+import { VscRefresh } from 'react-icons/vsc'
 
 import { Nullable } from 'uiSrc/interfaces'
 import {
@@ -77,8 +77,7 @@ export const RefreshBtn: FC<Props> = (props) => {
           aria-label="refresh button"
           data-testid={triggerTestid}
         >
-          <RefreshIcon />
-          {/* <VscRefresh /> */}
+          <VscRefresh />
         </VSCodeButton>
       )}
     >

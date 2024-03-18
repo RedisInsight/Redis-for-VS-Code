@@ -5,6 +5,17 @@ import { Certificate } from 'uiSrc/store/hooks/use-certificates-store/interface'
 import { UTF8ToArray, stringToBuffer } from 'uiSrc/utils'
 import { Database } from 'uiSrc/store'
 
+const COMMON_CONSENT_CONTENT = {
+  defaultValue: false,
+  required: false,
+  editable: true,
+  disabled: false,
+  displayInSetting: true,
+  since: '1.0.0',
+  title: 'Title',
+  label: '<a>Text</a>',
+}
+
 const TEST_KEYS = [
   { name: UTF8ToArray('keys:1:2') },
   { name: UTF8ToArray('keys2') },
@@ -144,6 +155,60 @@ export const constants = {
       data: { message: DEFAULT_ERROR_MESSAGE },
     },
   },
+
+  get COMMON_CONSENT_CONTENT() {
+    return COMMON_CONSENT_CONTENT
+  },
+
+  get REDIS_COMMANDS() {
+    return REDIS_COMMANDS
+  },
+
+  get REDIS_COMMANDS_ARRAY() {
+    return Object.keys(REDIS_COMMANDS).sort()
+  },
+
+  get REDIS_COMMANDS_GROUPS() {
+    return ['info', 'server']
+  },
+
+  SERVER_INFO: {
+    id: 'cceadb87-d2aa-47be-b647-5be34dcb8636',
+    createDateTime: '2024-02-27T13:10:54.000Z',
+    sessionId: 1710764631838,
+    appVersion: '2.44.0',
+    osPlatform: 'darwin',
+    buildType: 'ELECTRON',
+    appType: 'ELECTRON',
+    encryptionStrategies: [
+      'PLAIN',
+      'KEYTAR',
+    ],
+    controlNumber: 41.74,
+    controlGroup: '41',
+  },
+
+  SETTINGS: {
+    theme: null,
+    scanThreshold: 10000,
+    batchSize: 5,
+    agreements: {
+      analytics: true,
+      notifications: false,
+      encryption: false,
+      eula: true,
+      version: '1.0.6',
+    },
+  },
+
+  SETTINGS_AGREEMENTS_SPEC: {
+    version: '1.0.6',
+    agreements: {
+      analytics: {
+        ...COMMON_CONSENT_CONTENT,
+      },
+    },
+  },
 }
 
 const KEY_INFO: KeyInfo = {
@@ -225,4 +290,29 @@ const DATABASE: Database = {
   name: constants.TEST_DATABASE_NAME,
   modules: constants.TEST_DATABASE_MODULES,
   version: constants.TEST_DATABASE_VERSION,
+}
+
+const REDIS_COMMANDS = {
+  INFO: {
+    summary: 'INFO',
+    since: '6.0.0',
+    group: 'info',
+    complexity: 'Depends on subcommand.',
+    acl_categories: [
+      '@slow',
+    ],
+    arity: -2,
+    provider: 'main',
+  },
+  ACL: {
+    summary: 'A container for Access List Control commands.',
+    since: '6.0.0',
+    group: 'server',
+    complexity: 'Depends on subcommand.',
+    acl_categories: [
+      '@slow',
+    ],
+    arity: -2,
+    provider: 'main',
+  },
 }

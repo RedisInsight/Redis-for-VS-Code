@@ -4,7 +4,7 @@ import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints } from 'uiSrc/constants'
-import { isStatusSuccessful } from 'uiSrc/utils'
+import { getApiErrorMessage, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { Certificate, CertificatesActions, CertificatesStore } from './interface'
 
 export const initialCertsState: CertificatesStore = {
@@ -38,7 +38,7 @@ export const fetchCerts = () => {
         state.processCertsSuccess(caCerts, clientCerts)
       }
     } catch (error) {
-      console.debug({ error })
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {
       state.processCertsFinal()
     }
