@@ -129,12 +129,12 @@ const InlineEditor = memo((props: Props) => {
 
     if (validation) {
       newValue = validation(newValue)
-      setValue(newValue)
     }
     if (disableByValidation) {
       setIsError(disableByValidation(newValue))
     }
 
+    setValue(newValue)
     onChange?.(newValue)
   }
 
