@@ -1,5 +1,5 @@
 import { KeyTypes } from 'uiSrc/constants'
-import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
+import { KeyDto, KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 
 export interface KeysStore {
   databaseId: Nullable<string>
@@ -51,6 +51,7 @@ export interface KeysThunks {
   ) => void
   deleteKeyAction: (key: RedisString, onSuccessAction?: () => void) => void
   addStringKey: (data: SetStringWithExpire, onSuccessAction?: () => void, onFailAction?: () => void) => void
+  addSetKey: (data: CreateSetWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addKeyIntoTree: (key: RedisString, keyType: KeyTypes) => void
   addTypedKey: (
     data: any,
@@ -85,8 +86,14 @@ export interface GetKeysWithDetailsShardResponse extends GetKeysWithDetailsRespo
   id?: string
 }
 
-export interface SetStringWithExpire {
-  keyName: RedisString
-  value: RedisString
+export interface KeyWithExpireDto extends KeyDto {
   expire?: number
+}
+
+export interface SetStringWithExpire extends KeyWithExpireDto {
+  value: RedisString
+}
+
+export interface CreateSetWithExpireDto extends KeyWithExpireDto {
+  members: RedisString[]
 }

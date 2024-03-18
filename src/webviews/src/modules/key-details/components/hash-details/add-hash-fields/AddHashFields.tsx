@@ -118,7 +118,7 @@ const AddHashFields = (props: Props) => {
                     fieldValue: '',
                   }))}
                 clearIsDisabled={isClearDisabled(item)}
-                loading={loading}
+                disabled={loading}
               />
             </div>
           </div>

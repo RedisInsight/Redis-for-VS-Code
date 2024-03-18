@@ -7,6 +7,8 @@ import { KeyTypesShort } from '@e2eSrc/helpers/constants'
  */
 export class AddKeyView extends BaseComponent {
   keyTypeDropdown = By.xpath('//*[@data-testid="select-key-type"]')
+  ttlInput = By.xpath('//*[@data-testid="ttl-input"]')
+  keyNameInput = By.xpath('//*[@data-testid="key-input"]')
 
   /**
    * Select key type

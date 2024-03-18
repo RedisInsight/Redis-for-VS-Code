@@ -4,9 +4,13 @@ import * as l10n from '@vscode/l10n'
 
 import { KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
+import { RedisString } from 'uiSrc/interfaces'
 import { SetDetailsTable } from './set-details-table'
 import { AddSetMembers } from './add-set-members'
+import { addSetMembersAction, useSetStore } from './hooks/useSetStore'
+import { AddMembersToSetDto } from './hooks/interface'
 import { AddItemsAction } from '../key-details-actions'
 
 export interface Props extends KeyDetailsHeaderProps {
@@ -18,9 +22,11 @@ export const SetDetails = (props: Props) => {
   const keyType = KeyTypes.Hash
   const { onRemoveKey, onOpenAddItemPanel, onCloseAddItemPanel } = props
 
-  const [isAddItemPanelOpen, setIsAddItemPanelOpen] = useState<boolean>(false)
-
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
   const loading = useSelectedKeyStore((state) => state.loading)
+  const loadingSet = useSetStore((state) => state.loading)
+
+  const [isAddItemPanelOpen, setIsAddItemPanelOpen] = useState<boolean>(false)
 
   const openAddItemPanel = () => {
     setIsAddItemPanelOpen(true)
@@ -30,6 +36,22 @@ export const SetDetails = (props: Props) => {
   const closeAddItemPanel = (isCancelled = false) => {
     setIsAddItemPanelOpen(false)
     onCloseAddItemPanel(isCancelled)
+  }
+
+  const onSuccessAdded = (members: RedisString[]) => {
+    closeAddItemPanel()
+    sendEventTelemetry({
+      event: TelemetryEvent.TREE_VIEW_KEY_VALUE_ADDED,
+      eventData: {
+        databaseId,
+        keyType: KeyTypes.Set,
+        numberOfAdded: members.length,
+      },
+    })
+  }
+
+  const addSetMembers = (data: AddMembersToSetDto) => {
+    addSetMembersAction(data, () => onSuccessAdded(data.members))
   }
 
   const Actions = () => (
@@ -52,7 +74,11 @@ export const SetDetails = (props: Props) => {
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            <AddSetMembers closePanel={closeAddItemPanel} />
+            <AddSetMembers
+              disabled={loadingSet}
+              closePanel={closeAddItemPanel}
+              onSubmitData={addSetMembers}
+            />
           </div>
         )}
       </div>

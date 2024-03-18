@@ -1,51 +1,54 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import * as l10n from '@vscode/l10n'
+import cx from 'classnames'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 
 import {
-  TelemetryEvent,
   addNewItem,
   handleItemChange,
   removeItem,
-  sendEventTelemetry,
   setEmptyItemById,
   stringToBuffer,
 } from 'uiSrc/utils'
-import { AddSetFormConfig as config, KeyTypes } from 'uiSrc/constants'
+import { AddSetFormConfig as config } from 'uiSrc/constants'
 import { INITIAL_SET_MEMBER_STATE, ISetMemberState } from 'uiSrc/modules/add-key'
-import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useSelectedKeyStore } from 'uiSrc/store'
 import { AddItemsActions } from 'uiSrc/components'
 import { InputText } from 'uiSrc/ui'
-import { addSetMembersAction, useSetStore } from '../hooks/useSetStore'
+import { AddMembersToSetDto } from '../hooks/interface'
 
 export interface Props {
-  closePanel: (isCancelled?: boolean) => void
+  hideCancel?: boolean
+  autoFocus?: boolean
+  disabled?: boolean
+  disabledSubmit?: boolean
+  submitText?: string
+  containerClassName?: string
+  closePanel?: (isCancelled?: boolean) => void
+  onSubmitData: (data: AddMembersToSetDto, onSuccess?: (data: AddMembersToSetDto) => void) => void
 }
 
 const AddSetMembers = (props: Props) => {
-  const { closePanel } = props
-  const loading = useSetStore((state) => state.loading)
+  const {
+    hideCancel,
+    disabled,
+    disabledSubmit,
+    submitText,
+    autoFocus = true,
+    containerClassName,
+    closePanel,
+    onSubmitData,
+  } = props
   const selectedKey = useSelectedKeyStore((state) => state.data?.name ?? '')
-  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
   const lastAddedMemberName = useRef<HTMLInputElement>(null)
   const [members, setMembers] = useState<ISetMemberState[]>([{ ...INITIAL_SET_MEMBER_STATE }])
 
   useEffect(() => {
-    lastAddedMemberName.current?.focus()
+    if (autoFocus || members.length > 1) {
+      lastAddedMemberName.current?.focus()
+    }
   }, [members.length])
-
-  const onSuccessAdded = () => {
-    closePanel()
-    sendEventTelemetry({
-      event: TelemetryEvent.TREE_VIEW_KEY_VALUE_ADDED,
-      eventData: {
-        databaseId,
-        keyType: KeyTypes.Set,
-        numberOfAdded: members.length,
-      },
-    })
-  }
 
   const submitData = (): void => {
     const data = {
@@ -53,14 +56,14 @@ const AddSetMembers = (props: Props) => {
       members: members.map((item) => stringToBuffer(item.name)),
     }
 
-    addSetMembersAction(data, onSuccessAdded)
+    onSubmitData(data)
   }
 
   const isClearDisabled = (item: ISetMemberState): boolean => members.length === 1 && !item.name.length
 
   return (
     <>
-      <div className="key-footer-items-container" data-testid="add-set-field-panel">
+      <div className={cx('key-footer-items-container', containerClassName)} data-testid="add-set-field-panel">
         {members.map((item, index) => (
           <div key={item.id}>
             <div className="flex items-center mb-3">
@@ -74,7 +77,7 @@ const AddSetMembers = (props: Props) => {
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setMembers(handleItemChange(members, 'name', item.id, e.target.value))}
                     inputRef={index === members.length - 1 ? lastAddedMemberName : null}
-                    disabled={loading}
+                    disabled={disabled}
                     data-testid="member-name"
                   />
                 </div>
@@ -82,7 +85,7 @@ const AddSetMembers = (props: Props) => {
                   id={item.id}
                   index={index}
                   length={members.length}
-                  loading={loading}
+                  disabled={disabled}
                   removeItem={(id) => setMembers(removeItem(members, id))}
                   addItem={() => setMembers(addNewItem(members, INITIAL_SET_MEMBER_STATE))}
                   clearIsDisabled={isClearDisabled(item)}
@@ -98,25 +101,25 @@ const AddSetMembers = (props: Props) => {
         ))}
       </div>
 
-      <div className="pr-4 pb-4">
-        <div className="flex justify-end">
+      <div className="flex justify-end">
+        {!hideCancel && (
           <VSCodeButton
             appearance="secondary"
-            onClick={() => closePanel(true)}
+            onClick={() => closePanel?.(true)}
             className="mr-3"
             data-testid="cancel-members-btn"
           >
             {l10n.t('Cancel')}
           </VSCodeButton>
-          <VSCodeButton
-            appearance="primary"
-            onClick={submitData}
-            disabled={loading}
-            data-testid="save-members-btn"
-          >
-            {l10n.t('Save')}
-          </VSCodeButton>
-        </div>
+        )}
+        <VSCodeButton
+          appearance="primary"
+          onClick={submitData}
+          disabled={disabledSubmit}
+          data-testid="save-members-btn"
+        >
+          {submitText || l10n.t('Save')}
+        </VSCodeButton>
       </div>
     </>
   )
