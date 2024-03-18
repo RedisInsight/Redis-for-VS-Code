@@ -16,6 +16,7 @@ export interface SelectedKeyStore {
 interface SelectedKeyAction {
   databaseId: string
   key?: RedisString
+  newKey?: RedisString
   type: SelectedKeyActionType
   keyType?: KeyTypes
 }

@@ -1,21 +1,19 @@
 import React, { ReactElement } from 'react'
 import { isUndefined } from 'lodash'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { VscDebugRestart } from 'react-icons/vsc'
-import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 
-// import { AutoRefresh } from 'uiSrc/components'
 import {
   AllKeyTypes,
   KeyTypes,
 } from 'uiSrc/constants'
 import { RedisString } from 'uiSrc/interfaces'
-import { editKeyTTL, refreshKeyInfo, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { editKeyTTL, refreshKeyInfo, useDatabasesStore, useSelectedKeyStore, editKey } from 'uiSrc/store'
 import { TelemetryEvent, formatLongName, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
 // import { KeyDetailsHeaderFormatter } from './components/key-details-header-formatter'
 import { PopoverDelete } from 'uiSrc/components'
+import { RefreshBtn } from 'uiSrc/ui'
 import { KeyDetailsHeaderName } from './components/key-details-header-name'
 import { KeyDetailsHeaderTTL } from './components/key-details-header-ttl'
 // import { KeyDetailsHeaderDelete } from './components/key-details-header-delete'
@@ -39,9 +37,10 @@ const KeyDetailsHeader = ({
   keyType,
   Actions,
 }: KeyDetailsHeaderProps) => {
-  const { data, refreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
+  const { data, refreshDisabled, lastRefreshTime } = useSelectedKeyStore(useShallow((state) => ({
     data: state.data,
     refreshDisabled: state.refreshDisabled || state.loading,
+    lastRefreshTime: state.lastRefreshTime,
   })))
 
   const { type = KeyTypes.String, name: keyBuffer, nameString: keyProp, length } = data ?? {}
@@ -68,7 +67,7 @@ const KeyDetailsHeader = ({
     })
   }
   const handleEditKey = (oldKey: RedisString, newKey: RedisString, onFailure?: () => void) => {
-    // dispatch(editKey(oldKey, newKey, () => onEditKey(oldKey, newKey), onFailure))
+    editKey(oldKey, newKey, () => onEditKey?.(oldKey, newKey), onFailure)
   }
 
   const handleDeleteKey = (key: RedisString) => {
@@ -84,27 +83,6 @@ const KeyDetailsHeader = ({
         source: 'keyValue',
       },
     })
-  }
-
-  const handleEnableAutoRefresh = (enableAutoRefresh: boolean, refreshRate: string) => {
-    const treeViewEvent = enableAutoRefresh
-      ? TelemetryEvent.TREE_VIEW_KEY_DETAILS_AUTO_REFRESH_ENABLED
-      : TelemetryEvent.TREE_VIEW_KEY_DETAILS_AUTO_REFRESH_DISABLED
-    sendEventTelemetry({
-      event: treeViewEvent,
-      eventData: {
-        length,
-        databaseId,
-        keyType: type,
-        refreshRate: +refreshRate,
-      },
-    })
-  }
-
-  const handleChangeAutoRefreshRate = (enableAutoRefresh: boolean, refreshRate: string) => {
-    if (enableAutoRefresh) {
-      handleEnableAutoRefresh(enableAutoRefresh, refreshRate)
-    }
   }
 
   return (
@@ -123,35 +101,19 @@ const KeyDetailsHeader = ({
                 {getGroupTypeDisplay(type)}
               </div>
               <KeyDetailsHeaderName onEditKey={handleEditKey} />
-              {/* <div className={styles.closeBtnContainer} title="Close">
-                  <VSCodeButton
-                    aria-label="Close key"
-                    className={styles.closeBtn}
-                    onClick={() => onCloseKey(keyProp)}
-                  >
-                    <VscClose
-                        // className={cx(styles.nodeIcon, styles.nodeIconArrow)}
-                      data-testid="close-key-btn"
-                    />
-                  </VSCodeButton>
-                </div> */}
             </div>
             <div className={styles.groupSecondLine}>
               <KeyDetailsHeaderSizeLength width={width} />
               <KeyDetailsHeaderTTL onEditTTL={handleEditTTL} />
               <div className="flex ml-auto">
                 <div className={styles.subtitleActionBtns}>
-                  <VSCodeButton
-                    appearance="icon"
+                  <RefreshBtn
+                    lastRefreshTime={lastRefreshTime}
                     disabled={refreshDisabled}
-                    className={styles.actionBtn}
+                    triggerClassName={styles.actionBtn}
                     onClick={handleRefreshKey}
-                    aria-label="refresh key"
-                      // title={tooltipContent}
-                    data-testid="refresh-key-btn"
-                  >
-                    <VscDebugRestart />
-                  </VSCodeButton>
+                    triggerTestid="refresh-key-btn"
+                  />
                   {!isUndefined(Actions) && <Actions width={width} />}
                   <PopoverDelete
                     item={keyProp!}
@@ -164,17 +126,6 @@ const KeyDetailsHeader = ({
                     handleDeleteItem={handleDeleteKey}
                     handleButtonClick={handleDeleteKeyClicked}
                   />
-                  {/* <AutoRefresh
-                      postfix={type}
-                      loading={loading}
-                      lastRefreshTime={lastRefreshTime}
-                      displayText={width > HIDE_LAST_REFRESH}
-                      containerClassName={styles.actionBtn}
-                      onRefresh={handleRefreshKey}
-                      onEnableAutoRefresh={handleEnableAutoRefresh}
-                      onChangeAutoRefreshRate={handleChangeAutoRefreshRate}
-                      testid="refresh-key-btn"
-                    /> */}
                   {/* {Object.values(KeyTypes).includes(keyType as KeyTypes) && (
                       <KeyDetailsHeaderFormatter width={width} />
                     )}

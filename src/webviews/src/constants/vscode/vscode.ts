@@ -16,6 +16,7 @@ export enum VscodeMessageAction {
   OpenCli = 'OpenCli',
   RefreshTree = 'RefreshTree',
   CloseKeyAndRefresh = 'CloseKeyAndRefresh',
+  EditKeyName = 'EditKeyName',
   CloseAddDatabase = 'CloseAddDatabase',
   CloseEditDatabase = 'CloseEditDatabase',
   CloseAddKey = 'CloseAddKey',

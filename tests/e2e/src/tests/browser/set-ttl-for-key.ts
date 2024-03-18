@@ -1,8 +1,9 @@
 import { expect } from 'chai'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it, afterEach } from 'mocha'
 import {
   BottomBar,
   CliViewPanel,
+  InputWithButtons,
   KeyDetailsView,
   TreeView,
   WebView,
@@ -65,14 +66,12 @@ describe('Set TTL for Key', () => {
     )
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
-
-    const inputField = await keyDetailsView.getElement(keyDetailsView.ttlField)
-    await InputActions.slowType(inputField, ttlValue)
-    await ButtonActions.clickElement(keyDetailsView.saveTtl)
+    await InputActions.slowType(keyDetailsView.inlineItemEditor, ttlValue)
+    await ButtonActions.clickElement(InputWithButtons.applyInput)
 
     await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
 
-    const newTtlValue = Number(await keyDetailsView.getKeyTtl())
+    const newTtlValue = Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))
     expect(Number(ttlValue)).gt(newTtlValue)
   })
 })

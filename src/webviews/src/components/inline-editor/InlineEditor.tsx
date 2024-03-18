@@ -50,6 +50,8 @@ export interface Props {
   disableFocusTrap?: boolean
   approveByValidation?: (value: string) => boolean
   approveText?: { title: string, text: string }
+  inputClassName?: string
+  inlineTestId?: string
 }
 
 const InlineEditor = memo((props: Props) => {
@@ -82,6 +84,8 @@ const InlineEditor = memo((props: Props) => {
     approveByValidation,
     approveText,
     isActive: isActiveProp,
+    inputClassName,
+    inlineTestId = 'inline-item-editor',
   } = props
 
   const containerEl: Ref<HTMLDivElement> = useRef(null)
@@ -125,12 +129,12 @@ const InlineEditor = memo((props: Props) => {
 
     if (validation) {
       newValue = validation(newValue)
-      setValue(newValue)
     }
     if (disableByValidation) {
       setIsError(disableByValidation(newValue))
     }
 
+    setValue(newValue)
     onChange?.(newValue)
   }
 
@@ -203,7 +207,7 @@ const InlineEditor = memo((props: Props) => {
                   type="text"
                   name={fieldName}
                   id={fieldName}
-                  className={styles.field}
+                  className={cx(styles.field, inputClassName)}
                   maxLength={maxLength}
                   placeholder={placeholder}
                   value={value}
@@ -211,7 +215,7 @@ const InlineEditor = memo((props: Props) => {
                   onInput={handleInputValue}
                   onKeyDown={handleKeyDown}
                   inputRef={inputRef}
-                  data-testid="inline-item-editor"
+                  data-testid={inlineTestId}
                 />
               )}
             </div>

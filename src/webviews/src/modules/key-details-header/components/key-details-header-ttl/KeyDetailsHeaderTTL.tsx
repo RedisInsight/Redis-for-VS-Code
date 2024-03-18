@@ -63,39 +63,10 @@ const KeyDetailsHeaderTTL = ({ onEditTTL }: Props) => {
             placeholder={AddCommonFieldsFormConfig?.keyTTL?.placeholder}
             validation={(value) => validateTTLNumber(value)}
             onChange={onChangeTTL}
-            data-testid="edit-ttl-input"
+            inlineTestId="edit-ttl-input"
           />
-          {/* <InputText
-                name="ttl"
-                id="ttl"
-                className={cx(
-                  styles.ttlInput,
-                  ttlIsEditing && styles.editing,
-                )}
-                maxLength={200}
-                placeholder="No limit"
-                value={ttl === '-1' ? '' : ttl}
-                fullWidth={false}
-                compressed
-                min={0}
-                max={MAX_TTL_NUMBER}
-                isLoading={loading}
-                onChange={onChangeTTL}
-                append={appendTTLEditing()}
-                autoComplete="off"
-                data-testid="edit-ttl-input"
-              /> */}
         </div>
       </div>
-      {/* <div
-        className={cx(styles.subtitleText, { [styles.hidden]: ttlIsEditing })}
-        data-testid="key-ttl-text"
-      >
-        TTL:
-        <span className={styles.ttlTextValue}>
-          {ttl === '-1' ? 'No limit' : ttl}
-        </span>
-      </div> */}
     </div>
   )
 }

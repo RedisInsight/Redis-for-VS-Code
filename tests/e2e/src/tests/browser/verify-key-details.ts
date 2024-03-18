@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it, afterEach } from 'mocha'
 import {
   BottomBar,
   WebView,
@@ -111,12 +111,12 @@ describe('Key Details verifications', () => {
     const keyType = await keyDetailsView.getElementText(
       stringKeyDetailsView.keyType,
     )
-    const enteredKeyName = await stringKeyDetailsView.getElementText(
-      stringKeyDetailsView.keyName,
+    const enteredKeyName = await InputActions.getInputValue(
+      stringKeyDetailsView.keyNameInput,
     )
     const keySize = await stringKeyDetailsView.getKeySize()
     const keyLength = await stringKeyDetailsView.getKeyLength()
-    const keyTtl = Number(await stringKeyDetailsView.getKeyTtl())
+    const keyTtl = Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))
     const keyValue = await stringKeyDetailsView.getElementText(
       stringKeyDetailsView.stringKeyValueInput,
     )
@@ -157,12 +157,12 @@ describe('Key Details verifications', () => {
     const keyType = await hashKeyDetailsView.getElementText(
       hashKeyDetailsView.keyType,
     )
-    const enteredKeyName = await hashKeyDetailsView.getElementText(
-      hashKeyDetailsView.keyName,
+    const enteredKeyName = await InputActions.getInputValue(
+      stringKeyDetailsView.keyNameInput,
     )
     const keySize = await hashKeyDetailsView.getKeySize()
     const keyLength = await hashKeyDetailsView.getKeyLength()
-    const keyTtl = Number(await hashKeyDetailsView.getKeyTtl())
+    const keyTtl = Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))
 
     expect(keyType).contains('Hash', 'Type is incorrect')
     expect(enteredKeyName).eq(keyName, 'Name is incorrect')
@@ -200,8 +200,8 @@ describe('Key Details verifications', () => {
       ),
     ).contain('Sorted Set', 'Type is incorrect')
     expect(
-      await sortedSetKeyDetailsView.getElementText(
-        sortedSetKeyDetailsView.keyName,
+      await InputActions.getInputValue(
+        stringKeyDetailsView.keyNameInput,
       ),
     ).eq(keyName, 'Name is incorrect')
     expect(await sortedSetKeyDetailsView.getKeySize()).greaterThan(
@@ -212,7 +212,7 @@ describe('Key Details verifications', () => {
       0,
       'Length is 0',
     )
-    expect(Number(await sortedSetKeyDetailsView.getKeyTtl())).match(
+    expect(Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))).match(
       expectedTTL,
       'The Key TTL is incorrect',
     )
@@ -245,14 +245,16 @@ describe('Key Details verifications', () => {
       await listKeyDetailsView.getElementText(listKeyDetailsView.keyType),
     ).contain('List', 'Type is incorrect')
     expect(
-      await listKeyDetailsView.getElementText(listKeyDetailsView.keyName),
+      await InputActions.getInputValue(
+        stringKeyDetailsView.keyNameInput,
+      ),
     ).eq(keyName, 'Name is incorrect')
     expect(await listKeyDetailsView.getKeySize()).greaterThan(0, 'Size is 0')
     expect(await listKeyDetailsView.getKeyLength()).greaterThan(
       0,
       'Length is 0',
     )
-    expect(Number(await listKeyDetailsView.getKeyTtl())).match(
+    expect(Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))).match(
       expectedTTL,
       'The Key TTL is incorrect',
     )
@@ -283,11 +285,13 @@ describe('Key Details verifications', () => {
       await setKeyDetailsView.getElementText(setKeyDetailsView.keyType),
     ).contain('Set', 'Type is incorrect')
     expect(
-      await setKeyDetailsView.getElementText(setKeyDetailsView.keyName),
+      await InputActions.getInputValue(
+        stringKeyDetailsView.keyNameInput,
+      ),
     ).eq(keyName, 'Name is incorrect')
     expect(await setKeyDetailsView.getKeySize()).greaterThan(0, 'Size is 0')
     expect(await setKeyDetailsView.getKeyLength()).greaterThan(0, 'Length is 0')
-    expect(Number(await setKeyDetailsView.getKeyTtl())).match(
+    expect(Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))).match(
       expectedTTL,
       'The Key TTL is incorrect',
     )

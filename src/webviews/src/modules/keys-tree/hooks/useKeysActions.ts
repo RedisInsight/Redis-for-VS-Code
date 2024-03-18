@@ -1,7 +1,7 @@
 import { StateCreator } from 'zustand'
-import { isNull, remove } from 'lodash'
+import { isNull, map, remove } from 'lodash'
 
-import { isEqualBuffers } from 'uiSrc/utils'
+import { bufferToString, isEqualBuffers } from 'uiSrc/utils'
 import { KeysStore, KeysActions } from './interface'
 
 export const initialKeysState: KeysStore = {
@@ -66,6 +66,22 @@ KeysStore & KeysActions
 
     state.data.total = !isNull(state.data.total) ? state.data.total - 1 : null
     state.data.scanned -= 1
+
+    return state
+  }),
+
+  editKeyName: (keyProp, newKeyProp) => set((state) => {
+    if (state.data?.keys.length === 0) {
+      return state
+    }
+
+    map(state.data?.keys, (key) => {
+      if (isEqualBuffers(key.name, keyProp)) {
+        key.name = newKeyProp
+        key.nameString = bufferToString(newKeyProp)
+      }
+      return key
+    })
 
     return state
   }),

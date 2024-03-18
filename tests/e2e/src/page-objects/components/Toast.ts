@@ -3,5 +3,5 @@ import { BaseComponent } from './BaseComponent';
 
 export class Toast extends BaseComponent {
     toastHeader = By.xpath(`//*[@data-test-subj='euiToastHeader']`)
-    toastCloseButton = By.xpath('[data-test-subj=toastCloseButton]');
+    toastCloseButton = By.xpath('[data-test-subj=toastCloseButton]')
 }

@@ -1,6 +1,6 @@
 import { By } from 'selenium-webdriver'
-import { KeyDetailsView } from '@e2eSrc/page-objects/components'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
+import { KeyDetailsView } from './KeyDetailsView'
 
 /**
  * Base view for all keyTypes that have 2 columns value

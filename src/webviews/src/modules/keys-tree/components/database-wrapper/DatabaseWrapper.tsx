@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import cx from 'classnames'
-import { VscChevronRight, VscChevronDown, VscTerminal, VscAdd, VscRefresh, VscEdit } from 'react-icons/vsc'
+import { VscChevronRight, VscChevronDown, VscTerminal, VscAdd, VscEdit } from 'react-icons/vsc'
 import { BiSortDown, BiSortUp } from 'react-icons/bi'
 import * as l10n from '@vscode/l10n'
 import { useShallow } from 'zustand/react/shallow'
@@ -20,7 +20,8 @@ import { Database, checkConnectToDatabase, deleteDatabases, useContextApi, useCo
 import DatabaseOfflineIconSvg from 'uiSrc/assets/database/database_icon_offline.svg?react'
 import DatabaseActiveIconSvg from 'uiSrc/assets/database/database_icon_active.svg?react'
 import { PopoverDelete } from 'uiSrc/components'
-import { useKeysApi } from '../../hooks/useKeys'
+import { RefreshBtn } from 'uiSrc/ui'
+import { useKeysApi, useKeysInContext } from '../../hooks/useKeys'
 
 import styles from './styles.module.scss'
 
@@ -33,6 +34,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   const { id, name } = database
   const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
 
+  const lastRefreshTime = useKeysInContext((state) => state.data.lastRefreshTime)
   const { selectedKeyAction, setSelectedKeyAction } = useSelectedKeyStore(useShallow((state) => ({
     selectedKeyAction: state.action,
     setSelectedKeyAction: state.setSelectedKeyAction,
@@ -46,7 +48,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   const isSortingASC = sorting === SortOrder.ASC
 
   useEffect(() => {
-    const { type, key, keyType, databaseId } = selectedKeyAction || {}
+    const { type, key, keyType, databaseId, newKey } = selectedKeyAction || {}
 
     if (!type || databaseId !== database.id) {
       return
@@ -58,11 +60,14 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
         break
       case SelectedKeyActionType.Removed:
         keysApi.deleteKeyFromTree(key!)
-        setSelectedKeyAction(null)
+        break
+      case SelectedKeyActionType.Renamed:
+        keysApi.editKeyName(key!, newKey!)
         break
       default:
         break
     }
+    setSelectedKeyAction(null)
   }, [selectedKeyAction])
 
   const handleCheckConnectToDatabase = ({ id, provider, modules }: Database) => {
@@ -173,9 +178,12 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
             >
               {isSortingASC ? <BiSortDown /> : <BiSortUp />}
             </VSCodeButton>
-            <VSCodeButton appearance="icon" onClick={refreshHandle} data-testid="refresh-keys">
-              <VscRefresh />
-            </VSCodeButton>
+            <RefreshBtn
+              lastRefreshTime={lastRefreshTime}
+              position="left center"
+              onClick={refreshHandle}
+              triggerTestid="refresh-keys"
+            />
             <VSCodeButton appearance="icon" onClick={editHandle} data-testid="edit-database">
               <VscEdit />
             </VSCodeButton>

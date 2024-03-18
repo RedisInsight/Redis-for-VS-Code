@@ -141,13 +141,39 @@ export function editKeyTTL(
 
         if (ttl !== 0) {
           fetchKeyInfo({ key })
-        } else {
-          // state.deleteSelectedKey()
-          // dispatch<any>(deleteKeyFromList(key))
         }
       }
     } catch (error) {
-      console.debug({ error })
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
+    } finally {
+      state.processSelectedKeyFinal()
+    }
+  })
+}
+
+// Asynchronous thunk action
+export function editKey(
+  key: RedisString,
+  newKey: RedisString,
+  onSuccess?: () => void,
+  onFail?: () => void,
+) {
+  useSelectedKeyStore.setState(async (state) => {
+    state.processSelectedKey()
+
+    try {
+      const { status } = await apiService.patch(
+        getUrl(ApiEndpoints.KEY_NAME),
+        { keyName: key, newKeyName: newKey },
+        { params: { encoding: getEncoding() } },
+      )
+      if (isStatusSuccessful(status)) {
+        onSuccess?.()
+        state.processSelectedKeySuccess({ ...state.data, name: newKey })
+      }
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
+      onFail?.()
     } finally {
       state.processSelectedKeyFinal()
     }

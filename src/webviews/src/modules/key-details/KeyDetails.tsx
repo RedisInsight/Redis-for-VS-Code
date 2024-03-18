@@ -80,6 +80,13 @@ const KeyDetails = (props: Props) => {
     })
   }
 
+  const onEditKey = (key: RedisString, newKey: RedisString) => {
+    vscodeApi.postMessage({
+      action: VscodeMessageAction.EditKeyName,
+      data: { key, newKey, type: SelectedKeyActionType.Renamed, databaseId: databaseId! },
+    })
+  }
+
   return (
     <div className={styles.container}>
       <div className={cx(styles.content, { [styles.contentActive]: data || loading })}>
@@ -96,6 +103,7 @@ const KeyDetails = (props: Props) => {
         <DynamicTypeDetails
           {...props}
           onRemoveKey={onRemoveKey}
+          onEditKey={onEditKey}
           keyType={keyType}
           onOpenAddItemPanel={onOpenAddItemPanel}
           onCloseAddItemPanel={onCloseAddItemPanel}

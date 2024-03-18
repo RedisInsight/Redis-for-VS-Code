@@ -33,8 +33,12 @@ export interface InformationMessageAction {
 }
 
 export interface SelectedKeyAction {
-  action: VscodeMessageAction.CloseKeyAndRefresh | VscodeMessageAction.CloseAddKeyAndRefresh | VscodeMessageAction.RefreshTree
-  data: { key?: RedisString, type: SelectedKeyActionType, databaseId: string, keyType?: KeyTypes }
+  action:
+  VscodeMessageAction.CloseKeyAndRefresh |
+  VscodeMessageAction.CloseAddKeyAndRefresh |
+  VscodeMessageAction.RefreshTree |
+  VscodeMessageAction.EditKeyName
+  data: { key?: RedisString, type: SelectedKeyActionType, databaseId: string, keyType?: KeyTypes, newKey?: RedisString }
 }
 
 export interface NoDataAction {
