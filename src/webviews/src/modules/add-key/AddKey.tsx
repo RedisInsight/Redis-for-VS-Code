@@ -17,10 +17,10 @@ import { ADD_KEY_TYPE_OPTIONS } from './constants/key-type-options'
 // import AddKeyHash from './AddKeyHash/AddKeyHash'
 // import AddKeyZset from './AddKeyZset/AddKeyZset'
 import AddKeyString from './components/AddKeyString/AddKeyString'
-// import AddKeySet from './AddKeySet/AddKeySet'
 // import AddKeyList from './AddKeyList/AddKeyList'
 // import AddKeyReJSON from './AddKeyReJSON/AddKeyReJSON'
 // import AddKeyStream from './AddKeyStream/AddKeyStream'
+import { AddKeySet } from './components/AddKeySet/AddKeySet'
 
 import { useKeysApi, useKeysInContext } from '../keys-tree/hooks/useKeys'
 import styles from './styles.module.scss'
@@ -91,9 +91,9 @@ export const AddKey = () => {
       {/* {typeSelected === KeyTypes.ZSet && (
             <AddKeyZset onCancel={closeAddKeyPanel} {...defaultFields} />
           )} */}
-      {/* {typeSelected === KeyTypes.Set && (
-            <AddKeySet onCancel={closeAddKeyPanel} {...defaultFields} />
-          )} */}
+      {typeSelected === KeyTypes.Set && (
+        <AddKeySet onCancel={closeAddKeyPanel} {...defaultFields} />
+      )}
       {typeSelected === KeyTypes.String && (
         <AddKeyString onCancel={closeAddKeyPanel} {...defaultFields} />
       )}

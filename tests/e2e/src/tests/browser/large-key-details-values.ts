@@ -38,7 +38,7 @@ describe('Large key details verification', () => {
   let setKeyDetailsView: SetKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
 
-  beforeEach(async () => {
+  before(async () => {
     webView = new WebView()
     sortedsetKeyDetailsView = new SortedSetKeyDetailsView()
     hashKeyDetailsView = new HashKeyDetailsView()
@@ -57,6 +57,10 @@ describe('Large key details verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await webView.switchToFrame(Views.TreeView)
+  })
+  after(async () => {
+    await webView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can expand/collapse for sorted set data type', async function () {

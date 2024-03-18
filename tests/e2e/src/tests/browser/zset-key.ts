@@ -29,7 +29,7 @@ describe('ZSet Key fields verification', () => {
   let treeView: TreeView
   let cliViewPanel: CliViewPanel
 
-  beforeEach(async () => {
+  before(async () => {
     bottomBar = new BottomBar()
     webView = new WebView()
     keyDetailsView = new SortedSetKeyDetailsView()
@@ -41,10 +41,15 @@ describe('ZSet Key fields verification', () => {
   })
   afterEach(async () => {
     await webView.switchBack()
+    await webView.switchToFrame(Views.TreeView)
     await KeyAPIRequests.deleteKeyIfExistsApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+  })
+  after(async () => {
+    await webView.switchBack()
+
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search and delete by member in Zset', async function () {

@@ -7,7 +7,7 @@ export interface Props {
   id: number
   length: number
   index: number
-  loading: boolean
+  disabled?: boolean
   removeItem: (id: number) => void
   addItem: () => void
   anchorClassName?: string
@@ -21,7 +21,7 @@ const AddItemsActions = (props: Props) => {
   const {
     id,
     length,
-    loading,
+    disabled,
     removeItem,
     index,
     addItem,
@@ -49,7 +49,7 @@ const AddItemsActions = (props: Props) => {
         >
           <VSCodeButton
             appearance="icon"
-            disabled={loading}
+            disabled={disabled}
             data-testid="remove-item"
             onClick={handleClick}
             aria-label={length === 1 ? 'Clear Item' : 'Remove Item'}
@@ -66,7 +66,7 @@ const AddItemsActions = (props: Props) => {
         >
           <VSCodeButton
             appearance="icon"
-            disabled={loading || addItemIsDisabled}
+            disabled={disabled || addItemIsDisabled}
             data-testid={dataTestId || 'add-new-item'}
             onClick={addItem}
             aria-label="Add new item"

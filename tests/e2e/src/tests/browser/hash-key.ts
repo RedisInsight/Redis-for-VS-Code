@@ -25,7 +25,7 @@ describe('Hash Key fields verification', () => {
   let keyDetailsView: HashKeyDetailsView
   let treeView: TreeView
 
-  beforeEach(async () => {
+  before(async () => {
     webView = new WebView()
     keyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
@@ -34,13 +34,17 @@ describe('Hash Key fields verification', () => {
       Config.ossStandaloneConfig,
     )
   })
+  after(async () => {
+    await webView.switchBack()
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
+  })
   afterEach(async () => {
     await webView.switchBack()
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
-    await DatabaseAPIRequests.deleteAllDatabasesApi()
+    await webView.switchToFrame(Views.TreeView)
   })
   it('Verify that user can search by full field name in Hash', async function () {
     keyName = Common.generateWord(10)
@@ -94,7 +98,7 @@ describe('Hash Key fields verification', () => {
       fields: [
         {
           field: 'field',
-          value: 'value'
+          value: 'value',
         },
       ],
     }
@@ -131,18 +135,25 @@ describe('Hash Key fields verification', () => {
     )
     await webView.switchBack()
     // Check the notification message that field deleted
-    await NotificationActions.checkNotificationMessage(`${keyFieldValue} has been removed from ${keyName}`)
+    await NotificationActions.checkNotificationMessage(
+      `${keyFieldValue} has been removed from ${keyName}`,
+    )
 
     await webView.switchToFrame(Views.KeyDetailsView)
     // Verify that hash key deleted when all fields deleted
-    await keyDetailsView.removeRowByField(KeyTypesShort.Hash, hashKeyParameters.fields[0].field)
+    await keyDetailsView.removeRowByField(
+      KeyTypesShort.Hash,
+      hashKeyParameters.fields[0].field,
+    )
     await keyDetailsView.clickRemoveRowButtonByField(
       KeyTypesShort.Hash,
       hashKeyParameters.fields[0].field,
     )
     await webView.switchBack()
     // Check the notification message that key deleted
-    await NotificationActions.checkNotificationMessage(`${keyName} has been deleted.`)
+    await NotificationActions.checkNotificationMessage(
+      `${keyName} has been deleted.`,
+    )
 
     // Verify that details panel is closed for hash key after deletion
     await KeyDetailsActions.verifyDetailsPanelClosed()
