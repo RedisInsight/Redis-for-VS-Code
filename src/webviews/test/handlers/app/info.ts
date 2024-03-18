@@ -17,7 +17,7 @@ const handlers: RequestHandler[] = [
 
   http.patch(
     getMWSUrl(ApiEndpoints.SETTINGS),
-    (data) => HttpResponse.json(data.request.body),
+    async (data) => HttpResponse.json(await data.request.json()),
   ),
 ]
 

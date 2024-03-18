@@ -1,4 +1,6 @@
 import * as modules from 'uiSrc/modules'
+import { localStorageService } from 'uiSrc/services'
+import { StorageItem } from 'uiSrc/constants'
 import { constants } from 'testSrc/helpers'
 import { waitForStack } from 'testSrc/helpers/testUtils'
 import {
@@ -8,8 +10,10 @@ import {
   updateUserConfigSettingsAction,
 } from './useAppInfoStore'
 
-vi.spyOn(modules, 'fetchString')
+const newDelimiter = '*1*'
 
+vi.spyOn(localStorageService, 'set')
+vi.spyOn(modules, 'fetchString')
 beforeEach(() => {
   useAppInfoStore.setState(initialStateInit)
 })
@@ -52,6 +56,28 @@ describe('useAppInfoStore', () => {
     expect(useAppInfoStore.getState().config).toEqual(constants.SETTINGS)
     expect(useAppInfoStore.getState().spec).toEqual(constants.SETTINGS_AGREEMENTS_SPEC)
   })
+
+  it('setIsShowConceptsPopup', () => {
+    // Arrange
+    const initialState = { ...initialStateInit, isShowConceptsPopup: false } // Custom initial state
+    useAppInfoStore.setState((state) => ({ ...state, ...initialState }))
+
+    const { setIsShowConceptsPopup } = useAppInfoStore.getState()
+    // Act
+    setIsShowConceptsPopup(true)
+    // Assert
+    expect(useAppInfoStore.getState().isShowConceptsPopup).toEqual(true)
+  })
+
+  it('setDelimiter', () => {
+    // Arrange
+    const { setDelimiter } = useAppInfoStore.getState()
+    // Act
+    setDelimiter(newDelimiter)
+    // Assert
+    expect(localStorageService.set).toBeCalledWith(StorageItem.treeViewDelimiter, newDelimiter)
+    expect(useAppInfoStore.getState().delimiter).toEqual(newDelimiter)
+  })
 })
 
 describe('thunks', () => {
@@ -79,6 +105,8 @@ describe('thunks', () => {
 
       // Act
       updateUserConfigSettingsAction(data)
+
+      await waitForStack()
 
       // Assert
       expect(useAppInfoStore.getState().config).toEqual(data)
