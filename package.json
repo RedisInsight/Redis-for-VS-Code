@@ -24,7 +24,7 @@
       "panel": [
         {
           "id": "ri-panel-view",
-          "title": "RedisInsight CLI",
+          "title": "Redis CLI",
           "icon": "src/media/redisinsight.svg"
         }
       ]
@@ -44,7 +44,7 @@
           "type": "webview",
           "id": "ri-panel",
           "when": "RedisInsight.showCliPanel",
-          "name": "RedisInsight CLI"
+          "name": "Redis CLI"
         }
       ]
     },

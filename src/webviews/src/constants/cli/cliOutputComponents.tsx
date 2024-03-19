@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import * as l10n from '@vscode/l10n'
-import { getRouterLinkProps } from 'uiSrc/services'
 import { getDbIndex } from 'uiSrc/utils'
+import { RI_LINK } from '../core/app'
 
 export const InitOutputText = (
   host: string = '',
@@ -10,37 +10,10 @@ export const InitOutputText = (
   dbIndex: number = 0,
   emptyOutput: boolean,
 ) => [
-  <Fragment key={Math.random()}>
-    {emptyOutput && (
-    <span className="color-green" key={Math.random()}>
-      {l10n.t({
-        message: 'Try ',
-        comment:
-              'Context: Try "Workbench", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.',
-      })}
-      <Link
-        className="color-green"
-        style={{ fontSize: 'inherit', fontFamily: 'inherit' }}
-        data-test-subj="cli-workbench-page-btn"
-        to=""
-      >
-        Workbench
-      </Link>
-      {l10n.t({
-        message:
-              ', our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.',
-        comment:
-              'Context: Try "Workbench", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.',
-      })}
-    </span>
-    )}
-  </Fragment>,
-  '\n',
   l10n.t('Connecting...'),
   '\n',
   l10n.t('Pinging Redis server on '),
   <span color="default" key={Math.random()}>
-    {/* TODO: Remove mock after implementing DB connection: */}
     {`${host}:${port}${getDbIndex(dbIndex)}`}
   </span>,
 ]
@@ -70,20 +43,20 @@ export const cliTexts = {
   UNABLE_TO_DECRYPT: l10n.t(
     'Unable to decrypt. Check the system keychain or re-run the command.',
   ),
-  PSUBSCRIBE_COMMAND: (path: string = '') => (
-    <span color="danger" key={Date.now()}>
+  SUBSCRIBE_COMMAND: () => (
+    <span className="text-vscode-errorForeground" key={Date.now()}>
       {l10n.t({
-        message: 'Use ',
+        message: 'Use Pub/Sub available in the ',
         comment:
-          'Context: Use "Pub/Sub" to see the messages published to all channels in your database.',
+          'Context: Use Pub/Sub available in the RedisInsight application to see the messages published to all channels in your database.',
       })}
       <Link
-        {...getRouterLinkProps(path)}
+        to={`${RI_LINK}&utm_campaign=CLI`}
         color="text"
-        data-test-subj="pubsub-page-btn"
-        to=""
+        target="_blank"
+        data-test-subj="hello3-btn"
       >
-        Pub/Sub
+        {l10n.t('RedisInsight application')}
       </Link>
       {l10n.t({
         message:
@@ -93,63 +66,46 @@ export const cliTexts = {
       })}
     </span>
   ),
-  SUBSCRIBE_COMMAND: (path: string = '') => (
-    <span color="danger" key={Date.now()}>
-      {l10n.t({
-        message: 'Use ',
-        comment: 'Use "Pub/Sub" tool to subscribe to channels.',
-      })}
-      <Link
-        {...getRouterLinkProps(path)}
-        color="text"
-        data-test-subj="pubsub-page-btn"
-        to=""
-      >
-        Pub/Sub
-      </Link>
-      {l10n.t({
-        message: ' tool to subscribe to channels.',
-        comment: 'Use "Pub/Sub" tool to subscribe to channels.',
-      })}
-    </span>
-  ),
-  PSUBSCRIBE_COMMAND_CLI: (path: string = '') => [
-    cliTexts.PSUBSCRIBE_COMMAND(path),
+  PSUBSCRIBE_COMMAND_CLI: () => [
+    cliTexts.SUBSCRIBE_COMMAND(),
     '\n',
   ],
-  SUBSCRIBE_COMMAND_CLI: (path: string = '') => [
-    cliTexts.SUBSCRIBE_COMMAND(path),
+  SUBSCRIBE_COMMAND_CLI: () => [
+    cliTexts.SUBSCRIBE_COMMAND(),
     '\n',
   ],
-  MONITOR_COMMAND: (onClick: () => void) => (
-    <span color="danger" key={Date.now()}>
+  SSUBSCRIBE_COMMAND_CLI: () => [
+    cliTexts.SUBSCRIBE_COMMAND(),
+    '\n',
+  ],
+  MONITOR_COMMAND: () => (
+    <span className="text-vscode-errorForeground" key={Date.now()}>
       {l10n.t({
-        message: 'Use ',
+        message: 'Use Profiler tool available in the ',
         comment:
-          'Context: Use "Profiler" tool to see all the requests processed by the server.',
+          'Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server.',
       })}
       <Link
-        onClick={onClick}
-        className="btnLikeLink"
+        to={`${RI_LINK}&utm_campaign=CLI`}
         color="text"
+        target="_blank"
         data-test-subj="monitor-btn"
-        to=""
       >
-        Profiler
+        {l10n.t('RedisInsight application')}
       </Link>
       {l10n.t({
-        message: ' tool to see all the requests processed by the server.',
+        message: ' to see all the requests processed by the server.',
         comment:
-          'Context: Use "Profiler" tool to see all the requests processed by the server.',
+          'Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server.',
       })}
     </span>
   ),
-  MONITOR_COMMAND_CLI: (onClick: () => void) => [
-    cliTexts.MONITOR_COMMAND(onClick),
+  MONITOR_COMMAND_CLI: () => [
+    cliTexts.MONITOR_COMMAND(),
     '\n',
   ],
   HELLO3_COMMAND: () => (
-    <span color="danger" key={Date.now()}>
+    <span className="text-vscode-errorForeground" key={Date.now()}>
       {l10n.t({
         message: 'RedisInsight does not support ',
         comment:
@@ -174,7 +130,7 @@ export const cliTexts = {
   HELLO3_COMMAND_CLI: () => [cliTexts.HELLO3_COMMAND(), '\n'],
   CLI_ERROR_MESSAGE: (message: string) => [
     '\n',
-    <span color="danger" key={Date.now()}>
+    <span className="text-vscode-errorForeground" key={Date.now()}>
       {message}
     </span>,
     '\n\n',
