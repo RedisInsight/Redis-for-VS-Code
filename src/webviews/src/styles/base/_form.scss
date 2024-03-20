@@ -10,6 +10,6 @@ input:focus, textarea:focus, a:focus {
   outline: none;
 }
 
-input:disabled {
+input:disabled, button:disabled, vscode-button:disabled {
   @apply cursor-not-allowed;
 }
