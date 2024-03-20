@@ -9,6 +9,10 @@ export class WebView {
   private handle: string | undefined
 
   iframeBody = By.xpath('//*[@class="vscode-dark"]')
+  webViewIframe = By.xpath(
+    `//iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]`,
+  )
+  webViewViewIframe = By.xpath(`//iframe`)
 
   constructor() {
     this.driver = VSBrowser.instance.driver
@@ -37,6 +41,23 @@ export class WebView {
   }
 
   /**
+   * Is the web element displayed
+   * @param locator locator to check
+   */
+  async isWebElementDisplayed(locator: Locator): Promise<boolean> {
+    try {
+      const elements = await this.driver.findElements(locator)
+      if (elements.length > 0) {
+        return await elements[0].isDisplayed()
+      } else {
+        return false
+      }
+    } catch (error) {
+      return false
+    }
+  }
+
+  /**
    * Wait for the element to be found by locator and return it
    * @param locator Webdriver locator to search by
    * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
@@ -60,18 +81,17 @@ export class WebView {
     timeout: number = 5000,
     stateOfDisplayed: boolean = true,
   ): Promise<void> {
+    let element: WebElement
     if (stateOfDisplayed) {
       try {
-        await this.driver.wait(
-          until.elementLocated(locator),
-          timeout,
-        )
+        element = await this.driver.wait(until.elementLocated(locator), timeout)
+        await this.driver.wait(until.elementIsVisible(element), timeout)
       } catch (e) {
         // Do nothing
       }
     } else {
       try {
-        let element = await this.driver.wait(until.elementLocated(locator), 0)
+        element = await this.driver.wait(until.elementLocated(locator), timeout)
         const isVisible = await element.isDisplayed()
         if (isVisible) {
           await this.driver.wait(until.elementIsNotVisible(element), timeout)
@@ -108,6 +128,42 @@ export class WebView {
 
     const elementLocator = By.xpath(ViewElements[switchView])
     await this.waitForWebElementVisibility(elementLocator)
+  }
+
+  /**
+   * Switch the underlying webdriver context to directly inner view iframe
+   * @param switchInnerView webdriver iframe inner view
+   * @returns Promise resolving when switched to Inner WebView iframe
+   */
+  async switchToInnerViewFrame(switchInnerView: InnerViews): Promise<void> {
+    await this.waitForWebElementVisibility(this.webViewIframe)
+
+    const mainIframes = await this.findWebElements(this.webViewIframe)
+
+    if (mainIframes.length > 1) {
+      for (const mainIframe of mainIframes) {
+        await this.driver.switchTo().frame(mainIframe)
+
+        const innerFrameLocator = By.xpath(InnerViewLocators[switchInnerView])
+        await this.waitForWebElementVisibility(this.webViewViewIframe)
+
+        if (await this.isWebElementDisplayed(innerFrameLocator)) {
+          await this.waitForWebElementVisibility(innerFrameLocator)
+          const innerView = await this.getWebElement(innerFrameLocator)
+          await this.driver.switchTo().frame(innerView)
+          return
+        } else {
+          await this.switchBack()
+        }
+      }
+    } else {
+      const firstView = await this.getWebElement(this.webViewIframe)
+      await this.driver.switchTo().frame(firstView)
+      const innerFrameLocator = By.xpath(InnerViewLocators[switchInnerView])
+      await this.waitForWebElementVisibility(innerFrameLocator)
+      const innerView = await this.getWebElement(innerFrameLocator)
+      await this.driver.switchTo().frame(innerView)
+    }
   }
 
   /**
@@ -153,10 +209,19 @@ export const ViewElements = {
 export enum InnerViews {
   KeyListInnerView,
   KeyDetailsInnerView,
+  SettingsInnerView,
+  CliInnerView,
+  AddDatabaseInnerView,
+  EditDatabaseInnerView,
+  AddKeyInnerView,
 }
 
 export const InnerViewLocators = {
-  [InnerViews.KeyListInnerView]: "//iframe[@title='RedisInsight']",
-  [InnerViews.KeyDetailsInnerView]:
-    "//iframe[@title='RedisInsight - Key details']",
+  [InnerViews.KeyListInnerView]: `//iframe[@title='RedisInsight']`,
+  [InnerViews.KeyDetailsInnerView]: `//iframe[@title='RedisInsight - Key details']`,
+  [InnerViews.SettingsInnerView]: `//iframe[@title='RedisInsight - Settings']`,
+  [InnerViews.CliInnerView]: `//iframe[@title='RedisInsight CLI']`,
+  [InnerViews.AddDatabaseInnerView]: `//iframe[@title='RedisInsight - Add Database connection']`,
+  [InnerViews.EditDatabaseInnerView]: `//iframe[@title='RedisInsight - Edit Database connection']`,
+  [InnerViews.AddKeyInnerView]: `//iframe[@title='RedisInsight - Add new key']`,
 }

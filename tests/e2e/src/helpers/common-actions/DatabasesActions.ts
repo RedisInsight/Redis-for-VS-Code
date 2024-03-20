@@ -3,11 +3,7 @@ import { expect } from 'chai'
 import { ActivityBar, Locator, VSBrowser, until } from 'vscode-extension-tester'
 import { CommonDriverExtension } from '../CommonDriverExtension'
 import { TreeView } from '@e2eSrc/page-objects/components'
-import {
-  InnerViews,
-  Views,
-  WebView,
-} from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews, WebView } from '@e2eSrc/page-objects/components/WebView'
 import { AddNewDatabaseParameters } from '../types/types'
 import { DatabaseAPIRequests } from '../api'
 import { NotificationActions } from './actions'
@@ -66,10 +62,7 @@ export class DatabasesActions extends CommonDriverExtension {
     await DatabaseAPIRequests.addNewStandaloneDatabaseApi(databaseParameters)
     await VSBrowser.instance.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
-    await new WebView().switchToFrame(
-      Views.TreeView,
-      InnerViews.KeyListInnerView,
-    )
+    await new WebView().switchToInnerViewFrame(InnerViews.KeyListInnerView)
     await new TreeView().clickDatabaseByName(databaseParameters.databaseName!)
   }
 
