@@ -1,9 +1,12 @@
 import { By } from 'selenium-webdriver'
 import { BaseComponent } from '../BaseComponent'
-import { InnerViewLocators, InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import {
+  InnerViewLocators,
+  InnerViews,
+} from '@e2eSrc/page-objects/components/WebView'
 
 /**
- * Edit Database view
+ * Settings view
  */
 export class SettingsView extends BaseComponent {
   switchAnalyticsOption = By.xpath(`//*[@data-testid='check-option-analytics']`)
@@ -13,11 +16,11 @@ export class SettingsView extends BaseComponent {
     super(By.xpath(InnerViewLocators[InnerViews.SettingsInnerView]))
   }
 
-    /**
-     * Get state of Analytics switcher
-     */
-      async getAnalyticsSwitcherValue(): Promise<boolean> {
-        const switcherElement = await this.getElement(this.switchAnalyticsOption)
-        return await switcherElement.getAttribute('current-checked') === 'true';
-    }
+  /**
+   * Get state of Analytics switcher
+   */
+  async getAnalyticsSwitcherValue(): Promise<boolean> {
+    const switcherElement = await this.getElement(this.switchAnalyticsOption)
+    return (await switcherElement.getAttribute('current-checked')) === 'true'
+  }
 }
