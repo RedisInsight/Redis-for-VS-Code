@@ -16,7 +16,7 @@ import {
   showInformationMessage,
   getDatabaseUrl,
   getUrl,
-  getAdditionalAddedEventData,
+  getLengthByKeyType,
 } from 'uiSrc/utils'
 import { useSelectedKeyStore } from 'uiSrc/store'
 import { GetKeysWithDetailsResponse, KeysStore, KeysActions, SetStringWithExpire, KeysThunks, CreateSetWithExpireDto } from './interface'
@@ -225,12 +225,13 @@ KeysThunks
         data,
       )
       if (isStatusSuccessful(status)) {
-        const additionalData = getAdditionalAddedEventData(endpoint, data)
         sendEventTelemetry({
           event: TelemetryEvent.TREE_VIEW_KEY_ADDED,
           eventData: {
+            keyType,
+            TTL: data.expire || -1,
             databaseId: sessionStorageService.get(StorageItem.databaseId),
-            ...additionalData,
+            length: getLengthByKeyType(keyType, data),
           },
         })
         showInformationMessage(successMessages.ADDED_NEW_KEY(data.keyName).title)

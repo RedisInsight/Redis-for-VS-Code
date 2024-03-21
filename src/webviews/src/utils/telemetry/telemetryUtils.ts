@@ -71,49 +71,22 @@ export const getRedisModulesSummary = (modules: AdditionalRedisModule[] = []): I
   return summary
 }
 
-export const getAdditionalAddedEventData = (endpoint: ApiEndpoints, data: any) => {
-  switch (endpoint) {
-    case ApiEndpoints.HASH:
-      return {
-        keyType: KeyTypes.Hash,
-        length: data.fields?.length,
-        TTL: data.expire || -1,
-      }
-    case ApiEndpoints.SET:
-      return {
-        keyType: KeyTypes.Set,
-        length: data.members?.length,
-        TTL: data.expire || -1,
-      }
-    case ApiEndpoints.ZSET:
-      return {
-        keyType: KeyTypes.ZSet,
-        length: data.members?.length,
-        TTL: data.expire || -1,
-      }
-    case ApiEndpoints.STRING:
-      return {
-        keyType: KeyTypes.String,
-        length: data.value?.length,
-        TTL: data.expire || -1,
-      }
-    case ApiEndpoints.LIST:
-      return {
-        keyType: KeyTypes.List,
-        length: 1,
-        TTL: data.expire || -1,
-      }
-    case ApiEndpoints.REJSON:
-      return {
-        keyType: KeyTypes.ReJSON,
-        TTL: -1,
-      }
-    case ApiEndpoints.STREAMS:
-      return {
-        keyType: KeyTypes.Stream,
-        length: 1,
-        TTL: data.expire || -1,
-      }
+export const getLengthByKeyType = (type: KeyTypes, data: any) => {
+  switch (type) {
+    case KeyTypes.Hash:
+      return data.fields?.length
+    case KeyTypes.Set:
+      return data.members?.length
+    case KeyTypes.ZSet:
+      return data.members?.length
+    case KeyTypes.String:
+      return data.value?.length
+    case KeyTypes.List:
+      return 1
+    case KeyTypes.Stream:
+      return 1
+    case KeyTypes.ReJSON:
+      return undefined
     default:
       return {}
   }
