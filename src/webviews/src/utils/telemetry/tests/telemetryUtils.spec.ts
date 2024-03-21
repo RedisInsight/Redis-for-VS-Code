@@ -82,10 +82,10 @@ const getLengthByKeyTypeTests = [
   [KeyTypes.List, { expire: 3 }, 1],
   [KeyTypes.Stream, { }, 1],
   [KeyTypes.ReJSON, { }, undefined],
+  ['oeuoeu', { }, undefined],
 ]
 
 describe('getLengthByKeyType', () => {
-  // @ts-ignore
   test.each(getLengthByKeyTypeTests)('for input: %s (keyType), %s (data) should be output: %s', (keyType, data, expected) => {
     const result = getLengthByKeyType(keyType as KeyTypes, data)
     expect(result).toEqual(expected)

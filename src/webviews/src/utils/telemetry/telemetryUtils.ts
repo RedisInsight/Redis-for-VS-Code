@@ -88,6 +88,6 @@ export const getLengthByKeyType = (type: KeyTypes, data: any) => {
     case KeyTypes.ReJSON:
       return undefined
     default:
-      return {}
+      return undefined
   }
 }
