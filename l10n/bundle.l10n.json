@@ -148,10 +148,10 @@
   "Ready to execute commands.": "Ready to execute commands.",
   "Connecting...": "Connecting...",
   "Pinging Redis server on ": "Pinging Redis server on ",
-  " is not supported by the RedisInsight CLI. The list of all unsupported commands: /Example: INFO is not supported by the RedisInsight CLI. The list of all unsupported commands: ...": {
-    "message": " is not supported by the RedisInsight CLI. The list of all unsupported commands: ",
+  " is not supported by the Redis CLI. The list of all unsupported commands: /Example: INFO is not supported by the Redis CLI. The list of all unsupported commands: ...": {
+    "message": " is not supported by the Redis CLI. The list of all unsupported commands: ",
     "comment": [
-      "Example: INFO is not supported by the RedisInsight CLI. The list of all unsupported commands: ..."
+      "Example: INFO is not supported by the Redis CLI. The list of all unsupported commands: ..."
     ]
   },
   " is not supported by the Workbench. The list of all unsupported commands: /Example: AUTH is not supported by the Workbench. The list of all unsupported commands: ...": {

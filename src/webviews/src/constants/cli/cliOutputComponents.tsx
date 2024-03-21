@@ -20,9 +20,9 @@ export const InitOutputText = (
 
 const unsupportedCommandTextCli = l10n.t({
   message:
-    ' is not supported by the RedisInsight CLI. The list of all unsupported commands: ',
+    ' is not supported by the Redis CLI. The list of all unsupported commands: ',
   comment:
-    'Example: INFO is not supported by the RedisInsight CLI. The list of all unsupported commands: ...',
+    'Example: INFO is not supported by the Redis CLI. The list of all unsupported commands: ...',
 })
 const unsupportedCommandTextWorkbench = l10n.t({
   message:
