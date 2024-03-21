@@ -1,9 +1,10 @@
 import React, { FormEvent, useState, useEffect, ChangeEvent, useRef, Ref } from 'react'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import Popup from 'reactjs-popup'
 
-import { stringToBuffer } from 'uiSrc/utils'
-import { Maybe, RedisResponseBuffer } from 'uiSrc/interfaces'
+import { getRequiredFieldsText, stringToBuffer } from 'uiSrc/utils'
+import { Maybe, RedisString } from 'uiSrc/interfaces'
 import { TextArea } from 'uiSrc/ui'
 import { SetStringWithExpire } from 'uiSrc/modules/keys-tree/hooks/interface'
 import { useKeysApi, useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
@@ -14,11 +15,11 @@ import styles from './styles.module.scss'
 export interface Props {
   keyName: string
   keyTTL: Maybe<number>
-  onCancel: (isCancelled?: boolean, keyType?: KeyTypes) => void
+  onClose: (isCancelled?: boolean, keyType?: KeyTypes) => void
 }
 
 const AddKeyString = (props: Props) => {
-  const { keyName = '', keyTTL, onCancel } = props
+  const { keyName = '', keyTTL, onClose } = props
   const keysApi = useKeysApi()
   const loading = useKeysInContext((state) => state.addKeyLoading)
 
@@ -40,24 +41,28 @@ const AddKeyString = (props: Props) => {
 
   const submitData = (): void => {
     const data: SetStringWithExpire = {
-      keyName: stringToBuffer(keyName) as RedisResponseBuffer,
-      value: stringToBuffer(value) as RedisResponseBuffer,
+      keyName: stringToBuffer(keyName) as RedisString,
+      value: stringToBuffer(value) as RedisString,
     }
     if (keyTTL !== undefined) {
       data.expire = keyTTL
     }
-    keysApi.addStringKey(data, () => onCancel(false, KeyTypes.String))
+    keysApi.addStringKey(data, () => onClose(false, KeyTypes.String))
   }
 
-  const getTooltip = (): string => {
-    const keyValid = keyName.length > 0
-    const valueValid = value.length > 0
-    const invalidFieldsCount = Number(!keyValid)
-    const invalidFieldsString = `${!keyValid ? l10n.t('Key Name') : ''}`
-    if (!keyValid || !valueValid) {
-      return `${l10n.t('Enter a value for required fields')} (${invalidFieldsCount}):\n${invalidFieldsString}`
-    } return ''
-  }
+  const SubmitBtn = () => (
+    <VSCodeButton
+      onClick={submitData}
+      disabled={!isFormValid || loading}
+      data-testid="btn-add"
+    >
+      {l10n.t('Add Key')}
+    </VSCodeButton>
+  )
+
+  const disabledSubmitText = !keyName
+    ? getRequiredFieldsText({ keyName: l10n.t('Key Name') })
+    : (loading ? l10n.t('loading...') : null)
 
   return (
     <form onSubmit={onFormSubmit}>
@@ -85,18 +90,21 @@ const AddKeyString = (props: Props) => {
           <section className={styles.controls}>
             <VSCodeButton
               appearance="secondary"
-              onClick={() => onCancel(true)}
+              onClick={() => onClose(true)}
             >
               {l10n.t('Cancel')}
             </VSCodeButton>
-            <VSCodeButton
-              onClick={submitData}
-              disabled={!isFormValid || loading}
-              title={getTooltip()}
-              data-testid="btn-add"
-            >
-              {l10n.t('Add Key')}
-            </VSCodeButton>
+            {disabledSubmitText && (
+              <Popup
+                keepTooltipInside
+                on="hover"
+                position="top center"
+                trigger={SubmitBtn}
+              >
+                <div className="font-bold pb-1">{disabledSubmitText}</div>
+              </Popup>
+            )}
+            {!disabledSubmitText && <SubmitBtn />}
           </section>
         </section>
       </section>

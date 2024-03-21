@@ -92,10 +92,10 @@ export const AddKey = () => {
             <AddKeyZset onCancel={closeAddKeyPanel} {...defaultFields} />
           )} */}
       {typeSelected === KeyTypes.Set && (
-        <AddKeySet onCancel={closeAddKeyPanel} {...defaultFields} />
+        <AddKeySet onClose={closeAddKeyPanel} {...defaultFields} />
       )}
       {typeSelected === KeyTypes.String && (
-        <AddKeyString onCancel={closeAddKeyPanel} {...defaultFields} />
+        <AddKeyString onClose={closeAddKeyPanel} {...defaultFields} />
       )}
       {/* {typeSelected === KeyTypes.List && (
             <AddKeyList onCancel={closeAddKeyPanel} {...defaultFields} />

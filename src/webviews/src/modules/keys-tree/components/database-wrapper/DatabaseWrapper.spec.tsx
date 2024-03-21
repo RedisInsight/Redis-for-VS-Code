@@ -3,13 +3,14 @@ import { mock } from 'ts-mockito'
 import { cloneDeep } from 'lodash'
 import { Mock } from 'vitest'
 
-import { KeyTypes, SelectedKeyActionType, SortOrder } from 'uiSrc/constants'
+import { KeyTypes, SelectedKeyActionType, SortOrder, VscodeMessageAction } from 'uiSrc/constants'
 import * as utils from 'uiSrc/utils'
-import { apiService } from 'uiSrc/services'
+import { apiService, vscodeApi } from 'uiSrc/services'
 import * as useContext from 'uiSrc/store/hooks/use-context/useContext'
 import * as useSelectedKeyStore from 'uiSrc/store/hooks/use-selected-key-store/useSelectedKeyStore'
 import { DATABASE_ID_MOCK } from 'uiSrc/modules/cli/slice/tests/cli-settings.spec'
 import { Database } from 'uiSrc/store'
+import { TelemetryEvent } from 'uiSrc/utils'
 import { cleanup, constants, fireEvent, mockedStore, render, waitForStack } from 'testSrc/helpers'
 import { DatabaseWrapper, Props } from './DatabaseWrapper'
 import * as useKeys from '../../hooks/useKeys'
@@ -29,6 +30,8 @@ beforeEach(() => {
 })
 
 vi.spyOn(utils, 'sendEventTelemetry')
+vi.spyOn(vscodeApi, 'postMessage')
+
 const fnMock = vi.fn()
 const addKeyIntoTreeMock = vi.fn()
 const deleteKeyFromTreeMock = vi.fn();
@@ -78,6 +81,26 @@ describe('DatabaseWrapper', () => {
       eventData: {
         databaseId: utils.getDatabaseId(),
         sorting: 'DESC',
+      },
+    })
+  })
+
+  it('should call sendEventTelemetry and postMessage actions after click on Add Key icon', async () => {
+    const { queryByTestId } = render(<DatabaseWrapper {...mockedProps} />)
+
+    fireEvent.click(queryByTestId(`database-${mockDatabase.id}`)!)
+    await waitForStack()
+
+    fireEvent.click(queryByTestId('add-key-button')!)
+
+    expect(vscodeApi.postMessage).toBeCalledWith({
+      action: VscodeMessageAction.AddKey, data: mockDatabase,
+    })
+
+    expect(utils.sendEventTelemetry).toBeCalledWith({
+      event: TelemetryEvent.TREE_VIEW_KEY_ADD_BUTTON_CLICKED,
+      eventData: {
+        databaseId: mockDatabase.id,
       },
     })
   })

@@ -269,22 +269,6 @@ export const autoFillFormDetails = (
   return false
 }
 
-export const getSubmitButtonContent = (errors: FormikErrors<DbConnectionInfo>, submitIsDisabled?: boolean) => {
-  const maxErrorsCount = 5
-  const errorsArr = Object.values(errors).map((err) => [
-    err,
-    <br key={err as string} />,
-  ])
-
-  if (errorsArr.length > maxErrorsCount) {
-    errorsArr.splice(maxErrorsCount, errorsArr.length, ['...'])
-  }
-
-  return submitIsDisabled ? (
-    <div>{errorsArr}</div>
-  ) : null
-}
-
 export const getFormValues = (instance?: Nullable<Record<string, any>>) => ({
   ...instance,
   host: instance?.host ?? (instance ? '' : DEFAULT_HOST),

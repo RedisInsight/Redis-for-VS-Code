@@ -1,4 +1,5 @@
-import { getRedisModulesSummary } from '../telemetryUtils'
+import { ApiEndpoints, KeyTypes } from 'uiSrc/constants'
+import { getAdditionalAddedEventData, getRedisModulesSummary } from '../telemetryUtils'
 
 const DEFAULT_SUMMARY = Object.freeze(
   {
@@ -69,6 +70,24 @@ describe('getRedisModulesSummary', () => {
   test.each(getRedisModulesSummaryTests)('%j', ({ input, expected }) => {
     // @ts-ignore
     const result = getRedisModulesSummary(input)
+    expect(result).toEqual(expected)
+  })
+})
+
+const getAdditionalAddedEventDataTests = [
+  [ApiEndpoints.HASH, { fields: [,,] }, { keyType: KeyTypes.Hash, length: 2, TTL: -1 }],
+  [ApiEndpoints.SET, { members: [,] }, { keyType: KeyTypes.Set, length: 1, TTL: -1 }],
+  [ApiEndpoints.ZSET, { members: [,,,,], expire: 123 }, { keyType: KeyTypes.ZSet, length: 4, TTL: 123 }],
+  [ApiEndpoints.STRING, { value: '123', expire: 123 }, { keyType: KeyTypes.String, length: 3, TTL: 123 }],
+  [ApiEndpoints.LIST, { expire: 3 }, { keyType: KeyTypes.List, length: 1, TTL: 3 }],
+  [ApiEndpoints.REJSON, { }, { keyType: KeyTypes.ReJSON,  TTL: -1 }],
+  [ApiEndpoints.STREAMS, { }, { keyType: KeyTypes.Stream, length: 1, TTL: -1 }],
+]
+
+describe('getAdditionalAddedEventData', () => {
+  // @ts-ignore
+  test.each(getAdditionalAddedEventDataTests)('for input: %s (endpoint), %s (data) should be output: %s', (endpoint, data, expected) => {
+    const result = getAdditionalAddedEventData(endpoint as ApiEndpoints, data)
     expect(result).toEqual(expected)
   })
 })
