@@ -148,7 +148,6 @@ export class WebView {
         await this.waitForWebElementVisibility(this.webViewViewIframe)
 
         if (await this.isWebElementDisplayed(innerFrameLocator)) {
-          await this.waitForWebElementVisibility(innerFrameLocator)
           const innerView = await this.getWebElement(innerFrameLocator)
           await this.driver.switchTo().frame(innerView)
           return
