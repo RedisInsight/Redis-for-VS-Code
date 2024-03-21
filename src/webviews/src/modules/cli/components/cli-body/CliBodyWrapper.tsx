@@ -28,6 +28,7 @@ import {
   CommandPSubscribe,
   CommandSubscribe,
   CommandHello3,
+  CommandSSubscribe,
   // Pages
 } from 'uiSrc/constants'
 import { getCommandRepeat, isRepeatCountCorrect, sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
@@ -95,6 +96,7 @@ export const CliBodyWrapper = () => {
 
   const handleSubmit = () => {
     const [commandLine, countRepeat] = getCommandRepeat(decode(command).trim() || '')
+
     const unsupportedCommand = checkUnsupportedCommand(unsupportedCommands, commandLine)
     dispatch(concatToOutput(cliCommandOutput(decode(command), currentDbIndex)))
 
@@ -105,23 +107,28 @@ export const CliBodyWrapper = () => {
 
     // Flow if MONITOR command was executed
     if (checkUnsupportedCommand([CommandMonitor.toLowerCase()], commandLine)) {
-      dispatch(concatToOutput(cliTexts.MONITOR_COMMAND_CLI(() => {
-        // dispatch(showMonitor())
-      })))
+      dispatch(concatToOutput(cliTexts.MONITOR_COMMAND_CLI()))
       resetCommand()
       return
     }
 
     // Flow if PSUBSCRIBE command was executed
     if (checkUnsupportedCommand([CommandPSubscribe.toLowerCase()], commandLine)) {
-      dispatch(concatToOutput(cliTexts.PSUBSCRIBE_COMMAND_CLI('')))
+      dispatch(concatToOutput(cliTexts.PSUBSCRIBE_COMMAND_CLI()))
       resetCommand()
       return
     }
 
     // Flow if SUBSCRIBE command was executed
     if (checkUnsupportedCommand([CommandSubscribe.toLowerCase()], commandLine)) {
-      dispatch(concatToOutput(cliTexts.SUBSCRIBE_COMMAND_CLI('')))
+      dispatch(concatToOutput(cliTexts.SUBSCRIBE_COMMAND_CLI()))
+      resetCommand()
+      return
+    }
+
+    // Flow if SSUBSCRIBE command was executed
+    if (checkUnsupportedCommand([CommandSSubscribe.toLowerCase()], commandLine)) {
+      dispatch(concatToOutput(cliTexts.SSUBSCRIBE_COMMAND_CLI()))
       resetCommand()
       return
     }

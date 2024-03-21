@@ -114,7 +114,7 @@ function unzipRedisServer(redisInsideArchivePath: string, extractDir: string) {
     }
     cp.spawnSync('tar', ['-xzf', redisInsideArchivePath, '-C', extractDir, '--strip-components', '2', 'api/dist'])
     // Temporary: there's no some dependencies in current dist's, starting re-install
-    cp.spawnSync('yarn', ['--cwd', extractDir, 'install', '--production'])
+    cp.spawnSync('yarn', ['--cwd', extractDir, 'install'])
 
     // remove plugins
     fs.rmSync(staticPath, { recursive: true, force: true });

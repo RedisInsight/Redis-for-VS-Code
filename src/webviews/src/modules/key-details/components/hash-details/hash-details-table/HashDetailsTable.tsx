@@ -295,7 +295,7 @@ const HashDetailsTable = (props: Props) => {
   const columns: ITableColumn[] = [
     {
       id: 'field',
-      label: 'FIELD',
+      label: 'Field',
       isSearchable: true,
       isResizable: true,
       minWidth: 120,
@@ -333,7 +333,7 @@ const HashDetailsTable = (props: Props) => {
     },
     {
       id: 'value',
-      label: 'VALUE',
+      label: 'Value',
       minWidth: 120,
       truncateText: true,
       alignment: TableCellAlignment.Left,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, MouseEvent } from 'react'
 import cx from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
-import { cliSettingsSelector, closeAllCliConnections, deleteCli, selectCli } from 'uiSrc/modules/cli/slice/cli-settings'
+import { cliSettingsSelector, closeAllCliConnections, deleteCli, fetchUnsupportedCliCommandsAction, selectCli } from 'uiSrc/modules/cli/slice/cli-settings'
 import { AppDispatch } from 'uiSrc/store'
 
 import { ConnectionHistory } from 'uiSrc/interfaces'
@@ -27,6 +27,7 @@ export const Cli = (props: Props) => {
 
   useEffect(() => () => {
     dispatch(closeAllCliConnections())
+    dispatch(fetchUnsupportedCliCommandsAction())
   }, [])
 
   const enableDragging = () => setDragged(true)
