@@ -1,5 +1,5 @@
 import { By } from 'selenium-webdriver'
-import { DoubleColumnKeyDetailsView } from '@e2eSrc/page-objects/components/edit-panel/DoubleColumnKeyDetailsView'
+import { DoubleColumnKeyDetailsView } from '@e2eSrc/page-objects/components/editor-view/DoubleColumnKeyDetailsView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { InputActions } from '@e2eSrc/helpers/common-actions'
 
