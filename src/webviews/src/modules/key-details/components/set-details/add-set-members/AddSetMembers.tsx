@@ -1,7 +1,8 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import * as l10n from '@vscode/l10n'
 import cx from 'classnames'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import Popup from 'reactjs-popup'
 
 import {
   addNewItem,
@@ -21,7 +22,7 @@ export interface Props {
   hideCancel?: boolean
   autoFocus?: boolean
   disabled?: boolean
-  disabledSubmit?: boolean
+  disabledSubmitText?: ReactNode
   submitText?: string
   containerClassName?: string
   closePanel?: (isCancelled?: boolean) => void
@@ -32,7 +33,7 @@ const AddSetMembers = (props: Props) => {
   const {
     hideCancel,
     disabled,
-    disabledSubmit,
+    disabledSubmitText,
     submitText,
     autoFocus = true,
     containerClassName,
@@ -60,6 +61,17 @@ const AddSetMembers = (props: Props) => {
   }
 
   const isClearDisabled = (item: ISetMemberState): boolean => members.length === 1 && !item.name.length
+
+  const SubmitBtn = () => (
+    <VSCodeButton
+      appearance="primary"
+      onClick={submitData}
+      disabled={!!disabledSubmitText}
+      data-testid="save-members-btn"
+    >
+      {submitText || l10n.t('Save')}
+    </VSCodeButton>
+  )
 
   return (
     <>
@@ -112,14 +124,18 @@ const AddSetMembers = (props: Props) => {
             {l10n.t('Cancel')}
           </VSCodeButton>
         )}
-        <VSCodeButton
-          appearance="primary"
-          onClick={submitData}
-          disabled={disabledSubmit}
-          data-testid="save-members-btn"
-        >
-          {submitText || l10n.t('Save')}
-        </VSCodeButton>
+        {disabledSubmitText && (
+          <Popup
+            keepTooltipInside
+            on="hover"
+            position="top center"
+            trigger={SubmitBtn}
+          >
+            <div className="font-bold pb-1">{disabledSubmitText}</div>
+          </Popup>
+        )}
+        {!disabledSubmitText && <SubmitBtn />}
+
       </div>
     </>
   )

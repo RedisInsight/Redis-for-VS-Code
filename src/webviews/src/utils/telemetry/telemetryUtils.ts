@@ -3,7 +3,7 @@ import { cloneDeep, get } from 'lodash'
 
 import { AdditionalRedisModule, store } from 'uiSrc/store'
 import { apiService } from 'uiSrc/services'
-import { ApiEndpoints, DEFAULT_SUMMARY, SUPPORTED_REDIS_MODULES } from 'uiSrc/constants'
+import { ApiEndpoints, DEFAULT_SUMMARY, KeyTypes, SUPPORTED_REDIS_MODULES } from 'uiSrc/constants'
 import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 import { IModuleSummary, IRedisModulesSummary, ITelemetrySendEvent, MatchType, RedisModules, RedisModulesKeyType } from './interfaces'
 import { isRedisearchAvailable, isTriggeredAndFunctionsAvailable } from '../database'
@@ -70,4 +70,25 @@ export const getRedisModulesSummary = (modules: AdditionalRedisModule[] = []): I
     // continue regardless of error
   }
   return summary
+}
+
+export const getLengthByKeyType = (type: KeyTypes, data: any) => {
+  switch (type) {
+    case KeyTypes.Hash:
+      return data.fields?.length
+    case KeyTypes.Set:
+      return data.members?.length
+    case KeyTypes.ZSet:
+      return data.members?.length
+    case KeyTypes.String:
+      return data.value?.length
+    case KeyTypes.List:
+      return 1
+    case KeyTypes.Stream:
+      return 1
+    case KeyTypes.ReJSON:
+      return undefined
+    default:
+      return undefined
+  }
 }

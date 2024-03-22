@@ -99,6 +99,10 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   }
 
   const addKeyClickHandle = () => {
+    sendEventTelemetry({
+      event: TelemetryEvent.TREE_VIEW_KEY_ADD_BUTTON_CLICKED,
+      eventData: { databaseId: id },
+    })
     vscodeApi.postMessage({ action: VscodeMessageAction.AddKey, data: database })
   }
 

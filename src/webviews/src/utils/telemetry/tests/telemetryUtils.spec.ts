@@ -1,4 +1,5 @@
-import { getRedisModulesSummary } from '../telemetryUtils'
+import { KeyTypes } from 'uiSrc/constants'
+import { getLengthByKeyType, getRedisModulesSummary } from '../telemetryUtils'
 
 const DEFAULT_SUMMARY = Object.freeze(
   {
@@ -69,6 +70,24 @@ describe('getRedisModulesSummary', () => {
   test.each(getRedisModulesSummaryTests)('%j', ({ input, expected }) => {
     // @ts-ignore
     const result = getRedisModulesSummary(input)
+    expect(result).toEqual(expected)
+  })
+})
+
+const getLengthByKeyTypeTests = [
+  [KeyTypes.Hash, { fields: [,,] }, 2],
+  [KeyTypes.Set, { members: [,] }, 1],
+  [KeyTypes.ZSet, { members: [,,,,], expire: 123 }, 4],
+  [KeyTypes.String, { value: '123', expire: 123 }, 3],
+  [KeyTypes.List, { expire: 3 }, 1],
+  [KeyTypes.Stream, { }, 1],
+  [KeyTypes.ReJSON, { }, undefined],
+  ['oeuoeu', { }, undefined],
+]
+
+describe('getLengthByKeyType', () => {
+  test.each(getLengthByKeyTypeTests)('for input: %s (keyType), %s (data) should be output: %s', (keyType, data, expected) => {
+    const result = getLengthByKeyType(keyType as KeyTypes, data)
     expect(result).toEqual(expected)
   })
 })

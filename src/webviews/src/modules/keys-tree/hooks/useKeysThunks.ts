@@ -2,8 +2,8 @@ import axios, { AxiosError, CancelTokenSource } from 'axios'
 import { StateCreator } from 'zustand'
 
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
-import { apiService } from 'uiSrc/services'
-import { DEFAULT_SEARCH_MATCH, ApiEndpoints, KeyTypes, successMessages, SCAN_TREE_COUNT_DEFAULT, ENDPOINT_BASED_ON_KEY_TYPE, EndpointBasedOnKeyType } from 'uiSrc/constants'
+import { apiService, sessionStorageService } from 'uiSrc/services'
+import { DEFAULT_SEARCH_MATCH, ApiEndpoints, KeyTypes, successMessages, SCAN_TREE_COUNT_DEFAULT, ENDPOINT_BASED_ON_KEY_TYPE, EndpointBasedOnKeyType, StorageItem } from 'uiSrc/constants'
 import {
   TelemetryEvent,
   getApiErrorMessage,
@@ -16,6 +16,7 @@ import {
   showInformationMessage,
   getDatabaseUrl,
   getUrl,
+  getLengthByKeyType,
 } from 'uiSrc/utils'
 import { useSelectedKeyStore } from 'uiSrc/store'
 import { GetKeysWithDetailsResponse, KeysStore, KeysActions, SetStringWithExpire, KeysThunks, CreateSetWithExpireDto } from './interface'
@@ -224,8 +225,17 @@ KeysThunks
         data,
       )
       if (isStatusSuccessful(status)) {
-        onSuccessAction?.()
+        sendEventTelemetry({
+          event: TelemetryEvent.TREE_VIEW_KEY_ADDED,
+          eventData: {
+            keyType,
+            TTL: data.expire || -1,
+            databaseId: sessionStorageService.get(StorageItem.databaseId),
+            length: getLengthByKeyType(keyType, data),
+          },
+        })
         showInformationMessage(successMessages.ADDED_NEW_KEY(data.keyName).title)
+        onSuccessAction?.()
       }
     } catch (error) {
       const errorMessage = getApiErrorMessage(error as AxiosError)

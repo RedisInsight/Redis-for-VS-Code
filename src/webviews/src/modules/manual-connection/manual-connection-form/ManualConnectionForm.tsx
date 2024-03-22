@@ -15,7 +15,7 @@ import {
   ConnectionType,
 } from 'uiSrc/constants'
 import { DbConnectionInfo, ISubmitButton } from 'uiSrc/interfaces'
-import { getFormErrors, getSubmitButtonContent } from 'uiSrc/utils'
+import { getFormErrors, getRequiredFieldsText } from 'uiSrc/utils'
 import {
   DbIndex,
   DbInfo,
@@ -162,8 +162,7 @@ const ManualConnectionForm = (props: Props) => {
           trigger={Btn}
           on="hover"
         >
-          {validationErrors.REQUIRED_TITLE(Object.keys(errors).length)}
-          {getSubmitButtonContent(errors, submitIsDisabled)}
+          {getRequiredFieldsText(errors)}
         </Popup>
       )
   }
