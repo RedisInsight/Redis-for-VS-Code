@@ -1,0 +1,1 @@
+export { ConsentsPrivacy } from './ConsentsPrivacy'

@@ -1,14 +1,16 @@
 import { cloneDeep } from 'lodash'
 import React from 'react'
 import { cleanup, fireEvent } from '@testing-library/react'
-import { Mock } from 'vitest'
 
 import { stringToBuffer } from 'uiSrc/utils'
 import { KeyTypes } from 'uiSrc/constants'
-import { setKeysTreeNodesOpen } from 'uiSrc/slices/app/context/context.slice'
+import { useContextApi } from 'uiSrc/store'
+import * as storeContext from 'uiSrc/store'
 import { mockedStore, render } from 'testSrc/helpers'
 import { KeysTree } from './KeysTree'
 import { KeysStoreData } from './hooks/interface'
+
+vi.spyOn(storeContext, 'useContextApi')
 
 let store: typeof mockedStore
 beforeEach(() => {
@@ -129,7 +131,7 @@ describe('KeysTree', () => {
       fireEvent.click(getByTestId(`node-item_${folderFullName}`))
 
       const expectedActions = [
-        setKeysTreeNodesOpen({ [folderFullName]: true }),
+        useContextApi().setKeysTreeNodesOpen({ [folderFullName]: true }),
       ]
 
       expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))

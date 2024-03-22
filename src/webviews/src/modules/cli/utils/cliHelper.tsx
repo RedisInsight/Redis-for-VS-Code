@@ -75,12 +75,12 @@ const cliParseTextResponse = (
     className={
       status === CommandExecutionStatus.Success
         ? `${prefix}-output-response-success`
-        : `${prefix}-output-response-fail`
+        : `${prefix}-output-response-fail text-vscode-errorForeground`
     }
     data-testid={
       status === CommandExecutionStatus.Success
         ? `${prefix}-output-response-success`
-        : `${prefix}-output-response-fail`
+        : `${prefix}-output-response-fail text-vscode-errorForeground`
     }
   >
     {isParse ? parse(formatToText(text, command)) : formatToText(text, command)}

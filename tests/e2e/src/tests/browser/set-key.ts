@@ -18,7 +18,7 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { SetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
-import { AddSetKeyView } from '@e2eSrc/page-objects/components/edit-panel/AddSetView'
+import { AddSetKeyView } from '@e2eSrc/page-objects/components/editor-view/AddSetView'
 
 let keyName: string
 

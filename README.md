@@ -17,8 +17,8 @@ Temporary repository to work on the VS Code extension
 
 ### Scripts:  
 `download:backend` - download backend for current platform   
-`dev:sidebar` - run web server with sidebar router  
-`dev:webview` - run web server with main webview router  
+`dev` - run web server with custom router in the `RI_DATA_ROUTE` env variable. Like `RI_DATA_ROUTE=settings yarn dev`
+`dev:sidebar` - run web server with sidebar router   
 `l10n:collect` - auto find all new strings and add them to `./l10n/bundle.l10n.json`  
 `storybook:dev` - run web storybook dev server  
 `package:prod` - package plugin as *.vsix file for prod  

@@ -84,4 +84,10 @@ export const handleMessage = (message: any = {}) => {
   if (message.action === 'CloseEditDatabase') {
     vscode.commands.executeCommand('RedisInsight.editDatabaseClose', message)
   }
+  if (message.action === 'UpdateSettings') {
+    vscode.commands.executeCommand('RedisInsight.updateSettings', message)
+  }
+  if (message.action === 'UpdateSettingsDelimiter') {
+    vscode.commands.executeCommand('RedisInsight.updateSettingsDelimiter', message)
+  }
 }

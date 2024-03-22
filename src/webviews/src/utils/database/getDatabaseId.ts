@@ -1,5 +1,5 @@
 import { get } from 'lodash'
-import { store } from 'uiSrc/store'
+import { useDatabasesStore } from 'uiSrc/store'
 
 export const getDatabaseId = (): string =>
-  get(store.getState(), 'connections.databases.connectedDatabase.id', '')
+  get(useDatabasesStore.getState(), 'connectedDatabase.id', '')

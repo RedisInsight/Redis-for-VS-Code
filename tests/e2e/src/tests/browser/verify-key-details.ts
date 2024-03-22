@@ -21,7 +21,7 @@ import {
   InputActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
-import { AddStringKeyView } from '@e2eSrc/page-objects/components/edit-panel/AddStringKeyView'
+import { AddStringKeyView } from '@e2eSrc/page-objects/components/editor-view/AddStringKeyView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
 const keyTTL = '2147476121'

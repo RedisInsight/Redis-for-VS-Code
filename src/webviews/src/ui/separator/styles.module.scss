@@ -1,0 +1,12 @@
+.separator {
+  @apply bg-vscode-menu-separatorBackground;
+
+  &Horizontal {
+    @apply h-px w-full my-2;
+  }
+
+  &Vertical {
+    @apply h-full w-px mx-2;
+  }
+}
+

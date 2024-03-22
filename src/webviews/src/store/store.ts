@@ -1,26 +1,11 @@
-import { createBrowserHistory } from 'history'
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import userSettingsReducer from 'uiSrc/slices/user/user-settings.slice'
-import appInfoReducer from 'uiSrc/slices/app/info/info.slice'
-import appRedisCommandsReducer from 'uiSrc/slices/app/commands/redis-commands.slice'
-import appContextReducer from 'uiSrc/slices/app/context/context.slice'
 import cliSettingsReducer from 'uiSrc/modules/cli/slice/cli-settings'
 import outputReducer from 'uiSrc/modules/cli/slice/cli-output'
 
-export const history = createBrowserHistory()
-
 export const rootReducers = {
-  app: combineReducers({
-    info: appInfoReducer,
-    context: appContextReducer,
-    redisCommands: appRedisCommandsReducer,
-  }),
   cli: combineReducers({
     settings: cliSettingsReducer,
     output: outputReducer,
-  }),
-  user: combineReducers({
-    settings: userSettingsReducer,
   }),
 }
 

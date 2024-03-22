@@ -99,7 +99,6 @@ const InlineEditor = memo((props: Props) => {
     if (preventOutsideClick) return
     if (!containerEl?.current?.contains(event.target)) {
       if (!isLoading) {
-        setIsActive(false)
         onDecline?.(event)
       } else {
         event.stopPropagation()
@@ -151,13 +150,9 @@ const InlineEditor = memo((props: Props) => {
     setIsActive(true)
   }
 
-  // const handleOnEsc = (event: KeyboardEvent) => {
-  //   if (event.code.toLowerCase() === 'escape' || event.keyCode === 27) {
-  //     event.stopPropagation()
-  //     setIsActive(false)
-  //     onDecline?.()
-  //   }
-  // }
+  const handleBlur = () => {
+    setIsActive(false)
+  }
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.code.toLowerCase() === 'enter' || event.keyCode === 13) {
@@ -167,7 +162,6 @@ const InlineEditor = memo((props: Props) => {
 
     if (event.code.toLowerCase() === 'escape' || event.keyCode === 27) {
       event.stopPropagation()
-      setIsActive(false)
       onDecline?.()
     }
   }
@@ -175,7 +169,6 @@ const InlineEditor = memo((props: Props) => {
   const handleFormSubmit = (event: MouseEvent | KeyboardEvent): void => {
     event.preventDefault()
     event.stopPropagation()
-    setIsActive(false)
     onApply?.(value)
   }
 
@@ -211,6 +204,7 @@ const InlineEditor = memo((props: Props) => {
                   maxLength={maxLength}
                   placeholder={placeholder}
                   value={value}
+                  onBlur={handleBlur}
                   onFocus={handleFocus}
                   onInput={handleInputValue}
                   onKeyDown={handleKeyDown}

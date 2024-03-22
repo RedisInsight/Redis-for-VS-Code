@@ -1,8 +1,18 @@
 {
+  "RedisInsight - Key details": "RedisInsight - Key details",
+  "RedisInsight - Add new key": "RedisInsight - Add new key",
+  "RedisInsight - Add Database connection": "RedisInsight - Add Database connection",
+  "RedisInsight - Settings": "RedisInsight - Settings",
+  "RedisInsight - Edit Database connection": "RedisInsight - Edit Database connection",
   "now": "now",
   "< 1 min": "< 1 min",
   "Last Refresh": "Last Refresh",
   "Page was not found": "Page was not found",
+  "Settings": "Settings",
+  "Delimiter to separate namespaces": "Delimiter to separate namespaces",
+  "Privacy": "Privacy",
+  "To optimize your experience, RedisInsight uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.": "To optimize your experience, RedisInsight uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.",
+  "Analytics": "Analytics",
   "loading...": "loading...",
   "key(s)": "key(s)",
   "Key Name": "Key Name",
@@ -145,24 +155,12 @@
   "Something was wrong!": "Something was wrong!",
   "Connected.": "Connected.",
   "Ready to execute commands.": "Ready to execute commands.",
-  "Try /Context: Try \"Workbench\", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.": {
-    "message": "Try ",
-    "comment": [
-      "Context: Try \"Workbench\", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities."
-    ]
-  },
-  ", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities./Context: Try \"Workbench\", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.": {
-    "message": ", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities.",
-    "comment": [
-      "Context: Try \"Workbench\", our advanced CLI. Check out our Quick Guides to learn more about Redis capabilities."
-    ]
-  },
   "Connecting...": "Connecting...",
   "Pinging Redis server on ": "Pinging Redis server on ",
-  " is not supported by the RedisInsight CLI. The list of all unsupported commands: /Example: INFO is not supported by the RedisInsight CLI. The list of all unsupported commands: ...": {
-    "message": " is not supported by the RedisInsight CLI. The list of all unsupported commands: ",
+  " is not supported by the Redis CLI. The list of all unsupported commands: /Example: INFO is not supported by the Redis CLI. The list of all unsupported commands: ...": {
+    "message": " is not supported by the Redis CLI. The list of all unsupported commands: ",
     "comment": [
-      "Example: INFO is not supported by the RedisInsight CLI. The list of all unsupported commands: ..."
+      "Example: INFO is not supported by the Redis CLI. The list of all unsupported commands: ..."
     ]
   },
   " is not supported by the Workbench. The list of all unsupported commands: /Example: AUTH is not supported by the Workbench. The list of all unsupported commands: ...": {
@@ -174,40 +172,29 @@
   "Invalid repeat command option value": "Invalid repeat command option value",
   "Client connection previously closed. Run the command after the connection is re-created.": "Client connection previously closed. Run the command after the connection is re-created.",
   "Unable to decrypt. Check the system keychain or re-run the command.": "Unable to decrypt. Check the system keychain or re-run the command.",
-  "Use /Context: Use \"Pub/Sub\" to see the messages published to all channels in your database.": {
-    "message": "Use ",
+  "Use Pub/Sub available in the /Context: Use Pub/Sub available in the RedisInsight application to see the messages published to all channels in your database.": {
+    "message": "Use Pub/Sub available in the ",
     "comment": [
-      "Context: Use \"Pub/Sub\" to see the messages published to all channels in your database."
+      "Context: Use Pub/Sub available in the RedisInsight application to see the messages published to all channels in your database."
     ]
   },
+  "RedisInsight application": "RedisInsight application",
   " to see the messages published to all channels in your database./Context: Use \"Pub/Sub\" to see the messages published to all channels in your database.": {
     "message": " to see the messages published to all channels in your database.",
     "comment": [
       "Context: Use \"Pub/Sub\" to see the messages published to all channels in your database."
     ]
   },
-  "Use /Use \"Pub/Sub\" tool to subscribe to channels.": {
-    "message": "Use ",
+  "Use Profiler tool available in the /Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server.": {
+    "message": "Use Profiler tool available in the ",
     "comment": [
-      "Use \"Pub/Sub\" tool to subscribe to channels."
+      "Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server."
     ]
   },
-  " tool to subscribe to channels./Use \"Pub/Sub\" tool to subscribe to channels.": {
-    "message": " tool to subscribe to channels.",
+  " to see all the requests processed by the server./Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server.": {
+    "message": " to see all the requests processed by the server.",
     "comment": [
-      "Use \"Pub/Sub\" tool to subscribe to channels."
-    ]
-  },
-  "Use /Context: Use \"Profiler\" tool to see all the requests processed by the server.": {
-    "message": "Use ",
-    "comment": [
-      "Context: Use \"Profiler\" tool to see all the requests processed by the server."
-    ]
-  },
-  " tool to see all the requests processed by the server./Context: Use \"Profiler\" tool to see all the requests processed by the server.": {
-    "message": " tool to see all the requests processed by the server.",
-    "comment": [
-      "Context: Use \"Profiler\" tool to see all the requests processed by the server."
+      "Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server."
     ]
   },
   "RedisInsight does not support /Context: RedisInsight does not support \"RESP3\" at the moment, but we are working on it.": {

@@ -39,7 +39,7 @@ export class BottomBar extends BottomBarPanel {
    * @returns Promise resolving to CliView object
    */
   async openCliViewPanel(): Promise<CliViewPanel> {
-    await this.openBottomTab('RedisInsight CLI')
+    await this.openBottomTab('Redis CLI')
     return new CliViewPanel().wait()
   }
 

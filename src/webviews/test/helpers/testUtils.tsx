@@ -9,10 +9,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { ContextStoreProvider, RootState } from 'uiSrc/store'
 import { initialState as initialStateCliSettings } from 'uiSrc/modules/cli/slice/cli-settings'
 import { initialState as initialStateCliOutput } from 'uiSrc/modules/cli/slice/cli-output'
-import { initialState as initialStateAppInfo } from 'uiSrc/slices/app/info/info.slice'
-import { initialState as initialStateAppContext } from 'uiSrc/slices/app/context/context.slice'
-import { initialState as initialStateAppRedisCommands } from 'uiSrc/slices/app/commands/redis-commands.slice'
-import { initialState as initialStateUserSettings } from 'uiSrc/slices/user/user-settings.slice'
 import { BASE_URL } from 'uiSrc/constants'
 import { KeysStoreProvider } from 'uiSrc/modules/keys-tree/hooks/useKeys'
 
@@ -24,17 +20,9 @@ interface Options {
 
 // root state
 export const initialStateDefault: RootState = {
-  app: {
-    info: cloneDeep(initialStateAppInfo),
-    context: cloneDeep(initialStateAppContext),
-    redisCommands: cloneDeep(initialStateAppRedisCommands),
-  },
   cli: {
     settings: cloneDeep(initialStateCliSettings),
     output: cloneDeep(initialStateCliOutput),
-  },
-  user: {
-    settings: cloneDeep(initialStateUserSettings),
   },
 }
 

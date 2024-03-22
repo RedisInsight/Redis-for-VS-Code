@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { reactClickToComponent } from 'vite-plugin-react-click-to-component'
 // import compression from 'vite-plugin-compression2'
 import svgr from 'vite-plugin-svgr'
 import { fileURLToPath, URL } from 'node:url'
@@ -14,6 +15,7 @@ export default defineConfig({
     htmlPlugin(),
     closePlugin(),
     svgr(),
+    reactClickToComponent(),
     // compression({
     //   algorithm: 'gzip', exclude: [/\.(br)$ /, /\.(gz)$/],
     // }),

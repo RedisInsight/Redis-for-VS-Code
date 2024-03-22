@@ -1,43 +1,39 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
-import {
-  fetchUserConfigSettings,
-  fetchUserSettingsSpec,
-  userSettingsSelector,
-  setSettingsPopupState,
-} from 'uiSrc/slices/user/user-settings.slice'
-import {
-  fetchServerInfo,
-} from 'uiSrc/slices/app/info/info.slice'
-import { fetchRedisCommandsInfo } from 'uiSrc/slices/app/commands/redis-commands.slice'
+import { useShallow } from 'zustand/react/shallow'
 import { isDifferentConsentsExists } from 'uiSrc/utils'
-import { AppDispatch, fetchDatabases } from 'uiSrc/store'
+import { fetchDatabases } from 'uiSrc/store'
+import { fetchAppInfo, useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
+import { fetchRedisCommands } from 'uiSrc/store/hooks/use-redis-commands-store/useRedisCommandsStore'
 
 export const Config = () => {
-  const { config, spec } = useSelector(userSettingsSelector)
+  const appInfo = useAppInfoStore(useShallow((state) => ({
+    config: state.config,
+    spec: state.spec,
+    setIsShowConceptsPopup: state.setIsShowConceptsPopup,
+    setInitialStateAppInfo: state.setInitialState,
+  })))
 
-  const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
-    dispatch(fetchServerInfo())
-    dispatch(fetchRedisCommandsInfo())
-    fetchDatabases()
+    appInfo.setInitialStateAppInfo()
 
-    // fetch config settings, after that take spec
-    dispatch(fetchUserConfigSettings(() => dispatch(fetchUserSettingsSpec())))
+    fetchAppInfo()
+    fetchDatabases()
+    fetchRedisCommands()
   }, [])
 
   useEffect(() => {
+    const { config, spec } = appInfo
     if (config && spec) {
       checkSettingsToShowPopup()
     }
-  }, [spec])
+  }, [appInfo])
 
   const checkSettingsToShowPopup = () => {
-    const specConsents = spec?.agreements
-    const appliedConsents = config?.agreements
+    const specConsents = appInfo.spec?.agreements
+    const appliedConsents = appInfo.config?.agreements
 
-    dispatch(setSettingsPopupState(isDifferentConsentsExists(specConsents, appliedConsents)))
+    appInfo.setIsShowConceptsPopup(isDifferentConsentsExists(specConsents, appliedConsents))
   }
 
   return null

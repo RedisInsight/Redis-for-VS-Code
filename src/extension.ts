@@ -70,6 +70,17 @@ export async function activate(context: vscode.ExtensionContext) {
       })
     }),
 
+    vscode.commands.registerCommand('RedisInsight.openSettings', (args) => {
+      WebviewPanel.getInstance({
+        context,
+        route: 'settings',
+        title: 'RedisInsight - Settings',
+        viewId: ViewId.Settings,
+        handleMessage: (message) => handleMessage(message),
+        message: args,
+      })
+    }),
+
     vscode.commands.registerCommand('RedisInsight.editDatabase', (args) => {
       WebviewPanel.getInstance({
         context,
@@ -112,6 +123,16 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisInsight.resetSelectedKey', () => {
       sidebarProvider.view?.webview.postMessage({ action: 'ResetSelectedKey' })
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.updateSettings', (args) => {
+      sidebarProvider.view?.webview.postMessage({ action: 'UpdateSettings', data: args.data })
+      panelProvider.view?.webview.postMessage({ action: 'UpdateSettings', data: args.data })
+      // WebviewPanel.getInstance({ viewId: ViewId.Key }).update()
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.updateSettingsDelimiter', (args) => {
+      sidebarProvider.view?.webview.postMessage({ action: 'UpdateSettingsDelimiter', data: args.data })
     }),
   )
 }
