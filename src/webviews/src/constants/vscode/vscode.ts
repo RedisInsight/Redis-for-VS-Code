@@ -22,6 +22,8 @@ export enum VscodeMessageAction {
   CloseAddKey = 'CloseAddKey',
   CloseAddKeyAndRefresh = 'CloseAddKeyAndRefresh',
   ResetSelectedKey = 'ResetSelectedKey',
+  UpdateSettings = 'UpdateSettings',
+  UpdateSettingsDelimiter = 'UpdateSettingsDelimiter',
 }
 
 export enum VscodeStateItem {

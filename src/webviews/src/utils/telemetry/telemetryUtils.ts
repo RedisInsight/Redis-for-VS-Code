@@ -4,6 +4,7 @@ import { cloneDeep, get } from 'lodash'
 import { AdditionalRedisModule, store } from 'uiSrc/store'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints, DEFAULT_SUMMARY, SUPPORTED_REDIS_MODULES } from 'uiSrc/constants'
+import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 import { IModuleSummary, IRedisModulesSummary, ITelemetrySendEvent, MatchType, RedisModules, RedisModulesKeyType } from './interfaces'
 import { isRedisearchAvailable, isTriggeredAndFunctionsAvailable } from '../database'
 
@@ -27,7 +28,7 @@ export const getMatchType = (match: string): MatchType => (
 
 // Check is user give access to collect his events
 export const checkIsAnalyticsGranted = (): boolean =>
-  !!get(store.getState(), 'user.settings.config.agreements.analytics', false)
+  !!get(useAppInfoStore.getState(), 'config.agreements.analytics', false)
 
 const getEnumKeyBValue = (myEnum: any, enumValue: number | string): string => {
   const keys = Object.keys(myEnum)

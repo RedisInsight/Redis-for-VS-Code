@@ -1,71 +1,36 @@
 import React from 'react'
-import { cloneDeep } from 'lodash'
-import { cleanup } from '@testing-library/react'
 import { Mock, vi } from 'vitest'
 
-import {
-  getUserConfigSettings,
-  userSettingsSelector,
-} from 'uiSrc/slices/user/user-settings.slice'
-import { getServerInfo } from 'uiSrc/slices/app/info/info.slice'
-import { getRedisCommands } from 'uiSrc/slices/app/commands/redis-commands.slice'
 import * as useDatabases from 'uiSrc/store/hooks/use-databases-store/useDatabasesStore'
-import { mockedStore, render } from 'testSrc/helpers'
+import * as useAppInfo from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
+import * as useRedisCommands from 'uiSrc/store/hooks/use-redis-commands-store/useRedisCommandsStore'
+import { render } from 'testSrc/helpers'
 import { Config } from './Config'
 
-let store: typeof mockedStore
-beforeEach(() => {
-  cleanup()
-  store = cloneDeep(mockedStore)
-  store.clearActions()
-})
-
-vi.mock('uiSrc/slices/user/user-settings.slice', async () => ({
-  ...(await vi.importActual<object>('uiSrc/slices/user/user-settings.slice')),
-  userSettingsSelector: vi.fn().mockReturnValue({
-    config: {
-      agreements: {},
-    },
-    spec: {
-      agreements: {},
-    },
-  }),
-}))
-
-vi.mock('uiSrc/slices/app/info', async () => ({
-  ...(await vi.importActual<object>('uiSrc/slices/app/info')),
-  appServerInfoSelector: vi.fn(),
-}))
-
-vi.mock('uiSrc/services', async () => ({
-  ...(await vi.importActual<object>('uiSrc/services')),
-  localStorageService: {
-    set: vi.fn(),
-    get: vi.fn(),
-  },
-}))
-
 vi.spyOn(useDatabases, 'fetchDatabases')
+vi.spyOn(useAppInfo, 'fetchAppInfo')
+vi.spyOn(useRedisCommands, 'fetchRedisCommands')
 
 describe('Config', () => {
   it('should render', () => {
     render(<Config />)
-    const afterRenderActions = [
-      getServerInfo(),
-      getRedisCommands(),
-      // setSettingsPopupState(false),
-      getUserConfigSettings(),
-    ]
-    expect(store.getActions()).toEqual([...afterRenderActions])
     expect(useDatabases.fetchDatabases).toBeCalled()
+    expect(useAppInfo.fetchAppInfo).toBeCalled()
+    expect(useRedisCommands.fetchRedisCommands).toBeCalled()
   })
 
-  it('should call the list of actions', () => {
-    const userSettingsSelectorMock = vi.fn().mockReturnValue({
+  it('should call "setIsShowConceptsPopup" with true', () => {
+    const mockSetIsShowConceptsPopup = vi.fn()
+    const mockSetInitialStateAppInfo = vi.fn();
+
+    (vi.spyOn(useAppInfo, 'useAppInfoStore') as Mock).mockImplementation(() => ({
+      setInitialStateAppInfo: mockSetInitialStateAppInfo,
+      setIsShowConceptsPopup: mockSetIsShowConceptsPopup,
       config: {
         agreements: {},
       },
       spec: {
+        version: '1.0.0',
         agreements: {
           eula: {
             defaultValue: false,
@@ -77,16 +42,11 @@ describe('Config', () => {
           },
         },
       },
-    });
-    (userSettingsSelector as Mock).mockImplementation(userSettingsSelectorMock)
+    }))
+
     render(<Config />)
-    const afterRenderActions = [
-      getServerInfo(),
-      getRedisCommands(),
-      getUserConfigSettings(),
-      // setSettingsPopupState(true),
-    ]
-    expect(store.getActions()).toEqual([...afterRenderActions])
-    expect(useDatabases.fetchDatabases).toBeCalled()
+
+    expect(mockSetInitialStateAppInfo).toBeCalled()
+    expect(mockSetIsShowConceptsPopup).toBeCalledWith(true)
   })
 })

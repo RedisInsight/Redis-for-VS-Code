@@ -46,7 +46,14 @@ export class InputActions {
       until.elementLocated(inputLocator),
       timeout,
     )
-    await inputElement.clear()
+
+    // Clear the input field by sending backspace key presses
+    const currentValue = await inputElement.getAttribute('value')
+    for (let i = 0; i < currentValue.length; i++) {
+      await inputElement.sendKeys(Key.BACK_SPACE)
+      await InputActions.driver.sleep(delay)
+    }
+
     for (const char of text) {
       await inputElement.sendKeys(char)
       await InputActions.driver.sleep(delay)

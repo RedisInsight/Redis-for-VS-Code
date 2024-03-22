@@ -1,6 +1,6 @@
 import { By, Locator } from 'selenium-webdriver'
 import { BaseComponent } from '../BaseComponent'
-import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
+import { ViewElements, Views } from '@e2eSrc/page-objects/components/WebView'
 import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 
 /**
@@ -13,11 +13,12 @@ export class TreeView extends BaseComponent {
     `//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')]`,
   )
   keyStarts = By.xpath(`//div[starts-with(@data-testid, 'key-')]`)
-  refreshButton = By.xpath(`//vscode-button[@data-testid = 'refresh-keys']`)
-  addKeyButton = By.xpath(`//vscode-button[@data-testid = 'add-key-button']`)
-  sortKeysBtn = By.xpath(`//vscode-button[@data-testid = 'sort-keys']`)
-  addDatabaseBtn = By.xpath(`//li[@title='Add Redis database']`)
+  refreshButton = By.xpath(`//vscode-button[@data-testid='refresh-keys']`)
+  addKeyButton = By.xpath(`//vscode-button[@data-testid='add-key-button']`)
+  sortKeysBtn = By.xpath(`//vscode-button[@data-testid='sort-keys']`)
+  addDatabaseBtn = By.xpath(`//a[@aria-label='Add Redis database']`)
   editDatabaseBtn = By.xpath(`//vscode-button[@data-testid='edit-database']`)
+  settingsButton = By.xpath(`//a[@aria-label='Open RedisInsight settings']`)
   deleteKeyInListBtn = By.xpath(
     `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
   )
@@ -30,14 +31,12 @@ export class TreeView extends BaseComponent {
     By.xpath(
       `//vscode-button[starts-with(@data-testid, 'remove-key-${keyName}')]`,
     )
-
   getTreeViewItemByIndex = (index: number): Locator =>
     By.xpath(
       `(//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')])[${index}]`,
     )
   getKey = (base: string): Locator =>
     By.xpath(`//div[starts-with(@data-testid, '${base}')]`)
-
   getFolderSelectorByName = (folderName: string): Locator => {
     return By.xpath(
       `//div[starts-with(@data-testid, 'node-item_${folderName}')]`,
@@ -51,27 +50,31 @@ export class TreeView extends BaseComponent {
       `(//div[starts-with(@data-testid, 'node-item_${folderName}')])[${index}]//*[starts-with(@data-testid, 'folder-')]`,
     )
   }
-
   getDatabaseByName = (name: string): Locator =>
     By.xpath(
       `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..`,
     )
-
   getEditDatabaseBtnByName = (name: string): Locator =>
     By.xpath(
       `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid='edit-database']`,
     )
-
   getRefreshDatabaseBtnByName = (name: string): Locator =>
     By.xpath(
       `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid = 'refresh-keys']`,
     )
-
   getKeySelectorByName = (name: string): Locator =>
     By.xpath(`//*[@data-testid="key-${name}"]`)
+  getNotPatternedKeyByName = (name: string): Locator =>
+    By.xpath(
+      `//div[starts-with(@data-testid, 'node-item_${name}') and .//div[starts-with(@data-testid, 'key-')]]`,
+    )
+  getLimitedTreeViewKeys = (number: number): Locator =>
+    By.xpath(
+      `(//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')])[position() <= ${number}]`,
+    )
 
   constructor() {
-    super(By.xpath(ViewLocators[Views.TreeView]))
+    super(By.xpath(ViewElements[Views.TreeView]))
   }
 
   /**

@@ -14,6 +14,7 @@ import {
   NotFoundPage,
   AddDatabasePage,
   EditDatabasePage,
+  SettingsPage,
 } from 'uiSrc/pages'
 
 const rootEl = document.getElementById('root')
@@ -34,6 +35,7 @@ export const AppRoutes = () => {
         <Route path="add_database" element={<AddDatabasePage />} />
         <Route path="edit_database" element={<EditDatabasePage />} />
       </Route>
+      <Route path="settings" element={<SettingsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )

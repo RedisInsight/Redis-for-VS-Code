@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { capitalize } from 'lodash'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
@@ -7,7 +6,6 @@ import * as l10n from '@vscode/l10n'
 import { VscInfo } from 'react-icons/vsc'
 import Popup from 'reactjs-popup'
 import { ConnectionType, Nullable } from 'uiSrc/interfaces'
-import { appInfoSelector } from 'uiSrc/slices/app/info/info.slice'
 import { AdditionalRedisModule, Endpoint } from 'uiSrc/store'
 import { DatabaseModules } from 'uiSrc/components'
 import styles from './styles.module.scss'
@@ -25,8 +23,6 @@ export interface Props {
 
 const DbInfo = (props: Props) => {
   const { connectionType, nameFromProvider, nodes = null, host, port, db, modules, isFromCloud } = props
-
-  const { server } = useSelector(appInfoSelector)
 
   const AppendEndpoints = () => (
     <Popup
