@@ -100,11 +100,11 @@ export const KeysTree = () => {
     })
   }
 
-  const handleStatusSelected = (name: RedisString) => {
+  const handleStatusSelected = (name: RedisString, keyString: string, type: AllKeyTypes) => {
     fetchKeyInfo({ key: name, databaseId }, false, () => {
       vscodeApi.postMessage({
         action: VscodeMessageAction.SelectKey,
-        data: { key: name, databaseId },
+        data: { key: name, keyString, type, databaseId },
       })
     })
   }

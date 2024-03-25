@@ -48,7 +48,7 @@ const showMessage = (location: vscode.ProgressLocation, title: string) => {
 
 export const handleMessage = (message: any = {}) => {
   if (message.action === 'SelectKey') {
-    vscode.commands.executeCommand('RedisInsight.openPage', message)
+    vscode.commands.executeCommand('RedisInsight.openKey', message)
   }
   if (message.action === 'EditDatabase') {
     vscode.commands.executeCommand('RedisInsight.editDatabase', message)
@@ -91,3 +91,6 @@ export const handleMessage = (message: any = {}) => {
     vscode.commands.executeCommand('RedisInsight.updateSettingsDelimiter', message)
   }
 }
+
+export const truncateText = (text = '', maxLength = 0, separator = '...') =>
+  (text.length >= maxLength ? text.slice(0, maxLength) + separator : text)

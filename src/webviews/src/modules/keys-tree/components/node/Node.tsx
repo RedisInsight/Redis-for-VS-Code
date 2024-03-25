@@ -5,7 +5,7 @@ import * as l10n from '@vscode/l10n'
 import { VscFolder, VscFolderOpened, VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 
 import { formatLongName } from 'uiSrc/utils'
-import { Maybe, RedisString } from 'uiSrc/interfaces'
+import { RedisString } from 'uiSrc/interfaces'
 import { KeyRowName } from '../key-row-name'
 import { KeyRowDelete } from '../key-row-delete'
 import { KeyRowType } from '../key-row-type'
@@ -42,6 +42,8 @@ export const Node = ({
     updateStatusSelected,
   } = data
 
+  const keyString = formatLongName(nameString)
+
   useEffect(() => {
     if (!isLeaf || !nameBuffer) {
       return
@@ -53,13 +55,13 @@ export const Node = ({
 
   useEffect(() => {
     if (isSelected && nameBuffer) {
-      updateStatusSelected?.(nameBuffer)
+      updateStatusSelected?.(nameBuffer, keyString, type)
     }
   }, [isSelected])
 
   const handleClick = () => {
     if (isLeaf) {
-      updateStatusSelected?.(nameBuffer)
+      updateStatusSelected?.(nameBuffer, keyString, type)
     }
 
     updateStatusOpen?.(fullName, !isOpen)
@@ -80,7 +82,7 @@ export const Node = ({
     onDeleteClicked?.(type)
   }
 
-  const folderTooltipContent = `${formatLongName(nameString)}\n`
+  const folderTooltipContent = `${keyString}\n`
     + `${keyCount} ${l10n.t('key(s)')} (${Math.round(keyApproximate * 100) / 100}%)`
 
   const Folder = () => (

@@ -1,7 +1,3 @@
-export enum ExecuteCommand {
-  OpenPage = 'RedisInsight.openPage',
-}
-
 export enum VscodeState {
   SelectedKey = 'SelectedKey',
 }

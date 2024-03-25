@@ -36,11 +36,12 @@ export async function startBackend(context: vscode.ExtensionContext): Promise<an
           '-NonInteractive',
           '-NoLogo',
           '-Command',
-          `$env:RI_APP_FOLDER_NAME=${apiFolder};`
+          '$env:NODE_ENV="production";'
+          + `$env:RI_APP_FOLDER_NAME=${apiFolder};`
           + `$env:RI_APP_PORT=${port};`
-          + '$env:NODE_ENV="production";'
-          + '$env:RI_STDOUT_LOGGER="true";'
-          + '$env:RI_BUILD_TYPE="DOCKER_ON_PREMISE";'
+          + `$env:RI_STDOUT_LOGGER=${process.env.RI_STDOUT_LOGGER};`
+          + `$env:RI_BUILD_TYPE=${process.env.RI_BUILD_TYPE};`
+          + `$env:RI_SEGMENT_WRITE_KEY=${process.env.RI_SEGMENT_WRITE_KEY};`
           + `node ${backendSrcPath}`,
         ])
       } else {
@@ -49,11 +50,12 @@ export async function startBackend(context: vscode.ExtensionContext): Promise<an
           {
             env:
             {
+              NODE_ENV: 'production',
               RI_APP_FOLDER_NAME: apiFolder,
               RI_APP_PORT: port,
-              NODE_ENV: 'production',
-              RI_STDOUT_LOGGER: 'true',
-              RI_BUILD_TYPE: 'DOCKER_ON_PREMISE',
+              RI_STDOUT_LOGGER: process.env.RI_STDOUT_LOGGER,
+              RI_BUILD_TYPE: process.env.RI_BUILD_TYPE,
+              RI_SEGMENT_WRITE_KEY: process.env.RI_SEGMENT_WRITE_KEY,
               PATH: process.env.PATH,
             },
           },

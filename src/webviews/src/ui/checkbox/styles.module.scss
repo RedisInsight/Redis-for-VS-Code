@@ -1,8 +1,27 @@
+.container {
+  @apply flex items-center font-medium;
+}
+
+:global(.ri-checkbox-input) {
+  @apply invisible w-0;
+}
+
 .checkbox {
-  &::part(control) {
-    @apply border-none bg-vscode-input-background;
+  &:global(.ri-checkbox-checked) ~ div > .checkmark {
+    @apply visible;
   }
-  &::part(label) {
-    @apply font-medium;
-  }
+}
+
+.checkmark {
+  @apply invisible w-full h-full border-none bg-vscode-input-background;
+}
+
+.checkmarkContainer {
+  @apply relative box-border outline-0 cursor-pointer mr-2;
+
+  width: calc(var(--design-unit)* 4px + 2px);
+  height: calc(var(--design-unit)* 4px + 2px);
+  border-radius: calc(var(--checkbox-corner-radius)* 1px);
+  border: calc(var(--border-width)* 1px) solid var(--checkbox-border);
+  background: var(--checkbox-background);
 }

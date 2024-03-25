@@ -1,4 +1,4 @@
-import { KeyTypes, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
+import { AllKeyTypes, KeyTypes, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
 import { Database } from 'uiSrc/store'
 import { GetAppSettingsResponse } from 'uiSrc/store/hooks/use-app-info-store/interface'
 import { RedisString } from '../core/app'
@@ -15,7 +15,7 @@ export interface ResetSelectedKeyAction {
 
 export interface SelectKeyAction {
   action: VscodeMessageAction.SelectKey
-  data: { key: RedisString, databaseId: string }
+  data: { key: RedisString, keyString: string, type: AllKeyTypes, databaseId: string }
 }
 
 export interface RefreshTreeAction {

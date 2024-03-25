@@ -13,7 +13,7 @@ export interface Props {
 const AddItemsAction = ({ title, openAddItemPanel }: Props) => (
   <VSCodeButton
     appearance="icon"
-    className={cx(styles.actionBtn, 'mt-[3px]')}
+    className={cx(styles.actionBtn, 'mt-[1px]')}
     onClick={openAddItemPanel}
     aria-label={title}
     title={title}

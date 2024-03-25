@@ -25,7 +25,6 @@ export interface NodeMetaData {
   keyCount: number,
   name: string,
   fullName: string,
-  updateStatusSelected: (fullName: string, keys: any) => void,
   updateStatusOpen: (name: string, value: boolean) => void,
   keyApproximate: number,
   isSelected: boolean,
@@ -50,7 +49,7 @@ export interface TreeData extends FixedSizeNodeData {
   isSelected: boolean
   children?: TreeData[]
   updateStatusOpen: (fullName: string, value: boolean) => void
-  updateStatusSelected: (key: RedisString) => void
+  updateStatusSelected: (key: RedisString, keyString: string, type: AllKeyTypes) => void
   getMetadata: (key: RedisString, path: string) => void
   onDelete: (key: RedisString) => void
   onDeleteClicked: (type: AllKeyTypes) => void
