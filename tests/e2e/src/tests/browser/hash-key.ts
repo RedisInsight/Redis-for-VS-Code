@@ -162,7 +162,7 @@ describe('Hash Key fields verification', () => {
     await KeyDetailsActions.verifyDetailsPanelClosed()
   })
 
-  it.only('Verify that tab is closed if Hash was deleted from keys list', async function () {
+  it('Verify that tab is closed if Hash was deleted from keys list', async function () {
     keyName = Common.generateWord(10)
 
     const hashKeyParameters: HashKeyParameters = {
