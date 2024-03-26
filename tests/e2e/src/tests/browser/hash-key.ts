@@ -158,4 +158,37 @@ describe('Hash Key fields verification', () => {
     // Verify that details panel is closed for hash key after deletion
     await KeyDetailsActions.verifyDetailsPanelClosed()
   })
+
+  it('Verify that tab is closed if Hash was deleted from keys list', async function () {
+    keyName = Common.generateWord(10)
+
+    const hashKeyParameters: HashKeyParameters = {
+      keyName: keyName,
+      fields: [
+        {
+          field: 'field',
+          value: 'value',
+        },
+      ],
+    }
+    await KeyAPIRequests.addHashKeyApi(
+      hashKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+
+    // Open key details iframe
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    await webView.switchBack()
+    expect(`hash:${keyName}`).eql(await KeyDetailsActions.getDetailsPanelName())
+    await webView.switchToFrame(Views.TreeView)
+    await treeView.deleteKeyFromListByName(keyName)
+    await webView.switchBack()
+    // Verify that details panel is closed for hash key after deletion
+    await KeyDetailsActions.verifyDetailsPanelClosed()
+  })
 })

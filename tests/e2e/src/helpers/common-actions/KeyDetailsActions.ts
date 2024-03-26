@@ -38,8 +38,19 @@ export class KeyDetailsActions extends CommonDriverExtension {
   static async verifyDetailsPanelClosed(): Promise<void> {
     expect(
       await new DatabaseDetailsView().isElementDisplayed(
-        By.xpath(ViewElements[Views.DatabaseDetailsView]),
+        By.xpath(ViewElements[Views.KeyDetailsView]),
       ),
     ).eql(false, 'Details panel not closed')
+  }
+
+  /**
+   * Get tab name
+   */
+  static async getDetailsPanelName(): Promise<string> {
+    // take the second tab since the first tab is Welcome
+    const tabName = By.xpath(
+      `(//div[@class = 'tabs-and-actions-container tabs-border-bottom']//a[@class = 'label-name'])[2]`,
+    )
+    return await new DatabaseDetailsView().getElementText(tabName)
   }
 }
