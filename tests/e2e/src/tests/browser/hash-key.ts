@@ -17,6 +17,7 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { EditorView } from 'vscode-extension-tester'
 
 let keyName: string
 
@@ -24,11 +25,13 @@ describe('Hash Key fields verification', () => {
   let webView: WebView
   let keyDetailsView: HashKeyDetailsView
   let treeView: TreeView
+  let editorView: EditorView
 
   before(async () => {
     webView = new WebView()
     keyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
+    editorView = new EditorView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -155,6 +158,41 @@ describe('Hash Key fields verification', () => {
       `${keyName} has been deleted.`,
     )
 
+    // Verify that details panel is closed for hash key after deletion
+    await KeyDetailsActions.verifyDetailsPanelClosed()
+  })
+
+  it('Verify that tab is closed if Hash was deleted from keys list', async function () {
+    keyName = Common.generateWord(10)
+
+    const hashKeyParameters: HashKeyParameters = {
+      keyName: keyName,
+      fields: [
+        {
+          field: 'field',
+          value: 'value',
+        },
+      ],
+    }
+    await KeyAPIRequests.addHashKeyApi(
+      hashKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+
+    // Open key details iframe
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    await webView.switchBack()
+    const titles = await editorView.getOpenEditorTitles()
+    const isTitleCorrect = titles.some(t => t === `hash:${keyName}`)
+    expect(isTitleCorrect).eql(true, 'tab name is unexpected')
+    await webView.switchToFrame(Views.TreeView)
+    await treeView.deleteKeyFromListByName(keyName)
+    await webView.switchBack()
     // Verify that details panel is closed for hash key after deletion
     await KeyDetailsActions.verifyDetailsPanelClosed()
   })

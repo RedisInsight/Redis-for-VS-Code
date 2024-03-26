@@ -8,6 +8,7 @@ import {
 import {
   InnerViews,
   ViewElements,
+  ViewLocators,
   Views,
 } from '@e2eSrc/page-objects/components/WebView'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
@@ -38,7 +39,7 @@ export class KeyDetailsActions extends CommonDriverExtension {
   static async verifyDetailsPanelClosed(): Promise<void> {
     expect(
       await new DatabaseDetailsView().isElementDisplayed(
-        By.xpath(ViewElements[Views.DatabaseDetailsView]),
+        By.xpath(ViewLocators[Views.KeyDetailsView]),
       ),
     ).eql(false, 'Details panel not closed')
   }
