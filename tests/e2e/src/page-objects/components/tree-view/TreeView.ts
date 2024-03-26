@@ -163,9 +163,7 @@ export class TreeView extends BaseComponent {
    * Delete first Key in list after Hovering
    */
   async deleteKeyFromListByName(keyName: string): Promise<void> {
-    console.log('###')
     await ButtonActions.hoverElement(this.getTreeViewItemByName(keyName))
-    console.log('$$$')
     await (await this.getElement(this.getItemDeleteButton(keyName))).click()
     await (await this.getElement(this.submitDeleteKeyButton)).click()
   }
