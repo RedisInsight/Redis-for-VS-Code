@@ -28,7 +28,7 @@ export class KeyDetailsActions extends CommonDriverExtension {
     await webView.switchBack()
     await webView.switchToFrame(
       Views.KeyDetailsView,
-      //InnerViews.KeyDetailsInnerView,
+      InnerViews.KeyDetailsInnerView,
     )
     await this.driverSleep(1000)
   }
