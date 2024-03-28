@@ -7,11 +7,12 @@ import { CreateSetWithExpireDto } from 'uiSrc/modules/keys-tree/hooks/interface'
 import { useKeysApi, useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
 import { AddSetMembers } from 'uiSrc/modules/key-details/components/set-details/add-set-members'
 import { AddMembersToSetDto } from 'uiSrc/modules/key-details/components/set-details/hooks/interface'
+import { KeyTypes } from 'uiSrc/constants'
 
 export interface Props {
   keyName: string
   keyTTL: Maybe<number>
-  onClose: (isCancelled?: boolean) => void
+  onClose: (isCancelled?: boolean, keyType?: KeyTypes) => void
 }
 
 const AddKeySet = (props: Props) => {
@@ -28,7 +29,7 @@ const AddKeySet = (props: Props) => {
     if (keyTTL !== undefined) {
       data.expire = keyTTL
     }
-    keysApi.addSetKey(data, onClose)
+    keysApi.addSetKey(data, () => onClose(false, KeyTypes.Set))
   }
 
   const noKeyNameText = !keyName ? getRequiredFieldsText({ keyName: l10n.t('Key Name') }) : null

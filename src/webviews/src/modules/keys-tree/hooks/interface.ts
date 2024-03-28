@@ -49,7 +49,7 @@ export interface KeysThunks {
     onSuccessAction?: (data: KeyInfo[]) => void,
     onFailAction?: () => void,
   ) => void
-  deleteKeyAction: (key: RedisString, onSuccessAction?: () => void) => void
+  deleteKeyAction: (key: RedisString, onSuccessAction?: (key: RedisString) => void) => void
   addStringKey: (data: SetStringWithExpire, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addSetKey: (data: CreateSetWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addKeyIntoTree: (key: RedisString, keyType: KeyTypes) => void

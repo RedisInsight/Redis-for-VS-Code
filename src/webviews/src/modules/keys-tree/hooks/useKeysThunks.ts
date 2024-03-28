@@ -172,7 +172,7 @@ KeysThunks
   // Asynchronous thunk action
   deleteKeyAction: async (
     key: RedisString,
-    onSuccessAction?: () => void,
+    onSuccessAction?: (key: RedisString) => void,
   ) => {
     get().deleteKey()
     try {
@@ -187,7 +187,7 @@ KeysThunks
       if (isStatusSuccessful(status)) {
         get().deleteKeyFromTree(key)
         showInformationMessage(successMessages.DELETED_KEY(key).title)
-        onSuccessAction?.()
+        onSuccessAction?.(key)
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))

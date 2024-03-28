@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import * as l10n from '@vscode/l10n'
 
+import { isUndefined } from 'lodash'
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { AllKeyTypes, VscodeMessageAction } from 'uiSrc/constants'
 import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
 import { NoKeysMessage } from 'uiSrc/components'
-import { bufferToString } from 'uiSrc/utils/formatters'
+import { bufferToString, isEqualBuffers } from 'uiSrc/utils/formatters'
 import { fetchKeyInfo, useContextApi, useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
 import { vscodeApi } from 'uiSrc/services'
 import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
@@ -25,6 +26,7 @@ export const KeysTree = () => {
   const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
 
   const selectedKeyName = useSelectedKeyStore((state) => state.data?.nameString) || ''
+  const selectedKey = useSelectedKeyStore((state) => state.data?.name) || null
 
   const keysState = useKeysInContext((state) => state.data)
   const loading = useKeysInContext((state) => state.loading)
@@ -101,16 +103,27 @@ export const KeysTree = () => {
   }
 
   const handleStatusSelected = (name: RedisString, keyString: string, type: AllKeyTypes) => {
+    if (isUndefined(type)) {
+      return
+    }
     fetchKeyInfo({ key: name, databaseId }, false, () => {
       vscodeApi.postMessage({
         action: VscodeMessageAction.SelectKey,
-        data: { key: name, keyString, type, databaseId },
+        data: { key: name, keyString, keyType: type, databaseId },
       })
     })
   }
 
   const handleDeleteLeaf = (key: RedisString) => {
-    keysApi.deleteKeyAction(key)
+    keysApi.deleteKeyAction(key, onLeafDeleted)
+  }
+
+  const onLeafDeleted = (key: RedisString) => {
+    if (isEqualBuffers(key, selectedKey)) {
+      vscodeApi.postMessage({
+        action: VscodeMessageAction.CloseKey,
+      })
+    }
   }
 
   const handleDeleteClicked = (type: AllKeyTypes) => {
