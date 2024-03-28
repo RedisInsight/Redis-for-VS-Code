@@ -27,7 +27,6 @@ const deleteKeyActionMock = vi.fn();
 (vi.spyOn(useKeys, 'useKeysApi') as Mock).mockImplementation(() => ({
   deleteKeyAction: deleteKeyActionMock,
 }))
-vi.spyOn(vscodeApi, 'postMessage')
 
 let store: typeof mockedStore
 beforeEach(() => {
