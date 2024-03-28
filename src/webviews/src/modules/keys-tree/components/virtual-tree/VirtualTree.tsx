@@ -202,7 +202,7 @@ const VirtualTree = (props: Props) => {
       size: node.size,
       type: node.type,
       fullName: node.fullName,
-      shortName: node.nameString.split(delimiter).pop(),
+      shortName: node.nameString?.split(delimiter).pop(),
       nestingLevel: getNestingLevel(nestingLevel),
       deleting,
       path: node.path,

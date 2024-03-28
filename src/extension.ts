@@ -38,7 +38,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('RedisInsight.openKey', (args) => {
-      const title = `${args?.data?.type}:${truncateText(args?.data?.keyString, MAX_TITLE_KEY_LENGTH)}`
+      const title = `${args?.data?.keyType}:${truncateText(args?.data?.keyString, MAX_TITLE_KEY_LENGTH)}`
 
       WebviewPanel.getInstance({
         context,
@@ -116,6 +116,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisInsight.closeKeyAndRefresh', (args) => {
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
+      WebviewPanel.getInstance({ viewId: ViewId.Key })?.dispose()
+    }),
+
+    vscode.commands.registerCommand('RedisInsight.closeKey', () => {
       WebviewPanel.getInstance({ viewId: ViewId.Key })?.dispose()
     }),
 
