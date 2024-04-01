@@ -1,6 +1,6 @@
 import { By } from 'selenium-webdriver'
 import { KeyDetailsView } from '@e2eSrc/page-objects/components'
-import { InputActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 
 /**
  * Sorted Set Key details view
@@ -16,8 +16,8 @@ export class SetKeyDetailsView extends KeyDetailsView {
    * @param keyMember The value of the set member
    */
   async addMemberToSet(keyMember: string): Promise<void> {
-    await (await this.getElement(this.addKeyValueItemsButton)).click()
+    await ButtonActions.clickElement(this.addKeyValueItemsButton)
     await InputActions.typeText(this.setMemberInput, keyMember)
-    await (await this.getElement(this.saveMemberButton)).click()
+    await ButtonActions.clickElement(this.saveMemberButton)
   }
 }

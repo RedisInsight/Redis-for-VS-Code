@@ -1,9 +1,7 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, SideBarView } from 'vscode-extension-tester'
 import {
   BottomBar,
-  WebView,
   CliViewPanel,
   TreeView,
 } from '@e2eSrc/page-objects/components'
@@ -13,21 +11,18 @@ import { JsonKeyParameters } from '@e2eSrc/helpers/types/types'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
 import { ButtonActions } from '@e2eSrc/helpers/common-actions'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 describe('CLI critical', () => {
-  let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
-  let sideBarView: SideBarView | undefined
   let treeView: TreeView
 
   let keyName = Common.generateWord(20)
 
   before(async () => {
     bottomBar = new BottomBar()
-    webView = new WebView()
     treeView = new TreeView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
@@ -35,12 +30,12 @@ describe('CLI critical', () => {
     )
   })
   beforeEach(async () => {
-    await webView.switchBack()
+    await treeView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(Views.CliViewPanel)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await cliViewPanel.switchBack()
     await bottomBar.openTerminalView()
     await KeyAPIRequests.deleteKeyIfExistsApi(
       keyName,
@@ -48,7 +43,7 @@ describe('CLI critical', () => {
     )
   })
   after(async () => {
-    await webView.switchBack()
+    await cliViewPanel.switchBack()
 
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
@@ -175,14 +170,8 @@ describe('CLI critical', () => {
       `SADD ${keyName} "chinese" "japanese" "german"`,
     )
 
-    await webView.switchBack()
-    // should be removed when iframe get unic locator
-    await bottomBar.toggle(false)
-    sideBarView = await (
-      await new ActivityBar().getViewControl('RedisInsight')
-    )?.openView()
-
-    await webView.switchToFrame(Views.TreeView)
+    await cliViewPanel.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.openKeyDetailsByKeyName(keyName)
   })
   it('Verify that user can use blocking command', async function () {
@@ -199,28 +188,28 @@ describe('CLI critical', () => {
     expect(text).contain(`Pinging Redis server on ${dbAddress}`)
 
     await cliViewPanel.executeCommand('info')
-    await webView.switchBack()
+    await cliViewPanel.switchBack()
 
     await ButtonActions.clickElement(cliViewPanel.addCliBtn, 5000)
 
-    await webView.switchToFrame(Views.CliViewPanel)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
     // Verify that user can see the list of all active CLI instances
     expect(await cliViewPanel.getCliInstancesCount()).eql(2)
     expect(
-      await cliViewPanel.getElementText(cliViewPanel.cliInstanceByIndex(1)),
+      await cliViewPanel.getElementText(cliViewPanel.getCliInstanceByIndex(1)),
     ).eql(dbAddress)
     expect(
-      await cliViewPanel.getElementText(cliViewPanel.cliInstanceByIndex(2)),
+      await cliViewPanel.getElementText(cliViewPanel.getCliInstanceByIndex(2)),
     ).eql(dbAddress)
 
-    await ButtonActions.clickElement(cliViewPanel.cliInstanceByIndex(1))
+    await ButtonActions.clickElement(cliViewPanel.getCliInstanceByIndex(1))
     // Verify that user can switch between CLI instances
     expect(await cliViewPanel.getCliLastCommandResponse()).contain(
       'redis_version:',
     )
 
     // Verify that user can not see CLI instances panel when only one instance added
-    await ButtonActions.hoverElement(cliViewPanel.cliInstanceByIndex(1))
+    await ButtonActions.hoverElement(cliViewPanel.getCliInstanceByIndex(1))
     await ButtonActions.clickElement(cliViewPanel.cliInstanceDeleteBtn)
     expect(
       await cliViewPanel.isElementDisplayed(cliViewPanel.cliInstancesPanel),

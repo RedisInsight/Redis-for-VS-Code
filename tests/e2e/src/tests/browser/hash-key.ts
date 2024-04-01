@@ -1,10 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
-import {
-  WebView,
-  HashKeyDetailsView,
-  TreeView,
-} from '@e2eSrc/page-objects/components'
+import { HashKeyDetailsView, TreeView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
@@ -16,17 +12,15 @@ import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 
 describe('Hash Key fields verification', () => {
-  let webView: WebView
   let keyDetailsView: HashKeyDetailsView
   let treeView: TreeView
 
   before(async () => {
-    webView = new WebView()
     keyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
 
@@ -35,16 +29,16 @@ describe('Hash Key fields verification', () => {
     )
   })
   after(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
-    await webView.switchToFrame(Views.TreeView)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   it('Verify that user can search by full field name in Hash', async function () {
     keyName = Common.generateWord(10)
@@ -73,20 +67,25 @@ describe('Hash Key fields verification', () => {
     const commands = ['hashField*', '*11111', 'hash*11111']
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)
     // Check the search result
-    let result = await (
-      await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
-    )[0].getText()
+    let result = await keyDetailsView.getElementText(
+      keyDetailsView.hashFieldsList,
+    )
+
     expect(result).contains(keyFieldValue)
     await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
 
-    for (const c of commands) {
-      await keyDetailsView.searchByTheValueInKeyDetails(c)
+    for (const command of commands) {
+      await keyDetailsView.searchByTheValueInKeyDetails(command)
       // Check the search result
-      let result = await (
-        await keyDetailsView.getElements(keyDetailsView.hashFieldsList)
-      )[0].getText()
+      result = await keyDetailsView.getElementText(
+        keyDetailsView.hashFieldsList,
+      )
       expect(result).eqls(keyFieldValue)
-      expect(result.length).eqls(1)
+      expect(
+        (await keyDetailsView.getElements(keyDetailsView.hashFieldsList))
+          .length,
+      ).eqls(1)
+      await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
     }
   })
   it('Verify that user can add field to Hash', async function () {
@@ -133,13 +132,13 @@ describe('Hash Key fields verification', () => {
       KeyTypesShort.Hash,
       keyFieldValue,
     )
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     // Check the notification message that field deleted
     await NotificationActions.checkNotificationMessage(
       `${keyFieldValue} has been removed from ${keyName}`,
     )
 
-    await webView.switchToFrame(Views.KeyDetailsView)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
     // Verify that hash key deleted when all fields deleted
     await keyDetailsView.removeRowByField(
       KeyTypesShort.Hash,
@@ -149,7 +148,7 @@ describe('Hash Key fields verification', () => {
       KeyTypesShort.Hash,
       hashKeyParameters.fields[0].field,
     )
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     // Check the notification message that key deleted
     await NotificationActions.checkNotificationMessage(
       `${keyName} has been deleted.`,

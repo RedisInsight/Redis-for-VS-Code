@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
-import { WebView, TreeView } from '@e2eSrc/page-objects/components'
+import { TreeView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   KeyAPIRequests,
@@ -11,12 +11,10 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
 
 describe('Filtering iteratively in Tree view', () => {
-  let webView: WebView
   let treeView: TreeView
   let keys: string[]
 
   before(async () => {
-    webView = new WebView()
     treeView = new TreeView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
@@ -24,11 +22,11 @@ describe('Filtering iteratively in Tree view', () => {
     )
   })
   after(async () => {
-    await webView.switchBack()
+    await treeView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await treeView.switchBack()
     for (const keyName of keys) {
       await KeyAPIRequests.deleteKeyIfExistsApi(
         keyName,

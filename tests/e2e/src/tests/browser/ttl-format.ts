@@ -2,7 +2,6 @@ import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
 import {
   BottomBar,
-  WebView,
   CliViewPanel,
   KeyDetailsView,
   TreeView,
@@ -10,8 +9,7 @@ import {
 import { Common } from '@e2eSrc/helpers/Common'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { COMMANDS_TO_CREATE_KEY, keyLength } from '@e2eSrc/helpers/constants'
-import { keyTypes } from '@e2eSrc/helpers/KeysActions'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { keyTypes } from '@e2eSrc/helpers/common-actions/KeysActions'
 import {
   DatabasesActions,
   InputActions,
@@ -19,6 +17,7 @@ import {
 } from '@e2eSrc/helpers/common-actions'
 import { Config } from '@e2eSrc/helpers'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 const keysData = keyTypes.map(object => ({ ...object })).slice(0, 6)
 for (const key of keysData) {
@@ -29,7 +28,6 @@ const ttlForSet = [59, 800, 20000, 2000000, 31000000, 2147483647]
 const ttlValues = ['s', '13 min', '5 h', '23 d', '11 mo', '68 yr']
 
 describe('TTL values in Keys Table', () => {
-  let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
   let keyDetailsView: KeyDetailsView
@@ -37,7 +35,6 @@ describe('TTL values in Keys Table', () => {
 
   before(async () => {
     bottomBar = new BottomBar()
-    webView = new WebView()
     keyDetailsView = new KeyDetailsView()
     treeView = new TreeView()
 
@@ -46,15 +43,15 @@ describe('TTL values in Keys Table', () => {
     )
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await bottomBar.openTerminalView()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(Views.CliViewPanel)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
     await cliViewPanel.executeCommand(`FLUSHDB`)
   })
 
   after(async () => {
-    await webView.switchBack()
+    await cliViewPanel.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that Key is deleted if TTL finishes', async function () {
@@ -62,12 +59,12 @@ describe('TTL values in Keys Table', () => {
     const TTL = 15
     const keyName = Common.generateWord(10)
 
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(Views.CliViewPanel)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
     await cliViewPanel.executeCommand(`set ${keyName} EXPIRE ${TTL}`)
-    await webView.switchBack()
-    await webView.switchToFrame(Views.TreeView)
+    await cliViewPanel.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     // Refresh database
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
@@ -89,9 +86,9 @@ describe('TTL values in Keys Table', () => {
   })
 
   it('Verify that user can see TTL in the list of keys rounded down to the nearest unit', async function () {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(Views.CliViewPanel)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
 
     for (let i = 0; i < keysData.length; i++) {
       await cliViewPanel.executeCommand(
@@ -100,9 +97,9 @@ describe('TTL values in Keys Table', () => {
         )} EXPIRE ${ttlForSet[i]}`,
       )
     }
-    await webView.switchBack()
+    await cliViewPanel.switchBack()
     // Refresh database
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
@@ -113,10 +110,9 @@ describe('TTL values in Keys Table', () => {
       await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(
         keysData[i].keyName,
       )
-      expect(await InputActions.getInputValue(keyDetailsView.inlineItemEditor)).contains(
-        ttlValues[i],
-        `TTL value in keys table is not ${ttlValues[i]}`,
-      )
+      expect(
+        await InputActions.getInputValue(keyDetailsView.inlineItemEditor),
+      ).contains(ttlValues[i], `TTL value in keys table is not ${ttlValues[i]}`)
     }
   })
 })

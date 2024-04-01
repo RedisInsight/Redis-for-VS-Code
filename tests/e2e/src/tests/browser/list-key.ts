@@ -1,10 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import {
-  WebView,
-  TreeView,
-  ListKeyDetailsView,
-} from '@e2eSrc/page-objects/components'
+import { TreeView, ListKeyDetailsView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   DatabasesActions,
@@ -14,7 +10,7 @@ import {
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ListKeyParameters } from '@e2eSrc/helpers/types/types'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 const elements = [
@@ -24,18 +20,18 @@ const elements = [
 ]
 
 describe('List Key verification', () => {
-  let webView: WebView
   let listKeyDetailsView: ListKeyDetailsView
   let treeView: TreeView
 
   before(async () => {
-    webView = new WebView()
     listKeyDetailsView = new ListKeyDetailsView()
     treeView = new TreeView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
+  })
+  beforeEach(async () => {
     keyName = Common.generateWord(10)
     const listKeyParameters: ListKeyParameters = {
       keyName: keyName,
@@ -74,15 +70,15 @@ describe('List Key verification', () => {
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await listKeyDetailsView.switchBack()
     await KeyAPIRequests.deleteKeyIfExistsApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
-    await webView.switchToFrame(Views.TreeView)
+    await listKeyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   after(async () => {
-    await webView.switchBack()
+    await listKeyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search List element by index', async function () {
@@ -102,16 +98,18 @@ describe('List Key verification', () => {
     await listKeyDetailsView.removeListElementFromTail('1')
 
     // Check the notification message
-    await webView.switchBack()
+    await listKeyDetailsView.switchBack()
     await NotificationActions.checkNotificationMessage(
       `1 Element(s) removed from ${keyName}`,
     )
 
     // Check the removed element is not in the list
-    await webView.switchToFrame(Views.KeyDetailsView)
+    await listKeyDetailsView.switchToInnerViewFrame(
+      InnerViews.KeyDetailsInnerView,
+    )
     expect(
       await listKeyDetailsView.isElementDisplayed(
-        listKeyDetailsView.elementValueByText(elements[2]),
+        listKeyDetailsView.getElementValueByText(elements[2]),
       ),
     ).eql(false, 'Removed element is still in the list')
   })
@@ -120,15 +118,17 @@ describe('List Key verification', () => {
     // Remove element from the key
     await listKeyDetailsView.removeListElementFromHead('1')
     // Check the notification message
-    await webView.switchBack()
+    await listKeyDetailsView.switchBack()
     await NotificationActions.checkNotificationMessage(
       `1 Element(s) removed from ${keyName}`,
     )
     // Check the removed element is not in the list
-    await webView.switchToFrame(Views.KeyDetailsView)
+    await listKeyDetailsView.switchToInnerViewFrame(
+      InnerViews.KeyDetailsInnerView,
+    )
     expect(
       await listKeyDetailsView.isElementDisplayed(
-        listKeyDetailsView.elementValueByText(elements[0]),
+        listKeyDetailsView.getElementValueByText(elements[0]),
       ),
     ).eql(false, 'Removed element is still in the list')
   })
@@ -136,7 +136,7 @@ describe('List Key verification', () => {
   it('Verify that user can remove list Key by removing all elements', async function () {
     // Remove all element from the key
     await listKeyDetailsView.removeListElementFromHead('3')
-    await webView.switchBack()
+    await listKeyDetailsView.switchBack()
     // Check the notification message that key deleted
     await NotificationActions.checkNotificationMessage(
       `${keyName} has been deleted.`,
@@ -148,12 +148,10 @@ describe('List Key verification', () => {
 })
 
 describe('List Key verification for db with version <6.2', () => {
-  let webView: WebView
   let listKeyDetailsView: ListKeyDetailsView
   let treeView: TreeView
 
   beforeEach(async () => {
-    webView = new WebView()
     listKeyDetailsView = new ListKeyDetailsView()
     treeView = new TreeView()
 
@@ -162,7 +160,7 @@ describe('List Key verification for db with version <6.2', () => {
     )
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await listKeyDetailsView.switchBack()
     await KeyAPIRequests.deleteKeyIfExistsApi(
       keyName,
       Config.ossStandaloneV5Config.databaseName,
@@ -190,17 +188,17 @@ describe('List Key verification for db with version <6.2', () => {
     await listKeyDetailsView.addListElementToTail(elements[1])
     // Verify that user can add element to List
     await listKeyDetailsView.getElement(
-      listKeyDetailsView.elementValueByText(elements[1]),
+      listKeyDetailsView.getElementValueByText(elements[1]),
     )
     expect(
       await listKeyDetailsView.isElementDisplayed(
-        listKeyDetailsView.elementValueByText(elements[1]),
+        listKeyDetailsView.getElementValueByText(elements[1]),
       ),
     ).eql(true, 'Element not added')
 
     await listKeyDetailsView.addListElementToHead(elements[2])
     await listKeyDetailsView.getElement(
-      listKeyDetailsView.elementValueByText(elements[2]),
+      listKeyDetailsView.getElementValueByText(elements[2]),
     )
     // Remove element from the key
     await listKeyDetailsView.removeListElementFromHeadOld()
@@ -208,7 +206,7 @@ describe('List Key verification for db with version <6.2', () => {
 
     expect(
       await listKeyDetailsView.waitForElementVisibility(
-        listKeyDetailsView.elementValueByText(elements[2]),
+        listKeyDetailsView.getElementValueByText(elements[2]),
         3000,
         false,
       ),
@@ -219,7 +217,7 @@ describe('List Key verification for db with version <6.2', () => {
       'Wrong number of elements removed',
     )
     // Check the notification message
-    await webView.switchBack()
+    await listKeyDetailsView.switchBack()
     await NotificationActions.checkNotificationMessage(
       `1 Element(s) removed from ${keyName}`,
     )

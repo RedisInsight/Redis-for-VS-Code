@@ -1,10 +1,6 @@
 import { expect } from 'chai'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
-import {
-  WebView,
-  TreeView,
-  EditDatabaseView,
-} from '@e2eSrc/page-objects/components'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { TreeView, EditDatabaseView } from '@e2eSrc/page-objects/components'
 import {
   ButtonActions,
   DatabasesActions,
@@ -14,7 +10,6 @@ import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Common, CommonDriverExtension, Config } from '@e2eSrc/helpers'
 
 describe('Edit Databases', () => {
-  let webView: WebView
   let treeView: TreeView
   let editDatabaseView: EditDatabaseView
 
@@ -22,17 +17,18 @@ describe('Edit Databases', () => {
   const newDatabaseName = Common.generateWord(20)
 
   beforeEach(async () => {
-    webView = new WebView()
     treeView = new TreeView()
     editDatabaseView = new EditDatabaseView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(database)
     await treeView.editDatabaseByName(database.databaseName)
-    await webView.switchBack()
-    await webView.switchToFrame(Views.DatabaseDetailsView)
+    await treeView.switchBack()
+    await editDatabaseView.switchToInnerViewFrame(
+      InnerViews.AddDatabaseInnerView,
+    )
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await editDatabaseView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   // TODO unskip after implementing edit of DB alias
@@ -46,14 +42,18 @@ describe('Edit Databases', () => {
     await ButtonActions.clickElement(editDatabaseView.editAliasButton)
     // Fill the add database form
     await InputActions.typeText(editDatabaseView.aliasInput, newDatabaseName)
-    ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
+    await ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
     // TODO Verify that database has new alias
   })
   it('Verify that user can edit Standalone DB', async function () {
     const connectionTimeout = '20'
     await CommonDriverExtension.driverSleep(10000)
-    const caCertFieldValue = await editDatabaseView.getElementText(editDatabaseView.caCertField)
-    const clientCertFieldValue = await editDatabaseView.getElementText(editDatabaseView.clientCertField)
+    const caCertFieldValue = await editDatabaseView.getElementText(
+      editDatabaseView.caCertField,
+    )
+    const clientCertFieldValue = await editDatabaseView.getElementText(
+      editDatabaseView.clientCertField,
+    )
 
     expect(caCertFieldValue).contains('ca', 'CA certificate is incorrect')
     expect(clientCertFieldValue).contains(
@@ -65,8 +65,8 @@ describe('Edit Databases', () => {
       editDatabaseView.timeoutInput,
       connectionTimeout,
     )
-    ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
-    await webView.switchBack()
+    await ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
+    await editDatabaseView.switchBack()
     await DatabasesActions.verifyDatabaseEdited()
   })
 })

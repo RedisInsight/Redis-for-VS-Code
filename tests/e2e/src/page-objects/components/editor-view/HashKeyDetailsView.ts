@@ -1,7 +1,7 @@
 import { By } from 'selenium-webdriver'
 import { DoubleColumnKeyDetailsView } from '@e2eSrc/page-objects/components/editor-view/DoubleColumnKeyDetailsView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
-import { InputActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 
 /**
  * Hash Key details view
@@ -12,7 +12,7 @@ export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
     `//*[contains(@data-testid, 'hash-field-') and not(contains(@data-testid,'value'))]/div`,
   )
   hashValuesList = By.xpath(
-    `//*[contains(@data-testid, 'hash-field-value-')]/div`,
+    `//*[contains(@data-testid, 'hash-field-value-')]`,
   )
   truncatedValue = By.xpath(
     `//*[contains(@data-testid, 'hash-field-value-')]//*[@class = 'truncate']`,
@@ -46,9 +46,9 @@ export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
    * @param keyValue The hash value
    */
   async addFieldToHash(keyFieldValue: string, keyValue: string): Promise<void> {
-    await (await this.getElement(this.addKeyValueItemsButton)).click()
+    await ButtonActions.clickElement(this.addKeyValueItemsButton)
     await InputActions.typeText(this.hashFieldInput, keyFieldValue)
     await InputActions.typeText(this.hashValueInput, keyValue)
-    await (await this.getElement(this.saveHashFieldButton)).click()
+    await ButtonActions.clickElement(this.saveHashFieldButton)
   }
 }
