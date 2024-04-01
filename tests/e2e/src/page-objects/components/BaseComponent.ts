@@ -1,11 +1,11 @@
 import { WebElement, WebDriver, until, Locator, By } from 'selenium-webdriver'
-import { ISize, VSBrowser } from 'vscode-extension-tester'
+import { VSBrowser } from 'vscode-extension-tester'
 
 /**
  * Default wrapper for webelement
  */
 export class BaseComponent extends WebElement {
-  protected static driver: WebDriver
+  static driver: WebDriver
 
   /**
    * Constructs a new element from a Locator or an existing WebElement
@@ -114,12 +114,14 @@ export class BaseComponent extends WebElement {
    */
   async waitForElementVisibility(
     locator: Locator,
-    timeout: number,
+    timeout: number = 5000,
     stateOfDisplayed: boolean = true,
   ): Promise<boolean> {
+    let element: WebElement
     if (stateOfDisplayed) {
       try {
-        await this.getDriver().wait(until.elementLocated(locator), timeout)
+        element = await this.getDriver().wait(until.elementLocated(locator), timeout)
+        await this.getDriver().wait(until.elementIsVisible(element), timeout)
         return true
       } catch (e) {
         // Element not visible during timeout

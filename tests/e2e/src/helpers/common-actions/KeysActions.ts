@@ -1,4 +1,4 @@
-import { KeyTypesTexts } from './constants'
+import { KeyTypesTexts } from '../constants'
 import { AddKeyArguments } from '@e2eSrc/helpers/types/types'
 import { createClient } from 'redis'
 import { Common } from '@e2eSrc/helpers/Common'

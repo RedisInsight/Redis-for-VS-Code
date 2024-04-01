@@ -1,12 +1,11 @@
 import { By, until } from 'selenium-webdriver'
 import { Key } from 'vscode-extension-tester'
-import { BaseComponent } from '../BaseComponent'
-import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
+import { WebView } from '@e2eSrc/page-objects/components/WebView'
 
 /**
  * CLI view on the bottom panel
  */
-export class CliViewPanel extends BaseComponent {
+export class CliViewPanel extends WebView {
   cliPanel = By.xpath(`//*[@data-testid='panel-view-page']`)
   cliCommand = By.xpath('//span[@data-testid="cli-command"]')
   cliCommandWrapper = By.xpath('//span[@data-testid="cli-command-wrapper"]')
@@ -22,23 +21,16 @@ export class CliViewPanel extends BaseComponent {
   cliInstance = By.xpath('//*[contains(@data-testid, "cli-select-row")]')
   cliInstanceDeleteBtn = By.xpath('//*[contains(@data-testid, "cli-delete-button")]')
   cliInstancesPanel = By.xpath('//*[@data-testid="history-panel-view"]')
-  static cliFrame = By.xpath(
-    `//div[@data-keybinding-context and not(@class)]/iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]`,
-  )
 
-  cliInstanceByIndex = (index: number) =>
+  getCliInstanceByIndex = (index: number) =>
     By.xpath(`(//*[contains(@data-testid, "cli-select-row")])[${index}]`)
-
-  constructor() {
-    super(By.xpath(ViewLocators[Views.CliViewPanel]))
-  }
 
   /**
    * Get Cli responses count
    * @returns Promise resolving to number of Cli responses
    */
   async getCliResponsesCount(): Promise<number> {
-    return (await this.getDriver().findElements(this.cliOutputResponseSuccess))
+    return (await super.getElements(this.cliOutputResponseSuccess))
       .length
   }
 
@@ -48,8 +40,8 @@ export class CliViewPanel extends BaseComponent {
    * @returns Promise resolving when the command is typed
    */
   async typeCommand(command: string): Promise<void> {
-    await this.getElement(this.cliPanel)
-    const input = await this.getElement(this.cliCommand)
+    await super.getElement(this.cliPanel)
+    const input = await super.getElement(this.cliCommand)
 
     try {
       await input.clear()
@@ -70,8 +62,8 @@ export class CliViewPanel extends BaseComponent {
    * @returns Promise resolving when the command is finished
    */
   async executeCommand(command: string): Promise<void> {
-    await this.getElement(this.cliPanel)
-    const input = await this.getElement(this.cliCommand)
+    await super.getElement(this.cliPanel)
+    const input = await super.getElement(this.cliCommand)
 
     try {
       await input.clear()
@@ -101,7 +93,7 @@ export class CliViewPanel extends BaseComponent {
    * @returns Promise resolving to number of commands in CLI
    */
   async getNumberOfCommands(): Promise<number> {
-    return (await this.getDriver().findElements(this.cliCommandWrapper)).length
+    return (await super.getElements(this.cliCommandWrapper)).length
   }
 
   /**
@@ -110,10 +102,10 @@ export class CliViewPanel extends BaseComponent {
    * @returns Promise resolving to cli result text
    */
   async getCliLastCommandResponse(timeout: number = 5000): Promise<string> {
-    await this.getElement(this.cliOutput)
+    await super.getElement(this.cliOutput)
     const commandsCount = await this.getNumberOfCommands()
-    await this.getDriver().wait(until.elementLocated(this.cliOutput), timeout)
-    const cliResponses = await this.getDriver().findElements(this.cliOutput)
+    await super.getElement(this.cliOutput)
+    const cliResponses = await super.getElements(this.cliOutput)
 
     return await cliResponses[commandsCount - 1].getText()
   }
@@ -123,7 +115,7 @@ export class CliViewPanel extends BaseComponent {
    * @returns Promise resolving to cli text
    */
   async getCliText(): Promise<string> {
-    return await (await this.getElement(this.cliPanel)).getText()
+    return await super.getElementText(this.cliPanel)
   }
 
   /**
@@ -131,7 +123,7 @@ export class CliViewPanel extends BaseComponent {
    * @returns Promise resolving to cli command text
    */
   async getCommandText(): Promise<string> {
-    return await (await this.getElement(this.cliCommand)).getText()
+    return await super.getElementText(this.cliCommand)
   }
 
   /**
@@ -139,7 +131,7 @@ export class CliViewPanel extends BaseComponent {
    * @returns Promise resolving to cli command autocomplete text
    */
   async getAutocompleteText(): Promise<string> {
-    return await (await this.getElement(this.cliCommandAutocomplete)).getText()
+    return await super.getElementText(this.cliCommandAutocomplete)
   }
 
   /**
@@ -147,7 +139,7 @@ export class CliViewPanel extends BaseComponent {
    * @returns Promise resolving to number of Cli instances
    */
     async getCliInstancesCount(): Promise<number> {
-      return (await this.getDriver().findElements(this.cliInstance))
+      return (await super.getElements(this.cliInstance))
         .length
     }
 }

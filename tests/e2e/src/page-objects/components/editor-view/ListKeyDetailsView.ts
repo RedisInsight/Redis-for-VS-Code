@@ -12,7 +12,7 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
   indexesList = By.xpath(
     `//*[contains(@data-testid, 'list-index-') and not(contains(@data-testid,'element'))]/div`,
   )
-  elementsList = By.xpath(`//*[contains(@data-testid, 'list-element-')]/div`)
+  elementsList = By.xpath(`//*[contains(@data-testid, 'list-element-')]`)
   truncatedValue = By.xpath(
     `//*[contains(@data-testid, 'list-element-')]//*[@class='truncate']`,
   )
@@ -31,7 +31,7 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
   fromHeadSelection = By.xpath(`//*[@data-testid='HEAD']`)
   countInput = By.xpath(`//*[@data-testid='count-input']`)
 
-  elementValueByText = (text: string): By =>
+  getElementValueByText = (text: string): By =>
     By.xpath(
       `//*[contains(@data-testid, 'list-element-value-')]/*[contains(text(), '${text}')]`,
     )
@@ -55,9 +55,9 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
    * @param element The value of the list element
    */
   async addListElementToTail(element: string): Promise<void> {
-    await (await this.getElement(this.addKeyValueItemsButton)).click()
+    await ButtonActions.clickElement(this.addKeyValueItemsButton)
     await InputActions.typeText(this.addListKeyElementInput, element)
-    await (await this.getElement(this.saveElementButton)).click()
+    await ButtonActions.clickElement(this.saveElementButton)
   }
 
   /**
@@ -65,35 +65,35 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
    * @param element The value of the list element
    */
   async addListElementToHead(element: string): Promise<void> {
-    await (await this.getElement(this.addKeyValueItemsButton)).click()
+    await ButtonActions.clickElement(this.addKeyValueItemsButton)
     await ButtonActions.clickAndWaitForElement(
       this.destinationSelect,
       this.fromHeadSelection,
     )
-    await (await this.getElement(this.fromHeadSelection)).click()
+    await ButtonActions.clickElement(this.fromHeadSelection)
     await InputActions.typeText(this.addListKeyElementInput, element)
-    await (await this.getElement(this.saveElementButton)).click()
+    await ButtonActions.clickElement(this.saveElementButton)
   }
 
   /**
    * Remove List element from tail for Redis databases less then v. 6.2.
    */
   async removeListElementFromTailOld(): Promise<void> {
-    await (await this.getElement(this.removeElementFromListIconButton)).click()
-    expect(await this.isElementDisabled(this.countInput, 'class')).eql(
+    await ButtonActions.clickElement(this.removeElementFromListIconButton)
+    expect(await super.isElementDisabled(this.countInput, 'class')).eql(
       true,
       'Count Input not disabled',
     )
-    await (await this.getElement(this.removeElementFromListButton)).click()
-    await (await this.getElement(this.confirmRemoveListElementButton)).click()
+    await ButtonActions.clickElement(this.removeElementFromListButton)
+    await ButtonActions.clickElement(this.confirmRemoveListElementButton)
   }
 
   /**
    * Remove List element from head for Redis databases less then v. 6.2.
    */
   async removeListElementFromHeadOld(): Promise<void> {
-    await (await this.getElement(this.removeElementFromListIconButton)).click()
-    expect(await this.isElementDisabled(this.countInput, 'class')).eql(
+    await ButtonActions.clickElement(this.removeElementFromListIconButton)
+    expect(await super.isElementDisabled(this.countInput, 'class')).eql(
       true,
       'Count Input not disabled',
     )
@@ -102,10 +102,10 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
       this.destinationSelect,
       this.fromHeadSelection,
     )
-    await (await this.getElement(this.fromHeadSelection)).click()
+    await ButtonActions.clickElement(this.fromHeadSelection)
     //Confirm removing
-    await (await this.getElement(this.removeElementFromListButton)).click()
-    await (await this.getElement(this.confirmRemoveListElementButton)).click()
+    await ButtonActions.clickElement(this.removeElementFromListButton)
+    await ButtonActions.clickElement(this.confirmRemoveListElementButton)
   }
 
   /**
@@ -113,10 +113,10 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
    * @param count The count if elements for removing
    */
   async removeListElementFromTail(count: string): Promise<void> {
-    await (await this.getElement(this.removeElementFromListIconButton)).click()
+    await ButtonActions.clickElement(this.removeElementFromListIconButton)
     await InputActions.typeText(this.countInput, count)
-    await (await this.getElement(this.removeElementFromListButton)).click()
-    await (await this.getElement(this.confirmRemoveListElementButton)).click()
+    await ButtonActions.clickElement(this.removeElementFromListButton)
+    await ButtonActions.clickElement(this.confirmRemoveListElementButton)
   }
 
   /**
@@ -124,7 +124,7 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
    * @param count The count if elements for removing
    */
   async removeListElementFromHead(count: string): Promise<void> {
-    await (await this.getElement(this.removeElementFromListIconButton)).click()
+    await ButtonActions.clickElement(this.removeElementFromListIconButton)
     //Enter count of the removing elements
     await InputActions.typeText(this.countInput, count)
     //Select Remove from head selection
@@ -132,9 +132,9 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
       this.destinationSelect,
       this.fromHeadSelection,
     )
-    await (await this.getElement(this.fromHeadSelection)).click()
+    await ButtonActions.clickElement(this.fromHeadSelection)
     //Confirm removing
-    await (await this.getElement(this.removeElementFromListButton)).click()
-    await (await this.getElement(this.confirmRemoveListElementButton)).click()
+    await ButtonActions.clickElement(this.removeElementFromListButton)
+    await ButtonActions.clickElement(this.confirmRemoveListElementButton)
   }
 }

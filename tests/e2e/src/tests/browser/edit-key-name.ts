@@ -1,7 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
 import {
-  WebView,
   HashKeyDetailsView,
   TreeView,
   SortedSetKeyDetailsView,
@@ -9,6 +8,7 @@ import {
   StringKeyDetailsView,
   SetKeyDetailsView,
   InputWithButtons,
+  KeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -21,43 +21,44 @@ import {
   StringKeyParameters,
 } from '@e2eSrc/helpers/types/types'
 import {
+  ButtonActions,
   DatabasesActions,
   InputActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 let keyNameBefore = Common.generateWord(10)
 let keyNameAfter = Common.generateWord(10)
 
 describe('Edit Key names verification', () => {
-  let webView: WebView
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
   let listKeyDetailsView: ListKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
   let setKeyDetailsView: SetKeyDetailsView
+  let keyDetailsView: KeyDetailsView
 
   before(async () => {
-    webView = new WebView()
     hashKeyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
     listKeyDetailsView = new ListKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
     setKeyDetailsView = new SetKeyDetailsView()
+    keyDetailsView = new KeyDetailsView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
   })
   after(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await KeyAPIRequests.deleteKeyByNameApi(
       keyNameAfter,
       Config.ossStandaloneConfig.databaseName,
@@ -66,7 +67,7 @@ describe('Edit Key names verification', () => {
       keyNameBefore,
       Config.ossStandaloneConfig.databaseName,
     )
-    await webView.switchToFrame(Views.TreeView)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   it('Verify that user can edit String Key name', async function () {
     keyNameBefore = Common.generateWord(10)
@@ -94,9 +95,12 @@ describe('Edit Key names verification', () => {
     )
 
     // Verify that user can cancel editing key name
-    await (await stringKeyDetailsView.getElement(stringKeyDetailsView.keyNameInput)).click()
-    await InputActions.slowType(stringKeyDetailsView.keyNameInput, 'textToCancel')
-    await (await stringKeyDetailsView.getElement(InputWithButtons.cancelInput)).click()
+    await ButtonActions.clickElement(stringKeyDetailsView.keyNameInput)
+    await InputActions.slowType(
+      stringKeyDetailsView.keyNameInput,
+      'textToCancel',
+    )
+    await ButtonActions.clickElement(InputWithButtons.cancelInput)
     expect(keyNameFromDetails).eql(
       keyNameBefore,
       'The String Key Name not editing not canceled',

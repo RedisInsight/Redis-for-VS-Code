@@ -1,11 +1,10 @@
 import { By } from 'selenium-webdriver'
-import { BaseComponent } from '../BaseComponent'
-import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
+import { WebView } from '@e2eSrc/page-objects/components/WebView'
 
 /**
  * Database details view
  */
-export class DatabaseDetailsView extends BaseComponent {
+export class DatabaseDetailsView extends WebView {
   // Inputs
   hostInput = By.xpath(`//*[@data-testid='host']`)
   portInput = By.xpath(`//*[@data-testid='port']`)
@@ -31,9 +30,4 @@ export class DatabaseDetailsView extends BaseComponent {
   // Radiobuttons
   passwordRadioBtn = By.xpath(`//vscode-radio[@data-testid='radio-btn-password']`)
   sshPrivateKeyRadioBtn = By.xpath(`//vscode-radio[@data-testid='radio-btn-privateKey']`)
-
-  constructor() {
-    super(By.xpath(ViewLocators[Views.DatabaseDetailsView]))
-  }
-
 }
