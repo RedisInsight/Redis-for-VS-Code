@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 import { reactClickToComponent } from 'vite-plugin-react-click-to-component'
 // import compression from 'vite-plugin-compression2'
 import svgr from 'vite-plugin-svgr'
@@ -16,6 +17,14 @@ export default defineConfig({
     closePlugin(),
     svgr(),
     reactClickToComponent(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: './src/resources',
+          dest: './',
+        },
+      ],
+    }),
     // compression({
     //   algorithm: 'gzip', exclude: [/\.(br)$ /, /\.(gz)$/],
     // }),

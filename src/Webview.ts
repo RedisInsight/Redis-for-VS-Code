@@ -97,7 +97,7 @@ abstract class Webview {
       </html>`
   }
 
-  public abstract update(): void
+  public abstract update(opts?: WebviewOptions): void
 }
 
 export class WebviewPanel extends Webview implements vscode.Disposable {
@@ -183,9 +183,13 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
 
   // Panel updates may also update the panel title
   // in addition to the webview content.
-  public update() {
+  public update({ title = '' }: Partial<WebviewOptions> = { }) {
     console.debug('Updating! ', this._opts.viewId)
-    this.panel.title = this._opts.title || ''
+    this.panel.title = title || this._opts.title || ''
+    this.panel.iconPath = vscode.Uri.joinPath(
+      this._opts.context?.extensionUri as vscode.Uri,
+      'dist/webviews/resources/redisinsight_dark.svg',
+    )
     this.panel.webview.html = this._getContent(this.panel.webview)
   }
 

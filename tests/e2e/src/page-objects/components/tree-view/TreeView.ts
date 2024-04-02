@@ -22,7 +22,7 @@ export class TreeView extends WebView {
     `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
   )
   submitDeleteKeyButton = By.xpath(
-    `//div[@class='popup-content ']${this.deleteKeyInListBtn}`,
+    `//div[@class='popup-content ']//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
   )
   // mask
   keyMask = '//*[@data-testid="key-$name"]'
@@ -33,6 +33,10 @@ export class TreeView extends WebView {
   getTreeViewItemByIndex = (index: number): Locator =>
     By.xpath(
       `(//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')])[${index}]`,
+    )
+  getTreeViewItemByName = (name: string): Locator =>
+    By.xpath(
+      `(//div[@role='treeitem']//div[starts-with(@data-testid, 'key-${name}')])`,
     )
   getKey = (base: string): Locator =>
     By.xpath(`//div[starts-with(@data-testid, '${base}')]`)
@@ -148,7 +152,7 @@ export class TreeView extends WebView {
    * Delete first Key in list after Hovering
    */
   async deleteKeyFromListByName(keyName: string): Promise<void> {
-    await ButtonActions.hoverElement(this.treeViewKey)
+    await ButtonActions.hoverElement(this.getTreeViewItemByName(keyName))
     await ButtonActions.clickElement(this.getItemDeleteButton(keyName))
     await ButtonActions.clickElement(this.submitDeleteKeyButton)
   }

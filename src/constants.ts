@@ -5,3 +5,5 @@ export enum ViewId {
   Settings = 'ri-settings',
   EditDatabase = 'ri-edit-database',
 }
+
+export const MAX_TITLE_KEY_LENGTH = 30

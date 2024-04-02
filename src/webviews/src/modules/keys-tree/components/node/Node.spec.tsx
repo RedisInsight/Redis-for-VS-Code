@@ -68,7 +68,7 @@ describe('Node', () => {
 
     screen.getByTestId(`node-item_${mockDataFullName}`).click()
 
-    expect(mockUpdateStatusSelected).toBeCalledWith(mockData.nameBuffer)
+    expect(mockUpdateStatusSelected).toBeCalledWith(mockData.nameBuffer, mockData.nameString, mockData.type)
     expect(mockUpdateStatusOpen).toBeCalledWith(mockDataFullName, true)
     expect(mockGetMetadata).toBeCalledWith(mockData.nameBuffer, mockData.path)
     expect(mockSetOpen).not.toBeCalled()
@@ -96,7 +96,7 @@ describe('Node', () => {
 
     screen.getByTestId(`node-item_${mockDataFullName}`).click()
 
-    expect(mockUpdateStatusSelected).toBeCalledWith(mockData.nameBuffer)
+    expect(mockUpdateStatusSelected).toBeCalledWith(mockData.nameBuffer, mockData.nameString, mockData.type)
     expect(mockUpdateStatusOpen).toBeCalledWith(mockDataFullName, true)
     expect(mockGetMetadata).not.toBeCalled()
     expect(mockSetOpen).not.toBeCalled()

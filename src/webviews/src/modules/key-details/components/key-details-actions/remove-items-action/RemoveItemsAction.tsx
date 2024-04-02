@@ -13,7 +13,7 @@ export interface Props {
 const RemoveItemsAction = ({ title, openRemoveItemPanel }: Props) => (
   <VSCodeButton
     appearance="icon"
-    className={cx(styles.actionBtn, 'mt-[3px]')}
+    className={cx(styles.actionBtn, 'mt-[1px]')}
     onClick={openRemoveItemPanel}
     aria-label={title}
     title={title}

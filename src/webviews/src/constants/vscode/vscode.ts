@@ -1,7 +1,3 @@
-export enum ExecuteCommand {
-  OpenPage = 'RedisInsight.openPage',
-}
-
 export enum VscodeState {
   SelectedKey = 'SelectedKey',
 }
@@ -15,6 +11,7 @@ export enum VscodeMessageAction {
   SelectKey = 'SelectKey',
   OpenCli = 'OpenCli',
   RefreshTree = 'RefreshTree',
+  CloseKey = 'CloseKey',
   CloseKeyAndRefresh = 'CloseKeyAndRefresh',
   EditKeyName = 'EditKeyName',
   CloseAddDatabase = 'CloseAddDatabase',

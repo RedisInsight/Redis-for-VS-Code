@@ -30,7 +30,7 @@ export interface Props {
   statusOpen: OpenedNodes
   webworkerFn: (...args: any) => any
   onStatusOpen?: (name: string, value: boolean) => void
-  onStatusSelected?: (key: RedisString) => void
+  onStatusSelected?: (key: RedisString, keyString: string, type: AllKeyTypes) => void
   setConstructingTree: (status: boolean) => void
   onDeleteLeaf: (key: RedisString) => void
   onDeleteClicked: (type: AllKeyTypes) => void
@@ -111,8 +111,8 @@ const VirtualTree = (props: Props) => {
     // setResult(webworkerFn?.({ items, delimiter, sorting }))
   }, [items, delimiter])
 
-  const handleUpdateSelected = useCallback((name: RedisString) => {
-    onStatusSelected?.(name)
+  const handleUpdateSelected = useCallback((name: RedisString, keyString: string, type: AllKeyTypes) => {
+    onStatusSelected?.(name, keyString, type)
   }, [onStatusSelected])
 
   const handleUpdateOpen = useCallback((fullName: string, value: boolean) => {
@@ -202,7 +202,7 @@ const VirtualTree = (props: Props) => {
       size: node.size,
       type: node.type,
       fullName: node.fullName,
-      shortName: node.nameString.split(delimiter).pop(),
+      shortName: node.nameString?.split(delimiter).pop(),
       nestingLevel: getNestingLevel(nestingLevel),
       deleting,
       path: node.path,

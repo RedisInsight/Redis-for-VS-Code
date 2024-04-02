@@ -12,6 +12,7 @@ import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
+import { EditorView } from 'vscode-extension-tester'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
@@ -19,10 +20,12 @@ let keyName: string
 describe('Hash Key fields verification', () => {
   let keyDetailsView: HashKeyDetailsView
   let treeView: TreeView
+  let editorView: EditorView
 
   before(async () => {
     keyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
+    editorView = new EditorView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -154,6 +157,41 @@ describe('Hash Key fields verification', () => {
       `${keyName} has been deleted.`,
     )
 
+    // Verify that details panel is closed for hash key after deletion
+    await KeyDetailsActions.verifyDetailsPanelClosed()
+  })
+
+  it('Verify that tab is closed if Hash was deleted from keys list', async function () {
+    keyName = Common.generateWord(10)
+
+    const hashKeyParameters: HashKeyParameters = {
+      keyName: keyName,
+      fields: [
+        {
+          field: 'field',
+          value: 'value',
+        },
+      ],
+    }
+    await KeyAPIRequests.addHashKeyApi(
+      hashKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+
+    // Open key details iframe
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    await treeView.switchBack()
+    const titles = await editorView.getOpenEditorTitles()
+    const isTitleCorrect = titles.some(t => t === `hash:${keyName}`)
+    expect(isTitleCorrect).eql(true, 'tab name is unexpected')
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await treeView.deleteKeyFromListByName(keyName)
+    await treeView.switchBack()
     // Verify that details panel is closed for hash key after deletion
     await KeyDetailsActions.verifyDetailsPanelClosed()
   })
