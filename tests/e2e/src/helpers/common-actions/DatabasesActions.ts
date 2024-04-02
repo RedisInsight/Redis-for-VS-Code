@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { ActivityBar, Locator, VSBrowser, until } from 'vscode-extension-tester'
 import { CommonDriverExtension } from '../CommonDriverExtension'
 import { TreeView } from '@e2eSrc/page-objects/components'
-import { InnerViews, WebView } from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { AddNewDatabaseParameters } from '../types/types'
 import { DatabaseAPIRequests } from '../api'
 import { NotificationActions } from './actions'
@@ -19,8 +19,8 @@ export class DatabasesActions extends CommonDriverExtension {
    */
   static async checkModulesOnPage(moduleList: Locator[]): Promise<void> {
     for (const item of moduleList) {
-      await this.initializeDriver()
-      expect(await this.driver.wait(until.elementLocated(item), 5000)).eql(
+      await super.initializeDriver()
+      expect(await super.driver.wait(until.elementLocated(item), 5000)).eql(
         true,
         `${item} icon not found`,
       )
@@ -30,7 +30,7 @@ export class DatabasesActions extends CommonDriverExtension {
    * Verify that success notification displayed when adding database
    */
   static async verifyDatabaseAdded(): Promise<void> {
-    await this.driverSleep(1000)
+    await super.driverSleep(1000)
     // Check the notification message
     await NotificationActions.checkNotificationMessage(
       `Database has been added`,
@@ -43,7 +43,7 @@ export class DatabasesActions extends CommonDriverExtension {
    * Verify that success notification displayed when editing database
    */
   static async verifyDatabaseEdited(): Promise<void> {
-    await this.driverSleep(1000)
+    await super.driverSleep(1000)
     // Check the notification message
     await NotificationActions.checkNotificationMessage(
       `Database has been edited`,
@@ -59,11 +59,12 @@ export class DatabasesActions extends CommonDriverExtension {
   static async acceptLicenseTermsAndAddDatabaseApi(
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {
+    let treeView = new TreeView()
     await DatabaseAPIRequests.addNewStandaloneDatabaseApi(databaseParameters)
     await VSBrowser.instance.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
-    await new WebView().switchToInnerViewFrame(InnerViews.KeyListInnerView)
-    await new TreeView().clickDatabaseByName(databaseParameters.databaseName!)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await treeView.clickDatabaseByName(databaseParameters.databaseName!)
   }
 
   /**

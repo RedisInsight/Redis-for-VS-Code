@@ -1,12 +1,8 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
-import {
-  WebView,
-  TreeView,
-  HashKeyDetailsView,
-} from '@e2eSrc/page-objects/components'
+import { TreeView, HashKeyDetailsView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { KeyActions } from '@e2eSrc/helpers/KeysActions'
+import { KeyActions } from '@e2eSrc/helpers/common-actions/KeysActions'
 import {
   DatabasesActions,
   KeyDetailsActions,
@@ -14,17 +10,15 @@ import {
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 
 describe('Cases with large data', () => {
-  let webView: WebView
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
 
   before(async () => {
-    webView = new WebView()
     hashKeyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
 
@@ -33,15 +27,15 @@ describe('Cases with large data', () => {
     )
   })
   afterEach(async () => {
-    await webView.switchBack()
-    await webView.switchToFrame(Views.TreeView)
+    await hashKeyDetailsView.switchBack()
+    await hashKeyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
   })
   after(async () => {
-    await webView.switchBack()
+    await hashKeyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search per exact field name in Hash in DB with 1 million of fields', async function () {

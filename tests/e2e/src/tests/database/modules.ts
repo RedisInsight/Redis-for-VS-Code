@@ -1,18 +1,11 @@
 import { Locator } from 'vscode-extension-tester'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
-import {
-  WebView,
-  TreeView,
-  EditDatabaseView,
-} from '@e2eSrc/page-objects/components'
-import {
-  DatabasesActions,
-} from '@e2eSrc/helpers/common-actions'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { TreeView, EditDatabaseView } from '@e2eSrc/page-objects/components'
+import { DatabasesActions } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Common, CommonDriverExtension, Config } from '@e2eSrc/helpers'
 
 describe('Database modules', () => {
-  let webView: WebView
   let treeView: TreeView
   let editDatabaseView: EditDatabaseView
   let moduleList: Locator[]
@@ -23,17 +16,19 @@ describe('Database modules', () => {
   }
 
   beforeEach(async () => {
-    webView = new WebView()
     treeView = new TreeView()
+    editDatabaseView = new EditDatabaseView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(database)
     await treeView.editDatabaseByName(database.databaseName)
     await CommonDriverExtension.driverSleep(2000)
-    await webView.switchBack()
-    await webView.switchToFrame(Views.DatabaseDetailsView)
+    await treeView.switchBack()
+    await editDatabaseView.switchToInnerViewFrame(
+      InnerViews.AddDatabaseInnerView,
+    )
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await editDatabaseView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can see full module list in the Edit mode', async function () {

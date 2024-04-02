@@ -2,7 +2,6 @@ import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
 import {
   BottomBar,
-  WebView,
   CliViewPanel,
   StringKeyDetailsView,
   TreeView,
@@ -14,7 +13,6 @@ import {
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
 import {
   ButtonActions,
   DatabasesActions,
@@ -23,13 +21,13 @@ import {
 } from '@e2eSrc/helpers/common-actions'
 import { AddStringKeyView } from '@e2eSrc/page-objects/components/editor-view/AddStringKeyView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 const keyTTL = '2147476121'
 const expectedTTL = /214747612*/
 let keyName: string
 
 describe('Key Details verifications', () => {
-  let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
   let keyDetailsView: StringKeyDetailsView
@@ -43,7 +41,6 @@ describe('Key Details verifications', () => {
 
   before(async () => {
     bottomBar = new BottomBar()
-    webView = new WebView()
     keyDetailsView = new StringKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
     treeView = new TreeView()
@@ -58,8 +55,8 @@ describe('Key Details verifications', () => {
     )
   })
   afterEach(async () => {
-    await webView.switchBack()
-    await webView.switchToFrame(Views.TreeView)
+    await keyDetailsView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
@@ -67,7 +64,7 @@ describe('Key Details verifications', () => {
   })
 
   after(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
 
@@ -77,15 +74,9 @@ describe('Key Details verifications', () => {
     const testStringValue = 'stringValue'
     keyName = Common.generateWord(20)
 
-    // const center = await new Workbench().openNotificationsCenter()
-    // const notifications = await center.getNotifications(NotificationType.Any)
-    // for (const notification of notifications) {
-    //   await notification.dismiss()
-    // }
+    await treeView.switchBack()
     await ButtonActions.clickElement(treeView.addKeyButton)
-
-    await webView.switchBack()
-    await webView.switchToFrame(Views.AddKeyView)
+    await treeView.switchToInnerViewFrame(InnerViews.AddKeyInnerView)
     await addStringKeyView.selectKeyTypeByValue(KeyTypesShort.String)
     await InputActions.typeText(addStringKeyView.ttlInput, ttlValue)
     await InputActions.typeText(
@@ -102,8 +93,8 @@ describe('Key Details verifications', () => {
     await InputActions.typeText(addStringKeyView.keyNameInput, keyName)
 
     await ButtonActions.clickElement(addStringKeyView.addButton)
-    await webView.switchBack()
-    await webView.switchToFrame(Views.TreeView)
+    await addStringKeyView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
 
     // check the key details
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
@@ -116,7 +107,9 @@ describe('Key Details verifications', () => {
     )
     const keySize = await stringKeyDetailsView.getKeySize()
     const keyLength = await stringKeyDetailsView.getKeyLength()
-    const keyTtl = Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))
+    const keyTtl = Number(
+      await InputActions.getInputValue(keyDetailsView.inlineItemEditor),
+    )
     const keyValue = await stringKeyDetailsView.getElementText(
       stringKeyDetailsView.stringKeyValueInput,
     )
@@ -135,19 +128,19 @@ describe('Key Details verifications', () => {
 
   it('Verify that user can see Hash Key details', async function () {
     keyName = Common.generateWord(10)
-    await webView.switchBack()
+    await treeView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(Views.CliViewPanel)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
 
     const command = `HSET ${keyName} \"\" \"\"`
     await cliViewPanel.executeCommand(`${command}`)
     const command2 = `expire ${keyName} \"${keyTTL}\" `
     await cliViewPanel.executeCommand(`${command2}`)
-    await webView.switchBack()
+    await cliViewPanel.switchBack()
     await bottomBar.toggle(false)
 
     // Refresh database
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
@@ -162,7 +155,9 @@ describe('Key Details verifications', () => {
     )
     const keySize = await hashKeyDetailsView.getKeySize()
     const keyLength = await hashKeyDetailsView.getKeyLength()
-    const keyTtl = Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))
+    const keyTtl = Number(
+      await InputActions.getInputValue(keyDetailsView.inlineItemEditor),
+    )
 
     expect(keyType).contains('Hash', 'Type is incorrect')
     expect(enteredKeyName).eq(keyName, 'Name is incorrect')
@@ -176,18 +171,19 @@ describe('Key Details verifications', () => {
     const value = 'value'
     const score = 1
 
+    await treeView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(Views.CliViewPanel)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
 
     const command = `ZADD ${keyName} ${score} \"${value}\"`
     await cliViewPanel.executeCommand(`${command}`)
     const command2 = `expire ${keyName} \"${keyTTL}\" `
     await cliViewPanel.executeCommand(`${command2}`)
-    await webView.switchBack()
+    await cliViewPanel.switchBack()
     await bottomBar.toggle(false)
 
     // Refresh database
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
@@ -200,9 +196,7 @@ describe('Key Details verifications', () => {
       ),
     ).contain('Sorted Set', 'Type is incorrect')
     expect(
-      await InputActions.getInputValue(
-        stringKeyDetailsView.keyNameInput,
-      ),
+      await InputActions.getInputValue(stringKeyDetailsView.keyNameInput),
     ).eq(keyName, 'Name is incorrect')
     expect(await sortedSetKeyDetailsView.getKeySize()).greaterThan(
       0,
@@ -212,10 +206,9 @@ describe('Key Details verifications', () => {
       0,
       'Length is 0',
     )
-    expect(Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))).match(
-      expectedTTL,
-      'The Key TTL is incorrect',
-    )
+    expect(
+      Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor)),
+    ).match(expectedTTL, 'The Key TTL is incorrect')
   })
 
   it('Verify that user can see List Key details', async function () {
@@ -223,18 +216,19 @@ describe('Key Details verifications', () => {
     const ttl = '121212'
     const element = 'element1'
 
+    await treeView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(Views.CliViewPanel)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
 
     const command = `LPUSH ${keyName} \"${element}\"`
     await cliViewPanel.executeCommand(`${command}`)
     const command2 = `expire ${keyName} \"${ttl}\" `
     await cliViewPanel.executeCommand(`${command2}`)
-    await webView.switchBack()
+    await cliViewPanel.switchBack()
     await bottomBar.toggle(false)
 
     // Refresh database
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
@@ -245,36 +239,34 @@ describe('Key Details verifications', () => {
       await listKeyDetailsView.getElementText(listKeyDetailsView.keyType),
     ).contain('List', 'Type is incorrect')
     expect(
-      await InputActions.getInputValue(
-        stringKeyDetailsView.keyNameInput,
-      ),
+      await InputActions.getInputValue(stringKeyDetailsView.keyNameInput),
     ).eq(keyName, 'Name is incorrect')
     expect(await listKeyDetailsView.getKeySize()).greaterThan(0, 'Size is 0')
     expect(await listKeyDetailsView.getKeyLength()).greaterThan(
       0,
       'Length is 0',
     )
-    expect(Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))).match(
-      expectedTTL,
-      'The Key TTL is incorrect',
-    )
+    expect(
+      Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor)),
+    ).match(expectedTTL, 'The Key TTL is incorrect')
   })
   it('Verify that user can see Set Key details', async function () {
     keyName = Common.generateWord(20)
     const value = 'value'
 
+    await treeView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(Views.CliViewPanel)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
 
     const command = `SADD ${keyName} \"${value}\"`
     await cliViewPanel.executeCommand(`${command}`)
     const command2 = `expire ${keyName} \"${keyTTL}\" `
     await cliViewPanel.executeCommand(`${command2}`)
-    await webView.switchBack()
+    await cliViewPanel.switchBack()
     await bottomBar.toggle(false)
 
     // Refresh database
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
@@ -285,15 +277,12 @@ describe('Key Details verifications', () => {
       await setKeyDetailsView.getElementText(setKeyDetailsView.keyType),
     ).contain('Set', 'Type is incorrect')
     expect(
-      await InputActions.getInputValue(
-        stringKeyDetailsView.keyNameInput,
-      ),
+      await InputActions.getInputValue(stringKeyDetailsView.keyNameInput),
     ).eq(keyName, 'Name is incorrect')
     expect(await setKeyDetailsView.getKeySize()).greaterThan(0, 'Size is 0')
     expect(await setKeyDetailsView.getKeyLength()).greaterThan(0, 'Length is 0')
-    expect(Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))).match(
-      expectedTTL,
-      'The Key TTL is incorrect',
-    )
+    expect(
+      Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor)),
+    ).match(expectedTTL, 'The Key TTL is incorrect')
   })
 })

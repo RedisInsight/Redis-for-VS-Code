@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { WebView, TreeView } from '@e2eSrc/page-objects/components'
+import { TreeView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   KeyAPIRequests,
@@ -9,15 +9,13 @@ import {
 } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Tree view verifications', () => {
-  let webView: WebView
   let treeView: TreeView
   let keyNames: string[] = []
 
   before(async () => {
-    webView = new WebView()
     treeView = new TreeView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
@@ -29,10 +27,10 @@ describe('Tree view verifications', () => {
       'flushdb',
       Config.ossStandaloneConfig,
     )
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await treeView.switchBack()
     for (const keyName of keyNames) {
       await KeyAPIRequests.deleteKeyIfExistsApi(
         keyName,
@@ -41,7 +39,7 @@ describe('Tree view verifications', () => {
     }
   })
   after(async () => {
-    await webView.switchBack()
+    await treeView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that if there are keys without namespaces, they are displayed in the root directory after all folders by default in the Tree view', async function () {

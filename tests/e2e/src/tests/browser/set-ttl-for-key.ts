@@ -6,9 +6,7 @@ import {
   InputWithButtons,
   KeyDetailsView,
   TreeView,
-  WebView,
 } from '@e2eSrc/page-objects/components'
-
 import {
   InputActions,
   ButtonActions,
@@ -16,12 +14,11 @@ import {
   DatabasesActions,
 } from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
 import { Config } from '@e2eSrc/helpers'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Set TTL for Key', () => {
-  let webView: WebView
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
   let keyDetailsView: KeyDetailsView
@@ -29,7 +26,6 @@ describe('Set TTL for Key', () => {
 
   before(async () => {
     bottomBar = new BottomBar()
-    webView = new WebView()
     keyDetailsView = new KeyDetailsView()
     treeView = new TreeView()
 
@@ -38,29 +34,29 @@ describe('Set TTL for Key', () => {
     )
   })
   after(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
 
   afterEach(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await bottomBar.openTerminalView()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(Views.CliViewPanel)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.CliInnerView)
     await cliViewPanel.executeCommand(`FLUSHDB`)
   })
   it('Verify that user can specify TTL for Key', async function () {
     const ttlValue = '2147476121'
 
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     cliViewPanel = await bottomBar.openCliViewPanel()
-    await webView.switchToFrame(Views.CliViewPanel)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.CliInnerView)
     const keyName = Common.generateWord(20)
     const command = `SET ${keyName} a`
     await cliViewPanel.executeCommand(`${command}`)
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     // Refresh database
-    await webView.switchToFrame(Views.TreeView)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
@@ -71,7 +67,9 @@ describe('Set TTL for Key', () => {
 
     await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
 
-    const newTtlValue = Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor))
+    const newTtlValue = Number(
+      await InputActions.getInputValue(keyDetailsView.inlineItemEditor),
+    )
     expect(Number(ttlValue)).gt(newTtlValue)
   })
 })
