@@ -1,13 +1,10 @@
 import cx from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import Popup from 'reactjs-popup'
-import { VscAccount } from 'react-icons/vsc'
 
 import {
   KeyTypes,
   KeyValueFormat,
-  MIDDLE_SCREEN_RESOLUTION,
   TEXT_DISABLED_STRING_FORMATTING,
 } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent, isFullStringLoaded } from 'uiSrc/utils'
@@ -46,25 +43,7 @@ export const KeyDetailsHeaderFormatter = (props: Props) => {
     const newOptions: SelectOption[] = getKeyValueFormatterOptions(keyType).map(
       ({ value, text }) => ({
         value,
-        label: (
-          <Popup
-            on="hover"
-            trigger={(
-              <>
-                {width > MIDDLE_SCREEN_RESOLUTION && (
-                  <div className={styles.optionText}>{text}</div>
-                )}
-                {width <= MIDDLE_SCREEN_RESOLUTION && (
-                  <VscAccount
-                    data-testid={`key-value-formatter-option-selected-${value}`}
-                  />
-                )}
-              </>
-            )}
-          >
-            {!isStringFormattingEnabled ? TEXT_DISABLED_STRING_FORMATTING : typeSelected}
-          </Popup>
-        ),
+        label: <div className={styles.optionText}>{text}</div>,
         testid: `format-option-${value}`,
       }),
     )
@@ -100,6 +79,7 @@ export const KeyDetailsHeaderFormatter = (props: Props) => {
         containerClassName={styles.select}
         itemClassName={styles.option}
         onChange={(value: string) => onChangeType(value as KeyValueFormat)}
+        title={!isStringFormattingEnabled ? TEXT_DISABLED_STRING_FORMATTING : typeSelected}
         testid="select-format-key-value"
       />
     </div>
