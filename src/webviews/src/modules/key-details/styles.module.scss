@@ -11,7 +11,7 @@
 }
 
 .content {
-  @apply h-full relative;
+  @apply h-full relative pt-1;
   > div {
     @apply h-full
   }

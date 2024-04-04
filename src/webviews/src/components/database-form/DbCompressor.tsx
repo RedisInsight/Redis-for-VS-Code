@@ -2,6 +2,7 @@ import React, { ChangeEvent, useId } from 'react'
 import { FormikProps } from 'formik'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 import * as l10n from '@vscode/l10n'
+import { CheckboxChangeEvent } from 'rc-checkbox'
 
 import { KeyValueCompressor, NONE } from 'uiSrc/constants'
 import { DbConnectionInfo } from 'uiSrc/interfaces'
@@ -48,7 +49,7 @@ const DbCompressor = (props: Props) => {
     },
   ]
 
-  const handleChangeDbCompressorCheckbox = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleChangeDbCompressorCheckbox = (e: CheckboxChangeEvent): void => {
     const isChecked = e.target.checked
     if (!isChecked) {
       // Reset db field to initial value

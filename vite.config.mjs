@@ -7,6 +7,8 @@ import svgr from 'vite-plugin-svgr'
 import { fileURLToPath, URL } from 'node:url'
 import path from 'path'
 
+const isProduction = import.meta?.env?.PROD
+
 /**
  * @type {import('vite').UserConfig}
  */
@@ -62,7 +64,8 @@ export default defineConfig({
     watch: {}, // yes, this is correct
   },
   define: {
-    'process.env': JSON.stringify(process.platform),
+    'process.env': isProduction ? JSON.stringify(process.platform) : {},
+    'process.env.NODE_ENV': isProduction ? 'production' : undefined,
   },
 
   // vitest testing
@@ -84,6 +87,11 @@ export default defineConfig({
         lines: 80,
         branches: 70,
         functions: 60,
+      },
+    },
+    server: {
+      deps: {
+        inline: ['rawproto'],
       },
     },
   },

@@ -36,4 +36,5 @@ export interface SelectedKeyActions {
   updateSelectedKeyRefreshTime: (data: number) => void
   setSelectedKeyAction: (data: Nullable<SelectedKeyAction>) => void
   setSelectedKeyRefreshDisabled: (data: boolean) => void
+  setViewFormat: (data: KeyValueFormat) => void
 }

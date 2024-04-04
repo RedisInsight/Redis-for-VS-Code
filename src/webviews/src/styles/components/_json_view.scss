@@ -1,0 +1,30 @@
+.jsonViewer {
+  @apply p-0 mb-0 whitespace-pre-wrap;
+  letter-spacing: 0.15px;
+  background: transparent;
+
+  &-collapsed {
+    @apply whitespace-nowrap text-ellipsis w-full overflow-hidden;
+
+    line-height: inherit;
+  }
+
+  .json-pretty__key {
+    @apply text-vscode-terminal-ansiMagenta;
+  }
+
+  .json-pretty__number-value,
+  .json-pretty__bigint-value,
+  .json-pretty__null-value,
+  .json-pretty__other-value {
+    @apply text-vscode-terminal-ansiBrightBlue;
+  }
+
+  .json-pretty__string-value {
+    @apply text-vscode-terminal-ansiGreen;
+  }
+
+  .json-pretty__boolean-value {
+    @apply text-vscode-terminal-ansiYellow;
+  }
+}

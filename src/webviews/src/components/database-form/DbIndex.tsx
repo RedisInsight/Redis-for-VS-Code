@@ -2,12 +2,12 @@ import React, { ChangeEvent, useId } from 'react'
 import cx from 'classnames'
 import { FormikProps } from 'formik'
 import * as l10n from '@vscode/l10n'
-
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
+import { CheckboxChangeEvent } from 'rc-checkbox'
+
 import { validateNumber } from 'uiSrc/utils'
 import { DbConnectionInfo } from 'uiSrc/interfaces'
 import { Checkbox, InputText } from 'uiSrc/ui'
-import styles from './styles.module.scss'
 
 export interface Props {
 
@@ -19,7 +19,7 @@ const DbIndex = (props: Props) => {
 
   const id = useId()
 
-  const handleChangeDbIndexCheckbox = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleChangeDbIndexCheckbox = (e: CheckboxChangeEvent): void => {
     const isChecked = e.target.checked
     if (!isChecked) {
       // Reset db field to initial value

@@ -20,6 +20,7 @@ import { SCAN_COUNT_DEFAULT,
   TEXT_UNPRINTABLE_CHARACTERS,
   TEXT_DISABLED_COMPRESSED_VALUE,
   NoResultsFoundText,
+  TEXT_INVALID_VALUE,
 } from 'uiSrc/constants'
 import {
   bufferToSerializedFormat,
@@ -320,6 +321,12 @@ const ListDetailsTable = (props: Props) => {
                       controlsClassName={styles.textAreaControls}
                       onDecline={() => handleEditElement(index, false)}
                       onApply={() => handleApplyEditElement(index)}
+                      approveText={TEXT_INVALID_VALUE}
+                      approveByValidation={() =>
+                        formattingBuffer(
+                          stringToSerializedBufferFormat(viewFormat, areaValue),
+                          viewFormat,
+                        )?.isValid}
                     >
                       <TextArea
                         name="value"

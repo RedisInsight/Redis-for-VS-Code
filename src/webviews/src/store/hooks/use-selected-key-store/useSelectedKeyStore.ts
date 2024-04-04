@@ -10,6 +10,7 @@ import {
   DEFAULT_SEARCH_MATCH,
   DEFAULT_VIEW_FORMAT,
   KeyTypes,
+  KeyValueFormat,
   SCAN_COUNT_DEFAULT,
   STRING_MAX_LENGTH,
   SortOrder,
@@ -56,6 +57,11 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
 
     setSelectedKeyAction: (action) => set({ action }),
     setSelectedKeyRefreshDisabled: (refreshDisabled: boolean) => set({ refreshDisabled }),
+    setViewFormat: (viewFormat: KeyValueFormat) => set((state) => {
+      state.viewFormat = viewFormat
+
+      localStorageService?.set(StorageItem.viewFormat, viewFormat)
+    }),
   }),
   {
     name: 'selectedKey',
