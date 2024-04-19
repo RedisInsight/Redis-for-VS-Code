@@ -1,18 +1,16 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
-import { WebView, TreeView } from '@e2eSrc/page-objects/components'
+import { TreeView } from '@e2eSrc/page-objects/components'
 import { KeyAPIRequests, DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Tree view verifications', () => {
-  let webView: WebView
   let treeView: TreeView
   let keyNames: string[] = []
 
   before(async () => {
-    webView = new WebView()
     treeView = new TreeView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
@@ -20,19 +18,19 @@ describe('Tree view verifications', () => {
     )
   })
   after(async () => {
-    await webView.switchBack()
+    await treeView.switchBack()
 
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await treeView.switchBack()
     for (const keyName of keyNames) {
       await KeyAPIRequests.deleteKeyIfExistsApi(
         keyName,
         Config.ossStandaloneBigConfig.databaseName,
       )
     }
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   // TODO unskip once filtering by key type implemented
   it.skip('Verify that user can see the total number of keys, the number of keys scanned, the “Scan more” control displayed at the top of Tree view', async function () {

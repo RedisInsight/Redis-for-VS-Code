@@ -13,6 +13,6 @@ export class StringKeyDetailsView extends KeyDetailsView {
 
   //Get String key value from details
   async getStringKeyValue(): Promise<string> {
-    return await this.getElementText(this.stringKeyValueInput)
+    return await super.getElementText(this.stringKeyValueInput)
   }
 }

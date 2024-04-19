@@ -1,16 +1,15 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
 import {
-  WebView,
   SortedSetKeyDetailsView,
   TreeView,
   ListKeyDetailsView,
   HashKeyDetailsView,
   SetKeyDetailsView,
   StringKeyDetailsView,
+  KeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
 import {
   ButtonActions,
   DatabasesActions,
@@ -26,41 +25,42 @@ import {
   StringKeyParameters,
 } from '@e2eSrc/helpers/types/types'
 import { CommonDriverExtension } from '@e2eSrc/helpers'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 
 describe('Large key details verification', () => {
-  let webView: WebView
   let sortedsetKeyDetailsView: SortedSetKeyDetailsView
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
   let listKeyDetailsView: ListKeyDetailsView
   let setKeyDetailsView: SetKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
+  let keyDetailsView: KeyDetailsView
 
   before(async () => {
-    webView = new WebView()
     sortedsetKeyDetailsView = new SortedSetKeyDetailsView()
     hashKeyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
     listKeyDetailsView = new ListKeyDetailsView()
     setKeyDetailsView = new SetKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
+    keyDetailsView = new KeyDetailsView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
-    await webView.switchToFrame(Views.TreeView)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   after(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can expand/collapse for sorted set data type', async function () {
@@ -133,10 +133,10 @@ describe('Large key details verification', () => {
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    const memberValueCell = await hashKeyDetailsView.getElement(
+    const fieldValueCell = await hashKeyDetailsView.getElement(
       hashKeyDetailsView.hashValuesList,
     )
-    const size = await memberValueCell.getRect()
+    const size = await fieldValueCell.getRect()
     const rowHeight = size.height
 
     await ButtonActions.clickAndWaitForElement(
@@ -145,7 +145,7 @@ describe('Large key details verification', () => {
       false,
     )
 
-    let newSize = await memberValueCell.getRect()
+    let newSize = await fieldValueCell.getRect()
     expect(newSize.height).gt(rowHeight, 'Row is not expanded')
 
     await ButtonActions.clickAndWaitForElement(
@@ -153,7 +153,7 @@ describe('Large key details verification', () => {
       hashKeyDetailsView.truncatedValue,
     )
 
-    newSize = await memberValueCell.getRect()
+    newSize = await fieldValueCell.getRect()
     expect(newSize.height).eql(rowHeight, 'Row is not collapsed')
   })
   it('Verify that user can expand/collapse for list data type', async function () {
@@ -284,15 +284,15 @@ describe('Large key details verification', () => {
       await stringKeyDetailsView.isElementDisplayed(
         stringKeyDetailsView.loadAllBtn,
       ),
-    ).false
+    ).eql(false, 'Load All button still displayed')
     expect(
       await stringKeyDetailsView.isElementDisplayed(
         stringKeyDetailsView.downloadAllValueBtn,
       ),
-    ).false
+    ).eql(false, 'Download all value button still displayed')
 
-    await webView.switchBack()
-    await webView.switchToFrame(Views.TreeView)
+    await stringKeyDetailsView.switchBack()
+    await stringKeyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(
       bigStringKeyParameters.keyName,
     )
@@ -301,7 +301,7 @@ describe('Large key details verification', () => {
         stringKeyDetailsView.editKeyValueButton,
         'class',
       ),
-    ).true
+    ).eql(true, 'Edit String key button not disabled')
 
     // Verify that user can see String key value with only 5000 characters uploaded if length is more than 5000
     // Verify that 3 dots after truncated big strings displayed
@@ -334,14 +334,14 @@ describe('Large key details verification', () => {
         stringKeyDetailsView.editKeyValueButton,
         'class',
       ),
-    ).false
+    ).eql(false, 'Edit key value button not disabled')
     // Verify that user can see not fully loaded String key with > 5000 characters after clicking on Refresh button
     await ButtonActions.clickElement(stringKeyDetailsView.refreshKeyButton)
     expect(
       await stringKeyDetailsView.isElementDisplayed(
         stringKeyDetailsView.loadAllBtn,
       ),
-    ).true
+    ).eql(true, 'Load All button not displayed')
 
     // Uncomment in case if it is possible to download file from system window using vscode-extension-tester
     // Verify that user can download String key value as txt file when it has > 5000 characters

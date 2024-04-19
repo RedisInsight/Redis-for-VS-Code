@@ -1,10 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
-import {
-  WebView,
-  SetKeyDetailsView,
-  TreeView,
-} from '@e2eSrc/page-objects/components'
+import { SetKeyDetailsView, TreeView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
@@ -17,19 +13,17 @@ import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { SetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { AddSetKeyView } from '@e2eSrc/page-objects/components/editor-view/AddSetView'
 
 let keyName: string
 
 describe('Set Key fields verification', () => {
-  let webView: WebView
   let keyDetailsView: SetKeyDetailsView
   let treeView: TreeView
   let addSetKeyView: AddSetKeyView
 
   before(async () => {
-    webView = new WebView()
     keyDetailsView = new SetKeyDetailsView()
     treeView = new TreeView()
     addSetKeyView = new AddSetKeyView()
@@ -39,17 +33,17 @@ describe('Set Key fields verification', () => {
     )
   })
   beforeEach(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
   })
   afterEach(async () => {
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
-    await webView.switchToFrame(Views.TreeView)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   after(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user can search and delete by member in Set', async function () {
@@ -85,15 +79,15 @@ describe('Set Key fields verification', () => {
       KeyTypesShort.Set,
       keyFieldValue,
     )
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     // Check the notification message that field deleted
     await NotificationActions.checkNotificationMessage(
       `${keyFieldValue} has been removed from ${keyName}`,
     )
 
-    await webView.switchToFrame(Views.KeyDetailsView)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
     await keyDetailsView.removeFirstRow(KeyTypesShort.Set)
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
 
     // Check the notification message that key deleted
     await NotificationActions.checkNotificationMessage(
@@ -109,7 +103,7 @@ describe('Set Key fields verification', () => {
 
     await NotificationActions.closeAllNotifications()
 
-    await webView.switchToFrame(Views.TreeView)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await ButtonActions.clickElement(treeView.addKeyButton)
     expect(
       await addSetKeyView.isElementDisabled(addSetKeyView.addButton, 'class'),

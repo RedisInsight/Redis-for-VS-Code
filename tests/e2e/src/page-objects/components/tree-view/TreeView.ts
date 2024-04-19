@@ -1,12 +1,11 @@
 import { By, Locator } from 'selenium-webdriver'
-import { BaseComponent } from '../BaseComponent'
-import { ViewElements, Views } from '@e2eSrc/page-objects/components/WebView'
+import { WebView } from '@e2eSrc/page-objects/components/WebView'
 import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 
 /**
  * Tree list view with databases and keys
  */
-export class TreeView extends BaseComponent {
+export class TreeView extends WebView {
   treeViewPage = By.xpath(`//div[@data-testid='tree-view-page']`)
   scanMoreBtn = By.xpath(`//vscode-button[@data-testid='scan-more']`)
   treeViewKey = By.xpath(
@@ -77,19 +76,12 @@ export class TreeView extends BaseComponent {
       `(//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')])[position() <= ${number}]`,
     )
 
-  constructor() {
-    super(By.xpath(ViewElements[Views.TreeView]))
-  }
-
   /**
    * Open key details of the key by name
    * @param keyName The name of the key
    */
   async openKeyDetailsByKeyName(name: string): Promise<void> {
-    const keyNameInTheListElement = await this.getElement(
-      this.getKeySelectorByName(name),
-    )
-    await keyNameInTheListElement.click()
+    await ButtonActions.clickElement(this.getKeySelectorByName(name))
   }
 
   /**
@@ -114,7 +106,7 @@ export class TreeView extends BaseComponent {
    */
   async verifyElementExpanded(baseSelector: Locator): Promise<boolean> {
     const elementSelector = await (
-      await this.getElement(baseSelector)
+      await super.getElement(baseSelector)
     ).getAttribute('data-testid')
     return elementSelector?.includes('expanded')
   }
@@ -126,7 +118,7 @@ export class TreeView extends BaseComponent {
   private async clickElementIfNotExpanded(base: string): Promise<void> {
     const baseSelector = this.getKey(base)
     if (!(await this.verifyElementExpanded(baseSelector))) {
-      await (await this.getElement(baseSelector)).click()
+      await ButtonActions.clickElement(baseSelector)
     }
   }
 
@@ -135,18 +127,15 @@ export class TreeView extends BaseComponent {
    */
   async getAllKeysArray(): Promise<string[]> {
     const textArray: string[] = []
-    const treeViewItemElements = this.treeViewKey
-    const itemCount = (
-      await this.getDriver().findElements(treeViewItemElements)
-    ).length
+    const itemCount = (await super.getElements(this.treeViewKey)).length
 
     for (let i = 1; i <= itemCount; i++) {
-      const treeItemElement = await this.getDriver().findElement(
+      const treeItemElementText = await super.getElementText(
         this.getTreeViewItemByIndex(i),
       )
-      textArray.push(await treeItemElement.getText())
-    }
 
+      textArray.push(treeItemElementText)
+    }
     return textArray
   }
 
@@ -155,8 +144,8 @@ export class TreeView extends BaseComponent {
    */
   async deleteFirstKeyFromList(): Promise<void> {
     await ButtonActions.hoverElement(this.treeViewKey)
-    await (await this.getElement(this.deleteKeyInListBtn)).click()
-    await (await this.getElement(this.submitDeleteKeyButton)).click()
+    await ButtonActions.clickElement(this.deleteKeyInListBtn)
+    await ButtonActions.clickElement(this.submitDeleteKeyButton)
   }
 
   /**
@@ -164,8 +153,8 @@ export class TreeView extends BaseComponent {
    */
   async deleteKeyFromListByName(keyName: string): Promise<void> {
     await ButtonActions.hoverElement(this.getTreeViewItemByName(keyName))
-    await (await this.getElement(this.getItemDeleteButton(keyName))).click()
-    await (await this.getElement(this.submitDeleteKeyButton)).click()
+    await ButtonActions.clickElement(this.getItemDeleteButton(keyName))
+    await ButtonActions.clickElement(this.submitDeleteKeyButton)
   }
 
   /**
@@ -202,6 +191,6 @@ export class TreeView extends BaseComponent {
    */
   async isKeyIsDisplayedInTheList(keyName: string): Promise<boolean> {
     const keyNameInTheList = this.getKeySelectorByName(keyName)
-    return await this.isElementDisplayed(keyNameInTheList)
+    return await super.isElementDisplayed(keyNameInTheList)
   }
 }

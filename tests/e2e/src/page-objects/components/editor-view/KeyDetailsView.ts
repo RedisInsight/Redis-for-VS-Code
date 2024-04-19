@@ -1,14 +1,13 @@
 import { By } from 'selenium-webdriver'
-import { BaseComponent } from '../BaseComponent'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
-import { ViewLocators, Views } from '@e2eSrc/page-objects/components/WebView'
-import { InputWithButtons } from '../InputWithButtons'
+import { WebView } from '@e2eSrc/page-objects/components/WebView'
+import { InputWithButtons } from '../common/InputWithButtons'
 
 /**
  * Key details view
  */
-export class KeyDetailsView extends BaseComponent {
+export class KeyDetailsView extends WebView {
   inlineItemEditor = By.xpath(`//*[@data-testid='inline-item-editor']`)
   keyType = By.xpath(`//div[contains(@class, '_keyFlexGroup')]`)
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
@@ -36,37 +35,36 @@ export class KeyDetailsView extends BaseComponent {
     `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
   )
   submitDetailsDeleteKeyButton = By.xpath(
-    `//div[@class='popup-content ']${this.detailsDeleteKeyButton}`,
+    `//div[@class='popup-content ']//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
   )
   saveMemberButton = By.xpath(`//*[@data-testid='save-members-btn']`)
 
-  trashIcon = (keyType: string, name: string): By =>
+  getTrashIcon = (keyType: string, name: string): By =>
     By.xpath(
-      `//*[@data-testid="remove-${keyType}-button-${name}-icon"] | //*[@data-testid="${keyType}-remove-button-${name}-icon"] | //*[@data-testid="${keyType}-remove-btn-${name}-icon"]`,
+      `//*[@data-testid="remove-${keyType}-button-${name}-icon"] 
+      | //*[@data-testid="${keyType}-remove-button-${name}-icon"] 
+      | //*[@data-testid="${keyType}-remove-btn-${name}-icon"]
+      | //*[@data-testid="remove-${keyType}-button-${name}-trigger"]`,
     )
 
-  commonTrashIcon = (keyType: string): By =>
+  getCommonTrashIcon = (keyType: string): By =>
     By.xpath(
       `//*[contains(@data-testid,"${keyType}-remove-btn-")] | //*[contains(@data-testid,"${keyType}-remove-button-")]`,
     )
-  commonRemoveButton = (keyType: string): By =>
+  getCommonRemoveButton = (keyType: string): By =>
     By.xpath(
       `//*[contains(@data-testid, "${keyType}-remove-btn-") and not(contains(@data-testid, "-icon"))] | //*[contains(@data-testid, "${keyType}-remove-button-") and not(contains(@data-testid, "-icon"))]`,
     )
-  removeButton = (keyType: string, name: string): By =>
+  getRemoveButton = (keyType: string, name: string): By =>
     By.xpath(
       `//*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"]`,
     )
-
-  constructor() {
-    super(By.xpath(ViewLocators[Views.KeyDetailsView]))
-  }
 
   /**
    * get key size
    */
   async getKeySize(): Promise<number> {
-    const keySizeText = await this.getElementText(this.keySize)
+    const keySizeText = await super.getElementText(this.keySize)
     const regex = /Key Size: (\d+)/
     const match = keySizeText.match(regex)
     return match ? parseInt(match[1], 10) : NaN
@@ -76,7 +74,7 @@ export class KeyDetailsView extends BaseComponent {
    * get key length
    */
   async getKeyLength(): Promise<number> {
-    const keyLengthText = await this.getElementText(this.keyLength)
+    const keyLengthText = await super.getElementText(this.keyLength)
     const regex = /Length: (\d+)/
     const match = keyLengthText.match(regex)
     return match ? parseInt(match[1], 10) : NaN
@@ -87,13 +85,13 @@ export class KeyDetailsView extends BaseComponent {
    * @param value The value of the search parameter
    */
   async searchByTheValueInKeyDetails(value: string): Promise<void> {
-    if (!(await this.isElementDisplayed(this.searchInput))) {
+    if (!(await super.isElementDisplayed(this.searchInput))) {
       await ButtonActions.clickAndWaitForElement(
         this.searchButtonInKeyDetails,
         this.searchInput,
       )
     }
-    const inputField = await this.getElement(this.searchInput)
+    const inputField = await super.getElement(this.searchInput)
     await InputActions.typeText(this.searchInput, value)
     await InputActions.pressKey(inputField, 'enter')
     await CommonDriverExtension.driverSleep(1000)
@@ -103,13 +101,13 @@ export class KeyDetailsView extends BaseComponent {
    * Clear search input in key details table
    */
   async clearSearchInKeyDetails(): Promise<void> {
-    if (!(await this.isElementDisplayed(this.searchInput))) {
+    if (!(await super.isElementDisplayed(this.searchInput))) {
       await ButtonActions.clickAndWaitForElement(
         this.searchButtonInKeyDetails,
         this.searchInput,
       )
     }
-    const inputField = await this.getElement(this.searchInput)
+    const inputField = await super.getElement(this.searchInput)
     await ButtonActions.clickElement(this.clearSearchInput)
     await InputActions.pressKey(inputField, 'enter')
     await CommonDriverExtension.driverSleep(1000)
@@ -124,17 +122,15 @@ export class KeyDetailsView extends BaseComponent {
     keyType: string,
     name: string,
   ): Promise<void> {
-    const removeLocator = this.removeButton(keyType, name)
-    const element = await this.getElement(removeLocator)
-    await element.click()
+    const removeLocator = this.getRemoveButton(keyType, name)
+    await ButtonActions.clickElement(removeLocator)
   }
 
   /**
    * Click on copy button
    */
   async clickCopyKeyName(): Promise<void> {
-    const element = await this.getElement(this.copyButton)
-    await element.click()
+    await ButtonActions.clickElement(this.copyButton)
   }
 
   /**
@@ -143,9 +139,8 @@ export class KeyDetailsView extends BaseComponent {
    * @param name The field value
    */
   async removeRowByField(keyType: string, name: string): Promise<void> {
-    const rowInTheListLocator = this.trashIcon(keyType, name)
-    const element = await this.getElement(rowInTheListLocator)
-    await element.click()
+    const rowInTheListLocator = this.getTrashIcon(keyType, name)
+    await ButtonActions.clickElement(rowInTheListLocator)
   }
 
   /**
@@ -153,12 +148,10 @@ export class KeyDetailsView extends BaseComponent {
    * @param keyType The key type
    */
   async removeFirstRow(keyType: string): Promise<void> {
-    const rowInTheListLocator = this.commonTrashIcon(keyType)
-    const element = await this.getElement(rowInTheListLocator)
-    await element.click()
-    const removeLocator = this.commonRemoveButton(keyType)
-    const element2 = await this.getElement(removeLocator)
-    await element2.click()
+    const rowInTheListLocator = this.getCommonTrashIcon(keyType)
+    await ButtonActions.clickElement(rowInTheListLocator)
+    const removeLocator = this.getCommonRemoveButton(keyType)
+    await ButtonActions.clickElement(removeLocator)
   }
   /**
    * Remove multiple rows in key by field values
@@ -179,8 +172,8 @@ export class KeyDetailsView extends BaseComponent {
    * Remove key from key details
    */
   async removeKeyFromDetailedView(): Promise<void> {
-    await (await this.getElement(this.detailsDeleteKeyButton)).click()
-    await (await this.getElement(this.submitDetailsDeleteKeyButton)).click()
+    await ButtonActions.clickElement(this.detailsDeleteKeyButton)
+    await ButtonActions.clickElement(this.submitDetailsDeleteKeyButton)
   }
 
   /**
@@ -188,8 +181,8 @@ export class KeyDetailsView extends BaseComponent {
    * @param keyName The name of the key
    */
   async editKeyName(keyName: string): Promise<void> {
-    await (await this.getElement(this.keyNameInput)).click()
+    await ButtonActions.clickElement(this.keyNameInput)
     await InputActions.slowType(this.keyNameInput, keyName)
-    await (await this.getElement(InputWithButtons.applyInput)).click()
+    await ButtonActions.clickElement(InputWithButtons.applyInput)
   }
 }

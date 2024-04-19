@@ -3,23 +3,21 @@ import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Common } from '@e2eSrc/helpers/Common'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
-  WebView,
   StringKeyDetailsView,
   TreeView,
 } from '@e2eSrc/page-objects/components'
 import {
   DatabasesActions,
   KeyDetailsActions,
+  NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Actions with Key List', () => {
-  let webView: WebView
   let keyDetailsView: StringKeyDetailsView
   let treeView: TreeView
 
   before(async () => {
-    webView = new WebView()
     keyDetailsView = new StringKeyDetailsView()
     treeView = new TreeView()
 
@@ -28,12 +26,12 @@ describe('Actions with Key List', () => {
     )
   })
   after(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
-    await webView.switchBack()
-    await webView.switchToFrame(Views.TreeView)
+    await keyDetailsView.switchBack()
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
 
   it('Verify that key deleted properly from the list', async function () {
@@ -80,10 +78,14 @@ describe('Actions with Key List', () => {
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
     // Delete key from detailed view
-    keyDetailsView.removeKeyFromDetailedView()
-    expect(!keyDetailsView?.stringKeyValueInput).eql(
-      true,
-      'Detailed view closed after deleting',
+    await keyDetailsView.removeKeyFromDetailedView()
+    await keyDetailsView.switchBack()
+    // Check the notification message that key deleted
+    await NotificationActions.checkNotificationMessage(
+      `${keyName} has been deleted.`,
     )
+
+    // Verify that details panel is closed for zset key after deletion
+    await KeyDetailsActions.verifyDetailsPanelClosed()
   })
 })

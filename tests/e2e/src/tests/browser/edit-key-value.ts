@@ -1,12 +1,12 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
 import {
-  WebView,
   HashKeyDetailsView,
   TreeView,
   SortedSetKeyDetailsView,
   ListKeyDetailsView,
   StringKeyDetailsView,
+  KeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -23,43 +23,43 @@ import {
   InputActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName: string
 const keyValueBefore = 'ValueBeforeEdit!'
 const keyValueAfter = 'ValueAfterEdit!'
 
 describe('Edit Key values verification', () => {
-  let webView: WebView
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
   let listKeyDetailsView: ListKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
+  let keyDetailsView: KeyDetailsView
 
   before(async () => {
-    webView = new WebView()
     hashKeyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
     listKeyDetailsView = new ListKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
+    keyDetailsView = new KeyDetailsView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
   })
   after(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
-    await webView.switchToFrame(Views.TreeView)
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   it('Verify that user can edit Hash Key field', async function () {
     const fieldName = 'test'
@@ -173,11 +173,7 @@ describe('Edit Key values verification', () => {
     expect(keyValue).contains(keyValueBefore, 'The String value is incorrect')
 
     // Edit String key value
-    await (
-      await stringKeyDetailsView.getElement(
-        stringKeyDetailsView.stringKeyValueInput,
-      )
-    ).click()
+    await ButtonActions.clickElement(stringKeyDetailsView.stringKeyValueInput)
     await InputActions.typeText(
       stringKeyDetailsView.stringKeyValueInput,
       keyValueAfter,
@@ -189,7 +185,7 @@ describe('Edit Key values verification', () => {
         stringKeyDetailsView.refreshKeyButton,
         'class',
       ),
-    ).ok('Refresh button not disabled')
+    ).eql(true, 'Refresh button not disabled')
 
     await ButtonActions.clickElement(stringKeyDetailsView.applyBtn)
     // Check the key value after edit

@@ -1,11 +1,7 @@
 import { expect } from 'chai'
 import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
-import { Views } from '@e2eSrc/page-objects/components/WebView'
 import {
-  WebView,
   TreeView,
-  DatabaseDetailsView,
-  KeyDetailsView,
   AddDatabaseView,
   EditDatabaseView,
 } from '@e2eSrc/page-objects/components'
@@ -21,6 +17,7 @@ import {
   sshPrivateKey,
   sshPrivateKeyWithPasscode,
 } from '../../test-data/sshPrivateKeys'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 const sshParams = {
   sshHost: '172.31.100.245',
@@ -47,10 +44,7 @@ const sshWithPassphrase = {
 
 describe('Add database', () => {
   let browser: VSBrowser
-  let webView: WebView
-  let keyDetailsView: KeyDetailsView
   let treeView: TreeView
-  let databaseDetailsView: DatabaseDetailsView
   let addDatabaseView: AddDatabaseView
   let editDatabaseView: EditDatabaseView
 
@@ -58,21 +52,19 @@ describe('Add database', () => {
 
   beforeEach(async () => {
     browser = VSBrowser.instance
-    webView = new WebView()
-    keyDetailsView = new KeyDetailsView()
     treeView = new TreeView()
-    databaseDetailsView = new DatabaseDetailsView()
     addDatabaseView = new AddDatabaseView()
     editDatabaseView = new EditDatabaseView()
 
     await browser.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
     await ButtonActions.clickElement(treeView.addDatabaseBtn)
-    await webView.switchBack()
-    await webView.switchToFrame(Views.DatabaseDetailsView)
+    await addDatabaseView.switchToInnerViewFrame(
+      InnerViews.AddDatabaseInnerView,
+    )
   })
   afterEach(async () => {
-    await webView.switchBack()
+    await addDatabaseView.switchBack()
     await DatabaseAPIRequests.deleteStandaloneDatabasesByNamesApi([
       databaseName,
       Config.ossClusterConfig.ossClusterDatabaseName,
@@ -84,29 +76,26 @@ describe('Add database', () => {
 
     // Fill the add database form
     await InputActions.typeText(
-      databaseDetailsView.hostInput,
+      addDatabaseView.hostInput,
       Config.ossStandaloneConfig.host,
     )
     await InputActions.typeText(
-      databaseDetailsView.portInput,
+      addDatabaseView.portInput,
       Config.ossStandaloneConfig.port,
     )
     await InputActions.typeText(
-      databaseDetailsView.databaseAliasInput,
+      addDatabaseView.databaseAliasInput,
       databaseName,
     )
     // Verify that user can customize the connection timeout for the manual flow
-    await InputActions.typeText(
-      databaseDetailsView.timeoutInput,
-      connectionTimeout,
-    )
-    await ButtonActions.clickElement(databaseDetailsView.saveDatabaseButton)
-    await webView.switchBack()
+    await InputActions.typeText(addDatabaseView.timeoutInput, connectionTimeout)
+    await ButtonActions.clickElement(addDatabaseView.saveDatabaseButton)
+    await addDatabaseView.switchBack()
     await DatabasesActions.verifyDatabaseAdded()
     // Wait for database to be in the list
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     expect(
-      await databaseDetailsView.isElementDisplayed(
+      await treeView.isElementDisplayed(
         treeView.getDatabaseByName(databaseName),
       ),
     ).true(`${databaseName} not added to database list`)
@@ -117,12 +106,12 @@ describe('Add database', () => {
   it('Verify that user can add OSS Cluster DB', async function () {
     await addDatabaseView.addOssClusterDatabase(Config.ossClusterConfig)
     // Check for info message that DB was added
-    await webView.switchBack()
+    await addDatabaseView.switchBack()
     await DatabasesActions.verifyDatabaseAdded()
     // Wait for database to be in the list
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     expect(
-      await databaseDetailsView.isElementDisplayed(
+      await treeView.isElementDisplayed(
         treeView.getDatabaseByName(
           Config.ossClusterConfig.ossClusterDatabaseName,
         ),
@@ -138,16 +127,16 @@ describe('Add database', () => {
     // const defaultSentinelPort = '26379'
 
     // Verify that the Host, Port, Database Alias values pre-populated by default for the manual flow
-    expect(await InputActions.getInputValue(databaseDetailsView.hostInput)).eql(
+    expect(await InputActions.getInputValue(addDatabaseView.hostInput)).eql(
       defaultHost,
       'Default host not prepopulated',
     )
-    expect(await InputActions.getInputValue(databaseDetailsView.portInput)).eql(
+    expect(await InputActions.getInputValue(addDatabaseView.portInput)).eql(
       defaultPort,
       'Default port not prepopulated',
     )
     expect(
-      await InputActions.getInputValue(databaseDetailsView.databaseAliasInput),
+      await InputActions.getInputValue(addDatabaseView.databaseAliasInput),
     ).eql(`${defaultHost}:${defaultPort}`, 'Default db alias not prepopulated')
 
     // TODO add once db autodiscovery implemented:
@@ -160,12 +149,12 @@ describe('Add database', () => {
     }
 
     await addDatabaseView.addStandaloneSSHDatabase(sshDbPass, sshWithPass)
-    await webView.switchBack()
+    await addDatabaseView.switchBack()
     await DatabasesActions.verifyDatabaseAdded()
     // Wait for database to be in the list
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     expect(
-      await databaseDetailsView.isElementDisplayed(
+      await treeView.isElementDisplayed(
         treeView.getDatabaseByName(databaseName),
       ),
     ).true(`${databaseName} not added to database list`)
@@ -181,20 +170,22 @@ describe('Add database', () => {
       sshDbPrivateKey,
       sshWithPrivateKey,
     )
-    await webView.switchBack()
+    await addDatabaseView.switchBack()
     await DatabasesActions.verifyDatabaseAdded()
     // Wait for database to be in the list
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     expect(
-      await databaseDetailsView.isElementDisplayed(
+      await treeView.isElementDisplayed(
         treeView.getDatabaseByName(databaseName),
       ),
     ).true(`${databaseName} not added to database list`)
 
     await treeView.clickDatabaseByName(databaseName)
     await treeView.editDatabaseByName(databaseName)
-    await webView.switchBack()
-    await webView.switchToFrame(Views.DatabaseDetailsView)
+    await treeView.switchBack()
+    await addDatabaseView.switchToInnerViewFrame(
+      InnerViews.AddDatabaseInnerView,
+    )
 
     // Verify that user can edit SSH parameters for existing database connections
     await InputActions.typeText(
@@ -206,14 +197,16 @@ describe('Add database', () => {
       sshWithPassphrase.sshPassphrase,
     )
     await ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
-    await webView.switchBack()
+    await addDatabaseView.switchBack()
     await DatabasesActions.verifyDatabaseEdited()
 
     // Verify that password, passphrase and private key are hidden for SSH option
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.editDatabaseByName(databaseName)
-    await webView.switchBack()
-    await webView.switchToFrame(Views.DatabaseDetailsView)
+    await treeView.switchBack()
+    await addDatabaseView.switchToInnerViewFrame(
+      InnerViews.AddDatabaseInnerView,
+    )
     expect(
       await InputActions.getInputValue(editDatabaseView.sshPrivateKeyInput),
     ).eql(hiddenPass, 'Private Key not hidden for SSH on edit')
@@ -226,21 +219,21 @@ describe('Add database', () => {
       sshDbPasscode,
       sshWithPassphrase,
     )
-    await webView.switchBack()
+    await addDatabaseView.switchBack()
     await DatabasesActions.verifyDatabaseAdded()
     // Wait for database to be in the list
-    await webView.switchToFrame(Views.TreeView)
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     expect(
-      await databaseDetailsView.isElementDisplayed(
+      await treeView.isElementDisplayed(
         treeView.getDatabaseByName(databaseName),
       ),
     ).true(`${databaseName} not added to database list`)
   })
   it('Verify that Add database button disabled when mandatory ssh fields not specified', async function () {
-    await CheckboxActions.toggleCheckbox(databaseDetailsView.useSSHCheckbox)
-    await ButtonActions.clickElement(databaseDetailsView.sshPrivateKeyRadioBtn)
-    const isDisabled = await databaseDetailsView.isElementDisabled(
-      databaseDetailsView.saveDatabaseButton,
+    await CheckboxActions.toggleCheckbox(addDatabaseView.useSSHCheckbox)
+    await ButtonActions.clickElement(addDatabaseView.sshPrivateKeyRadioBtn)
+    const isDisabled = await addDatabaseView.isElementDisabled(
+      addDatabaseView.saveDatabaseButton,
       'class',
     )
     expect(isDisabled).true
