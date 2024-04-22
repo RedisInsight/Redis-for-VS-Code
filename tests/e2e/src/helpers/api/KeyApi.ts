@@ -12,7 +12,7 @@ import {
   StreamKeyParameters,
   StringKeyParameters,
 } from '../types/types'
-import { Key } from '../common-actions/KeysActions'
+import { Key } from '../common-actions/KeyActions'
 import { KeyTypesShort } from '../constants'
 
 const getKeysPathMask = '/databases/databaseId/keys/get-info?encoding=buffer'
