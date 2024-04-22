@@ -80,7 +80,7 @@ export enum InnerViews {
 
 export const InnerViewLocators = {
   [InnerViews.TreeInnerView]: `//iframe[@title='RedisInsight']`,
-  [InnerViews.KeyDetailsInnerView]: `//iframe[@title='RedisInsight - Key details']`,
+  [InnerViews.KeyDetailsInnerView]: `//iframe[contains(@title,':')]`,
   [InnerViews.SettingsInnerView]: `//iframe[@title='RedisInsight - Settings']`,
   [InnerViews.CliInnerView]: `//iframe[@title='Redis CLI']`,
   [InnerViews.AddDatabaseInnerView]: `//iframe[@title='RedisInsight - Add Database connection']`,
