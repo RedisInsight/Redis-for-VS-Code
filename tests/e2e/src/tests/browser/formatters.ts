@@ -7,7 +7,6 @@ import {
 import { Common } from '@e2eSrc/helpers/Common'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
-  WebView,
   TreeView,
   KeyDetailsView,
   HashKeyDetailsView,
@@ -29,8 +28,37 @@ import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { By, Locator } from 'vscode-extension-tester'
 import { CommonDriverExtension } from '@e2eSrc/helpers'
 
+const binaryFormattersSet = [formatters[5], formatters[6], formatters[7]]
+const formattersHighlightedSet = [formatters[0], formatters[3]]
+const fromBinaryFormattersSet = [
+  formatters[1],
+  formatters[2],
+  formatters[4],
+  formatters[8],
+  formatters[9],
+  formatters[10],
+]
+const formattersForEditSet = [formatters[0], formatters[1], formatters[3]]
+const formattersWithTooltipSet = [
+  formatters[0],
+  formatters[1],
+  formatters[2],
+  formatters[3],
+  formatters[4],
+  formatters[8],
+  formatters[9],
+  formatters[10],
+]
+const notEditableFormattersSet = [
+  formatters[2],
+  formatters[4],
+  formatters[8],
+  formatters[9],
+  formatters[10],
+]
+const defaultFormatter = Formatters.Unicode
+
 describe('Formatters', () => {
-  let webView: WebView
   let keyDetailsView: KeyDetailsView
   let treeView: TreeView
   let hashKeyDetailsView: HashKeyDetailsView
@@ -44,35 +72,6 @@ describe('Formatters', () => {
       (key.keyName =
         `${key.keyName}` + '-' + `${Common.generateWord(keyLength)}`),
   )
-  const binaryFormattersSet = [formatters[5], formatters[6], formatters[7]]
-  const formattersHighlightedSet = [formatters[0], formatters[3]]
-  const fromBinaryFormattersSet = [
-    formatters[1],
-    formatters[2],
-    formatters[4],
-    formatters[8],
-    formatters[9],
-    formatters[10],
-  ]
-  const formattersForEditSet = [formatters[0], formatters[1], formatters[3]]
-  const formattersWithTooltipSet = [
-    formatters[0],
-    formatters[1],
-    formatters[2],
-    formatters[3],
-    formatters[4],
-    formatters[8],
-    formatters[9],
-    formatters[10],
-  ]
-  const notEditableFormattersSet = [
-    formatters[2],
-    formatters[4],
-    formatters[8],
-    formatters[9],
-    formatters[10],
-  ]
-  const defaultFormatter = Formatters.Unicode
 
   async function verifyValueHighlighted(
     highlightedValueSelector: Locator,
@@ -84,7 +83,6 @@ describe('Formatters', () => {
   }
 
   before(async () => {
-    webView = new WebView()
     keyDetailsView = new KeyDetailsView()
     treeView = new TreeView()
     hashKeyDetailsView = new HashKeyDetailsView()
@@ -105,7 +103,7 @@ describe('Formatters', () => {
     )
   })
   after(async () => {
-    await webView.switchBack()
+    await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {

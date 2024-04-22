@@ -201,21 +201,30 @@ export class KeyDetailsView extends WebView {
    * Open formatter dropdown and select option
    * @param formatter The name of formatter
    */
+    async getFormatterValue(): Promise<string> {
+      const dropdownElement = await this.getElement(this.formatSwitcher)
+      return await dropdownElement.getAttribute('value')
+    }
+
+  /**
+   * Open formatter dropdown and select option
+   * @param formatter The name of formatter
+   */
   async selectFormatter(formatter: string): Promise<void> {
     await ButtonActions.clickElement(this.formatSwitcher)
     const dropdownElement = await this.getElement(this.formatSwitcher)
-    let currentValue = await dropdownElement.getAttribute('value')
+    let currentValue = await this.getFormatterValue()
 
     // Navigate up in the dropdown until "Unicode" is selected
     while (currentValue !== Formatters.Unicode) {
       await dropdownElement.sendKeys(Key.ARROW_UP)
-      currentValue = await dropdownElement.getAttribute('value')
+      currentValue = await this.getFormatterValue()
     }
 
     // Select the specified formatter
     while (currentValue !== formatter) {
       await dropdownElement.sendKeys(Key.ARROW_DOWN)
-      currentValue = await dropdownElement.getAttribute('value')
+      currentValue = await this.getFormatterValue()
     }
     await ButtonActions.clickElement(this.getFormatterOption(formatter))
   }
