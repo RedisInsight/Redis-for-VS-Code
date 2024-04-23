@@ -9,7 +9,7 @@ import {
 import { Common } from '@e2eSrc/helpers/Common'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { COMMANDS_TO_CREATE_KEY, keyLength } from '@e2eSrc/helpers/constants'
-import { keyTypes } from '@e2eSrc/helpers/common-actions/KeysActions'
+import { keyTypes } from '@e2eSrc/helpers/constants'
 import {
   DatabasesActions,
   InputActions,

@@ -11,7 +11,7 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
   )
   getEditButton = (keyType: string, name: string): By =>
     By.xpath(
-      `//*[@data-testid="edit-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-edit-button-${name}"]`,
+      `//*[contains(@data-testid, "edit-${keyType}-button-${name}")] | //*[contains(@data-testid, "${keyType}-edit-button-${name}")]`,
     )
 
   /**
@@ -33,22 +33,22 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     await ButtonActions.clickElement(this.applyButton)
   }
 
-    /**
+  /**
    * Edit key value from details with slow typing
    * @param value The value of the key
    * @param name The field value
    * @param editorLocator The locator of the edit field
    * @param keyType The key type
    */
-    protected async editKeyValueSlow(
-      value: string,
-      name: string,
-      editorLocator: By,
-      keyType: string,
-    ): Promise<void> {
-      const editLocator = this.getEditButton(keyType, name)
-      await ButtonActions.clickElement(editLocator)
-      await InputActions.slowType(editorLocator, value)
-      await ButtonActions.clickElement(this.applyButton)
-    }
+  protected async editKeyValueSlow(
+    value: string,
+    name: string,
+    editorLocator: By,
+    keyType: string,
+  ): Promise<void> {
+    const editLocator = this.getEditButton(keyType, name)
+    await ButtonActions.clickElement(editLocator)
+    await InputActions.slowType(editorLocator, value)
+    await ButtonActions.clickElement(this.applyButton)
+  }
 }

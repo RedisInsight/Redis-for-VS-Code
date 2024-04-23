@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
 import { TreeView, HashKeyDetailsView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { KeyActions } from '@e2eSrc/helpers/common-actions/KeysActions'
+import { KeyActions } from '@e2eSrc/helpers/common-actions/KeyActions'
 import {
   DatabasesActions,
   KeyDetailsActions,

@@ -1,3 +1,5 @@
+import { KeyTypesShort } from '../constants'
+
 /**
  * Add new database parameters
  * @param host The hostname of the database
@@ -48,7 +50,6 @@ export type SentinelParameters = {
  * @param ossClusterPort The port of OSS Cluster
  * @param ossClusterDatabaseName Database name for OSS Cluster
  */
-
 export type OSSClusterParameters = {
   ossClusterHost: string
   ossClusterPort: string
@@ -126,13 +127,12 @@ export type AddNewKeyParameters = {
 }
 
 /**
-* Hash key parameters
-* @param keyName The name of the key
-* @param fields The Array with fields
-* @param field The field of the field
-* @param value The value of the field
-
-*/
+ * Hash key parameters
+ * @param keyName The name of the key
+ * @param fields The Array with fields
+ * @param field The field of the field
+ * @param value The value of the field
+ */
 export type HashKeyParameters = {
   keyName: string
   fields: {
@@ -223,6 +223,19 @@ export type Result<T, E> =
   | { success: true; value: T }
   | { success: false; error: E }
 
+/**
+ * The key arguments for multiple keys/fields adding
+ * @param keysCount The number of keys to add
+ * @param fieldsCount The number of fields in key to add
+ * @param elementsCount The number of elements in key to add
+ * @param membersCount The number of members in key to add
+ * @param keyName The full key name
+ * @param keyNameStartWith The name of key should start with
+ * @param fieldStartWitht The name of field should start with
+ * @param fieldValueStartWith The name of field value should start with
+ * @param elementStartWith The name of element should start with
+ * @param memberStartWith The name of member should start with
+ */
 export type AddKeyArguments = {
   keysCount?: number
   fieldsCount?: number
@@ -234,4 +247,14 @@ export type AddKeyArguments = {
   fieldValueStartWith?: string
   elementStartWith?: string
   memberStartWith?: string
+}
+
+/**
+ * Keys Data parameters
+ * @param keyName The name of the key
+ * @param keyType The type of the key
+ */
+export type KeyData = {
+  keyName: string
+  keyType: KeyTypesShort
 }
