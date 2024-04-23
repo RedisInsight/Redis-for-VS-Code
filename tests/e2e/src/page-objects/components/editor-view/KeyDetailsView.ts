@@ -1,5 +1,5 @@
 import { By } from 'selenium-webdriver'
-import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions, DropdownActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { WebView } from '@e2eSrc/page-objects/components/WebView'
 import { InputWithButtons } from '../common/InputWithButtons'
@@ -201,30 +201,21 @@ export class KeyDetailsView extends WebView {
    * Open formatter dropdown and select option
    * @param formatter The name of formatter
    */
-    async getFormatterValue(): Promise<string> {
-      const dropdownElement = await this.getElement(this.formatSwitcher)
-      return await dropdownElement.getAttribute('value')
-    }
-
-  /**
-   * Open formatter dropdown and select option
-   * @param formatter The name of formatter
-   */
   async selectFormatter(formatter: string): Promise<void> {
     await ButtonActions.clickElement(this.formatSwitcher)
     const dropdownElement = await this.getElement(this.formatSwitcher)
-    let currentValue = await this.getFormatterValue()
+    let currentValue = await DropdownActions.getDropdownValue(this.formatSwitcher)
 
     // Navigate up in the dropdown until "Unicode" is selected
     while (currentValue !== Formatters.Unicode) {
       await dropdownElement.sendKeys(Key.ARROW_UP)
-      currentValue = await this.getFormatterValue()
+      currentValue = await DropdownActions.getDropdownValue(this.formatSwitcher)
     }
 
     // Select the specified formatter
     while (currentValue !== formatter) {
       await dropdownElement.sendKeys(Key.ARROW_DOWN)
-      currentValue = await this.getFormatterValue()
+      currentValue = await DropdownActions.getDropdownValue(this.formatSwitcher)
     }
     await ButtonActions.clickElement(this.getFormatterOption(formatter))
   }

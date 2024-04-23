@@ -10,6 +10,7 @@ import { TreeView, KeyDetailsView } from '@e2eSrc/page-objects/components'
 import {
   ButtonActions,
   DatabasesActions,
+  DropdownActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import {
@@ -93,7 +94,9 @@ describe('Format switcher functionality', () => {
     await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keysData[0].keyName)
     // Verify that formatters selection is saved when user switches between keys
-    expect(await keyDetailsView.getFormatterValue()).eql(
+    expect(
+      await DropdownActions.getDropdownValue(keyDetailsView.formatSwitcher),
+    ).eql(
       Formatters.JSON,
       'Formatter value is not saved when switching between keys',
     )
@@ -102,17 +105,18 @@ describe('Format switcher functionality', () => {
     await keyDetailsView.switchBack()
     await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keysData[1].keyName)
-    expect(await keyDetailsView.getFormatterValue()).eql(
-      Formatters.JSON,
-      'Formatter value is not saved when reloading page',
-    )
+    expect(
+      await DropdownActions.getDropdownValue(keyDetailsView.formatSwitcher),
+    ).eql(Formatters.JSON, 'Formatter value is not saved when reloading page')
     // Go to another database
     await keyDetailsView.switchBack()
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.clickDatabaseByName(databasesForAdding[1].databaseName)
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keysData[3].keyName)
     // Verify that formatters selection is saved when user switches between databases
-    expect(await keyDetailsView.getFormatterValue()).eql(
+    expect(
+      await DropdownActions.getDropdownValue(keyDetailsView.formatSwitcher),
+    ).eql(
       Formatters.JSON,
       'Formatter value is not saved when switching between databases',
     )
