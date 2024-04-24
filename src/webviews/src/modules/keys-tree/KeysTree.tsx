@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import * as l10n from '@vscode/l10n'
-
+import cx from 'classnames'
 import { isUndefined } from 'lodash'
+
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { AllKeyTypes, VscodeMessageAction } from 'uiSrc/constants'
-import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
+import { TelemetryEvent, isShowScanMore, sendEventTelemetry } from 'uiSrc/utils'
 import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString, isEqualBuffers } from 'uiSrc/utils/formatters'
 import { fetchKeyInfo, useContextApi, useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
@@ -150,7 +151,13 @@ export const KeysTree = () => {
   }
 
   return (
-    <div className={styles.content} data-testid="key-tree">
+    <div
+      className={cx(
+        styles.content,
+        { [styles.withScanMore]: isShowScanMore(keysState.scanned, keysState.total) },
+      )}
+      data-testid="key-tree"
+    >
       <VirtualTree
         items={items}
         delimiter={delimiter}

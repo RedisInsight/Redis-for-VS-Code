@@ -2,6 +2,7 @@ import React from 'react'
 
 import { ScanMore } from 'uiSrc/components'
 import { SCAN_TREE_COUNT_DEFAULT } from 'uiSrc/constants'
+import { isShowScanMore } from 'uiSrc/utils'
 import { useKeysApi, useKeysInContext } from '../../hooks/useKeys'
 
 export interface Props { }
@@ -18,15 +19,11 @@ export const KeysTreeHeader = () => {
     keysApi.fetchMorePatternKeysAction(nextCursor, SCAN_TREE_COUNT_DEFAULT)
   }
 
-  return (
-    <>
-      <ScanMore
-        loading={loading}
-        totalItemsCount={total}
-        scanned={scanned}
-        loadMoreItems={loadMoreItems}
-        nextCursor={nextCursor}
-      />
-    </>
+  return isShowScanMore(scanned, total) && (
+    <ScanMore
+      loading={loading}
+      loadMoreItems={loadMoreItems}
+      nextCursor={nextCursor}
+    />
   )
 }

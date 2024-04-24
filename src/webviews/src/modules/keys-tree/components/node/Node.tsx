@@ -123,16 +123,16 @@ export const Node = ({
 
   const NestingLevels = (): ReactNode => {
     if (!nestingLevel) {
-      return <div className={styles.nestingLevel} />
+      return <div className="sidebar-nesting-level" />
     }
     const levels = Array.from({ length: nestingLevel })
     return (
       <>
-        <div className={styles.nestingLevel} />
+        <div className="sidebar-nesting-level" />
         {levels.map(() => (
           <div
             key={Math.random()}
-            className={styles.nestingLevel}
+            className="sidebar-nesting-level"
           />
         ))}
       </>

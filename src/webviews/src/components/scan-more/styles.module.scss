@@ -1,0 +1,7 @@
+.btn {
+  @apply sidebar-nesting-level w-[calc(100%-60px)] h-4 left-[15px] z-10 mt-6 rounded-none bg-vscode-sideBar-background opacity-100;
+
+  &::part(control) {
+    @apply justify-start border-none;
+  }
+}

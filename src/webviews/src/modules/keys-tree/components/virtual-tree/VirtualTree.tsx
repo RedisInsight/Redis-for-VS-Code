@@ -265,7 +265,6 @@ const VirtualTree = (props: Props) => {
         {({ height, width }) => (
           <div className="relative" data-testid="virtual-tree">
             {nodes.current.length > 0 && (
-            <>
               <Tree
                 async
                 height={height}
@@ -278,7 +277,6 @@ const VirtualTree = (props: Props) => {
               >
                 {Node}
               </Tree>
-            </>
             )}
             {nodes.current.length === 0 && loading && (
               <div className={styles.loadingContainer} style={{ width: width || 0, height: height || 0 }} data-testid="virtual-tree-spinner">

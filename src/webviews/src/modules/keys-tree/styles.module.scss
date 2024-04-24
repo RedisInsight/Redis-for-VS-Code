@@ -1,3 +1,7 @@
 .content {
   @apply flex w-full flex-col h-[calc(100%-22px)] flex-auto;
 }
+
+.withScanMore {
+  @apply pt-[18px];
+}

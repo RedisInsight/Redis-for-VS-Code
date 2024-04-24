@@ -1,14 +1,12 @@
 import React, { FC } from 'react'
-import { isNull } from 'lodash'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import { VscDiffAdded } from 'react-icons/vsc'
 
-import { Nullable } from 'uiSrc/interfaces'
+import styles from './styles.module.scss'
 
 export interface Props {
   loading: boolean
-  scanned?: number
-  totalItemsCount?: Nullable<number>
   nextCursor?: string
   loadMoreItems?: (config: any) => void
 }
@@ -16,25 +14,17 @@ export interface Props {
 // const WARNING_MESSAGE = 'Scanning additional keys may decrease performance and memory available.'
 
 export const ScanMore: FC<Props> = ({
-  scanned = 0,
-  totalItemsCount = 0,
   loading,
-  loadMoreItems,
   nextCursor,
+  loadMoreItems,
 }) => (
-  <>
-    {((scanned || isNull(totalItemsCount)))
-      && nextCursor !== '0'
-      && (
-        <VSCodeButton
-          appearance="secondary"
-          disabled={loading}
-          data-testid="scan-more"
-          className="absolute right-0 z-10 mt-6"
-          onClick={loadMoreItems}
-        >
-          {l10n.t('Scan more')}
-        </VSCodeButton>
-      )}
-  </>
+  <VSCodeButton
+    disabled={loading || nextCursor === '0'}
+    data-testid="scan-more"
+    className={styles.btn}
+    onClick={loadMoreItems}
+  >
+    <VscDiffAdded className="mr-2" />
+    {l10n.t('Click to scan more')}
+  </VSCodeButton>
 )
