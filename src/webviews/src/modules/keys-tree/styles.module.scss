@@ -1,7 +1,7 @@
 .content {
-  @apply flex w-full flex-col h-[calc(100%-22px)] flex-auto;
+  @apply flex w-full flex-col h-[calc(100%-22px)] max-h-[calc(100vh-22px)] flex-auto;
 }
 
 .withScanMore {
-  @apply pt-[18px];
+  @apply h-[calc(100%-44px)] max-h-[calc(100vh-44px)];
 }

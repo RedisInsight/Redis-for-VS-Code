@@ -154,7 +154,7 @@ export const KeysTree = () => {
     <div
       className={cx(
         styles.content,
-        { [styles.withScanMore]: isShowScanMore(keysState.scanned, keysState.total) },
+        { [styles.withScanMore]: isShowScanMore(keysState.scanned, keysState.total, keysState.nextCursor) },
       )}
       data-testid="key-tree"
     >

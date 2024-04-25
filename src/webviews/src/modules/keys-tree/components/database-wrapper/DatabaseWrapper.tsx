@@ -11,7 +11,6 @@ import { POPOVER_WINDOW_BORDER_WIDTH, SelectedKeyActionType, SortOrder, StorageI
 import {
   TelemetryEvent,
   formatLongName,
-  getDatabaseId,
   getDbIndex,
   getRedisModulesSummary,
   sendEventTelemetry,
@@ -119,7 +118,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEYS_SORTED,
       eventData: {
-        databaseId: getDatabaseId(),
+        databaseId: id,
         sorting: newSorting,
       },
     })

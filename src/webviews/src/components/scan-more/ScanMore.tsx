@@ -6,25 +6,27 @@ import { VscDiffAdded } from 'react-icons/vsc'
 import styles from './styles.module.scss'
 
 export interface Props {
-  loading: boolean
-  nextCursor?: string
+  disabled: boolean
   loadMoreItems?: (config: any) => void
 }
 
 // const WARNING_MESSAGE = 'Scanning additional keys may decrease performance and memory available.'
 
 export const ScanMore: FC<Props> = ({
-  loading,
-  nextCursor,
+  disabled,
   loadMoreItems,
 }) => (
-  <VSCodeButton
-    disabled={loading || nextCursor === '0'}
-    data-testid="scan-more"
-    className={styles.btn}
-    onClick={loadMoreItems}
-  >
-    <VscDiffAdded className="mr-2" />
-    {l10n.t('Click to scan more')}
-  </VSCodeButton>
+  <div className={styles.container}>
+    <div className="sidebar-nesting-level" />
+    <VSCodeButton
+      disabled={disabled}
+      data-testid="scan-more"
+      className={styles.btn}
+      onClick={!disabled ? loadMoreItems : undefined}
+      title={disabled ? l10n.t('The entire database has been scanned.') : ''}
+    >
+      <VscDiffAdded className="mr-1" />
+      {l10n.t('Click to scan more')}
+    </VSCodeButton>
+  </div>
 )

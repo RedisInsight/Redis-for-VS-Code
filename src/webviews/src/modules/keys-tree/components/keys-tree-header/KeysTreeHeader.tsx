@@ -2,16 +2,18 @@ import React from 'react'
 
 import { ScanMore } from 'uiSrc/components'
 import { SCAN_TREE_COUNT_DEFAULT } from 'uiSrc/constants'
-import { isShowScanMore } from 'uiSrc/utils'
+import { isDisableScanMore, isShowScanMore } from 'uiSrc/utils'
 import { useKeysApi, useKeysInContext } from '../../hooks/useKeys'
 
 export interface Props { }
 
 export const KeysTreeHeader = () => {
-  const loading = useKeysInContext((state) => state.loading)
-  const total = useKeysInContext((state) => state.data.total)
-  const scanned = useKeysInContext((state) => state.data.scanned)
-  const nextCursor = useKeysInContext((state) => state.data.nextCursor)
+  const { loading, total, scanned, nextCursor } = useKeysInContext((state) => ({
+    loading: state.loading,
+    scanned: state.data.scanned,
+    total: state.data.total,
+    nextCursor: state.data.nextCursor,
+  }))
 
   const keysApi = useKeysApi()
 
@@ -19,11 +21,14 @@ export const KeysTreeHeader = () => {
     keysApi.fetchMorePatternKeysAction(nextCursor, SCAN_TREE_COUNT_DEFAULT)
   }
 
-  return isShowScanMore(scanned, total) && (
+  if (!isShowScanMore(scanned, total, nextCursor)) {
+    return null
+  }
+
+  return (
     <ScanMore
-      loading={loading}
+      disabled={loading || isDisableScanMore(scanned, total, nextCursor)}
       loadMoreItems={loadMoreItems}
-      nextCursor={nextCursor}
     />
   )
 }

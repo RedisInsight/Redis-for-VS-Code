@@ -79,7 +79,7 @@ describe('DatabaseWrapper', () => {
     expect(utils.sendEventTelemetry).toBeCalledWith({
       event: 'TREE_VIEW_KEYS_SORTED',
       eventData: {
-        databaseId: utils.getDatabaseId(),
+        databaseId: constants.TEST_DATABASE_ID,
         sorting: 'DESC',
       },
     })

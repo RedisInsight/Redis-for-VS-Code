@@ -1,7 +1,16 @@
+.container {
+  @apply flex flex-row pl-[15px];
+
+  &:hover {
+    background: var(--vscode-merge-commonHeaderBackground);
+  }
+}
+
 .btn {
-  @apply sidebar-nesting-level w-[calc(100%-60px)] h-4 left-[15px] z-10 mt-6 rounded-none bg-vscode-sideBar-background opacity-100;
+  @apply w-full h-[18px] z-10 rounded-none overflow-hidden pt-[2px] text-vscode-foreground;
+  background: transparent;
 
   &::part(control) {
-    @apply justify-start border-none;
+    @apply justify-start border-none text-vscode-foreground pl-px;
   }
 }
