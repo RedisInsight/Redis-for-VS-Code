@@ -22,7 +22,7 @@ export const ScanMore: FC<Props> = ({
       disabled={disabled}
       data-testid="scan-more"
       className={styles.btn}
-      onClick={!disabled ? loadMoreItems : undefined}
+      onClick={loadMoreItems}
       title={disabled ? l10n.t('The entire database has been scanned.') : ''}
     >
       <VscDiffAdded className="mr-1" />
