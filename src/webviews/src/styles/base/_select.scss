@@ -2,7 +2,11 @@
   @apply bg-vscode-input-background h-9;
 
   &__option {
-    @apply bg-vscode-input-background h-9 pl-2 pt-2 #{!important};
+    @apply bg-vscode-input-background h-9 pl-2 items-center #{!important};
+  }
+
+  &::part(listbox) {
+    top: 35px;
   }
 }
 

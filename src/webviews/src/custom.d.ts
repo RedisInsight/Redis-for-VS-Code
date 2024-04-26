@@ -4,5 +4,11 @@ declare namespace JSX {
       position?: 'below' | 'above'
       class?: string
     }, HTMLDivElement>
+    'vscode-option': React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement> & {
+      disabled?: boolean
+      selected?: boolean
+      value?: string
+      class?: string
+    }, HTMLDivElement>
   }
 }
