@@ -209,7 +209,7 @@
     ]
   },
   "The entire database has been scanned.": "The entire database has been scanned.",
-  "Click to scan more": "Click to scan more",
+  "Scan more": "Scan more",
   "Keys are the foundation of Redis.": "Keys are the foundation of Redis.",
   "No results found.": "No results found.",
   "Use TLS": "Use TLS",

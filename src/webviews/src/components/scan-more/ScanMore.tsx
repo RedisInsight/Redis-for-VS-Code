@@ -26,7 +26,7 @@ export const ScanMore: FC<Props> = ({
       title={disabled ? l10n.t('The entire database has been scanned.') : ''}
     >
       <VscDiffAdded className="mr-1" />
-      {l10n.t('Click to scan more')}
+      {l10n.t('Scan more')}
     </VSCodeButton>
   </div>
 )
