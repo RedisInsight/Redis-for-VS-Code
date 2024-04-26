@@ -9,6 +9,8 @@ import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 export class TreeView extends BaseComponent {
   treeViewPage = By.xpath(`//div[@data-testid='tree-view-page']`)
   scanMoreBtn = By.xpath(`//vscode-button[@data-testid='scan-more']`)
+  keyScannedNumber = By.xpath(`//sapn[@data-testid='keys-number-of-scanned']`)
+  totalKeyNumber = By.xpath(`//span[@data-testid='keys-total']`)
   treeViewKey = By.xpath(
     `//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')]`,
   )
