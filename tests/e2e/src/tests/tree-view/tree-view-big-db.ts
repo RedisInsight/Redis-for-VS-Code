@@ -51,6 +51,13 @@ describe('Tree view verifications', () => {
       true,
       'incorrect count is displayed',
     )
+    const count = parseInt(await treeView.getElementText(treeView.scanMoreBtn))
+     await ButtonActions.clickElement(treeView.scanMoreBtn)
+
+    expect(parseInt (await treeView.getElementText(treeView.scanMoreBtn))).gt(
+      count,
+      'the keys were not scanned',
+    )
   })
 
   it('Verify that when user deletes the key he can see the key is removed from the folder', async function () {
