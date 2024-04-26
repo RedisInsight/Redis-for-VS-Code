@@ -9,7 +9,7 @@ import { Props, ScanMore } from './ScanMore'
 import * as stories from './ScanMore.stories'
 
 // Every component that is returned maps 1:1 with the stories, but they already contain all decorators from story level, meta level and global level.
-const { Hidden, Default } = composeStories(stories)
+const { Default } = composeStories(stories)
 
 const scanMoreBtn = 'scan-more'
 const mockedProps = mock<Props>()
@@ -24,44 +24,34 @@ describe('ScanMore', () => {
     expect(queryByTestId(scanMoreBtn)).toBeInTheDocument()
   })
 
-  it('render Hidden button from stories', () => {
-    const { queryByTestId } = render(<Hidden />)
-    expect(queryByTestId(scanMoreBtn)).not.toBeInTheDocument()
-  })
-
   it('should call "loadMoreItems"', () => {
     const handleClick = vi.fn()
 
     const renderer = render(
-      <ScanMore {...instance(mockedProps)} loadMoreItems={handleClick} scanned={1} totalItemsCount={2} />,
+      <ScanMore {...instance(mockedProps)} loadMoreItems={handleClick} />,
+    )
+
+    expect(renderer).toBeTruthy()
+
+    const button = screen.getByTestId('scan-more') as HTMLButtonElement
+    fireEvent.click(button)
+
+    expect(handleClick).toHaveBeenCalledTimes(1)
+    expect(button.disabled).toBe(false)
+  })
+
+  it('should be disabled', () => {
+    const handleClick = vi.fn()
+
+    const renderer = render(
+      <ScanMore {...instance(mockedProps)} disabled loadMoreItems={handleClick} />,
     )
 
     expect(renderer).toBeTruthy()
 
     fireEvent.click(screen.getByTestId('scan-more'))
-    expect(handleClick).toHaveBeenCalledTimes(1)
-  })
 
-  it('should show button when totalItemsCount < scanned and nextCursor is not zero', () => {
-    const { queryByTestId } = render(
-      <ScanMore {...instance(mockedProps)} scanned={2} totalItemsCount={1} nextCursor="123" />,
-    )
-
-    expect(queryByTestId('scan-more')).toBeInTheDocument()
-  })
-
-  it('should hide button when totalItemsCount < scanned and nextCursor is zero', () => {
-    const { queryByTestId } = render(
-      <ScanMore {...instance(mockedProps)} scanned={2} totalItemsCount={1} nextCursor="0" />,
-    )
-
-    expect(queryByTestId('scan-more')).not.toBeInTheDocument()
-  })
-  it('should button be shown when totalItemsCount > scanned ', () => {
-    const { queryByTestId } = render(
-      <ScanMore {...instance(mockedProps)} scanned={1} totalItemsCount={2} />,
-    )
-
-    expect(queryByTestId('scan-more')).toBeInTheDocument()
+    const button = screen.getByTestId('scan-more') as HTMLButtonElement
+    expect(button.disabled).toBe(true)
   })
 })

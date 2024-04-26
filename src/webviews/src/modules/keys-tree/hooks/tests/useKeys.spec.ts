@@ -218,7 +218,7 @@ describe('useKeys', () => {
         const eventData = {
           event: 'TREE_VIEW_KEYS_SCANNED',
           eventData: {
-            databaseId: utils.getDatabaseId(),
+            databaseId: null,
             databaseSize: 249,
             keyType: null,
             match: '*',

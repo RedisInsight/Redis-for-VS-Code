@@ -2,15 +2,23 @@ import React from 'react'
 
 import { ScanMore } from 'uiSrc/components'
 import { SCAN_TREE_COUNT_DEFAULT } from 'uiSrc/constants'
+import { isDisableScanMore, isShowScanMore } from 'uiSrc/utils'
+import { Database } from 'uiSrc/store'
+import { KeysSummary } from '../keys-summary'
 import { useKeysApi, useKeysInContext } from '../../hooks/useKeys'
 
-export interface Props { }
+export interface Props {
+  database: Database
+}
 
-export const KeysTreeHeader = () => {
-  const loading = useKeysInContext((state) => state.loading)
-  const total = useKeysInContext((state) => state.data.total)
-  const scanned = useKeysInContext((state) => state.data.scanned)
-  const nextCursor = useKeysInContext((state) => state.data.nextCursor)
+export const KeysTreeHeader = ({ database }: Props) => {
+  const { loading, total, scanned, nextCursor, resultsLength } = useKeysInContext((state) => ({
+    loading: state.loading,
+    scanned: state.data.scanned,
+    total: state.data.total,
+    nextCursor: state.data.nextCursor,
+    resultsLength: state.data.keys?.length,
+  }))
 
   const keysApi = useKeysApi()
 
@@ -20,13 +28,20 @@ export const KeysTreeHeader = () => {
 
   return (
     <>
-      <ScanMore
+      <KeysSummary
+        database={database}
         loading={loading}
-        totalItemsCount={total}
         scanned={scanned}
-        loadMoreItems={loadMoreItems}
+        total={total}
         nextCursor={nextCursor}
+        resultsLength={resultsLength}
       />
+      {isShowScanMore(scanned, total, nextCursor) && (
+        <ScanMore
+          disabled={loading || isDisableScanMore(scanned, total, nextCursor)}
+          loadMoreItems={loadMoreItems}
+        />
+      )}
     </>
   )
 }

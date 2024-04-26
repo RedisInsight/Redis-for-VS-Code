@@ -1,0 +1,16 @@
+.container {
+  @apply flex flex-row pl-[15px];
+
+  &:hover {
+    background: var(--vscode-merge-commonHeaderBackground);
+  }
+}
+
+.btn {
+  @apply w-full h-[18px] z-10 rounded-none overflow-hidden pt-[2px] text-vscode-foreground;
+  background: transparent;
+
+  &::part(control) {
+    @apply justify-start border-none text-vscode-foreground pl-px;
+  }
+}

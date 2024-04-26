@@ -12,7 +12,7 @@ export const SidebarPage: FC<any> = () => {
         <ContextStoreProvider key={database.id}>
           <KeysStoreProvider>
             <DatabaseWrapper database={database}>
-              <KeysTreeHeader />
+              <KeysTreeHeader database={database} />
               <KeysTree />
             </DatabaseWrapper>
           </KeysStoreProvider>

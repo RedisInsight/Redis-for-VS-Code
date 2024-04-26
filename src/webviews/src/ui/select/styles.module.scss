@@ -1,7 +1,40 @@
 .container {
   @apply min-w-[210px];
+
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background-color: var(--vscode-editor-background);
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--vscode-scrollbarSlider-background);
+  }
+
+  &::part(listbox) {
+    height: 100px;
+  }
 }
 
 .option {
   @apply min-w-[80px];
+}
+
+:global{
+  div[id^='listbox-'] {
+    height: 110px;
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background-color: var(--vscode-editor-background);
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--vscode-scrollbarSlider-background);
+    }
+  }
 }
