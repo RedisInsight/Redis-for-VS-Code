@@ -1,5 +1,4 @@
 import React, { FC, ReactElement } from 'react'
-import { VSCodeOption } from '@vscode/webview-ui-toolkit/react'
 import cx from 'classnames'
 
 import { Nullable } from 'uiSrc/interfaces'
@@ -47,16 +46,17 @@ export const Select: FC<Props> = (props) => {
       disabled={disabled || undefined}
     >
       {options.map(({ value, label, testid }) => (
-        <VSCodeOption
+        <vscode-option
           value={value}
           key={value}
           onClick={() => onChange(value)}
           data-testid={testid}
-          className={cx(styles.option, itemClassName)}
-          selected={idSelected === value}
+          class={cx(styles.option, itemClassName)}
+          // is vscode-option look at is exists selected option, not on the parameter
+          selected={idSelected === value ? true : undefined}
         >
           {label}
-        </VSCodeOption>
+        </vscode-option>
       ))}
     </vscode-dropdown>
   )
