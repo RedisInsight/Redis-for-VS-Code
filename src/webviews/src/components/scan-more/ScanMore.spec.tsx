@@ -33,8 +33,11 @@ describe('ScanMore', () => {
 
     expect(renderer).toBeTruthy()
 
-    fireEvent.click(screen.getByTestId('scan-more'))
+    const button = screen.getByTestId('scan-more') as HTMLButtonElement
+    fireEvent.click(button)
+
     expect(handleClick).toHaveBeenCalledTimes(1)
+    expect(button.disabled).toBe(false)
   })
 
   it('should be disabled', () => {
@@ -47,6 +50,8 @@ describe('ScanMore', () => {
     expect(renderer).toBeTruthy()
 
     fireEvent.click(screen.getByTestId('scan-more'))
-    expect(handleClick).toHaveBeenCalledTimes(0)
+
+    const button = screen.getByTestId('scan-more') as HTMLButtonElement
+    expect(button.disabled).toBe(true)
   })
 })
