@@ -6,7 +6,7 @@ import * as l10n from '@vscode/l10n'
 import { useShallow } from 'zustand/react/shallow'
 
 import { sessionStorageService, vscodeApi } from 'uiSrc/services'
-import { POPOVER_WINDOW_BORDER_WIDTH, SelectedKeyActionType, SortOrder, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
+import { POPOVER_WINDOW_BORDER_WIDTH, SelectedKeyActionType, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import {
   TelemetryEvent,
   formatLongName,

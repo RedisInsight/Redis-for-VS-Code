@@ -88,7 +88,7 @@ const DbCompressor = (props: Props) => {
                   value || NONE,
                 )
               }}
-              data-testid="select-compressor"
+              testid="select-compressor"
             />
           </div>
         </div>
