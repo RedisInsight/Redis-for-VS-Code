@@ -39,7 +39,7 @@ import {
   DEFAULT_SEARCH_MATCH,
 } from 'uiSrc/constants'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyLSStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 
 import {
   deleteZSetMembers,
@@ -74,7 +74,7 @@ const ZSetDetailsTable = (props: Props) => {
 
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
-  const viewFormatProp = useSelectedKeyLSStore((state) => state.viewFormat)
+  const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
 
   const { length, key, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     length: state.data?.length,

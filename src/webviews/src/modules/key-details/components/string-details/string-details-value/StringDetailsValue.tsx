@@ -33,7 +33,7 @@ import {
 // import { decompressingBuffer } from 'uiSrc/utils/decompressors'
 import { downloadFile } from 'uiSrc/utils/dom/downloadFile'
 
-import { useSelectedKeyLSStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
 import { TextArea } from 'uiSrc/ui'
 import { InlineEditor } from 'uiSrc/components'
@@ -61,7 +61,7 @@ const StringDetailsValue = (props: Props) => {
     setIsStringCompressed,
   } = useStringStore(useShallow(useStringSelector))
 
-  const viewFormatProp = useSelectedKeyLSStore((state) => state.viewFormat)
+  const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
 
   const { key, length } = useSelectedKeyStore(useShallow((state) => ({
     key: state.data?.name,

@@ -1,4 +1,4 @@
-import { KeyTypes, KeyValueCompressor, KeyValueFormat, SelectedKeyActionType } from 'uiSrc/constants'
+import { KeyTypes, KeyValueCompressor, SelectedKeyActionType } from 'uiSrc/constants'
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 
 export interface SelectedKeyStore {
@@ -10,10 +10,6 @@ export interface SelectedKeyStore {
   compressor: Nullable<KeyValueCompressor>
   // for connection between selected key and key trees
   action: Nullable<SelectedKeyAction>
-}
-
-export interface SelectedKeyLSStore {
-  viewFormat: KeyValueFormat
 }
 
 interface SelectedKeyAction {
@@ -39,8 +35,4 @@ export interface SelectedKeyActions {
   updateSelectedKeyRefreshTime: (data: number) => void
   setSelectedKeyAction: (data: Nullable<SelectedKeyAction>) => void
   setSelectedKeyRefreshDisabled: (data: boolean) => void
-}
-
-export interface SelectedKeyLSActions {
-  setViewFormat: (data: KeyValueFormat) => void
 }

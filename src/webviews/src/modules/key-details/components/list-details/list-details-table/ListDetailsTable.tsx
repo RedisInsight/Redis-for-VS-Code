@@ -43,7 +43,7 @@ import { StopPropagation } from 'uiSrc/components/virtual-table'
 // import { getColumnWidth } from 'uiSrc/components/virtual-grid'
 // import { decompressingBuffer } from 'uiSrc/utils/decompressors'
 
-import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyLSStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { fetchListElements, fetchListMoreElements, fetchSearchingListElement, updateListElementsAction, useListStore } from '../hooks/useListStore'
@@ -70,7 +70,7 @@ const ListDetailsTable = (props: Props) => {
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
   const { [KeyTypes.List]: listSizes } = useContextInContext((state) => state.browser.keyDetailsSizes)
 
-  const viewFormatProp = useSelectedKeyLSStore((state) => state.viewFormat)
+  const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
 
   const { key, lastRefreshTime, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     key: state.data?.name,
