@@ -10,7 +10,7 @@ import { immer } from 'zustand/middleware/immer'
 import { useStoreWithEqualityFn } from 'zustand/traditional'
 
 import { ExtractState, ZustandStore } from 'uiSrc/store'
-import { DEFAULT_TREE_SORTING, KeyTypes, StorageItem } from 'uiSrc/constants'
+import { DEFAULT_TREE_SORTING, DEFAULT_VIEW_FORMAT, KeyTypes, StorageItem } from 'uiSrc/constants'
 import { localStorageService } from 'uiSrc/services'
 import { AppContextStore, AppContextActions } from './interface'
 import { createContextActions } from './useContextActions'
@@ -29,6 +29,7 @@ export const initialContextState: AppContextStore = {
     },
   },
   browser: {
+    viewFormat: localStorageService?.get(StorageItem.viewFormat) ?? DEFAULT_VIEW_FORMAT,
     keyDetailsSizes: {
       [KeyTypes.Hash]: localStorageService?.get(StorageItem.keyDetailSizes)?.hash ?? null,
       [KeyTypes.List]: localStorageService?.get(StorageItem.keyDetailSizes)?.list ?? null,

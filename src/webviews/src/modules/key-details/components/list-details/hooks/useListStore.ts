@@ -3,13 +3,11 @@ import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
-import { fetchKeyInfo, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
+import { refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints, successMessages } from 'uiSrc/constants'
 import {
-  bufferToString,
-  formatNameShort,
   getApiErrorMessage,
   getEncoding,
   getUrl,
