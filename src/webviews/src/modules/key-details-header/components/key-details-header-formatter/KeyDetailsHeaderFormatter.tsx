@@ -9,7 +9,7 @@ import {
 } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent, isFullStringLoaded } from 'uiSrc/utils'
 import { useStringStore } from 'uiSrc/modules/key-details/components/string-details'
-import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useDatabasesStore, useSelectedKeyLSStore, useSelectedKeyStore } from 'uiSrc/store'
 import { Select, SelectOption } from 'uiSrc/ui'
 import { getKeyValueFormatterOptions } from './constants'
 import styles from './styles.module.scss'
@@ -25,11 +25,14 @@ export const KeyDetailsHeaderFormatter = (props: Props) => {
 
   const keyValue = useStringStore(useShallow((state) => state.data.value))
 
-  const { viewFormat, keyType, length, setViewFormat } = useSelectedKeyStore(useShallow((state) => ({
+  const { viewFormat, setViewFormat } = useSelectedKeyLSStore(useShallow((state) => ({
     viewFormat: state.viewFormat,
+    setViewFormat: state.setViewFormat,
+  })))
+
+  const { keyType, length } = useSelectedKeyStore(useShallow((state) => ({
     length: state.data?.length,
     keyType: state.data?.type,
-    setViewFormat: state.setViewFormat,
   })))
 
   const [typeSelected, setTypeSelected] = useState<KeyValueFormat>(viewFormat)

@@ -4,7 +4,7 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { isNull } from 'lodash'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
-import { apiService, localStorageService } from 'uiSrc/services'
+import { apiService } from 'uiSrc/services'
 import {
   ApiEndpoints,
   DEFAULT_SEARCH_MATCH,
@@ -14,7 +14,6 @@ import {
   SCAN_COUNT_DEFAULT,
   STRING_MAX_LENGTH,
   SortOrder,
-  StorageItem,
 } from 'uiSrc/constants'
 import { bufferToString, getApiErrorMessage, getEncoding, getUrl, getDatabaseUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { fetchString } from 'uiSrc/modules'
@@ -26,7 +25,7 @@ import {
   useListStore,
 } from 'uiSrc/modules/key-details/components/list-details/hooks/useListStore'
 import { fetchSetMembers } from 'uiSrc/modules/key-details/components/set-details/hooks/useSetStore'
-import { SelectedKeyActions, SelectedKeyStore } from './interface'
+import { SelectedKeyActions, SelectedKeyLSActions, SelectedKeyLSStore, SelectedKeyStore } from './interface'
 
 export const initialSelectedKeyState: SelectedKeyStore = {
   loading: false,
@@ -34,7 +33,6 @@ export const initialSelectedKeyState: SelectedKeyStore = {
   refreshDisabled: false,
   lastRefreshTime: null,
   data: null,
-  viewFormat: localStorageService?.get(StorageItem.viewFormat) ?? DEFAULT_VIEW_FORMAT,
   compressor: null,
   action: null,
 }
@@ -57,11 +55,6 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
 
     setSelectedKeyAction: (action) => set({ action }),
     setSelectedKeyRefreshDisabled: (refreshDisabled: boolean) => set({ refreshDisabled }),
-    setViewFormat: (viewFormat: KeyValueFormat) => set((state) => {
-      state.viewFormat = viewFormat
-
-      localStorageService?.set(StorageItem.viewFormat, viewFormat)
-    }),
   }),
   {
     name: 'selectedKey',
@@ -69,11 +62,23 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
   }))),
 )
 
+// LS - Local Storage
+export const useSelectedKeyLSStore = create<SelectedKeyLSStore & SelectedKeyLSActions>()(
+  immer(devtools(persist((set) => ({
+    viewFormat: DEFAULT_VIEW_FORMAT,
+    // actions
+    setViewFormat: (viewFormat: KeyValueFormat) => set({ viewFormat }),
+  }),
+  {
+    name: 'selectedKeyLS',
+  }))),
+)
+
 // Asynchronous thunk action
 export const fetchKeyInfo = (
   { key, databaseId }: { key: RedisString, databaseId?: string },
   fetchKeyValue = true,
-  onSuccess?: () => void,
+  onSuccess?: (data: KeyInfo) => void,
 ) => {
   useSelectedKeyStore.setState(async (state) => {
     state.processSelectedKey()
@@ -85,7 +90,7 @@ export const fetchKeyInfo = (
       )
 
       if (isStatusSuccessful(status)) {
-        onSuccess?.()
+        onSuccess?.(data)
         state.processSelectedKeySuccess(data)
         state.updateSelectedKeyRefreshTime(Date.now())
 
