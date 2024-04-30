@@ -47,7 +47,7 @@ import {
   TEXT_INVALID_VALUE,
 } from 'uiSrc/constants'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyLSStore, useSelectedKeyStore } from 'uiSrc/store'
 import { TextArea } from 'uiSrc/ui'
 import { AddFieldsToHashDto, GetHashFieldsResponse, HashField } from '../hooks/interface'
 
@@ -81,8 +81,9 @@ const HashDetailsTable = (props: Props) => {
 
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
-  const { viewFormatProp, length, key, lastRefreshTime, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
-    viewFormatProp: state.viewFormat,
+  const viewFormatProp = useSelectedKeyLSStore((state) => state.viewFormat)
+
+  const { length, key, lastRefreshTime, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     length: state.data?.length,
     key: state.data?.name,
     lastRefreshTime: state.lastRefreshTime,

@@ -7,10 +7,13 @@ export interface SelectedKeyStore {
   refreshDisabled: boolean
   lastRefreshTime: Nullable<number>
   data: Nullable<KeyInfo>
-  viewFormat: KeyValueFormat
   compressor: Nullable<KeyValueCompressor>
   // for connection between selected key and key trees
   action: Nullable<SelectedKeyAction>
+}
+
+export interface SelectedKeyLSStore {
+  viewFormat: KeyValueFormat
 }
 
 interface SelectedKeyAction {
@@ -36,5 +39,8 @@ export interface SelectedKeyActions {
   updateSelectedKeyRefreshTime: (data: number) => void
   setSelectedKeyAction: (data: Nullable<SelectedKeyAction>) => void
   setSelectedKeyRefreshDisabled: (data: boolean) => void
+}
+
+export interface SelectedKeyLSActions {
   setViewFormat: (data: KeyValueFormat) => void
 }
