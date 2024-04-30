@@ -75,10 +75,12 @@ describe('useKeys', () => {
 
       // Act
       const { loadKeysSuccess } = useKeysStore.getState()
-      loadKeysSuccess(constants.KEYS_LIST)
+      loadKeysSuccess(constants.KEYS_LIST, true, true)
 
       // Assert
       expect(useKeysStore.getState().data).toEqual(stateData)
+      expect(useKeysStore.getState().isSearched).toEqual(true)
+      expect(useKeysStore.getState().isFiltered).toEqual(true)
     })
 
     it('should properly set the state with empty data', () => {

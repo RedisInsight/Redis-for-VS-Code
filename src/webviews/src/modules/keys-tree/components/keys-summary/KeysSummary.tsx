@@ -12,6 +12,7 @@ import { SortOrder, VscodeMessageAction } from 'uiSrc/constants'
 import { Database, useContextApi, useContextInContext } from 'uiSrc/store'
 import { Nullable } from 'uiSrc/interfaces'
 
+import { KeyTreeFilter } from '../keys-tree-filter'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -62,7 +63,7 @@ export const KeysSummary = (props: Props) => {
   }
 
   return (
-    <div className="flex flex-row justify-between pl-6">
+    <div className="flex flex-row justify-between pl-5">
       <div className={styles.content} data-testid="keys-summary">
         {(!!total || isNull(total)) && !!scanned && (
         <span>
@@ -83,7 +84,7 @@ export const KeysSummary = (props: Props) => {
         </div>
       )} */}
 
-      <div className="flex pr-4">
+      <div className="flex pr-3.5">
         <VSCodeButton
           appearance="icon"
           title={l10n.t('Sort by key names displayed')}
@@ -92,6 +93,7 @@ export const KeysSummary = (props: Props) => {
         >
           {isSortingASC ? <BiSortDown /> : <BiSortUp />}
         </VSCodeButton>
+        <KeyTreeFilter />
         <VSCodeButton appearance="icon" onClick={addKeyClickHandle} data-testid="add-key-button">
           <VscAdd />
         </VSCodeButton>

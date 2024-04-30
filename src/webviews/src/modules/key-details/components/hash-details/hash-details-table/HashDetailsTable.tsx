@@ -47,7 +47,7 @@ import {
   TEXT_INVALID_VALUE,
 } from 'uiSrc/constants'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyLSStore, useSelectedKeyStore } from 'uiSrc/store'
 import { TextArea } from 'uiSrc/ui'
 import { AddFieldsToHashDto, GetHashFieldsResponse, HashField } from '../hooks/interface'
 

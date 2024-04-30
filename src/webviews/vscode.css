@@ -43,6 +43,15 @@ vscode-button::part(control) {
 
     border-left: 1px solid var(--vscode-foreground);
   }
+
+  .empty-btn {
+    @apply underline hover:no-underline;
+    background-color: transparent;
+
+    &::part(control) {
+      @apply border-none;
+    }
+  }
 }
 
 .table-loading:before {

@@ -23,7 +23,7 @@ import {
   useListStore,
 } from 'uiSrc/modules/key-details/components/list-details/hooks/useListStore'
 import { fetchSetMembers } from 'uiSrc/modules/key-details/components/set-details/hooks/useSetStore'
-import { SelectedKeyActions, SelectedKeyStore } from './interface'
+import { SelectedKeyActions, SelectedKeyLSActions, SelectedKeyLSStore, SelectedKeyStore } from './interface'
 
 export const initialSelectedKeyState: SelectedKeyStore = {
   loading: false,
@@ -57,6 +57,18 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
   {
     name: 'selectedKey',
     storage: createJSONStorage(() => sessionStorage),
+  }))),
+)
+
+// LS - Local Storage
+export const useSelectedKeyLSStore = create<SelectedKeyLSStore & SelectedKeyLSActions>()(
+  immer(devtools(persist((set) => ({
+    viewFormat: DEFAULT_VIEW_FORMAT,
+    // actions
+    setViewFormat: (viewFormat: KeyValueFormat) => set({ viewFormat }),
+  }),
+  {
+    name: 'selectedKeyLS',
   }))),
 )
 

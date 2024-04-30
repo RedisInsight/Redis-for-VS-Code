@@ -1,0 +1,33 @@
+.label {
+  @apply min-w-[66px];
+}
+
+.title {
+  @apply font-medium;
+  font-size: 14px;
+}
+
+.row {
+  @apply flex flex-row items-center pb-2 last:pb-0;
+}
+
+.clearBtn {
+  @apply text-vscode-symbolIcon-textForeground;
+  font-size: 11px;
+}
+
+.footer {
+  @apply flex w-full justify-end pt-1;
+
+  & > * {
+    @apply ml-2;
+  }
+}
+
+.input {
+  @apply h-6;
+}
+
+:global(.key-tree-filter-popup-content) {
+  @apply w-[278px];
+}

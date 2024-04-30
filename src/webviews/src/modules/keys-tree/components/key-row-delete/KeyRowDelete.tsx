@@ -27,7 +27,7 @@ export const KeyRowDelete = (props: Props) => {
         header={`${formatLongName(nameString)}`}
         text={`${l10n.t(' will be deleted.')}`}
         approveTextBtn={l10n.t('Delete')}
-        triggerClassName={cx(styles.trigger, 'group-hover:block')}
+        triggerClassName={cx(styles.trigger, 'group-hover:!flex')}
         maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}
         handleDeleteItem={handleDelete}
         handleButtonClick={handleDeletePopoverOpen}

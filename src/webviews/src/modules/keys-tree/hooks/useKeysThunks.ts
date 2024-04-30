@@ -60,7 +60,12 @@ KeysThunks
 
       sourceKeysFetch = null
       if (isStatusSuccessful(status)) {
-        get().loadKeysSuccess(parseKeysListResponse({}, data))
+        get().loadKeysSuccess(
+          parseKeysListResponse({}, data),
+          !!match,
+          !!type,
+        )
+
         let matchValue = DEFAULT_SEARCH_MATCH
         let event = TelemetryEvent.TREE_VIEW_KEYS_SCANNED
         if (!!type || !!match) {
@@ -69,14 +74,15 @@ KeysThunks
           }
           event = TelemetryEvent.TREE_VIEW_KEYS_SCANNED_WITH_FILTER_ENABLED
         }
+
         sendEventTelemetry({
           event,
           eventData: {
-            databaseId: get().databaseId,
+            databaseId: get()?.databaseId,
             keyType: type,
             match: matchValue,
-            databaseSize: data[0].total,
-            numberOfKeysScanned: data[0].scanned,
+            databaseSize: data[0]?.total,
+            numberOfKeysScanned: data[0]?.scanned,
             scanCount: count,
             source: telemetryProperties.source ?? 'manual',
             ...telemetryProperties,

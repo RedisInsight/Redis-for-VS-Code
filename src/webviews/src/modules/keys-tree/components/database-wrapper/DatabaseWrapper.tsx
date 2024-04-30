@@ -6,7 +6,7 @@ import * as l10n from '@vscode/l10n'
 import { useShallow } from 'zustand/react/shallow'
 
 import { sessionStorageService, vscodeApi } from 'uiSrc/services'
-import { POPOVER_WINDOW_BORDER_WIDTH, SelectedKeyActionType, SortOrder, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
+import { POPOVER_WINDOW_BORDER_WIDTH, SelectedKeyActionType, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import {
   TelemetryEvent,
   formatLongName,
@@ -126,7 +126,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
 
   return (
     <div className={cx('flex w-full flex-col')}>
-      <div className={cx('flex justify-between pt-px flex-row flex-1 max-h-[22px]', { 'flex-col pr-3': !showTree })}>
+      <div className={cx('flex justify-between flex-1 min-h-[22px] flex-row group')}>
         <div
           onClick={() => handleCheckConnectToDatabase(database)}
           role="button"
@@ -143,32 +143,40 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
             <div>{getDbIndex(database.db)}</div>
           </div>
         </div>
-        {showTree && (
-          <div className="flex pr-3.5">
+        <div className="flex pr-3.5">
+          {showTree && (
             <RefreshBtn
               lastRefreshTime={lastRefreshTime}
               position="left center"
               onClick={refreshHandle}
               triggerTestid="refresh-keys"
             />
-            <VSCodeButton appearance="icon" onClick={editHandle} data-testid="edit-database">
-              <VscEdit />
-            </VSCodeButton>
-            <PopoverDelete
-              header={formatLongName(name, 50, 10, '...')}
-              text={l10n.t('will be deleted from RedisInsight.')}
-              item={id}
-              maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}
-              disabled={false}
-              handleDeleteItem={() => deleteDatabaseHandle()}
-              handleButtonClick={() => clickDeleteDatabaseHandle()}
-              testid={`delete-database-${id}`}
-            />
+          )}
+          <VSCodeButton
+            appearance="icon"
+            onClick={editHandle}
+            className={cx('hidden', 'group-hover:!flex', { '!flex': showTree })}
+            data-testid="edit-database"
+          >
+            <VscEdit />
+          </VSCodeButton>
+          <PopoverDelete
+            header={formatLongName(name, 50, 10, '...')}
+            text={l10n.t('will be deleted from RedisInsight.')}
+            item={id}
+            maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}
+            disabled={false}
+            triggerClassName={cx('hidden h-[22px] group-hover:!flex', { '!flex': showTree })}
+            handleDeleteItem={() => deleteDatabaseHandle()}
+            handleButtonClick={() => clickDeleteDatabaseHandle()}
+            testid={`delete-database-${id}`}
+          />
+          {showTree && (
             <VSCodeButton appearance="icon" onClick={openCliClickHandle} data-testid="terminal-button">
               <VscTerminal />
             </VSCodeButton>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       {showTree && children}
     </div>

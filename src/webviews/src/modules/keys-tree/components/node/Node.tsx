@@ -53,11 +53,11 @@ export const Node = ({
     }
   }, [])
 
-  useEffect(() => {
-    if (isSelected && nameBuffer) {
-      updateStatusSelected?.(nameBuffer, keyString, type)
-    }
-  }, [isSelected])
+  // useEffect(() => {
+  //   if (isSelected && nameBuffer) {
+  //     updateStatusSelected?.(nameBuffer, keyString, type)
+  //   }
+  // }, [isSelected])
 
   const handleClick = () => {
     if (isLeaf) {

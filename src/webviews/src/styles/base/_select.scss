@@ -1,3 +1,15 @@
+vscode-dropdown {
+  vscode-option {
+    @apply h-7 items-center pl-2;
+  }
+
+  &.select-without-border {
+    &:not(:focus)::part(control) {
+      border-color: transparent;
+    }
+  }
+}
+
 .database-form-select {
   @apply bg-vscode-input-background h-9;
 
@@ -9,5 +21,3 @@
     top: 35px;
   }
 }
-
-
