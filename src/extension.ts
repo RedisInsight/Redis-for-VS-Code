@@ -132,9 +132,15 @@ export async function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('RedisInsight.updateSettings', (args) => {
-      sidebarProvider.view?.webview.postMessage({ action: 'UpdateSettings', data: args.data })
-      panelProvider.view?.webview.postMessage({ action: 'UpdateSettings', data: args.data })
-      // WebviewPanel.getInstance({ viewId: ViewId.Key }).update()
+      const message = { action: 'UpdateSettings', data: args.data }
+
+      // send a new settings to all open panels
+      Object.values(WebviewPanel.instances).forEach((instance) => {
+        instance.update({ message })
+      })
+
+      sidebarProvider.view?.webview.postMessage(message)
+      panelProvider.view?.webview.postMessage(message)
     }),
 
     vscode.commands.registerCommand('RedisInsight.updateSettingsDelimiter', (args) => {
