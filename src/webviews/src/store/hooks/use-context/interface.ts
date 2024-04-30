@@ -1,5 +1,5 @@
 import { RelativeWidthSizes } from 'uiSrc/components/virtual-table/interfaces'
-import { KeyTypes, SortOrder } from 'uiSrc/constants'
+import { KeyTypes, KeyValueFormat, SortOrder } from 'uiSrc/constants'
 import { Nullable } from 'uiSrc/interfaces'
 
 export interface AppContextStore {
@@ -14,6 +14,7 @@ export interface AppContextStore {
     }
   }
   browser: {
+    viewFormat: KeyValueFormat
     keyDetailsSizes: {
       [key: string]: Nullable<RelativeWidthSizes>
     }
@@ -29,6 +30,8 @@ export interface AppContextActions {
   setKeysTreeNodesOpen: (nodes: OpenNodes) => void
   resetKeysTree: () => void
   updateKeyDetailsSizes: (data: { type: KeyTypes, sizes: RelativeWidthSizes }) => void
+
+  setViewFormat: (viewFormat: KeyValueFormat) => void
 }
 
 export interface OpenNodes {
