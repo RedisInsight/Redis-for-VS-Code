@@ -8,9 +8,7 @@ import { apiService } from 'uiSrc/services'
 import {
   ApiEndpoints,
   DEFAULT_SEARCH_MATCH,
-  DEFAULT_VIEW_FORMAT,
   KeyTypes,
-  KeyValueFormat,
   SCAN_COUNT_DEFAULT,
   STRING_MAX_LENGTH,
   SortOrder,

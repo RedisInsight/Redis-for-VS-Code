@@ -27,7 +27,7 @@ import {
 } from 'uiSrc/constants'
 import { PopoverDelete, VirtualTable } from 'uiSrc/components'
 import { IColumnSearchState, ITableColumn } from 'uiSrc/components/virtual-table/interfaces'
-import { useDatabasesStore, useSelectedKeyLSStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import {
   deleteSetMembers,
   fetchSetMembers,
@@ -56,7 +56,7 @@ export const SetDetailsTable = (props: Props) => {
 
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
-  const viewFormatProp = useSelectedKeyLSStore((state) => state.viewFormat)
+  const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
 
   const { length, key } = useSelectedKeyStore(useShallow((state) => ({
     length: state.data?.length,

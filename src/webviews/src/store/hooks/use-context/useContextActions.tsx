@@ -34,4 +34,10 @@ AppContextStore & AppContextActions
     localStorageService?.set(StorageItem.keyDetailSizes, state.browser.keyDetailsSizes)
     return state
   }),
+
+  setViewFormat: (viewFormat) => set((state) => {
+    state.browser.viewFormat = viewFormat
+    localStorageService?.set(StorageItem.viewFormat, viewFormat)
+    return state
+  }),
 })
