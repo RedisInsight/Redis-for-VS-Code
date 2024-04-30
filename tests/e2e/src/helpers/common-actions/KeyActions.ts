@@ -1,9 +1,9 @@
-import { KeyTypesTexts } from '../constants'
 import { AddKeyArguments } from '@e2eSrc/helpers/types/types'
 import { createClient } from 'redis'
 import { Common } from '@e2eSrc/helpers/Common'
 import { ZMember } from '@redis/client/dist/lib/commands/generic-transformers'
 import { random } from 'lodash'
+import { KeyTypesShort } from '../constants'
 
 export class KeyActions {
   /**
@@ -135,14 +135,50 @@ export class KeyActions {
   }
 }
 
-export const keyTypes = [
-  { textType: KeyTypesTexts.Hash, keyName: 'hash', data: 'value' },
-  { textType: KeyTypesTexts.List, keyName: 'list', data: 'element' },
-  { textType: KeyTypesTexts.Set, keyName: 'set', data: 'member' },
-  { textType: KeyTypesTexts.ZSet, keyName: 'zset', data: 'member' },
-  { textType: KeyTypesTexts.String, keyName: 'string', data: 'value' },
-  { textType: KeyTypesTexts.ReJSON, keyName: 'json', data: 'data' },
-  { textType: KeyTypesTexts.Stream, keyName: 'stream', data: 'field' },
-  { textType: KeyTypesTexts.Graph, keyName: 'graph' },
-  { textType: KeyTypesTexts.TimeSeries, keyName: 'timeSeries' },
-]
+export class Key {
+  private keyName: string
+  private keyType: KeyTypesShort
+  private properties: Record<string, any>
+
+  constructor(
+    keyName: string,
+    keyType: KeyTypesShort,
+    field?: string,
+    value?: string,
+  ) {
+    this.keyName = keyName
+    this.keyType = keyType
+    this.properties = this.createProperties(field, value)
+  }
+
+  private createProperties(field?: string, value?: string): Record<string, any> {
+    switch (this.keyType) {
+      case KeyTypesShort.Hash:
+        return { fields: [{ field, value }] }
+      case KeyTypesShort.List:
+        return { element: value }
+      case KeyTypesShort.Set:
+        return { members: [value] }
+      case KeyTypesShort.ZSet:
+        return { members: [{ name: field, score: 1 }] }
+      case KeyTypesShort.String:
+        return { value }
+      case KeyTypesShort.ReJSON:
+        return { data: value }
+      // case KeyTypesShort.Stream:
+      //   return {
+      //     entries: [{ id: '*', fields: [{ name: field, value: value }] }],
+      //   }
+
+      default:
+        throw new Error('Invalid keyType')
+    }
+  }
+
+  getRequestBody(): any {
+    return {
+      keyName: Buffer.from(this.keyName, 'utf-8'),
+      ...this.properties,
+    }
+  }
+}

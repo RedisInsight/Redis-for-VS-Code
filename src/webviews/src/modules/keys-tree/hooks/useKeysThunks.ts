@@ -7,7 +7,6 @@ import { DEFAULT_SEARCH_MATCH, ApiEndpoints, KeyTypes, successMessages, SCAN_TRE
 import {
   TelemetryEvent,
   getApiErrorMessage,
-  getDatabaseId,
   getEncoding,
   getMatchType,
   isStatusSuccessful,
@@ -73,7 +72,7 @@ KeysThunks
         sendEventTelemetry({
           event,
           eventData: {
-            databaseId: getDatabaseId(),
+            databaseId: get().databaseId,
             keyType: type,
             match: matchValue,
             databaseSize: data[0].total,
@@ -127,8 +126,8 @@ KeysThunks
         sendEventTelemetry({
           event: TelemetryEvent.TREE_VIEW_KEYS_ADDITIONALLY_SCANNED,
           eventData: {
-            databaseId: getDatabaseId(),
-            databaseSize: data[0].total,
+            databaseId: get().databaseId,
+            databaseSize: data[0]?.total,
             numberOfKeysScanned: get().data.scanned + data[0].scanned,
             scanCount: count,
           },

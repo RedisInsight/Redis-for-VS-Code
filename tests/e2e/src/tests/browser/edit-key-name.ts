@@ -14,7 +14,6 @@ import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
-  HashKeyParameters,
   ListKeyParameters,
   SetKeyParameters,
   SortedSetKeyParameters,
@@ -27,6 +26,7 @@ import {
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
 let keyNameBefore = Common.generateWord(10)
 let keyNameAfter = Common.generateWord(10)
@@ -193,17 +193,9 @@ describe('Edit Key names verification', () => {
   it('Verify that user can edit Hash Key name', async function () {
     keyNameBefore = Common.generateWord(10)
     keyNameAfter = Common.generateWord(10)
-    const hashKeyParameters: HashKeyParameters = {
-      keyName: keyNameBefore,
-      fields: [
-        {
-          field: 'fieldName',
-          value: 'keyValue',
-        },
-      ],
-    }
-    await KeyAPIRequests.addHashKeyApi(
-      hashKeyParameters,
+
+    await KeyAPIRequests.addKeyApi(
+      { keyName: keyNameBefore, keyType: KeyTypesShort.Hash },
       Config.ossStandaloneConfig.databaseName,
     )
     // Refresh database

@@ -11,15 +11,15 @@ import {
 import { RedisString } from 'uiSrc/interfaces'
 import { editKeyTTL, refreshKeyInfo, useDatabasesStore, useSelectedKeyStore, editKey } from 'uiSrc/store'
 import { TelemetryEvent, formatLongName, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
-// import { KeyDetailsHeaderFormatter } from './components/key-details-header-formatter'
 import { PopoverDelete } from 'uiSrc/components'
 import { RefreshBtn } from 'uiSrc/ui'
+import { KeyDetailsHeaderFormatter } from './components/key-details-header-formatter'
 import { KeyDetailsHeaderName } from './components/key-details-header-name'
 import { KeyDetailsHeaderTTL } from './components/key-details-header-ttl'
-// import { KeyDetailsHeaderDelete } from './components/key-details-header-delete'
 import { KeyDetailsHeaderSizeLength } from './components/key-details-header-size-length'
 
 import { useKeysApi } from '../keys-tree/hooks/useKeys'
+
 import styles from './styles.module.scss'
 
 export interface KeyDetailsHeaderProps {
@@ -115,6 +115,9 @@ const KeyDetailsHeader = ({
                     triggerTestid="refresh-key-btn"
                   />
                   {!isUndefined(Actions) && <Actions width={width} />}
+                  {Object.values(KeyTypes).includes(keyType as KeyTypes) && (
+                    <KeyDetailsHeaderFormatter width={width} />
+                  )}
                   <PopoverDelete
                     item={keyProp!}
                     itemRaw={keyBuffer}
@@ -126,10 +129,6 @@ const KeyDetailsHeader = ({
                     handleDeleteItem={handleDeleteKey}
                     handleButtonClick={handleDeleteKeyClicked}
                   />
-                  {/* {Object.values(KeyTypes).includes(keyType as KeyTypes) && (
-                      <KeyDetailsHeaderFormatter width={width} />
-                    )}
-                    */}
                 </div>
               </div>
             </div>

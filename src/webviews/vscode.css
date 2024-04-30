@@ -37,6 +37,12 @@ vscode-button::part(control) {
       @apply h-11;
     }
   }
+
+  .sidebar-nesting-level {
+    @apply w-1 min-h-max opacity-50 float-left ml-2 pr-2 h-[22px];
+
+    border-left: 1px solid var(--vscode-foreground);
+  }
 }
 
 .table-loading:before {

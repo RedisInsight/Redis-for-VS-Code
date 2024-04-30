@@ -2,7 +2,7 @@
 import { FormikErrors, useFormik } from 'formik'
 import { isEmpty, pick } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
-import ReactDOM from 'react-dom'
+import { createPortal } from 'react-dom'
 import Popup from 'reactjs-popup'
 import { VSCodeButton, VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 
@@ -171,7 +171,7 @@ const ManualConnectionForm = (props: Props) => {
     const footerEl = document.getElementById('footerDatabaseForm')
 
     if (footerEl) {
-      return ReactDOM.createPortal(
+      return createPortal(
         <div
           className="footerAddDatabase"
         >

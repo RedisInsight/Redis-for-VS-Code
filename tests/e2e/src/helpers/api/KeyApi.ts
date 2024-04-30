@@ -4,6 +4,7 @@ import { CommonAPIRequests } from './CommonApi'
 import {
   HashKeyParameters,
   JsonKeyParameters,
+  KeyData,
   ListKeyParameters,
   Result,
   SetKeyParameters,
@@ -11,6 +12,8 @@ import {
   StreamKeyParameters,
   StringKeyParameters,
 } from '../types/types'
+import { Key } from '../common-actions/KeyActions'
+import { KeyTypesShort } from '../constants'
 
 const getKeysPathMask = '/databases/databaseId/keys/get-info?encoding=buffer'
 const bufferPathMask = '/databases/databaseId/keys?encoding=buffer'
@@ -327,6 +330,52 @@ export class KeyAPIRequests {
       expect(response.status).eql(200, 'The deletion of the key request failed')
     } else {
       console.log(`Key '${keyName}' does not exist. Skipping deletion.`)
+    }
+  }
+
+  /**
+   * Add key via API
+   * @param keyData The key data
+   * @param databaseName The database name
+   * @param keyField The key field
+   * @param keyValue The key field value
+   */
+  static async addKeyApi(
+    keyData: KeyData,
+    databaseName: string,
+    keyField: string = 'test_field',
+    keyValue: string = 'test_value',
+  ): Promise<void> {
+    const databaseId =
+      await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
+    const key = new Key(keyData.keyName, keyData.keyType, keyField, keyValue)
+    const requestBody = await key.getRequestBody()
+    const response = await CommonAPIRequests.sendPostRequest(
+      `/databases/${databaseId}/${keyData.keyType}?encoding=buffer`,
+      requestBody,
+    )
+
+    expect(response.status).eql(
+      201,
+      `The creation of new ${keyData.keyType} key request failed`,
+    )
+  }
+
+  /**
+   * Add keys via API
+   * @param keyData The key data
+   * @param databaseName The database name
+   * @param keyField The key field
+   * @param keyValue The key field value
+   */
+  static async addKeysApi(
+    keyData: KeyData[],
+    databaseName: string,
+    keyField: string = 'test_field',
+    keyValue: string = 'test_value',
+  ): Promise<void> {
+    for (let key of keyData) {
+      await this.addKeyApi(key, databaseName, keyField, keyValue)
     }
   }
 }

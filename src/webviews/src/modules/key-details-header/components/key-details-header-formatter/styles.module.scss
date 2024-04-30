@@ -1,0 +1,28 @@
+$select-width: 124px;
+$select-height: 22px;
+
+.container {
+  @apply flex items-center mr-3 w-[#{$select-width}];
+}
+
+.select {
+  @apply rounded-[5px] h-[#{$select-height}] max-w-[#{$select-width}] min-w-[#{$select-width}];
+}
+
+.select::part(control) {
+  @apply rounded-[5px];
+}
+
+.select::part(listbox) {
+  @apply top-[#{$select-height}] #{!important};
+}
+
+.select::part(control),
+.optionText {
+  @apply font-medium;
+  font-size: 11px;
+}
+
+.option {
+  @apply flex items-center h-7 pl-2;
+}

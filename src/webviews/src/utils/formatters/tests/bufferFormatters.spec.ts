@@ -11,7 +11,7 @@ import {
   bufferToHex,
   bufferToBinary,
   binaryToBuffer,
-  // bufferToJava,
+  bufferToJava,
   bufferToUint8Array,
 } from 'uiSrc/utils'
 
@@ -134,14 +134,14 @@ const javaValues = [
   { uint8Array: [172, 237, 0, 5, 115, 114, 0, 32, 115, 101, 114, 105, 97, 108, 105, 122, 97, 116, 105, 111, 110, 68, 101, 109, 111, 46, 65, 110, 110, 111, 116, 97, 116, 105, 111, 110, 84, 101, 115, 116, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 1, 73, 0, 6, 110, 117, 109, 98, 101, 114, 120, 112, 0, 0, 0, 90], value: { annotations: [], className: 'serializationDemo.AnnotationTest', fields: [{ number: 90 }], serialVersionUid: 2n } },
 ]
 
-// const getBufferToJavaTests = javaValues.map(({ uint8Array, value }) =>
-//   ({ input: anyToBuffer(uint8Array), expected: value }))
+const getBufferToJavaTests = javaValues.map(({ uint8Array, value }) =>
+  ({ input: anyToBuffer(uint8Array), expected: value }))
 
-// describe('bufferToJava', () => {
-//   test.each(getBufferToJavaTests)('%o', ({ input, expected }) => {
-//     expect(bufferToJava(input)).toEqual(expected)
-//   })
-// })
+describe('bufferToJava', () => {
+  test.each(getBufferToJavaTests)('%o', ({ input, expected }) => {
+    expect(bufferToJava(input)).toEqual(expected)
+  })
+})
 
 describe('bufferToUint8Array', () => {
   test.each(javaValues)('%o', ({ uint8Array }) => {

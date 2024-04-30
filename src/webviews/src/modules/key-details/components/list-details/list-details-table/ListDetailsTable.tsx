@@ -20,6 +20,7 @@ import { SCAN_COUNT_DEFAULT,
   TEXT_UNPRINTABLE_CHARACTERS,
   TEXT_DISABLED_COMPRESSED_VALUE,
   NoResultsFoundText,
+  TEXT_INVALID_VALUE,
 } from 'uiSrc/constants'
 import {
   bufferToSerializedFormat,
@@ -69,8 +70,9 @@ const ListDetailsTable = (props: Props) => {
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
   const { [KeyTypes.List]: listSizes } = useContextInContext((state) => state.browser.keyDetailsSizes)
 
-  const { viewFormatProp, key, lastRefreshTime, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
-    viewFormatProp: state.viewFormat,
+  const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
+
+  const { key, lastRefreshTime, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     key: state.data?.name,
     lastRefreshTime: state.lastRefreshTime,
     setRefreshDisabled: state.setSelectedKeyRefreshDisabled,
@@ -320,6 +322,12 @@ const ListDetailsTable = (props: Props) => {
                       controlsClassName={styles.textAreaControls}
                       onDecline={() => handleEditElement(index, false)}
                       onApply={() => handleApplyEditElement(index)}
+                      approveText={TEXT_INVALID_VALUE}
+                      approveByValidation={() =>
+                        formattingBuffer(
+                          stringToSerializedBufferFormat(viewFormat, areaValue),
+                          viewFormat,
+                        )?.isValid}
                     >
                       <TextArea
                         name="value"

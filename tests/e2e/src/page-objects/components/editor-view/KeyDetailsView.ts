@@ -1,8 +1,10 @@
 import { By } from 'selenium-webdriver'
-import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
+import { ButtonActions, DropdownActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { WebView } from '@e2eSrc/page-objects/components/WebView'
 import { InputWithButtons } from '../common/InputWithButtons'
+import { Key } from 'vscode-extension-tester'
+import { Formatters } from '@e2eSrc/helpers/constants'
 
 /**
  * Key details view
@@ -38,6 +40,8 @@ export class KeyDetailsView extends WebView {
     `//div[@class='popup-content ']//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
   )
   saveMemberButton = By.xpath(`//*[@data-testid='save-members-btn']`)
+  formatSwitcher = By.xpath(`//*[@data-testid='select-format-key-value']`)
+  saveButton = By.xpath(`//vscode-button[@data-testid='save-btn']`)
 
   getTrashIcon = (keyType: string, name: string): By =>
     By.xpath(
@@ -46,7 +50,6 @@ export class KeyDetailsView extends WebView {
       | //*[@data-testid="${keyType}-remove-btn-${name}-icon"]
       | //*[@data-testid="remove-${keyType}-button-${name}-trigger"]`,
     )
-
   getCommonTrashIcon = (keyType: string): By =>
     By.xpath(
       `//*[contains(@data-testid,"${keyType}-remove-btn-")] | //*[contains(@data-testid,"${keyType}-remove-button-")]`,
@@ -59,6 +62,14 @@ export class KeyDetailsView extends WebView {
     By.xpath(
       `//*[@data-testid="remove-${keyType}-button-${name}"] | //*[@data-testid="${keyType}-remove-button-${name}"]`,
     )
+  getFormatterOption = (formatter: string): By =>
+    By.xpath(`//vscode-option[@data-testid="format-option-${formatter}"]`)
+  getKeyValue = (keyName: string, columnName: string): By =>
+    By.xpath(`//*[@data-testid[starts-with(., '${keyName.split('-')[0]}-') and contains(., '${columnName}')]]
+    | //*[@data-testid[starts-with(., '${keyName.split('-')[0]}-field-') and contains(., '${columnName}')]]`)
+  getHighlightedValue = (keyName: string, columnName: string): By =>
+    By.xpath(`//*[@data-testid[starts-with(., '${keyName.split('-')[0]}-') and contains(., '${columnName}')]]//*[@data-testid='value-as-json']
+    | //*[@data-testid[starts-with(., '${keyName.split('-')[0]}-field-') and contains(., '${columnName}')]]//*[@data-testid='value-as-json']`)
 
   /**
    * get key size
@@ -184,5 +195,28 @@ export class KeyDetailsView extends WebView {
     await ButtonActions.clickElement(this.keyNameInput)
     await InputActions.slowType(this.keyNameInput, keyName)
     await ButtonActions.clickElement(InputWithButtons.applyInput)
+  }
+
+  /**
+   * Open formatter dropdown and select option
+   * @param formatter The name of formatter
+   */
+  async selectFormatter(formatter: string): Promise<void> {
+    await ButtonActions.clickElement(this.formatSwitcher)
+    const dropdownElement = await this.getElement(this.formatSwitcher)
+    let currentValue = await DropdownActions.getDropdownValue(this.formatSwitcher)
+
+    // Navigate up in the dropdown until "Unicode" is selected
+    while (currentValue !== Formatters.Unicode) {
+      await dropdownElement.sendKeys(Key.ARROW_UP)
+      currentValue = await DropdownActions.getDropdownValue(this.formatSwitcher)
+    }
+
+    // Select the specified formatter
+    while (currentValue !== formatter) {
+      await dropdownElement.sendKeys(Key.ARROW_DOWN)
+      currentValue = await DropdownActions.getDropdownValue(this.formatSwitcher)
+    }
+    await ButtonActions.clickElement(this.getFormatterOption(formatter))
   }
 }

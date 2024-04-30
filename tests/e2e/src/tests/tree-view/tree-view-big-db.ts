@@ -32,15 +32,32 @@ describe('Tree view verifications', () => {
     }
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
-  // TODO unskip once filtering by key type implemented
-  it.skip('Verify that user can see the total number of keys, the number of keys scanned, the “Scan more” control displayed at the top of Tree view', async function () {
-    // TODO Select filter by key type
+
+  it('Verify that user can see the total number of keys, the number of keys scanned, the “Scan more” control displayed at the top of Tree view', async function () {
+    const number = 10500
+
     // Verify the controls on the Tree view
     expect(await treeView.isElementDisplayed(treeView.scanMoreBtn)).eql(
       true,
       'Tree view Scan more button not displayed for big database',
     )
+    expect(await treeView.isElementDisplayed(treeView.keyScannedNumber)).eql(
+      true,
+      'Scanned key is not correct',
+    )
+    expect(await treeView.isElementDisplayed(treeView.totalKeyNumber)).eql(
+      true,
+      'incorrect count is displayed',
+    )
+    const count = parseInt(await treeView.getElementText(treeView.scanMoreBtn))
+     await ButtonActions.clickElement(treeView.scanMoreBtn)
+
+    expect(parseInt (await treeView.getElementText(treeView.scanMoreBtn))).gt(
+      count,
+      'the keys were not scanned',
+    )
   })
+
   it('Verify that when user deletes the key he can see the key is removed from the folder', async function () {
     const mainFolder = treeView.getFolderSelectorByName('device')
     await treeView.getElement(mainFolder)

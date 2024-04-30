@@ -1,11 +1,12 @@
 import { isString } from 'lodash'
+import { ObjectInputStream } from 'java-object-serialization'
 import { Buffer } from 'buffer'
 import { KeyValueFormat } from 'uiSrc/constants'
 import {
-  Nullable,
-  RedisResponseBufferType,
   RedisString,
   UintArray,
+  Nullable,
+  RedisResponseBufferType,
 } from 'uiSrc/interfaces'
 
 const decoder = new TextDecoder('utf-8')
@@ -37,10 +38,13 @@ const bufferToHex = (reply: RedisString): string => {
   return result
 }
 
-const bufferToBinary = (reply: RedisString): string => (
-  isString(reply)
-    ? reply
-    : Array.from(reply.data).reduce((str, byte) => str + byte.toString(2).padStart(8, '0'), ''))
+const bufferToBinary = (reply: RedisString): string => {
+  if (isString(reply)) {
+    return reply
+  }
+
+  return Array.from(reply.data).reduce((str, byte) => str + byte.toString(2).padStart(8, '0'), '')
+}
 
 const binaryToBuffer = (reply: string) => {
   const data: number[] = reply.match(/.{1,8}/g)?.map((v) => parseInt(v, 2)) || []
@@ -48,10 +52,11 @@ const binaryToBuffer = (reply: string) => {
 }
 
 const bufferToASCII = (reply: RedisString): string => {
-  let result = ''
   if (isString(reply)) {
     return reply
   }
+
+  let result = ''
   reply.data.forEach((byte: number) => {
     const char = decoder.decode(new Uint8Array([byte]))
     if (IS_NON_PRINTABLE_ASCII_CHARACTER.test(char)) {
@@ -112,13 +117,37 @@ const ASCIIToBuffer = (strInit: string) => {
   return anyToBuffer(Array.from(Buffer.from(result, 'hex')))
 }
 
-const bufferToUint8Array = (reply: RedisString): Uint8Array =>
-  new Uint8Array(isString(reply) ? [] : reply?.data)
+const bufferToFloat32Array = (data: Uint8Array) => {
+  const { buffer } = new Uint8Array(data)
+  const dataView = new DataView(buffer)
+  const vector = []
+
+  for (let i = 0; i < dataView.byteLength; i += 4) {
+    vector.push(dataView.getFloat32(i, true))
+  }
+  return new Float32Array(vector)
+}
+
+const bufferToFloat64Array = (data: Uint8Array) => {
+  const { buffer } = new Uint8Array(data)
+  const dataView = new DataView(buffer)
+  const vector = []
+
+  for (let i = 0; i < dataView.byteLength; i += 8) {
+    vector.push(dataView.getFloat64(i, true))
+  }
+
+  return new Float64Array(vector)
+}
+
+const bufferToUint8Array = (reply: RedisString): Uint8Array => new Uint8Array(isString(reply) ? [] : reply.data)
+
 const bufferToUTF8 = (reply: RedisString): string => decoder.decode(bufferToUint8Array(reply))
 
 const UintArrayToString = (reply: UintArray): string => decoder.decode(new Uint8Array(reply))
 
 const UTF8ToBuffer = (reply: string): RedisString => anyToBuffer(encoder.encode(reply))
+
 const UTF8ToArray = (reply: string): any => anyToBuffer(Array.from(encoder.encode(reply)))
 
 // common formatters
@@ -144,6 +173,19 @@ const hexToBuffer = (data: string): RedisString => {
     string = string.substring(2, string.length)
   }
   return { type: RedisResponseBufferType.Buffer, data: result } as RedisString
+}
+
+const bufferToJava = (reply: RedisString) => {
+  const stream = new ObjectInputStream(bufferToUint8Array(reply))
+  const decoded = stream.readObject()
+
+  if (typeof decoded !== 'object') {
+    return decoded
+  }
+
+  const { fields } = decoded
+  const fieldsArray = Array.from(fields, ([key, value]) => ({ [key]: value }))
+  return { ...decoded, fields: fieldsArray }
 }
 
 const bufferToString = (data: RedisString = '', formatResult: KeyValueFormat = KeyValueFormat.Unicode): string => {
@@ -180,6 +222,9 @@ export {
   anyToBuffer,
   bufferToBinary,
   binaryToBuffer,
+  bufferToJava,
+  bufferToFloat32Array,
+  bufferToFloat64Array,
   UTF8ToArray,
 }
 

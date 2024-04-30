@@ -1,6 +1,6 @@
 .nodeContainer {
+  @apply pl-3;
   border-left: 3px solid transparent;
-  padding-left: 12px;
 
   &:hover {
     background-color: var(--vscode-merge-commonHeaderBackground);
@@ -18,9 +18,9 @@
     }
   }
   :global(.showOnHoverKey) {
-    display: none !important;
+    @apply hidden;
     &.show {
-      display: flex !important;
+      @apply flex;
     }
   }
 
@@ -29,28 +29,26 @@
       transform: translateX(-8px);
     }
     :global(.showOnHoverKey) {
-      display: flex !important;
+      @apply flex;
     }
   }
 }
 
 .nodeIcon {
-  @apply mr-2 w-4 h-4;
-  min-width: 16px;
+  @apply mr-2 w-4 h-4 min-w-4;
 
   &Arrow {
-    margin-right: 2px;
+    @apply mr-0.5;
   }
 
   &Leaf {
-    margin-left: 25px;
-    margin-bottom: 2px;
+    @apply ml-[25px] mb-0.5;
   }
 }
 
 .approximate,
 .keyCount {
-  display: inline-block;
+  @apply inline-block;
 }
 
 .nodeName {
@@ -58,9 +56,7 @@
 }
 
 .approximate {
-  width: 86px;
-  min-width: 86px;
-  text-align: right;
+  @apply w-[86px] min-w-[86px] text-right;
 }
 
 .keyInfoLoading {
@@ -68,17 +64,13 @@
 }
 
 .deletePopover {
-  max-width: 400px !important;
+  @apply max-w-[400px];
 }
 
 .nestingLevel {
-  @apply w-1 h-max min-h-max opacity-50;
+  @apply w-1 min-h-max opacity-50 float-left ml-2 pr-2 h-[22px];
 
-  height: 22px;
-  float: left;
   border-left: 1px solid var(--vscode-foreground);
-  margin-left: 8px;
-  padding-right: 8px;
 }
 
 .removeBtn {

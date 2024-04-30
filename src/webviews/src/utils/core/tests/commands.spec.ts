@@ -7,8 +7,7 @@ import {
   getDocUrlForCommand,
   generateRedisCommand,
 } from '../commands'
-
-const { MOCK_COMMANDS_SPEC } = await vi.importActual<{ [key: string]: any }>('uiSrc/constants')
+const { MOCK_COMMANDS_SPEC } = await vi.importActual<{ [key: string]: any }>('uiSrc/constants/mocks/mock-redis-commands')
 const ALL_REDIS_COMMANDS: ICommands = MOCK_COMMANDS_SPEC
 
 interface IMockedCommands {

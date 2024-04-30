@@ -3,6 +3,7 @@ import cx from 'classnames'
 import { FormikProps } from 'formik'
 import * as l10n from '@vscode/l10n'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
+import { CheckboxChangeEvent } from 'rc-checkbox'
 
 import { validateCertName, validateField } from 'uiSrc/utils'
 import {
@@ -82,7 +83,7 @@ const TlsDetails = (props: Props) => {
                 name="sni"
                 labelText={l10n.t('Use SNI')}
                 checked={!!formik.values.sni}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                onChange={(e: CheckboxChangeEvent) => {
                   formik.setFieldValue(
                     'servername',
                     formik.values.servername ?? formik.values.host ?? '',

@@ -1,3 +1,14 @@
+$rowHeight: 22px;
+$headerHeight: 3 * $rowHeight;
+$headerWithButtonHeight: 4 * $rowHeight;
+
 .content {
-  @apply flex w-full flex-col h-[calc(100%-22px)] flex-auto;
+  @apply flex w-full flex-col flex-auto;
+  height: calc(100% - $headerHeight);
+  max-height: calc(100vh - $headerHeight);
+}
+
+.withScanMore {
+  height: calc(100% - $headerWithButtonHeight);
+  max-height: calc(100vh - $headerWithButtonHeight);
 }

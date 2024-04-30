@@ -74,8 +74,9 @@ const ZSetDetailsTable = (props: Props) => {
 
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
-  const { viewFormatProp, length, key, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
-    viewFormatProp: state.viewFormat,
+  const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
+
+  const { length, key, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     length: state.data?.length,
     key: state.data?.name,
     setRefreshDisabled: state.setSelectedKeyRefreshDisabled,

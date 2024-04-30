@@ -24,6 +24,7 @@ import {
   isFormatEditable,
   isNonUnicodeFormatter,
   stringToSerializedBufferFormat,
+  stringToBuffer,
 } from 'uiSrc/utils'
 import { StopPropagation } from 'uiSrc/components/virtual-table'
 import {
@@ -43,8 +44,8 @@ import {
   helpTexts,
   NoResultsFoundText,
   DEFAULT_SEARCH_MATCH,
+  TEXT_INVALID_VALUE,
 } from 'uiSrc/constants'
-import { stringToBuffer } from 'uiSrc/utils/formatters/bufferFormatters'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { TextArea } from 'uiSrc/ui'
@@ -80,8 +81,9 @@ const HashDetailsTable = (props: Props) => {
 
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
-  const { viewFormatProp, length, key, lastRefreshTime, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
-    viewFormatProp: state.viewFormat,
+  const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
+
+  const { length, key, lastRefreshTime, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     length: state.data?.length,
     key: state.data?.name,
     lastRefreshTime: state.lastRefreshTime,
@@ -381,12 +383,12 @@ const HashDetailsTable = (props: Props) => {
                       controlsClassName={styles.textAreaControls}
                       onDecline={() => handleEditField(rowIndex, false)}
                       onApply={() => handleApplyEditField(fieldItem)}
-                      // approveText={TEXT_INVALID_VALUE}
-                      // approveByValidation={() =>
-                      //   formattingBuffer(
-                      //     stringToSerializedBufferFormat(viewFormat, areaValue),
-                      //     viewFormat,
-                      //   )?.isValid}
+                      approveText={TEXT_INVALID_VALUE}
+                      approveByValidation={() =>
+                        formattingBuffer(
+                          stringToSerializedBufferFormat(viewFormat, areaValue),
+                          viewFormat,
+                        )?.isValid}
                     >
                       <TextArea
                         name="value"

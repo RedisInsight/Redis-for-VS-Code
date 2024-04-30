@@ -4,16 +4,14 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { isNull } from 'lodash'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
-import { apiService, localStorageService } from 'uiSrc/services'
+import { apiService } from 'uiSrc/services'
 import {
   ApiEndpoints,
   DEFAULT_SEARCH_MATCH,
-  DEFAULT_VIEW_FORMAT,
   KeyTypes,
   SCAN_COUNT_DEFAULT,
   STRING_MAX_LENGTH,
   SortOrder,
-  StorageItem,
 } from 'uiSrc/constants'
 import { bufferToString, getApiErrorMessage, getEncoding, getUrl, getDatabaseUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { fetchString } from 'uiSrc/modules'
@@ -33,7 +31,6 @@ export const initialSelectedKeyState: SelectedKeyStore = {
   refreshDisabled: false,
   lastRefreshTime: null,
   data: null,
-  viewFormat: localStorageService?.get(StorageItem.viewFormat) ?? DEFAULT_VIEW_FORMAT,
   compressor: null,
   action: null,
 }
@@ -67,7 +64,7 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
 export const fetchKeyInfo = (
   { key, databaseId }: { key: RedisString, databaseId?: string },
   fetchKeyValue = true,
-  onSuccess?: () => void,
+  onSuccess?: (data: KeyInfo) => void,
 ) => {
   useSelectedKeyStore.setState(async (state) => {
     state.processSelectedKey()
@@ -79,7 +76,7 @@ export const fetchKeyInfo = (
       )
 
       if (isStatusSuccessful(status)) {
-        onSuccess?.()
+        onSuccess?.(data)
         state.processSelectedKeySuccess(data)
         state.updateSelectedKeyRefreshTime(Date.now())
 
