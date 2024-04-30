@@ -12,10 +12,6 @@ export interface SelectedKeyStore {
   action: Nullable<SelectedKeyAction>
 }
 
-export interface SelectedKeyLSStore {
-  viewFormat: KeyValueFormat
-}
-
 interface SelectedKeyAction {
   databaseId: string
   key?: RedisString

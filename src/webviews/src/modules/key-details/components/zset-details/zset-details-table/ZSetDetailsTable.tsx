@@ -39,7 +39,7 @@ import {
   DEFAULT_SEARCH_MATCH,
 } from 'uiSrc/constants'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
-import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyLSStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 
 import {
   deleteZSetMembers,
