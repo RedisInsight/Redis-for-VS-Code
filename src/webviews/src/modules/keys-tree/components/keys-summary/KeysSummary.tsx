@@ -76,7 +76,7 @@ export const KeysSummary = (props: Props) => {
         </div>
       )} */}
 
-      <div className="flex pr-4">
+      <div className="flex pr-3.5">
         <VSCodeButton
           appearance="icon"
           title={l10n.t('Sort by key names displayed')}

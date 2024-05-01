@@ -79,7 +79,7 @@ const PopoverDelete = (props: Props) => {
         <VSCodeButton
           appearance={!triggerText ? 'icon' : 'primary'}
           disabled={disabled}
-          className={cx(styles.trigger, triggerClassName, { '!block': open })}
+          className={cx(styles.trigger, triggerClassName, { '!flex': open })}
           aria-label="remove item"
           data-testid={testid ? `${testid}-trigger` : 'remove-trigger'}
         >

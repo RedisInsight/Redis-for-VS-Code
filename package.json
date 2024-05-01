@@ -118,7 +118,7 @@
     "workerDirectory": "./src/webviews/test/public"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "yarn lint"
+    "*.{js,jsx,ts,tsx}": "eslint --fix"
   },
   "author": {
     "name": "Redis Ltd.",

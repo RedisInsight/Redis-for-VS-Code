@@ -9,6 +9,8 @@ type WebviewOptions = {
   scriptUri?: vscode.Uri
   styleUri?: vscode.Uri
   nonce?: string
+  message?: object
+  column?: vscode.ViewColumn
   handleMessage?: (message: any) => any
 }
 
@@ -101,16 +103,14 @@ abstract class Webview {
 }
 
 export class WebviewPanel extends Webview implements vscode.Disposable {
-  private static instances: { [id: string]: WebviewPanel } = {}
+  public static instances: { [id: string]: WebviewPanel } = {}
 
   private readonly panel: vscode.WebviewPanel
 
   private _disposables: vscode.Disposable[] = []
 
   // Singleton
-  public static getInstance(
-    opts: WebviewOptions & { column?: vscode.ViewColumn } & { message?: object },
-  ): WebviewPanel {
+  public static getInstance(opts: WebviewOptions): WebviewPanel {
     const options = {
       column: vscode.window.activeTextEditor
         ? vscode.window.activeTextEditor.viewColumn
@@ -136,9 +136,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
     return instance
   }
 
-  private constructor(
-    opts: WebviewOptions & { column?: vscode.ViewColumn } & { message?: object },
-  ) {
+  private constructor(opts: WebviewOptions) {
     // Create the webview panel
     super(opts)
     this.panel = vscode.window.createWebviewPanel(
@@ -183,7 +181,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
 
   // Panel updates may also update the panel title
   // in addition to the webview content.
-  public update({ title = '' }: Partial<WebviewOptions> = { }) {
+  public update({ title = '', message }: Partial<WebviewOptions> = { }) {
     console.debug('Updating! ', this._opts.viewId)
     this.panel.title = title || this._opts.title || ''
     this.panel.iconPath = vscode.Uri.joinPath(
@@ -191,6 +189,10 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
       'dist/webviews/resources/redisinsight_dark.svg',
     )
     this.panel.webview.html = this._getContent(this.panel.webview)
+
+    if (message) {
+      this.panel.webview.postMessage(message)
+    }
   }
 
   public dispose() {

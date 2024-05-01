@@ -25,27 +25,6 @@ export const waitFor = async (timeout: number, condition: () => boolean): Promis
   return timeout > 0
 }
 
-export const showInformationMessage = (title: string) => {
-  showMessage(vscode.ProgressLocation.Notification, title)
-}
-
-export const showErrorMessage = (title: string) => {
-  showMessage(vscode.ProgressLocation.Notification, title)
-}
-const showMessage = (location: vscode.ProgressLocation, title: string) => {
-  vscode.window.withProgress(
-    {
-      location,
-      title,
-      cancellable: false,
-    },
-    async (progress): Promise<void> => {
-      await waitFor(NOTIFICATION_TIMEOUT, () => false)
-      progress.report({ increment: 100 })
-    },
-  )
-}
-
 export const handleMessage = (message: any = {}) => {
   if (message.action === 'SelectKey') {
     vscode.commands.executeCommand('RedisInsight.openKey', message)
@@ -57,8 +36,7 @@ export const handleMessage = (message: any = {}) => {
     vscode.window.showErrorMessage(message.data)
   }
   if (message.action === 'InformationMessage') {
-    // vscode.window.showInformationMessage(message.data)
-    showInformationMessage(message.data)
+    vscode.window.showInformationMessage(message.data)
   }
   if (message.action === 'AddCli') {
     vscode.commands.executeCommand('RedisInsight.addCli', message)
