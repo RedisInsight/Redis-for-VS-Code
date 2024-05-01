@@ -29,12 +29,12 @@ export const KeyTreeFilter = () => {
 
   const [typeSelected, setTypeSelected] = useState<string>(filter)
   const [search, setSearch] = useState<string>(searchInit)
-  const ref = useRef<PopupActions>(null)
+  const popupRef = useRef<PopupActions>(null)
 
   const { fetchPatternKeysAction } = useKeysApi()
 
   const closePopover = () => {
-    ref.current?.close?.()
+    popupRef.current?.close?.()
   }
 
   const handleApply = () => {
@@ -66,7 +66,7 @@ export const KeyTreeFilter = () => {
 
   return (
     <Popup
-      ref={ref}
+      ref={popupRef}
       closeOnEscape
       closeOnDocumentClick
       repositionOnResize
