@@ -8,7 +8,7 @@ import { PopupActions } from 'reactjs-popup/dist/types'
 import { useShallow } from 'zustand/react/shallow'
 
 import { InputText, Select, SelectOption } from 'uiSrc/ui'
-import { DEFAULT_SEARCH_MATCH, KeyTypes } from 'uiSrc/constants'
+import { DEFAULT_SEARCH_MATCH, KeyTypes, Keys } from 'uiSrc/constants'
 import { ALL_KEY_TYPES_VALUE, FILTER_KEY_TYPE_OPTIONS } from './constants'
 import { useKeysApi, useKeysInContext } from '../../hooks/useKeys'
 import styles from './styles.module.scss'
@@ -58,6 +58,12 @@ export const KeyTreeFilter = () => {
     closePopover()
   }
 
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key.toLowerCase() === Keys.ENTER) {
+      handleApply()
+    }
+  }
+
   return (
     <Popup
       ref={ref}
@@ -78,7 +84,7 @@ export const KeyTreeFilter = () => {
         </VSCodeButton>
       )}
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col text-vscode-icon-foreground">
         <div className={styles.row}>
           <span className={styles.title}>{l10n.t('Filters')}</span>
           <VSCodeButton
@@ -94,6 +100,7 @@ export const KeyTreeFilter = () => {
           <InputText
             placeholder={l10n.t('by key name or pattern')}
             value={search}
+            onKeyDown={onKeyDown}
             onChange={(e) => setSearch(e.target.value)}
             aria-label="tree view search input"
             data-testid="tree-view-search-input"
