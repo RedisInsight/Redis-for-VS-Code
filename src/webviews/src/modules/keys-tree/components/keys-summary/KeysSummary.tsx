@@ -17,7 +17,6 @@ import styles from './styles.module.scss'
 
 export interface Props {
   database: Database
-  nextCursor: string
   scanned: number
   resultsLength: number
   loading: boolean
@@ -25,15 +24,8 @@ export interface Props {
 }
 
 export const KeysSummary = (props: Props) => {
-  const { loading, total, scanned, nextCursor, resultsLength, database } = props
+  const { loading, total, scanned, resultsLength, database } = props
   const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
-
-  const scannedDisplay = resultsLength > scanned ? resultsLength : scanned
-  const notAccurateScanned = total
-    && scanned >= total
-    && nextCursor
-    && nextCursor !== '0'
-    ? '~' : ''
 
   const contextApi = useContextApi()
 
@@ -63,13 +55,13 @@ export const KeysSummary = (props: Props) => {
   }
 
   return (
-    <div className="flex flex-row justify-between pl-5">
+    <div className="flex flex-row justify-between pl-5 ">
       <div className={styles.content} data-testid="keys-summary">
         {(!!total || isNull(total)) && !!scanned && (
         <span>
           (
-          <span data-testid="keys-number-of-scanned">{notAccurateScanned}{numberWithSpaces(scannedDisplay)}</span>
-          /
+          <span data-testid="keys-number-of-results">{numberWithSpaces(resultsLength)}</span>
+          {' / '}
           <span data-testid="keys-total">{nullableNumberWithSpaces(total)}</span>
           )
           <span
