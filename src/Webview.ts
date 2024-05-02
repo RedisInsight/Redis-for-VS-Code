@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { getNonce, handleMessage } from './utils'
+import { workspaceStateService } from './lib'
 
 type WebviewOptions = {
   context?: vscode.ExtensionContext
@@ -51,7 +52,8 @@ abstract class Webview {
     const scriptUri = webview.asWebviewUri(this._opts.scriptUri as vscode.Uri)
     const styleUri = webview.asWebviewUri(this._opts.styleUri as vscode.Uri)
 
-    const apiPort = this._opts.context?.globalState.get('API_PORT')
+    const appInfo = workspaceStateService.get('appInfo')
+    const appPort = workspaceStateService.get('appPort')
 
     const contentSecurity = [
       `img-src ${webview.cspSource} 'self' data:`,
@@ -86,12 +88,14 @@ abstract class Webview {
         <link href="${styleUri}" rel="stylesheet" />
         <script nonce="${this._opts.nonce}">
           window.acquireVsCodeApi = acquireVsCodeApi;
+          window.appPort=${appPort};
+          window.appInfo=${JSON.stringify(appInfo)};
         </script>
 
         <title>RedisInsight Webview</title>
       </head>
       <body>
-        <div id="root" data-route="${this._opts.route}" data-api-port="${apiPort}"></div>
+        <div id="root" data-route="${this._opts.route}"></div>
         <script nonce="${this._opts.nonce}" src="${scriptUri}"></script>
       </body>
       </html>`

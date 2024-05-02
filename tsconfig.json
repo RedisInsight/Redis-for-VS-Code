@@ -7,7 +7,15 @@
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
-    "rootDir": "src"
+    "paths": {
+      "src": ["./src"],
+      "src/*": ["./src/*"],
+    },
+    "baseUrl": "./",
+    "plugins": [
+      // Transform paths in output .js files
+      { "transform": "typescript-transform-paths" },
+    ],
   },
   "exclude": [
     "typings/browser.d.ts",

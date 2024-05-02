@@ -90,10 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
         break
     }
   }
+
+  return () => window.removeEventListener('message', handleMessage)
 })
 
 const container = document.getElementById('root')
-window.apiPort = container?.dataset.apiPort as string
 const root = createRoot(container!)
 
 root.render(

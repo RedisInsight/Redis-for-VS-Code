@@ -1,6 +1,6 @@
 import { AllKeyTypes, KeyTypes, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
 import { Database } from 'uiSrc/store'
-import { GetAppSettingsResponse } from 'uiSrc/store/hooks/use-app-info-store/interface'
+import { AppInfoStore, GetAppSettingsResponse } from 'uiSrc/store/hooks/use-app-info-store/interface'
 import { RedisString } from '../core/app'
 
 export interface IVSCodeApi {
@@ -65,6 +65,11 @@ export interface UpdateSettingsDelimiterAction {
   data: string
 }
 
+export interface SaveAppInfoAction {
+  action: VscodeMessageAction.SaveAppInfo,
+  data: Partial<AppInfoStore>
+}
+
 export type PostMessage =
   SelectKeyAction |
   DatabaseAction |
@@ -75,4 +80,5 @@ export type PostMessage =
   UpdateSettingsAction |
   UpdateSettingsDelimiterAction |
   SelectedKeyCloseAction |
+  SaveAppInfoAction |
   ResetSelectedKeyAction

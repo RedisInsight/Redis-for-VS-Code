@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { getCommandRepeat } from 'uiSrc/utils'
 import { outputSelector } from 'uiSrc/modules/cli/slice/cli-output'
 import { CommandProvider } from 'uiSrc/constants'
-import { useRedisCommandsStore } from 'uiSrc/store/hooks/use-redis-commands-store/useRedisCommandsStore'
+import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 import { CliAutocomplete } from './cli-autocomplete'
 
 import { CliInput } from './cli-input'
@@ -21,7 +21,7 @@ export const CliInputWrapper = (props: Props) => {
   const { command = '', wordsTyped, setInputEl, setCommand, onKeyDown } = props
 
   const { db } = useSelector(outputSelector)
-  const ALL_REDIS_COMMANDS = useRedisCommandsStore((state) => state.spec)
+  const ALL_REDIS_COMMANDS = useAppInfoStore((state) => state.commandsSpec)
 
   const [commandLine, repeatCommand] = getCommandRepeat(command || '')
   const [firstCommand, secondCommand] = commandLine.split(' ')

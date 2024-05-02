@@ -3,20 +3,28 @@ import { Mock, vi } from 'vitest'
 
 import * as useDatabases from 'uiSrc/store/hooks/use-databases-store/useDatabasesStore'
 import * as useAppInfo from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
-import * as useRedisCommands from 'uiSrc/store/hooks/use-redis-commands-store/useRedisCommandsStore'
 import { render } from 'testSrc/helpers'
 import { Config } from './Config'
 
 vi.spyOn(useDatabases, 'fetchDatabases')
 vi.spyOn(useAppInfo, 'fetchAppInfo')
-vi.spyOn(useRedisCommands, 'fetchRedisCommands')
 
 describe('Config', () => {
+  afterEach(() => {
+    vi.resetAllMocks()
+    vi.unstubAllGlobals()
+  })
   it('should render', () => {
     render(<Config />)
     expect(useDatabases.fetchDatabases).toBeCalled()
     expect(useAppInfo.fetchAppInfo).toBeCalled()
-    expect(useRedisCommands.fetchRedisCommands).toBeCalled()
+  })
+
+  it('should not call fetchAppInfo if window.appInfo is object ', () => {
+    vi.stubGlobal('appInfo', { server: {} })
+    render(<Config />)
+    expect(useDatabases.fetchDatabases).toBeCalled()
+    expect(useAppInfo.fetchAppInfo).not.toBeCalled()
   })
 
   it('should call "setIsShowConceptsPopup" with true', () => {

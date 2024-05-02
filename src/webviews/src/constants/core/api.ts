@@ -1,4 +1,4 @@
-import { API_PORT, API_PREFIX, BASE_API_URL } from 'uiSrc/constants'
+import { APP_PORT, APP_PREFIX, BASE_APP_URL } from 'uiSrc/constants'
 
 enum ApiEndpoints {
   DATABASES = 'databases',
@@ -141,7 +141,7 @@ enum ApiEndpoints {
   ANALYTICS_SEND_PAGE = 'analytics/send-page',
 }
 
-export const BASE_URL = `${BASE_API_URL}:${API_PORT}/${API_PREFIX}/`
+export const BASE_URL = `${BASE_APP_URL}:${APP_PORT}/${APP_PREFIX}/`
 
 export enum CustomHeaders {
   DbIndex = 'ri-db-index',

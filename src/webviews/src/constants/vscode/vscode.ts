@@ -21,6 +21,7 @@ export enum VscodeMessageAction {
   ResetSelectedKey = 'ResetSelectedKey',
   UpdateSettings = 'UpdateSettings',
   UpdateSettingsDelimiter = 'UpdateSettingsDelimiter',
+  SaveAppInfo = 'SaveAppInfo',
 }
 
 export enum VscodeStateItem {
