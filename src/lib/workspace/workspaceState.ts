@@ -8,14 +8,12 @@ class WorkspaceStateService {
   }
 
   get<T>(key: string = ''): T | null {
-    let item
     try {
-      item = this.context.workspaceState.get<T>(key)
+      return this.context.workspaceState.get<T>(key)
     } catch (error) {
       console.error(`get from workspace state error: ${error}`)
+      return null
     }
-
-    return item || null
   }
 
   async set(key: string = '', item: any) {

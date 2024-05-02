@@ -29,7 +29,6 @@ export const waitFor = async (timeout: number, condition: () => boolean): Promis
 export const handleMessage = async (message: any = {}) => {
   switch (message.action) {
     case 'SelectKey':
-
       vscode.commands.executeCommand('RedisInsight.openKey', message)
       break
     case 'EditDatabase':
