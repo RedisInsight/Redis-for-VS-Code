@@ -7,10 +7,16 @@
 }
 
 .btn {
-  @apply w-full h-[18px] z-10 rounded-none overflow-hidden pt-[2px] text-vscode-foreground;
+  @apply w-full h-[22px] z-10 rounded-none overflow-hidden pt-[2px] text-vscode-icon-foreground;
   background: transparent;
 
   &::part(control) {
-    @apply justify-start border-none text-vscode-foreground pl-px;
+    @apply justify-start border-none text-vscode-icon-foreground pl-px h-[18px];
   }
+}
+
+.text {
+  @apply text-vscode-foreground opacity-80 pl-2;
+  font-size: 11px;
+  line-height: 16px;
 }

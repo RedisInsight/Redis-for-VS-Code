@@ -12,11 +12,11 @@ import { SortOrder, VscodeMessageAction } from 'uiSrc/constants'
 import { Database, useContextApi, useContextInContext } from 'uiSrc/store'
 import { Nullable } from 'uiSrc/interfaces'
 
+import { KeyTreeFilter } from '../keys-tree-filter'
 import styles from './styles.module.scss'
 
 export interface Props {
   database: Database
-  nextCursor: string
   scanned: number
   resultsLength: number
   loading: boolean
@@ -24,15 +24,8 @@ export interface Props {
 }
 
 export const KeysSummary = (props: Props) => {
-  const { loading, total, scanned, nextCursor, resultsLength, database } = props
+  const { loading, total, scanned, resultsLength, database } = props
   const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
-
-  const scannedDisplay = resultsLength > scanned ? resultsLength : scanned
-  const notAccurateScanned = total
-    && scanned >= total
-    && nextCursor
-    && nextCursor !== '0'
-    ? '~' : ''
 
   const contextApi = useContextApi()
 
@@ -62,13 +55,13 @@ export const KeysSummary = (props: Props) => {
   }
 
   return (
-    <div className="flex flex-row justify-between pl-6">
+    <div className="flex flex-row justify-between pl-5 ">
       <div className={styles.content} data-testid="keys-summary">
         {(!!total || isNull(total)) && !!scanned && (
         <span>
           (
-          <span data-testid="keys-number-of-scanned">{notAccurateScanned}{numberWithSpaces(scannedDisplay)}</span>
-          /
+          <span data-testid="keys-number-of-results">{numberWithSpaces(resultsLength)}</span>
+          {' / '}
           <span data-testid="keys-total">{nullableNumberWithSpaces(total)}</span>
           )
           <span
@@ -83,7 +76,7 @@ export const KeysSummary = (props: Props) => {
         </div>
       )} */}
 
-      <div className="flex pr-4">
+      <div className="flex pr-3.5">
         <VSCodeButton
           appearance="icon"
           title={l10n.t('Sort by key names displayed')}
@@ -92,6 +85,7 @@ export const KeysSummary = (props: Props) => {
         >
           {isSortingASC ? <BiSortDown /> : <BiSortUp />}
         </VSCodeButton>
+        <KeyTreeFilter />
         <VSCodeButton appearance="icon" onClick={addKeyClickHandle} data-testid="add-key-button">
           <VscAdd />
         </VSCodeButton>

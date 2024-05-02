@@ -6,23 +6,22 @@ import {
 import { Provider } from 'react-redux'
 
 import {
-  fetchKeyInfo,
   store,
-  resetZustand,
   useSelectedKeyStore,
   fetchEditedDatabase,
   Database,
-  useDatabasesStore,
-  fetchDatabases,
 } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
 import { PostMessage } from 'uiSrc/interfaces'
-import { isEqualBuffers } from 'uiSrc/utils'
-import { StorageItem, VscodeMessageAction } from 'uiSrc/constants'
-import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
-import { localStorageService, sessionStorageService } from './services'
+import { VscodeMessageAction } from 'uiSrc/constants'
 import { useAppInfoStore } from './store/hooks/use-app-info-store/useAppInfoStore'
+import {
+  addKeyAction,
+  processCliAction,
+  refreshTreeAction,
+  selectKeyAction,
+} from './actions'
 
 import './styles/main.scss'
 import '../vscode.css'
@@ -36,19 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     switch (message.action) {
       // Key details
       case VscodeMessageAction.SelectKey:
-        const { key, databaseId } = message?.data
-        const prevKey = useSelectedKeyStore.getState().data?.name
-
-        if (isEqualBuffers(key, prevKey)) {
-          return
-        }
-        sessionStorageService.set(StorageItem.databaseId, databaseId)
-        resetZustand()
-        fetchKeyInfo({ key }, true)
+        selectKeyAction(message)
         break
       case VscodeMessageAction.AddKey:
-        sessionStorageService.set(StorageItem.databaseId, message?.data?.id)
-        useDatabasesStore.getState().setConnectedDatabase(message?.data as Database)
+        addKeyAction(message)
         break
       case VscodeMessageAction.ResetSelectedKey:
         useSelectedKeyStore.getState().resetSelectedKeyStore()
@@ -56,11 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Sidebar
       case VscodeMessageAction.RefreshTree:
-        if (message.data?.key) {
-          useSelectedKeyStore.getState().setSelectedKeyAction(message.data)
-        } else {
-          fetchDatabases()
-        }
+        refreshTreeAction(message)
         break
       case VscodeMessageAction.EditDatabase:
         fetchEditedDatabase(message?.data as Database)
@@ -77,14 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // CLI
       case VscodeMessageAction.AddCli:
       case VscodeMessageAction.OpenCli:
-        const database = message?.data as Database
-
-        localStorageService.set(StorageItem.cliDatabase, database)
-        sessionStorageService.set(StorageItem.databaseId, database.id)
-
-        useDatabasesStore.getState().setConnectedDatabase(database)
-        store.dispatch(addCli(database))
-
+        processCliAction(message)
         break
       default:
         break

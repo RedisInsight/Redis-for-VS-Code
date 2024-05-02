@@ -35,6 +35,7 @@ export {
   screen,
   fireEvent,
   waitFor,
+  act,
 } from '@testing-library/react'
 
 const scrollIntoViewMock = vi.fn()

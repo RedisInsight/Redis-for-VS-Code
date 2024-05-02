@@ -11,4 +11,5 @@ export {
   fireEvent,
   waitForStack,
   waitFor,
+  act,
 } from './testUtils'

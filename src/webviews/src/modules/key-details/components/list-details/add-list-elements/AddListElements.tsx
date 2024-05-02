@@ -85,7 +85,7 @@ const AddListElements = (props: Props) => {
                 itemClassName={styles.selectOption}
                 idSelected={destination}
                 onChange={(value) => setDestination(value as ListElementDestination)}
-                data-testid="destination-select"
+                testid="destination-select"
               />
             </div>
             <div className="w-2/3">

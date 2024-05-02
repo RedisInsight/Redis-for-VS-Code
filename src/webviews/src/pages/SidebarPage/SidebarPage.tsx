@@ -7,7 +7,7 @@ export const SidebarPage: FC<any> = () => {
   const databases = useDatabasesStore((state) => state.data)
 
   return (
-    <div className="flex w-full flex-wrap flex-col min-h-full" data-testid="tree-view-page">
+    <div className="flex w-full flex-wrap flex-col min-h-full text-vscode-icon-foreground" data-testid="tree-view-page">
       {databases.map((database) => (
         <ContextStoreProvider key={database.id}>
           <KeysStoreProvider>

@@ -16,7 +16,6 @@ const mockedProps: Props = {
   scanned: 1,
   resultsLength: 1,
   loading: false,
-  nextCursor: '0',
 }
 
 vi.spyOn(utils, 'sendEventTelemetry')
@@ -49,14 +48,14 @@ describe('KeysSummary', () => {
     const { queryByTestId } = render(
       <KeysSummary {...mockedProps} scanned={1} resultsLength={1} total={1} />,
     )
-    expect(queryByTestId('keys-summary')).toHaveTextContent('(1/1)')
+    expect(queryByTestId('keys-summary')).toHaveTextContent('(1 / 1)')
   })
 
   it('should Keys summary show proper text with count > 1', () => {
     const { queryByTestId } = render(
       <KeysSummary {...mockedProps} scanned={2} resultsLength={2} total={2} />,
     )
-    expect(queryByTestId('keys-summary')).toHaveTextContent('(2/2)')
+    expect(queryByTestId('keys-summary')).toHaveTextContent('(2 / 2)')
   })
 
   it('should call setKeysTreeSort and resetKeysTree actions after click on sorting icon', async () => {
