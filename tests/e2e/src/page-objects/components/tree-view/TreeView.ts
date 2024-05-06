@@ -1,6 +1,10 @@
 import { By, Locator } from 'selenium-webdriver'
 import { WebView } from '@e2eSrc/page-objects/components/WebView'
-import { ButtonActions } from '@e2eSrc/helpers/common-actions'
+import {
+  ButtonActions,
+  DropdownActions,
+  InputActions,
+} from '@e2eSrc/helpers/common-actions'
 
 /**
  * Tree list view with databases and keys
@@ -8,7 +12,7 @@ import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 export class TreeView extends WebView {
   treeViewPage = By.xpath(`//div[@data-testid='tree-view-page']`)
   scanMoreBtn = By.xpath(`//vscode-button[@data-testid='scan-more']`)
-  keyScannedNumber = By.xpath(`//sapn[@data-testid='keys-number-of-scanned']`)
+  keyScannedNumber = By.xpath(`//span[@data-testid='keys-number-of-scanned']`)
   totalKeyNumber = By.xpath(`//span[@data-testid='keys-total']`)
   treeViewKey = By.xpath(
     `//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')]`,
@@ -26,6 +30,27 @@ export class TreeView extends WebView {
   submitDeleteKeyButton = By.xpath(
     `//div[@class='popup-content ']//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
   )
+  keyTreeFilterTrigger = By.xpath(
+    `//vscode-button[@data-testid='key-tree-filter-trigger']`,
+  )
+  treeViewSearchInput = By.xpath(
+    `//input[@data-testid='tree-view-search-input']`,
+  )
+  keyTreeFilterApplyBtn = By.xpath(
+    `//vscode-button[@data-testid='key-tree-filter-apply-btn']`,
+  )
+  keyTreeFilterCancelBtn = By.xpath(
+    `//vscode-button[@data-testid='key-tree-filter-cancel-btn']`,
+  )
+  loadingIndicator = By.xpath(`//*[contains(@class, "table-loading")]`)
+  treeViewFilterSelect = By.xpath(
+    `//vscode-dropdown[@data-testid='tree-view-filter-select']`,
+  )
+  keyTreeFilterClearBtn = By.xpath(
+    `//vscode-button[@data-testid='key-tree-filter-clear-btn']`,
+  )
+  keysSummary = By.xpath(`//*[@data-testid='keys-summary']`)
+
   // mask
   keyMask = '//*[@data-testid="key-$name"]'
   getItemDeleteButton = (keyName: string): Locator =>
@@ -194,5 +219,39 @@ export class TreeView extends WebView {
   async isKeyIsDisplayedInTheList(keyName: string): Promise<boolean> {
     const keyNameInTheList = this.getKeySelectorByName(keyName)
     return await super.isElementDisplayed(keyNameInTheList)
+  }
+
+  /**
+   * Searching by Key name in the list
+   * @param keyName The name of the key
+   */
+  async searchByKeyName(keyName: string): Promise<void> {
+    await ButtonActions.clickElement(this.keyTreeFilterTrigger)
+    await InputActions.typeText(this.treeViewSearchInput, keyName)
+    await ButtonActions.clickElement(this.keyTreeFilterApplyBtn)
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, false)
+  }
+
+  /**
+   * Select keys filter group type
+   * @param value The value to select
+   */
+  async selectFilterGroupType(value: string): Promise<void> {
+    await ButtonActions.clickElement(this.keyTreeFilterTrigger)
+    await DropdownActions.selectDropdownValue(
+      this.treeViewFilterSelect,
+      value,
+      'all',
+    )
+    await ButtonActions.clickElement(this.keyTreeFilterApplyBtn)
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, false)
+  }
+
+  /**
+   * Clear keys filter
+   */
+  async clearFilter(): Promise<void> {
+    await ButtonActions.clickElement(this.keyTreeFilterTrigger)
+    await ButtonActions.clickElement(this.keyTreeFilterClearBtn)
   }
 }

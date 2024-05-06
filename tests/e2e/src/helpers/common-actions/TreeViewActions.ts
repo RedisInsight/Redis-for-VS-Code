@@ -88,4 +88,41 @@ export class TreeViewActions extends CommonDriverExtension {
       await ButtonActions.clickElement(firstFolder)
     }
   }
+
+  /**
+   * Verify that keys can be scanned more and results increased
+   */
+  static async verifyScannningMore(): Promise<void> {
+    let treeView = new TreeView()
+    for (let i = 2; i < 100; i += 2) {
+      // Remember results value
+      const rememberedScanResults = Number(
+        (await treeView.getElementText(treeView.scanMoreBtn)).replace(
+          /\s/g,
+          '',
+        ),
+      )
+      await treeView.waitForElementVisibility(
+        treeView.loadingIndicator,
+        10000,
+        false,
+      )
+      const scannedValueText = await treeView.getElementText(
+        treeView.keyScannedNumber,
+      )
+      const regExp = new RegExp(`${i} ` + '...')
+      expect(scannedValueText).match(
+        regExp,
+        `The database is not automatically scanned by ${i} 000 keys`,
+      )
+      await ButtonActions.clickElement(treeView.scanMoreBtn)
+      const scannedResults = Number(
+        (await treeView.getElementText(treeView.scanMoreBtn)).replace(
+          /\s/g,
+          '',
+        ),
+      )
+      expect(scannedResults).gt(rememberedScanResults)
+    }
+  }
 }
