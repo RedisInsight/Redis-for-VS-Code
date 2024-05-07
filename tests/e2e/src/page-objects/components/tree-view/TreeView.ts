@@ -238,7 +238,7 @@ export class TreeView extends WebView {
    */
   async selectFilterGroupType(value: string): Promise<void> {
     await ButtonActions.clickElement(this.keyTreeFilterTrigger)
-    await DropdownActions.selectDropdownValue(
+    await DropdownActions.selectDropdownWithScrollValue(
       this.treeViewFilterSelect,
       value
     )

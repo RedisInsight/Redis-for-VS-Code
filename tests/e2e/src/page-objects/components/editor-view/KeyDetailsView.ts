@@ -205,7 +205,7 @@ export class KeyDetailsView extends WebView {
    * @param formatter The name of formatter
    */
   async selectFormatter(formatter: string): Promise<void> {
-    await DropdownActions.selectDropdownValue(
+    await DropdownActions.selectDropdownWithScrollValue(
       this.formatSwitcher,
       formatter
     )

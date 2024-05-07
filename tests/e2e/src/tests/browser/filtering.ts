@@ -325,7 +325,7 @@ describe('Filtering per key name', () => {
     // Verify that when user clicks on “Cancel” control filter is reset
     await ButtonActions.clickElement(treeView.keyTreeFilterTrigger)
     await InputActions.typeText(treeView.treeViewSearchInput, keyName)
-    await DropdownActions.selectDropdownValue(
+    await DropdownActions.selectDropdownWithScrollValue(
       treeView.treeViewFilterSelect,
       KeyTypesShort.Set,
     )

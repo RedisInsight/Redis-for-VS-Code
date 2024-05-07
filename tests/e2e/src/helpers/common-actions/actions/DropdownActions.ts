@@ -53,12 +53,12 @@ export class DropdownActions {
   }
 
   /**
-   * Open dropdown and select value
+   * Open dropdown which has scrollbar and select value
    * @param dropdownSelector The selector of dropdown
    * @param value The value in dropdown to select
    * @param defaultValue The first top value in dropdown
    */
-  static async selectDropdownValue(
+  static async selectDropdownWithScrollValue(
     dropdownSelector: Locator,
     value: string,
   ): Promise<void> {
