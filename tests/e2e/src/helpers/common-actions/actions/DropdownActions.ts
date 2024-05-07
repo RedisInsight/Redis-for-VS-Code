@@ -58,7 +58,7 @@ export class DropdownActions {
    * @param value The value in dropdown to select
    * @param defaultValue The first top value in dropdown
    */
-  static async selectDropdownWithScrollValue(
+  static async selectDropdownValueWithScroll(
     dropdownSelector: Locator,
     value: string,
   ): Promise<void> {
