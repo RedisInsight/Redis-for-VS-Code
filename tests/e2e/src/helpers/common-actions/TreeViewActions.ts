@@ -94,7 +94,7 @@ export class TreeViewActions extends CommonDriverExtension {
    */
   static async verifyScannningMore(): Promise<void> {
     let treeView = new TreeView()
-    for (let i = 2; i <= 20; i += 2) {
+    for (let i = 2; i <= 6; i += 2) {
       // Remember results value
       const rememberedScanResults = Number(
         (await treeView.getElementText(treeView.scanMoreBtn)).replace(

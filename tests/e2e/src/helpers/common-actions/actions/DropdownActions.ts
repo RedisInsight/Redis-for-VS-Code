@@ -77,7 +77,7 @@ export class DropdownActions {
       currentValue = await DropdownActions.getDropdownValue(dropdownSelector)
     }
 
-    // Select the specified formatter
+    // Select the specified value
     while (currentValue !== value) {
       await dropdown.sendKeys(Key.ARROW_DOWN)
       currentValue = await DropdownActions.getDropdownValue(dropdownSelector)
