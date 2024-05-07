@@ -240,8 +240,7 @@ export class TreeView extends WebView {
     await ButtonActions.clickElement(this.keyTreeFilterTrigger)
     await DropdownActions.selectDropdownValue(
       this.treeViewFilterSelect,
-      value,
-      'all',
+      value
     )
     await ButtonActions.clickElement(this.keyTreeFilterApplyBtn)
     await this.waitForElementVisibility(this.loadingIndicator, 1000, false)

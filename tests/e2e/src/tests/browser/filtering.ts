@@ -328,7 +328,6 @@ describe('Filtering per key name', () => {
     await DropdownActions.selectDropdownValue(
       treeView.treeViewFilterSelect,
       KeyTypesShort.Set,
-      'all',
     )
     await ButtonActions.clickElement(treeView.keyTreeFilterCancelBtn)
     await ButtonActions.clickElement(treeView.keyTreeFilterTrigger)

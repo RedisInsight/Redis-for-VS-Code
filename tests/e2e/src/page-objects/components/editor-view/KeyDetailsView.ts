@@ -207,8 +207,7 @@ export class KeyDetailsView extends WebView {
   async selectFormatter(formatter: string): Promise<void> {
     await DropdownActions.selectDropdownValue(
       this.formatSwitcher,
-      formatter,
-      Formatters.Unicode,
+      formatter
     )
   }
 }

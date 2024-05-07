@@ -37,6 +37,22 @@ export class DropdownActions {
   }
 
   /**
+   * Get the first top option value in dropdown
+   * @param locator dropdown locator
+   */
+  static async getDropdownTopValue(
+    locator: Locator,
+  ): Promise<string> {
+    DropdownActions.initializeDriver()
+    const dropdown = await DropdownActions.driver.wait(
+      until.elementLocated(locator),
+    )
+    const firstOption = await dropdown.findElement(By.xpath('./vscode-option'));
+
+    return await firstOption.getAttribute('value')
+  }
+
+  /**
    * Open dropdown and select value
    * @param dropdownSelector The selector of dropdown
    * @param value The value in dropdown to select
@@ -45,13 +61,14 @@ export class DropdownActions {
   static async selectDropdownValue(
     dropdownSelector: Locator,
     value: string,
-    defaultValue: string,
   ): Promise<void> {
     DropdownActions.initializeDriver()
     await ButtonActions.clickElement(dropdownSelector)
     const dropdown = await DropdownActions.driver.wait(
       until.elementLocated(dropdownSelector),
     )
+    const defaultValue =
+      await DropdownActions.getDropdownTopValue(dropdownSelector)
     let currentValue = await DropdownActions.getDropdownValue(dropdownSelector)
 
     // Navigate up in the dropdown until top default value selected
