@@ -37,6 +37,12 @@ export const KeyTreeFilter = () => {
     popupRef.current?.close?.()
   }
 
+  const handleCancel = () => {
+    closePopover()
+    setTypeSelected(filter)
+    setSearch(searchInit)
+  }
+
   const handleApply = () => {
     const filter = typeSelected === ALL_KEY_TYPES_VALUE ? null : typeSelected
 
@@ -113,7 +119,7 @@ export const KeyTreeFilter = () => {
           <Select
             options={sortOptions}
             idSelected={typeSelected}
-            containerClassName="select-without-border min-w-[100px] w-full"
+            containerClassName="select-without-border min-w-1 w-full"
             onChange={onChangeType}
             testid="tree-view-filter-select"
           />
@@ -123,7 +129,7 @@ export const KeyTreeFilter = () => {
             <VSCodeButton
               appearance="secondary"
               data-testid="key-tree-filter-cancel-btn"
-              onClick={closePopover}
+              onClick={handleCancel}
             >
               {l10n.t('Cancel')}
             </VSCodeButton>

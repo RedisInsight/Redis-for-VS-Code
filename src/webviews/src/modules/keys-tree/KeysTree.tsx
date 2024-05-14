@@ -144,7 +144,7 @@ export const KeysTree = () => {
     }
 
     return (
-      <div className="px-8">
+      <div className="pl-10">
         <NoKeysMessage total={keysState.total} />
       </div>
     )
