@@ -9,6 +9,10 @@
 
 .row {
   @apply flex flex-row items-center pb-2 last:pb-0;
+
+  input {
+    @apply min-w-1;
+  }
 }
 
 .clearBtn {
