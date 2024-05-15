@@ -16,7 +16,12 @@
 }
 
 .text {
-  @apply text-vscode-foreground opacity-80 pl-2;
+  @apply truncate text-vscode-foreground opacity-80 pl-2;
   font-size: 11px;
   line-height: 16px;
+}
+
+.textContainer {
+  @apply flex flex-row truncate;
+  width: calc(100vw - 60px);
 }
