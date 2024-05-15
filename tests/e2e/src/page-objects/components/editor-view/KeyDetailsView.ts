@@ -1,9 +1,12 @@
 import { By } from 'selenium-webdriver'
-import { ButtonActions, DropdownActions, InputActions } from '@e2eSrc/helpers/common-actions'
+import {
+  ButtonActions,
+  DropdownActions,
+  InputActions,
+} from '@e2eSrc/helpers/common-actions'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { WebView } from '@e2eSrc/page-objects/components/WebView'
 import { InputWithButtons } from '../common/InputWithButtons'
-import { Key } from 'vscode-extension-tester'
 import { Formatters } from '@e2eSrc/helpers/constants'
 
 /**
@@ -202,21 +205,9 @@ export class KeyDetailsView extends WebView {
    * @param formatter The name of formatter
    */
   async selectFormatter(formatter: string): Promise<void> {
-    await ButtonActions.clickElement(this.formatSwitcher)
-    const dropdownElement = await this.getElement(this.formatSwitcher)
-    let currentValue = await DropdownActions.getDropdownValue(this.formatSwitcher)
-
-    // Navigate up in the dropdown until "Unicode" is selected
-    while (currentValue !== Formatters.Unicode) {
-      await dropdownElement.sendKeys(Key.ARROW_UP)
-      currentValue = await DropdownActions.getDropdownValue(this.formatSwitcher)
-    }
-
-    // Select the specified formatter
-    while (currentValue !== formatter) {
-      await dropdownElement.sendKeys(Key.ARROW_DOWN)
-      currentValue = await DropdownActions.getDropdownValue(this.formatSwitcher)
-    }
-    await ButtonActions.clickElement(this.getFormatterOption(formatter))
+    await DropdownActions.selectDropdownValueWithScroll(
+      this.formatSwitcher,
+      formatter
+    )
   }
 }
