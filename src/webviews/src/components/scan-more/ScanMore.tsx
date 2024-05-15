@@ -7,6 +7,7 @@ import styles from './styles.module.scss'
 
 export interface Props {
   disabled: boolean
+  text?: string
   loadMoreItems?: (config: any) => void
 }
 
@@ -14,6 +15,7 @@ export interface Props {
 
 export const ScanMore: FC<Props> = ({
   disabled,
+  text,
   loadMoreItems,
 }) => (
   <div className={styles.container}>
@@ -26,7 +28,10 @@ export const ScanMore: FC<Props> = ({
       title={disabled ? l10n.t('The entire database has been scanned.') : ''}
     >
       <VscDiffAdded className="mr-1" />
-      {l10n.t('Scan more')}
+      <div className={styles.textContainer}>
+        {l10n.t('Scan more')}
+        {text && <div className={styles.text}>{text}</div>}
+      </div>
     </VSCodeButton>
   </div>
 )

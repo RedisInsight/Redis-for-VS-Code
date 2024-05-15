@@ -131,7 +131,7 @@ export class BaseComponent extends WebElement {
       try {
         let element = await this.getDriver().wait(
           until.elementLocated(locator),
-          0,
+          timeout,
         )
         const isVisible = await element.isDisplayed()
         if (isVisible) {

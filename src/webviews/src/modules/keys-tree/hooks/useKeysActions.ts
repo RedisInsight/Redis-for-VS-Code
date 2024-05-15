@@ -2,6 +2,7 @@ import { StateCreator } from 'zustand'
 import { isNull, map, remove } from 'lodash'
 
 import { bufferToString, isEqualBuffers } from 'uiSrc/utils'
+import { DEFAULT_SEARCH_MATCH } from 'uiSrc/constants'
 import { KeysStore, KeysActions } from './interface'
 
 export const initialKeysState: KeysStore = {
@@ -35,7 +36,9 @@ KeysStore & KeysActions
   loadKeys: () => set({ loading: true }),
   loadKeysFinal: () => set({ loading: false }),
 
-  loadKeysSuccess: (data) => set(() => ({
+  loadKeysSuccess: (data, isSearched = false, isFiltered = false) => set(() => ({
+    isSearched,
+    isFiltered,
     data: {
       ...data,
       previousResultCount: data.keys?.length,
@@ -112,4 +115,7 @@ KeysStore & KeysActions
   resetAddKey: () => set({ addKeyLoading: false }),
 
   setDatabaseId: (databaseId) => set({ databaseId }),
+
+  setFilterAndSearch: (filter, search = DEFAULT_SEARCH_MATCH) =>
+    set({ filter, search }),
 })

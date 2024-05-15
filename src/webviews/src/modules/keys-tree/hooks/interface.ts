@@ -16,7 +16,7 @@ export interface KeysStore {
 export interface KeysActions {
   loadKeys: () => void
   loadKeysFinal: () => void
-  loadKeysSuccess: (data: KeysStoreData) => void
+  loadKeysSuccess: (data: KeysStoreData, isSearched?: boolean, isFiltered?: boolean) => void
   loadMoreKeysSuccess: (data: KeysStoreData) => void
 
   deleteKey: () => void
@@ -31,6 +31,8 @@ export interface KeysActions {
   addKeyToTree: (key: RedisString, keyType: KeyTypes) => void
   resetAddKey: () => void
   setDatabaseId: (databaseId: string) => void
+
+  setFilterAndSearch: (filter: Nullable<KeyTypes>, search: string) => void
 }
 
 export interface KeysThunks {
