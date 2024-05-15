@@ -113,7 +113,7 @@
     "package:stage:mac": "vsce package --pre-release --yarn --target darwin-x64",
     "package:stage:win": "vsce package --pre-release --yarn --target win32-x64",
     "package:stage:linux": "vsce package --pre-release --yarn --target linux-x64",
-    "prepare": "husky install && ts-patch install -s"
+    "prepare": "husky install"
   },
   "msw": {
     "workerDirectory": "./src/webviews/test/public"
@@ -232,10 +232,8 @@
     "tailwindcss": "^3.4.3",
     "ts-mockito": "^2.6.1",
     "ts-node": "^10.9.1",
-    "ts-patch": "^3.1.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.5",
-    "typescript-transform-paths": "^3.4.7",
     "uuid": "^9.0.1",
     "vite": "^5.2.10",
     "vite-plugin-react-click-to-component": "^3.0.0",
