@@ -9,7 +9,7 @@ class WorkspaceStateService {
 
   get<T>(key: string = ''): T | null {
     try {
-      return this.context.workspaceState.get<T>(key)
+      return this.context.workspaceState.get<T>(key) || null
     } catch (error) {
       console.error(`get from workspace state error: ${error}`)
       return null
