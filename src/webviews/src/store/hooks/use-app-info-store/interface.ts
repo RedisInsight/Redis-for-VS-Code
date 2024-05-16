@@ -1,3 +1,4 @@
+import { ICommands } from 'uiSrc/constants'
 import { Nullable, RedisResponseEncoding } from 'uiSrc/interfaces'
 
 export interface AppInfoStore {
@@ -8,20 +9,35 @@ export interface AppInfoStore {
   spec: Nullable<GetAgreementsSpecResponse>
   server: Nullable<GetServerInfoResponse>
   delimiter: string
+  commandsSpec: ICommands
+  commandsArray: string[]
+  commandGroups: string[]
 }
 
 export interface AppInfoActions {
   setInitialState: () => void
   processAppInfo: () => void
   processAppInfoFinal: () => void
-  processAppInfoSuccess: ([config, spec, server]: AppInfoResponses) => void
+  processAppInfoSuccess: ({
+    server,
+    config,
+    spec,
+    commandsSpec,
+    commandsArray,
+    commandGroups,
+  }: Partial<AppInfoStore>) => void
   setIsShowConceptsPopup: (isShowConceptsPopup: boolean) => void
 
   updateUserConfigSettingsSuccess: (config: GetAppSettingsResponse) => void
   setDelimiter: (delimiter: string) => void
 }
 
-export type AppInfoResponses = [GetServerInfoResponse, GetAppSettingsResponse, GetAgreementsSpecResponse]
+export type AppInfoResponses = [
+  GetServerInfoResponse,
+  GetAppSettingsResponse,
+  GetAgreementsSpecResponse,
+  ICommands,
+]
 
 export interface GetServerInfoResponse {
   id: string

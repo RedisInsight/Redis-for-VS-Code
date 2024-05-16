@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { getNonce, handleMessage } from './utils'
+import { workspaceStateService } from './lib'
 
 export class WebViewProvider implements vscode.WebviewViewProvider {
   _doc?: vscode.TextDocument
@@ -51,7 +52,8 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
     )
     const viewRoute = this._route
 
-    const apiPort = this._context.globalState.get('API_PORT')
+    const appPort = workspaceStateService.get('appPort')
+    const appInfo = workspaceStateService.get('appInfo')
 
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce()
@@ -80,10 +82,12 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
           content="style-src 'self' https://*.vscode-cdn.net 'unsafe-inline';"
         />
         <script nonce="${nonce}">
+          window.appPort=${appPort};
+          window.appInfo=${JSON.stringify(appInfo)};
         </script>
       </head>
       <body>
-        <div id="root" data-route="${viewRoute}" data-api-port="${apiPort}"></div>
+        <div id="root" data-route="${viewRoute}"></div>
         <script nonce="${nonce}" src="${scriptUri}"></script>
       </body>
       </html>`

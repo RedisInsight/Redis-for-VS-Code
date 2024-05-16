@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { workspaceStateService } from './lib'
 
 export const NOTIFICATION_TIMEOUT = 5_000
 
@@ -25,51 +26,58 @@ export const waitFor = async (timeout: number, condition: () => boolean): Promis
   return timeout > 0
 }
 
-export const handleMessage = (message: any = {}) => {
-  if (message.action === 'SelectKey') {
-    vscode.commands.executeCommand('RedisInsight.openKey', message)
-  }
-  if (message.action === 'EditDatabase') {
-    vscode.commands.executeCommand('RedisInsight.editDatabase', message)
-  }
-  if (message.action === 'ErrorMessage') {
-    vscode.window.showErrorMessage(message.data)
-  }
-  if (message.action === 'InformationMessage') {
-    vscode.window.showInformationMessage(message.data)
-  }
-  if (message.action === 'AddCli') {
-    vscode.commands.executeCommand('RedisInsight.addCli', message)
-  }
-  if (message.action === 'AddKey') {
-    vscode.commands.executeCommand('RedisInsight.addKeyOpen', message)
-  }
-  if (message.action === 'CloseAddKey') {
-    vscode.commands.executeCommand('RedisInsight.addKeyClose')
-  }
-  if (message.action === 'CloseAddKeyAndRefresh') {
-    vscode.commands.executeCommand('RedisInsight.closeAddKeyAndRefresh', message.data)
-  }
-  if (message.action === 'CloseKeyAndRefresh') {
-    vscode.commands.executeCommand('RedisInsight.closeKeyAndRefresh', message.data)
-  }
-  if (message.action === 'CloseKey') {
-    vscode.commands.executeCommand('RedisInsight.closeKey')
-  }
-  if (message.action === 'EditKeyName') {
-    vscode.commands.executeCommand('RedisInsight.editKeyName', message.data)
-  }
-  if (message.action === 'CloseAddDatabase') {
-    vscode.commands.executeCommand('RedisInsight.addDatabaseClose')
-  }
-  if (message.action === 'CloseEditDatabase') {
-    vscode.commands.executeCommand('RedisInsight.editDatabaseClose', message)
-  }
-  if (message.action === 'UpdateSettings') {
-    vscode.commands.executeCommand('RedisInsight.updateSettings', message)
-  }
-  if (message.action === 'UpdateSettingsDelimiter') {
-    vscode.commands.executeCommand('RedisInsight.updateSettingsDelimiter', message)
+export const handleMessage = async (message: any = {}) => {
+  switch (message.action) {
+    case 'SelectKey':
+      vscode.commands.executeCommand('RedisInsight.openKey', message)
+      break
+    case 'EditDatabase':
+      vscode.commands.executeCommand('RedisInsight.editDatabase', message)
+      break
+    case 'ErrorMessage':
+      vscode.window.showErrorMessage(message.data)
+      break
+    case 'InformationMessage':
+      vscode.window.showInformationMessage(message.data)
+      break
+    case 'AddCli':
+      vscode.commands.executeCommand('RedisInsight.addCli', message)
+      break
+    case 'AddKey':
+      vscode.commands.executeCommand('RedisInsight.addKeyOpen', message)
+      break
+    case 'CloseAddKey':
+      vscode.commands.executeCommand('RedisInsight.addKeyClose')
+      break
+    case 'CloseAddKeyAndRefresh':
+      vscode.commands.executeCommand('RedisInsight.closeAddKeyAndRefresh', message.data)
+      break
+    case 'CloseKeyAndRefresh':
+      vscode.commands.executeCommand('RedisInsight.closeKeyAndRefresh', message.data)
+      break
+    case 'CloseKey':
+      vscode.commands.executeCommand('RedisInsight.closeKey')
+      break
+    case 'EditKeyName':
+      vscode.commands.executeCommand('RedisInsight.editKeyName', message.data)
+      break
+    case 'CloseAddDatabase':
+      vscode.commands.executeCommand('RedisInsight.addDatabaseClose')
+      break
+    case 'CloseEditDatabase':
+      vscode.commands.executeCommand('RedisInsight.editDatabaseClose', message)
+      break
+    case 'UpdateSettings':
+      vscode.commands.executeCommand('RedisInsight.updateSettings', message)
+      break
+    case 'UpdateSettingsDelimiter':
+      vscode.commands.executeCommand('RedisInsight.updateSettingsDelimiter', message)
+      break
+    case 'SaveAppInfo':
+      await workspaceStateService.set('appInfo', message.data)
+      break
+    default:
+      break
   }
 }
 

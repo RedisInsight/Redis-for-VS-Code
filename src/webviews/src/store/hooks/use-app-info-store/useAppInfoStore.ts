@@ -2,11 +2,13 @@ import { create } from 'zustand'
 import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
+import { isString, uniqBy } from 'lodash'
 
 import { apiService, localStorageService } from 'uiSrc/services'
-import { ApiEndpoints, DEFAULT_DELIMITER, StorageItem } from 'uiSrc/constants'
+import { ApiEndpoints, DEFAULT_DELIMITER, ICommand, StorageItem } from 'uiSrc/constants'
 import { getApiErrorMessage, showErrorMessage } from 'uiSrc/utils'
 import { RedisResponseEncoding } from 'uiSrc/interfaces'
+import { checkDeprecatedCommandGroup } from 'uiSrc/modules/cli/utils'
 import {
   AppInfoStore,
   AppInfoActions,
@@ -22,6 +24,9 @@ export const initialAppInfoState: AppInfoStore = {
   spec: null,
   server: null,
   delimiter: DEFAULT_DELIMITER,
+  commandsSpec: {},
+  commandsArray: [],
+  commandGroups: [],
 }
 
 export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
@@ -35,8 +40,7 @@ export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
     // actions
     processAppInfo: () => set({ loading: true }),
     processAppInfoFinal: () => set({ loading: false }),
-    processAppInfoSuccess: ([server, config, spec]) =>
-      set({ server, config, spec }),
+    processAppInfoSuccess: (appInfo) => set({ ...appInfo }),
 
     setIsShowConceptsPopup: (isShowConceptsPopup) => set({ isShowConceptsPopup }),
 
@@ -56,17 +60,31 @@ export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
 )
 
 // Asynchronous thunk action
-export const fetchAppInfo = () => {
+export const fetchAppInfo = (onSuccess?: (data: Partial<AppInfoStore>) => void) => {
   useAppInfoStore.setState(async (state) => {
     state.processAppInfo()
     try {
-      const responses = await Promise.all([
+      const [server, config, spec, commandsSpec] = (await Promise.all([
         ApiEndpoints.INFO,
         ApiEndpoints.SETTINGS,
         ApiEndpoints.SETTINGS_AGREEMENTS_SPEC,
-      ].map((url) => apiService.get(url)))
+        ApiEndpoints.REDIS_COMMANDS,
+      ].map((url) => apiService.get(url)))).map(({ data }) => data) as AppInfoResponses
 
-      state.processAppInfoSuccess(responses.map(({ data }) => data) as AppInfoResponses)
+      const appInfo = {
+        server,
+        config,
+        spec,
+        commandsSpec,
+        commandsArray: Object.keys(commandsSpec).sort(),
+        commandGroups: uniqBy(Object.values(commandsSpec), 'group')
+          .map((item: ICommand) => item.group)
+          .filter((group: string) => isString(group))
+          .filter((group: string) => !checkDeprecatedCommandGroup(group)),
+      }
+
+      state.processAppInfoSuccess(appInfo)
+      onSuccess?.(appInfo)
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))
     } finally {

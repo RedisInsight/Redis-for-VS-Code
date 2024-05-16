@@ -50,11 +50,19 @@ describe('useAppInfoStore', () => {
 
     const { processAppInfoSuccess } = useAppInfoStore.getState()
     // Act
-    processAppInfoSuccess([constants.SERVER_INFO, constants.SETTINGS, constants.SETTINGS_AGREEMENTS_SPEC])
+    processAppInfoSuccess({
+      server: constants.SERVER_INFO,
+      config: constants.SETTINGS,
+      spec: constants.SETTINGS_AGREEMENTS_SPEC,
+      commandsArray: constants.REDIS_COMMANDS_ARRAY,
+      commandGroups: constants.REDIS_COMMANDS_GROUPS,
+    })
     // Assert
     expect(useAppInfoStore.getState().server).toEqual(constants.SERVER_INFO)
     expect(useAppInfoStore.getState().config).toEqual(constants.SETTINGS)
     expect(useAppInfoStore.getState().spec).toEqual(constants.SETTINGS_AGREEMENTS_SPEC)
+    expect(useAppInfoStore.getState().commandsArray).toEqual(constants.REDIS_COMMANDS_ARRAY)
+    expect(useAppInfoStore.getState().commandGroups).toEqual(constants.REDIS_COMMANDS_GROUPS)
   })
 
   it('setIsShowConceptsPopup', () => {
@@ -88,6 +96,8 @@ describe('thunks', () => {
     expect(useAppInfoStore.getState().server).toEqual(constants.SERVER_INFO)
     expect(useAppInfoStore.getState().config).toEqual(constants.SETTINGS)
     expect(useAppInfoStore.getState().spec).toEqual(constants.SETTINGS_AGREEMENTS_SPEC)
+    expect(useAppInfoStore.getState().commandsArray).toEqual(constants.REDIS_COMMANDS_ARRAY)
+    expect(useAppInfoStore.getState().commandGroups).toEqual(constants.REDIS_COMMANDS_GROUPS)
     expect(useAppInfoStore.getState().loading).toEqual(false)
   })
 

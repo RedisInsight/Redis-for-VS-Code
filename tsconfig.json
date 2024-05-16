@@ -7,7 +7,7 @@
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
-    "rootDir": "src"
+    "rootDir": "src",
   },
   "exclude": [
     "typings/browser.d.ts",
