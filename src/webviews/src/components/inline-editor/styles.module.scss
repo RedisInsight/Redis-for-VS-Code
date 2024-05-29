@@ -10,7 +10,7 @@ $controls-padding-y: 10px;
 }
 
 .field {
-  @apply bg-vscode-input-background;
+  @apply bg-vscode-input-background pr-5;
   min-width: 72px;
   max-width: 100% !important;
   height: 100% !important;
@@ -36,7 +36,7 @@ $controls-padding-y: 10px;
     @apply items-center;
 
     .applyBtn {
-      @apply h-full bg-vscode-button-background min-h-[28px] w-full;
+      @apply h-full bg-vscode-button-background min-h-[25px] w-full;
       border-radius: 0 !important;
     }
   }
@@ -91,4 +91,8 @@ $controls-padding-y: 10px;
     height: 36px !important;
     width: 86px !important;
   }
+}
+
+.invalid {
+  @apply border-error #{!important};
 }

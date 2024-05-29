@@ -1,0 +1,10 @@
+.jsonItemEditor {
+  @apply w-full;
+  padding-right: 80px;
+  max-width: 600px;
+}
+
+.euiPopover__anchor.deleteFieldPopover {
+  display: flex;
+  align-items: center;
+}

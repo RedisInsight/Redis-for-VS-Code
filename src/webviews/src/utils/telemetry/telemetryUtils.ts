@@ -1,7 +1,8 @@
 import isGlob from 'is-glob'
 import { cloneDeep, get } from 'lodash'
+import * as jsonpath from 'jsonpath'
 
-import { AdditionalRedisModule, store } from 'uiSrc/store'
+import { AdditionalRedisModule } from 'uiSrc/store'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints, DEFAULT_SUMMARY, KeyTypes, SUPPORTED_REDIS_MODULES } from 'uiSrc/constants'
 import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
@@ -90,5 +91,22 @@ export const getLengthByKeyType = (type: KeyTypes, data: any) => {
       return undefined
     default:
       return undefined
+  }
+}
+
+export const getJsonPathLevel = (path: string): string => {
+  try {
+    if (path === '.') {
+      return 'root'
+    }
+    const levelsLength = jsonpath.parse(
+      `$${path.startsWith('.') ? '' : '..'}${path}`,
+    ).length
+    if (levelsLength === 1) {
+      return 'root'
+    }
+    return `${levelsLength - 2}`
+  } catch (e) {
+    return 'root'
   }
 }

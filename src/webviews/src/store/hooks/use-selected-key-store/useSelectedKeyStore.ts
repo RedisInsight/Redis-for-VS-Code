@@ -23,6 +23,7 @@ import {
   useListStore,
 } from 'uiSrc/modules/key-details/components/list-details/hooks/useListStore'
 import { fetchSetMembers } from 'uiSrc/modules/key-details/components/set-details/hooks/useSetStore'
+import { fetchReJSON } from 'uiSrc/modules/key-details/components/rejson-details/hooks/useRejsonStore'
 import { SelectedKeyActions, SelectedKeyStore } from './interface'
 
 export const initialSelectedKeyState: SelectedKeyStore = {
@@ -200,9 +201,9 @@ export const fetchKeyValueByType = (key: RedisString, type?: KeyTypes) => {
   if (type === KeyTypes.Set) {
     fetchSetMembers(key, 0, SCAN_COUNT_DEFAULT, DEFAULT_SEARCH_MATCH)
   }
-  // if (type === KeyTypes.ReJSON) {
-  //   dispatch<any>(fetchReJSON(key, '.', resetData))
-  // }
+  if (type === KeyTypes.ReJSON) {
+    fetchReJSON(key, '.')
+  }
   // if (type === KeyTypes.Stream) {
   //   const { viewType } = state.browser.stream
 

@@ -1,0 +1,239 @@
+.container {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  padding: 16px;
+  overflow: auto;
+  position: relative;
+}
+
+.fullWidthContainer {
+  @apply pl-3 w-full pt-3 pb-8;
+}
+
+.placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 12px;
+  width: 100%;
+}
+
+.jsonData {
+  @apply w-full;
+  font-size: 14px;
+  line-height: 25px;
+  letter-spacing: 0.15px;
+  flex-grow: 1;
+
+  input {
+    width: 100%;
+    min-width: 140px;
+  }
+}
+
+.errorMessage {
+  padding: 4px 8px 0 8px;
+  width: 100%;
+}
+
+.errorMessageForTextArea {
+  @apply absolute;
+}
+
+.controls,
+.controlsBottom {
+  @apply flex items-end;
+  height: 24px !important;
+  z-index: 2;
+
+  &.controls {
+    @apply mb-[3px] ml-2;
+    width: 80px;
+    border-radius: 0 10px 10px 0;
+  }
+
+  &.controlsBottom {
+    @apply absolute w-[46px];
+    height: 34px;
+    top: 100%;
+    right: 0;
+    left: auto;
+    border-radius: 0 0 10px 10px;
+  }
+}
+
+.row {
+  min-height: 25px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+
+  &:last-child {
+    @apply pb-3;
+  }
+
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 -16px;
+    z-index: 0;
+  }
+
+  &:nth-child(2n):before {
+    @apply bg-vscode-tab-inactiveBackground;
+  }
+
+  &:hover:before {
+    background-color: var(--vscode-panelStickyScroll-shadow);
+  }
+
+  > div, span, button {
+    z-index: 1;
+  }
+
+  div, input {
+    min-height: 25px;
+  }
+}
+
+.rowContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.keyName {
+  @apply text-vscode-terminal-ansiMagenta;
+  width: max-content;
+  word-break: break-all;
+  max-width: 300px;
+  box-sizing: content-box;
+  flex-shrink: 0;
+}
+
+.quotedKeyName {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 1em;
+}
+
+.defaultFontExpandArray {
+  display: inline-block;
+  cursor: pointer;
+  padding-left: 8px;
+}
+
+.defaultFontOpenIndex {
+  display: inline-block;
+  cursor: pointer;
+  padding-left: 8px;
+}
+
+.jsonValue {
+  font-size: 14px;
+  line-height: 25px;
+  font-family: "Inconsolata", monospace;
+  letter-spacing: 0.15px;
+  padding: 0 8px;
+  max-width: 1000px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    outline: 1px solid #b5b6c0;
+  }
+}
+
+.keyNameArray {
+  @apply text-vscode-terminal-ansiMagenta;
+}
+
+.jsonString {
+  @apply text-vscode-terminal-ansiGreen;
+}
+
+.jsonNumber {
+  @apply text-vscode-terminal-ansiBrightBlue;
+}
+
+.jsonBoolean {
+  @apply text-vscode-terminal-ansiYellow;
+}
+
+.jsonNull {
+  @apply text-vscode-terminal-ansiWhite;
+}
+
+.jsonNonStringPrimitive {
+  @apply text-vscode-terminal-ansiBlue;
+}
+
+.newValue {
+  @apply text-error;
+}
+
+.stringStyle {
+  word-break: break-all;
+}
+
+.quoted {
+  &:before,
+  &:after {
+    content: '"';
+  }
+}
+
+.actionButtons, .deleteBtn {
+  margin-left: 1em;
+  display: flex;
+  align-items: center;
+  min-width: 24px;
+}
+/*
+.declineBtn:hover {
+  @apply text-error;
+}
+
+.applyBtn:hover {
+  @apply text-vscode-foreground;
+} */
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
+
+.keySpinner {
+  @apply absolute w-full;
+
+  span {
+    @apply w-full #{!important};
+  }
+}
+
+.fullWidthTextArea {
+  height: 150px;
+  width: 100%;
+  padding-bottom: 30px;
+  scroll-padding-bottom: 30px;
+  max-width: none;
+}
+
+.buttonStyle, .jsonButtonStyle {
+  z-index: 1;
+}

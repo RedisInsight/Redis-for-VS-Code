@@ -7,6 +7,7 @@ import styles from './styles.module.scss'
 export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   inputRef?: React.Ref<HTMLInputElement>
   append?: ReactElement
+  invalid?: boolean
   label?: {
     text?: string
     className?: string
@@ -14,14 +15,21 @@ export interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const InputText: FC<Props> = (props) => {
-  const { className, inputRef, type = 'text', label, name, id, append } = props
+  const { className, inputRef, type = 'text', label, name, id, append, invalid } = props
   const { text: labelText, className: labelClassName = '' } = label ?? {}
   const inputEl = (
     <input
-      {...omit(props, 'inputRef', 'labelText', 'append')}
+      {...omit(props, 'inputRef', 'labelText', 'append', 'invalid')}
       type={type}
       ref={inputRef}
-      className={cx(styles.input, { [styles.withAppend]: !!append }, className)}
+      className={cx(
+        styles.input,
+        {
+          [styles.withAppend]: append,
+          [styles.invalid]: invalid,
+        },
+        className,
+      )}
     />
   )
   return (label && name && id) ? (

@@ -7,5 +7,7 @@ export { Select } from './select/Select'
 export { RefreshBtn } from './refresh-btn/RefreshBtn'
 export { Separator } from './separator/Separator'
 export { JSONViewer } from './json-viewer/JSONViewer'
+export { Spinner } from './spinner/Spinner'
+
 export type { RadioGroupOption } from './radio-group/RadioGroup'
 export type { SelectOption } from './select/Select'

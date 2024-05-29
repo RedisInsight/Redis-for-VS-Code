@@ -164,6 +164,22 @@ export const constants = {
     return REDIS_COMMANDS
   },
 
+  get REJSON_DATA() {
+    return REJSON_DATA
+  },
+
+  get REJSON_DATA_OBJECT() {
+    return REJSON_DATA_OBJECT
+  },
+
+  get REJSON_DATA_ARRAY() {
+    return REJSON_DATA_ARRAY
+  },
+
+  get REJSON_DATA_RESPONSE() {
+    return REJSON_DATA_RESPONSE
+  },
+
   get REDIS_COMMANDS_ARRAY() {
     return Object.keys(REDIS_COMMANDS).sort()
   },
@@ -241,6 +257,11 @@ const LIST_DATA_RESPONSE = {
   total: constants.KEY_LENGTH_4,
   nextCursor: 0,
 }
+
+const REJSON_DATA = { a: 1, b: null, c: 'string', d: true }
+const REJSON_DATA_OBJECT = { a: { a: 1, b: null, c: 'string', d: true } }
+const REJSON_DATA_ARRAY = { a: [1, null, 'aaa'] }
+const REJSON_DATA_RESPONSE = { data: REJSON_DATA, downloaded: true, path: '.' }
 
 const SET_DATA = {
   keyName: constants.KEY_NAME_5,

@@ -13,7 +13,7 @@ import { useKeysApi, useKeysInContext } from '../keys-tree/hooks/useKeys'
 import styles from './styles.module.scss'
 
 export interface Props {
-  keyProp: Nullable<RedisString>
+  // keyProp: Nullable<RedisString>
   // onCloseKey: () => void
   // onEditKey: (key: RedisString, newKey: RedisString) => void
   // onRemoveKey: () => void
@@ -21,16 +21,13 @@ export interface Props {
   // keysLastRefreshTime: Nullable<number>
 }
 
-const KeyDetails = (props: Props) => {
-  const {
-    keyProp,
-  } = props
-
+const KeyDetails = () => {
   const { keyType, keyName, loading } = useSelectedKeyStore(useShallow((state) => ({
     keyType: state.data?.type || KeyTypes.String,
     keyName: state.data?.name,
     loading: state.loading,
   })))
+
   const databaseId = useKeysInContext((state) => state.databaseId)
 
   const keysApi = useKeysApi()
@@ -89,7 +86,6 @@ const KeyDetails = (props: Props) => {
         )} */}
         {/* {(!isKeySelected || !loading) && ( */}
         <DynamicTypeDetails
-          {...props}
           onRemoveKey={onRemoveKey}
           onEditKey={onEditKey}
           keyType={keyType}

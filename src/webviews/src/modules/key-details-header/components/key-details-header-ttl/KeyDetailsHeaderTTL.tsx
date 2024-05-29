@@ -53,7 +53,7 @@ const KeyDetailsHeaderTTL = ({ onEditTTL }: Props) => {
         <span className={styles.subtitleText}>
           TTL:
         </span>
-        <div>
+        <div className="h-7">
           <InlineEditor
             onApply={() => applyEditTTL()}
             onDecline={(event) => cancelEditTTl(event)}
