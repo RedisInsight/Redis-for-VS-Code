@@ -68,6 +68,7 @@ export const EditEntireItemAction = (props: Props) => {
           >
             <div className="grow">
               <TextArea
+                autoFocus
                 inputRef={textareaRef}
                 invalid={!!error}
                 className={styles.fullWidthTextArea}

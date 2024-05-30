@@ -1,10 +1,5 @@
 .container {
-  display: flex;
-  flex: 1;
-  width: 100%;
-  padding: 16px;
-  overflow: auto;
-  position: relative;
+  @apply flex flex-1 w-full p-4 overflow-auto relative;
 }
 
 .fullWidthContainer {
@@ -12,78 +7,52 @@
 }
 
 .placeholder {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 12px;
-  width: 100%;
+  @apply flex justify-center items-center h-full p-3 w-full;
 }
 
 .jsonData {
-  @apply w-full;
-  font-size: 14px;
-  line-height: 25px;
+  @apply w-full grow leading-[25px] text-[14px];
   letter-spacing: 0.15px;
-  flex-grow: 1;
 
   input {
-    width: 100%;
-    min-width: 140px;
+    @apply w-full min-w-[140px];
   }
 }
 
 .errorMessage {
+  @apply w-full;
   padding: 4px 8px 0 8px;
-  width: 100%;
 }
 
 .errorMessageForTextArea {
-  @apply absolute;
+  @apply absolute pt-0;
 }
 
 .controls,
 .controlsBottom {
-  @apply flex items-end;
-  height: 24px !important;
-  z-index: 2;
+  @apply flex items-end h-6 z-[2];
 
   &.controls {
-    @apply mb-[3px] ml-2;
-    width: 80px;
+    @apply mb-[3px] ml-2 w-20;
     border-radius: 0 10px 10px 0;
   }
 
   &.controlsBottom {
-    @apply absolute w-[46px];
-    height: 34px;
-    top: 100%;
-    right: 0;
-    left: auto;
+    @apply absolute w-[46px] h-8 top-[calc(100%-10px)] right-0 left-auto;
     border-radius: 0 0 10px 10px;
   }
 }
 
 .row {
-  min-height: 25px;
-  position: relative;
-  display: flex;
-  align-items: flex-end;
+  @apply min-h-[25px] relative flex items-end;
 
   &:last-child {
     @apply pb-3;
   }
 
   &:before {
+    @apply block absolute h-full top-0 left-0 right-0 z-0 mx-[-16px];
     content: "";
-    display: block;
-    position: absolute;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: 0 -16px;
-    z-index: 0;
   }
 
   &:nth-child(2n):before {
@@ -95,62 +64,34 @@
   }
 
   > div, span, button {
-    z-index: 1;
+    @apply z-[1];
   }
 
   div, input {
-    min-height: 25px;
+    @apply min-h-[25px];
   }
 }
 
 .rowContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
+  @apply flex flex-row justify-between w-full;
 }
 
 .keyName {
-  @apply text-vscode-terminal-ansiMagenta;
-  width: max-content;
-  word-break: break-all;
-  max-width: 300px;
-  box-sizing: content-box;
-  flex-shrink: 0;
+  @apply text-vscode-terminal-ansiMagenta w-max break-all max-w-[300px] shrink-0 box-content;
 }
 
 .quotedKeyName {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding-left: 1em;
+  @apply flex flex-row items-center pl-4;
 }
 
-.defaultFontExpandArray {
-  display: inline-block;
-  cursor: pointer;
-  padding-left: 8px;
-}
-
+.defaultFontExpandArray,
 .defaultFontOpenIndex {
-  display: inline-block;
-  cursor: pointer;
-  padding-left: 8px;
+  @apply inline-block cursor-pointer pl-2;
 }
 
 .jsonValue {
-  font-size: 14px;
-  line-height: 25px;
-  font-family: "Inconsolata", monospace;
+  @apply truncate py-0 px-2 max-w-[1000px] text-[14px] leading-[25px];
   letter-spacing: 0.15px;
-  padding: 0 8px;
-  max-width: 1000px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  &:hover {
-    outline: 1px solid #b5b6c0;
-  }
 }
 
 .keyNameArray {
@@ -182,7 +123,7 @@
 }
 
 .stringStyle {
-  word-break: break-all;
+  @apply break-all
 }
 
 .quoted {
@@ -193,28 +134,18 @@
 }
 
 .actionButtons, .deleteBtn {
-  margin-left: 1em;
-  display: flex;
-  align-items: center;
-  min-width: 24px;
-}
-/*
-.declineBtn:hover {
-  @apply text-error;
+  @apply ml-4 flex items-center min-w-6;
 }
 
-.applyBtn:hover {
-  @apply text-vscode-foreground;
-} */
+.actionButtons vscode-button {
+  @apply w-[26px];
+}
 
 .spinner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @apply flex items-center justify-center;
 
   span {
-    width: 24px !important;
-    height: 24px !important;
+    @apply w-6 h-6;
   }
 }
 
@@ -227,13 +158,9 @@
 }
 
 .fullWidthTextArea {
-  height: 150px;
-  width: 100%;
-  padding-bottom: 30px;
-  scroll-padding-bottom: 30px;
-  max-width: none;
+  @apply h-[150px] w-full pb-[30px] max-w-none scroll-pb-5;
 }
 
 .buttonStyle, .jsonButtonStyle {
-  z-index: 1;
+  @apply z-[1];
 }

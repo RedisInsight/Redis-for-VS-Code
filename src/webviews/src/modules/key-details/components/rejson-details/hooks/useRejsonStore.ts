@@ -118,7 +118,7 @@ export const setReJSONDataAction = (
       }
 
       fetchReJSON(key, '.', length)
-      refreshKeyInfo(key)
+      refreshKeyInfo(key, false)
     }
   } catch (error) {
     showErrorMessage(getApiErrorMessage(error as AxiosError))
@@ -156,7 +156,7 @@ export const appendReJSONArrayItemAction = (
       }
 
       fetchReJSON(key, '.', length)
-      refreshKeyInfo(key)
+      refreshKeyInfo(key, false)
     }
   } catch (error) {
     showErrorMessage(getApiErrorMessage(error as AxiosError))
@@ -188,12 +188,12 @@ export const removeReJSONKeyAction = (
     if (isStatusSuccessful(status)) {
       try {
         fetchReJSON(key, '.', length)
-        refreshKeyInfo(key)
+        refreshKeyInfo(key, false)
 
         onSuccessAction?.(getJsonPathLevel(path))
 
         showInformationMessage(
-          successMessages.REMOVED_KEY_VALUE(key, jsonKeyName, 'JSON key').title,
+          successMessages.REMOVED_KEY_VALUE(key, jsonKeyName, 'JSON key').message,
         )
       } catch (error) {
         // console.log(error)

@@ -27,11 +27,10 @@ const RejsonDetailsWrapper = (props: Props) => {
     downloaded: state.data.downloaded,
   })))
 
-  const { selectedKey, nameString, length, lastRefreshTime } = useSelectedKeyStore(useShallow((state) => ({
+  const { selectedKey, nameString, length } = useSelectedKeyStore(useShallow((state) => ({
     selectedKey: state.data?.name,
     nameString: state.data?.nameString,
     length: state.data?.length,
-    lastRefreshTime: state.lastRefreshTime,
   })))
 
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
@@ -40,7 +39,7 @@ const RejsonDetailsWrapper = (props: Props) => {
 
   useEffect(() => {
     setExpandedRows(new Set())
-  }, [nameString, lastRefreshTime])
+  }, [nameString])
 
   const reportJSONKeyCollapsed = (level: number) => {
     sendEventTelemetry({

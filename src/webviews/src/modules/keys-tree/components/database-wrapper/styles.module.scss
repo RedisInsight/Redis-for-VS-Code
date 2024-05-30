@@ -3,11 +3,11 @@
 }
 
 .databaseName {
-  @apply text-ellipsis whitespace-nowrap overflow-hidden flex;
+  @apply text-ellipsis whitespace-nowrap overflow-hidden flex items-center;
 }
 
 .icon {
-  @apply mr-2 w-4 h-4;
+  @apply mr-2 w-4 h-full;
   min-width: 16px;
 
   &Nested {

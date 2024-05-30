@@ -8,14 +8,8 @@ export const KeyDetailsPage: FC = () => {
   const selectedKey = useSelectedKeyStore(useShallow((state) => state.data?.name))
 
   useEffect(() => {
-    fetchKeyInfo({ key: { type: 'Buffer', data: [112, 97, 99, 107, 97, 103, 101, 46, 106, 115, 111, 110] } }, true)
-
     fetchDatabaseOverview()
-  }, [])
-
-  // useEffect(() => {
-  //   fetchDatabaseOverview()
-  // }, [selectedKey])
+  }, [selectedKey])
 
   return (
     <div className="h-full" data-testid="key-details-page">
