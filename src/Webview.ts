@@ -94,7 +94,7 @@ abstract class Webview {
           window.appInfo=${JSON.stringify(appInfo)};
         </script>
 
-        <title>RedisInsight Webview</title>
+        <title>Redis Insight Webview</title>
       </head>
       <body>
         <div id="root" data-route="${this._opts.route}"></div>

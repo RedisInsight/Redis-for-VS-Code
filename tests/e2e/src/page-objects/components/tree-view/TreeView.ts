@@ -23,7 +23,7 @@ export class TreeView extends WebView {
   sortKeysBtn = By.xpath(`//vscode-button[@data-testid='sort-keys']`)
   addDatabaseBtn = By.xpath(`//a[@aria-label='Add Redis database']`)
   editDatabaseBtn = By.xpath(`//vscode-button[@data-testid='edit-database']`)
-  settingsButton = By.xpath(`//a[@aria-label='Open RedisInsight settings']`)
+  settingsButton = By.xpath(`//a[@aria-label='Open Redis Insight settings']`)
   deleteKeyInListBtn = By.xpath(
     `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
   )

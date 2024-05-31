@@ -79,13 +79,13 @@ export enum InnerViews {
 }
 
 export const InnerViewLocators = {
-  [InnerViews.TreeInnerView]: `//iframe[@title='RedisInsight']`,
+  [InnerViews.TreeInnerView]: `//iframe[@title='Redis Insight']`,
   [InnerViews.KeyDetailsInnerView]: `//iframe[contains(@title,':')]`,
-  [InnerViews.SettingsInnerView]: `//iframe[@title='RedisInsight - Settings']`,
+  [InnerViews.SettingsInnerView]: `//iframe[@title='Redis Insight - Settings']`,
   [InnerViews.CliInnerView]: `//iframe[@title='Redis CLI']`,
-  [InnerViews.AddDatabaseInnerView]: `//iframe[@title='RedisInsight - Add Database connection']`,
-  [InnerViews.EditDatabaseInnerView]: `//iframe[@title='RedisInsight - Edit Database connection']`,
-  [InnerViews.AddKeyInnerView]: `//iframe[@title='RedisInsight - Add new key']`,
+  [InnerViews.AddDatabaseInnerView]: `//iframe[@title='Redis Insight - Add Database connection']`,
+  [InnerViews.EditDatabaseInnerView]: `//iframe[@title='Redis Insight - Edit Database connection']`,
+  [InnerViews.AddKeyInnerView]: `//iframe[@title='Redis Insight - Add new key']`,
 }
 
 export const InnerViewElements = {

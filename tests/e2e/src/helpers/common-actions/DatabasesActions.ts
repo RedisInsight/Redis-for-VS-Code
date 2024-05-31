@@ -62,7 +62,7 @@ export class DatabasesActions extends CommonDriverExtension {
     let treeView = new TreeView()
     await DatabaseAPIRequests.addNewStandaloneDatabaseApi(databaseParameters)
     await VSBrowser.instance.waitForWorkbench(20_000)
-    await (await new ActivityBar().getViewControl('RedisInsight'))?.openView()
+    await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.clickDatabaseByName(databaseParameters.databaseName!)
   }

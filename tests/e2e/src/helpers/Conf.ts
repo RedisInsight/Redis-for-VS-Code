@@ -9,7 +9,7 @@ export class Config {
   static apiUrl = process.env.API_URL || 'http://127.0.0.1:5541/api'
   static vscodeVersion = process.env.VSCODE_VERSION || '1.87.2'
   static extensionName =
-    process.env.EXTENSION_NAME || 'redisinsight-vsc-plugin-0.0.1.vsix'
+    process.env.EXTENSION_NAME || 'redis-insight-vsc-plugin-0.0.1.vsix'
 
   static workingDirectory =
     process.env.APP_FOLDER_ABSOLUTE_PATH ||
