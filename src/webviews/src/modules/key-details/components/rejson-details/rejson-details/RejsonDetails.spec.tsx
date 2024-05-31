@@ -4,6 +4,7 @@ import { stringToBuffer } from 'uiSrc/utils'
 import { render, screen, fireEvent } from 'testSrc/helpers'
 import { RejsonDetails } from './RejsonDetails'
 import { BaseProps } from '../interfaces'
+import * as useRejson from '../hooks/useRejsonStore'
 
 const mockedProps = mock<BaseProps>()
 
@@ -37,7 +38,18 @@ const mockedJSONBoolean = true
 const mockedJSONNumber = 123123
 const mockedSelectedKey = stringToBuffer('key')
 
+const spyAppendReJSONArrayItemAction = vi.spyOn(useRejson, 'appendReJSONArrayItemAction')
+const spyFetchVisualisationResults = vi.spyOn(useRejson, 'fetchVisualisationResults')
+const spyRemoveReJSONKeyAction = vi.spyOn(useRejson, 'removeReJSONKeyAction')
+const spySetReJSONDataAction = vi.spyOn(useRejson, 'setReJSONDataAction')
+
 describe('RejsonDetails', () => {
+  beforeEach(() => {
+    spyAppendReJSONArrayItemAction.mockReset()
+    spyFetchVisualisationResults.mockReset()
+    spyRemoveReJSONKeyAction.mockReset()
+    spySetReJSONDataAction.mockReset()
+  })
   it('should render', () => {
     expect(render(
       <RejsonDetails
@@ -178,9 +190,7 @@ describe('RejsonDetails', () => {
     expect(screen.getByTestId('json-value')).toBeInTheDocument()
   })
 
-  it.skip('should be able to add proper key value into json object', () => {
-    const handleSubmitJsonUpdateValue = vi.fn()
-    const handleSubmitUpdateValue = vi.fn()
+  it('should be able to add proper key value into json object', () => {
     render(<RejsonDetails
       {...instance(mockedProps)}
       data={{ a: 1, b: 2 }}
@@ -203,13 +213,12 @@ describe('RejsonDetails', () => {
       },
     )
     fireEvent.click(screen.getByTestId('apply-btn'))
-    expect(handleSubmitJsonUpdateValue).toBeCalled()
-    expect(handleSubmitUpdateValue).not.toBeCalled()
+
+    expect(useRejson.setReJSONDataAction).toBeCalled()
+    expect(useRejson.appendReJSONArrayItemAction).not.toBeCalled()
   })
 
-  it.skip('should not be able to add wrong key value into json object', () => {
-    const handleSubmitJsonUpdateValue = vi.fn()
-    const handleSubmitUpdateValue = vi.fn()
+  it('should not be able to add wrong key value into json object', () => {
     render(<RejsonDetails
       {...instance(mockedProps)}
       data={{ a: 1, b: 2 }}
@@ -232,13 +241,12 @@ describe('RejsonDetails', () => {
       },
     )
     fireEvent.click(screen.getByTestId('apply-btn'))
-    expect(handleSubmitJsonUpdateValue).not.toBeCalled()
-    expect(handleSubmitUpdateValue).not.toBeCalled()
+
+    expect(useRejson.setReJSONDataAction).not.toBeCalled()
+    expect(useRejson.appendReJSONArrayItemAction).not.toBeCalled()
   })
 
-  it.skip('should be able to add proper value into json array', () => {
-    const handleSubmitJsonUpdateValue = vi.fn()
-    const handleSubmitUpdateValue = vi.fn()
+  it('should be able to add proper value into json array', () => {
     render(<RejsonDetails
       {...instance(mockedProps)}
       data={[1, 2, 3]}
@@ -255,13 +263,12 @@ describe('RejsonDetails', () => {
       },
     )
     fireEvent.click(screen.getByTestId('apply-btn'))
-    expect(handleSubmitJsonUpdateValue).toBeCalled()
-    expect(handleSubmitUpdateValue).not.toBeCalled()
+
+    expect(useRejson.setReJSONDataAction).not.toBeCalled()
+    expect(useRejson.appendReJSONArrayItemAction).toBeCalled()
   })
 
-  it.skip('should not be able to add wrong value into json array', () => {
-    const handleSubmitJsonUpdateValue = vi.fn()
-    const handleSubmitUpdateValue = vi.fn()
+  it('should not be able to add wrong value into json array', () => {
     render(<RejsonDetails
       {...instance(mockedProps)}
       data={[1, 2, 3]}
@@ -277,13 +284,12 @@ describe('RejsonDetails', () => {
         target: { value: '{' },
       },
     )
-    expect(handleSubmitJsonUpdateValue).not.toBeCalled()
-    expect(handleSubmitUpdateValue).not.toBeCalled()
+
+    expect(useRejson.setReJSONDataAction).not.toBeCalled()
+    expect(useRejson.appendReJSONArrayItemAction).not.toBeCalled()
   })
 
-  it.skip('should submit to add proper key value into json object', () => {
-    const handleSubmitJsonUpdateValue = vi.fn()
-    const handleSubmitUpdateValue = vi.fn()
+  it('should submit to add proper key value into json object', () => {
     render(<RejsonDetails
       {...instance(mockedProps)}
       data={{ a: 1, b: 2 }}
@@ -306,13 +312,12 @@ describe('RejsonDetails', () => {
       },
     )
     fireEvent.click(screen.getByTestId('apply-btn'))
-    expect(handleSubmitJsonUpdateValue).toBeCalled()
-    expect(handleSubmitUpdateValue).not.toBeCalled()
+
+    expect(useRejson.setReJSONDataAction).toBeCalled()
+    expect(useRejson.appendReJSONArrayItemAction).not.toBeCalled()
   })
 
-  it.skip('should submit to add proper value into json array', () => {
-    const handleSubmitJsonUpdateValue = vi.fn()
-    const handleSubmitUpdateValue = vi.fn()
+  it('should submit to add proper value into json array', () => {
     render(<RejsonDetails
       {...instance(mockedProps)}
       data={[1, 2, 3]}
@@ -329,7 +334,8 @@ describe('RejsonDetails', () => {
       },
     )
     fireEvent.click(screen.getByTestId('apply-btn'))
-    expect(handleSubmitJsonUpdateValue).toBeCalled()
-    expect(handleSubmitUpdateValue).not.toBeCalled()
+
+    expect(useRejson.setReJSONDataAction).not.toBeCalled()
+    expect(useRejson.appendReJSONArrayItemAction).toBeCalled()
   })
 })

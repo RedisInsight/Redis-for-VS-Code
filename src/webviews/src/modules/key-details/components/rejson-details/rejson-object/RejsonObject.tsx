@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 
 import { Spinner } from 'uiSrc/ui'
+
 import { RejsonDynamicTypes } from '../rejson-dynamic-types'
 import { JSONObjectProps, ObjectTypes } from '../interfaces'
 import { generatePath, getBrackets, wrapPath } from '../utils'
-
-import { AddItem, AddItemFieldAction, EditEntireItemAction, EditItemFieldAction } from '../components'
+import {
+  AddItem,
+  AddItemFieldAction,
+  EditEntireItemAction,
+  EditItemFieldAction,
+} from '../components'
 
 import styles from '../styles.module.scss'
 

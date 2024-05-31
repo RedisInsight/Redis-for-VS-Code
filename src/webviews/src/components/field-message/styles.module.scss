@@ -1,14 +1,10 @@
 .container {
-  @apply text-error;
-  padding: 4px 0;
-  display: flex;
-  flex: 1;
+  @apply flex flex-1 text-error py-1 px-0;
 }
 .icon {
-  margin-right: 4px;
+  @apply mr-1
 }
 .message {
-  font-size: 12px;
-  line-height: 16px;
+  @apply text-[12px] leading-[16px];
   letter-spacing: -0.12px
 }

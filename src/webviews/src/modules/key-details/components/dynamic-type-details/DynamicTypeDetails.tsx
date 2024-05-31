@@ -9,7 +9,6 @@ import { ZSetDetails } from '../zset-details'
 import { ListDetails } from '../list-details'
 import { SetDetails } from '../set-details/SetDetails'
 import { RejsonDetailsWrapper } from '../rejson-details'
-// import { HashDetails } from '../hash-details'
 // import { StreamDetails } from '../stream-details'
 
 export interface Props extends KeyDetailsHeaderProps {

@@ -59,58 +59,56 @@ export const EditEntireItemAction = (props: Props) => {
   return (
     <div className={styles.row}>
       <div className={styles.fullWidthContainer} ref={outsideClickRef}>
-        <div>
-          <form
-            onSubmit={handleFormSubmit}
-            className="flex flex-col relative"
-            data-testid="json-entire-form"
-            onKeyDown={handleKeyDown}
-          >
-            <div className="grow">
-              <TextArea
-                autoFocus
-                inputRef={textareaRef}
-                invalid={!!error}
-                className={styles.fullWidthTextArea}
-                value={value}
-                placeholder={l10n.t('Enter JSON value')}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)}
-                data-testid="json-value"
-              />
-            </div>
-            <div className={cx(styles.controls, styles.controlsBottom)}>
-              <VSCodeButton
-                appearance="icon"
-                className={styles.declineBtn}
-                onClick={onCancel}
-                aria-label="Cancel add"
-              >
-                <VscChromeClose />
-              </VSCodeButton>
+        <form
+          onSubmit={handleFormSubmit}
+          className="flex flex-col relative"
+          data-testid="json-entire-form"
+          onKeyDown={handleKeyDown}
+        >
+          <div className="grow">
+            <TextArea
+              autoFocus
+              inputRef={textareaRef}
+              invalid={!!error}
+              className={styles.fullWidthTextArea}
+              value={value}
+              placeholder={l10n.t('Enter JSON value')}
+              onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)}
+              data-testid="json-value"
+            />
+          </div>
+          <div className={cx(styles.controls, styles.controlsBottom)}>
+            <VSCodeButton
+              appearance="icon"
+              className={styles.declineBtn}
+              onClick={onCancel}
+              aria-label="Cancel add"
+            >
+              <VscChromeClose />
+            </VSCodeButton>
 
-              <VSCodeButton
-                appearance="icon"
-                className={styles.applyBtn}
-                onClick={() => handleFormSubmit()}
-                aria-label="Apply"
-                data-testid="apply-edit-btn"
-              >
-                <VscCheck />
-              </VSCodeButton>
-            </div>
-          </form>
-          {error && (
-            <div className={cx(styles.errorMessage, styles.errorMessageForTextArea)}>
-              <FieldMessage
-                scrollViewOnAppear
-                Icon={<GoAlert />}
-                testID="edit-json-error"
-              >
-                {error}
-              </FieldMessage>
-            </div>
-          )}
-        </div>
+            <VSCodeButton
+              appearance="icon"
+              className={styles.applyBtn}
+              onClick={() => handleFormSubmit()}
+              aria-label="Apply"
+              data-testid="apply-edit-btn"
+            >
+              <VscCheck />
+            </VSCodeButton>
+          </div>
+        </form>
+        {error && (
+          <div className={cx(styles.errorMessage, styles.errorMessageForTextArea)}>
+            <FieldMessage
+              scrollViewOnAppear
+              Icon={<GoAlert />}
+              testID="edit-json-error"
+            >
+              {error}
+            </FieldMessage>
+          </div>
+        )}
       </div>
     </div>
   )

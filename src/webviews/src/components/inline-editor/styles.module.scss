@@ -10,19 +10,15 @@ $controls-padding-y: 10px;
 }
 
 .field {
-  @apply bg-vscode-input-background pr-5;
-  min-width: 72px;
-  max-width: 100% !important;
-  height: 100% !important;
+  @apply bg-vscode-input-background pr-5 min-w-[72px] max-w-full h-full;
 
   &:focus {
-    outline: none !important;
+    @apply outline-none;
   }
 }
 
 .controls {
-  @apply hidden;
-  z-index: 3;
+  @apply hidden z-[3];
 
   &Bottom {
     @apply absolute right-3 top-[calc(100%-#{$controls-height+$controls-padding-y})];
@@ -36,15 +32,13 @@ $controls-padding-y: 10px;
     @apply items-center;
 
     .applyBtn {
-      @apply h-full bg-vscode-button-background min-h-[25px] w-full;
-      border-radius: 0 !important;
+      @apply h-full bg-vscode-button-background min-h-[25px] w-full rounded-none;
     }
   }
 
   .tooltip,
   .popoverWrapper {
-    width: 50% !important;
-    height: 100% !important;
+    @apply w-1/2 h-full;
   }
 }
 
@@ -56,31 +50,15 @@ $controls-padding-y: 10px;
   @apply flex -ml-[22px];
 }
 
-
-.popoverPanel:global(.euiPanel--paddingMedium) {
-  width: 296px !important;
-  padding: 24px 30px !important;
-  /* border: 1px solid var(--euiColorPrimary) !important; */
-  /* background-color: var(--browserTableRowEven) !important; */
-
-  :global(.euiPopover__panelArrow:after) {
-    /* border-left-color: var(--browserTableRowEven) !important; */
-  }
-  :global(.euiPopover__panelArrow:before) {
-    /* border-left-color: var(--euiColorPrimary) !important; */
-  }
-}
-
 .popover {
-  word-wrap: break-word;
+  @apply break-words;
 
   h4 b {
-    font-size: 14px !important;
-    /* color: var(--htmlColor) !important; */
+    @apply text-[14px];
   }
 }
 .approveText {
-  font-size: 13px !important;
+  @apply text-[13px];
   letter-spacing: -0.13px;
 }
 
@@ -88,8 +66,7 @@ $controls-padding-y: 10px;
   @apply flex justify-end mt-3;
 
   .saveBtn {
-    height: 36px !important;
-    width: 86px !important;
+    @apply h-9 w-[86px];
   }
 }
 

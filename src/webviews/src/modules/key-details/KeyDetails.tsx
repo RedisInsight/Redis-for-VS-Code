@@ -4,7 +4,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { KeyTypes, SelectedKeyActionType, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
-import { Nullable, RedisString } from 'uiSrc/interfaces'
+import { RedisString } from 'uiSrc/interfaces'
 import { useSelectedKeyStore } from 'uiSrc/store'
 import { sessionStorageService, vscodeApi } from 'uiSrc/services'
 import { DynamicTypeDetails } from './components/dynamic-type-details'
@@ -12,14 +12,7 @@ import { DynamicTypeDetails } from './components/dynamic-type-details'
 import { useKeysApi, useKeysInContext } from '../keys-tree/hooks/useKeys'
 import styles from './styles.module.scss'
 
-export interface Props {
-  // keyProp: Nullable<RedisString>
-  // onCloseKey: () => void
-  // onEditKey: (key: RedisString, newKey: RedisString) => void
-  // onRemoveKey: () => void
-  // totalKeys: number
-  // keysLastRefreshTime: Nullable<number>
-}
+export interface Props {}
 
 const KeyDetails = () => {
   const { keyType, keyName, loading } = useSelectedKeyStore(useShallow((state) => ({
