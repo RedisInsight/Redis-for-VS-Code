@@ -11,7 +11,9 @@ import { FieldMessage } from 'uiSrc/components'
 import { Nullable } from 'uiSrc/interfaces'
 import { Keys } from 'uiSrc/constants'
 import { TextArea } from 'uiSrc/ui'
-import { validateRejsonValue } from '../../utils'
+
+import { isValidJSON } from '../../utils'
+import { JSONErrors } from '../../constants'
 
 import styles from '../../styles.module.scss'
 
@@ -46,9 +48,8 @@ export const EditEntireItemAction = (props: Props) => {
   const handleFormSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault()
 
-    const error = validateRejsonValue(value)
-    if (error) {
-      setError(error)
+    if (!isValidJSON(value)) {
+      setError(JSONErrors.valueJSONFormat)
       textareaRef.current?.focus()
       return
     }

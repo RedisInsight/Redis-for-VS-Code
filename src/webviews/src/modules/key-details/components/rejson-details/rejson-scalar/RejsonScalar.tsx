@@ -8,9 +8,10 @@ import { TelemetryEvent, bufferToString, createDeleteFieldHeader, createDeleteFi
 import { Nullable } from 'uiSrc/interfaces'
 import { useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
 
-import { JSONScalarValue, JSONScalarProps } from '../interfaces'
-import { generatePath, getClassNameByValue, validateRejsonValue } from '../utils'
+import { JSONScalarProps } from '../interfaces'
+import { generatePath, getClassNameByValue, isValidJSON } from '../utils'
 import { setReJSONDataAction } from '../hooks/useRejsonStore'
+import { JSONErrors } from '../constants'
 
 import styles from '../styles.module.scss'
 import '../styles.scss'
@@ -43,10 +44,9 @@ export const RejsonScalar = (props: JSONScalarProps) => {
     setError(null)
   }
 
-  const onApplyValue = (value: JSONScalarValue) => {
-    const error = validateRejsonValue(value)
-    if (error) {
-      setError(error)
+  const onApplyValue = (value: string) => {
+    if (!isValidJSON(value)) {
+      setError(JSONErrors.valueJSONFormat)
       return
     }
 

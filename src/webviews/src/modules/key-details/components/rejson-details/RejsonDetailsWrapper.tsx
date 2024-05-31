@@ -17,8 +17,6 @@ import styles from './styles.module.scss'
 export interface Props extends KeyDetailsHeaderProps {}
 
 const RejsonDetailsWrapper = (props: Props) => {
-  const keyType = KeyTypes.ReJSON
-
   const { data, downloaded, type, path, loading } = useRejsonStore(useShallow((state) => ({
     data: state.data.data,
     type: state.data.type,
@@ -85,7 +83,7 @@ const RejsonDetailsWrapper = (props: Props) => {
       <KeyDetailsHeader
         {...props}
         key="key-details-header"
-        keyType={keyType}
+        keyType={KeyTypes.ReJSON}
       />
       <div className="key-details-body" key="key-details-body">
         <div className="flex flex-column h-full overflow-auto">

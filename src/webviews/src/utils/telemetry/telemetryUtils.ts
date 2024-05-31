@@ -102,10 +102,8 @@ export const getJsonPathLevel = (path: string): string => {
     const levelsLength = jsonpath.parse(
       `$${path.startsWith('.') ? '' : '..'}${path}`,
     ).length
-    if (levelsLength === 1) {
-      return 'root'
-    }
-    return `${levelsLength - 2}`
+
+    return levelsLength === 1 ? 'root' : `${levelsLength - 2}`
   } catch (e) {
     return 'root'
   }
