@@ -9,6 +9,7 @@ import {
   SortedSetKeyDetailsView,
   ListKeyDetailsView,
   SetKeyDetailsView,
+  JsonKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -22,6 +23,7 @@ import {
 import { AddStringKeyView } from '@e2eSrc/page-objects/components/editor-view/AddStringKeyView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { JsonKeyParameters } from '@e2eSrc/helpers/types/types'
 
 const keyTTL = '2147476121'
 const expectedTTL = /214747612*/
@@ -37,6 +39,7 @@ describe('Key Details verifications', () => {
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
   let listKeyDetailsView: ListKeyDetailsView
   let setKeyDetailsView: SetKeyDetailsView
+  let jsonKeyDetailsView: JsonKeyDetailsView
   let addStringKeyView: AddStringKeyView
 
   before(async () => {
@@ -48,6 +51,7 @@ describe('Key Details verifications', () => {
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
     listKeyDetailsView = new ListKeyDetailsView()
     setKeyDetailsView = new SetKeyDetailsView()
+    jsonKeyDetailsView = new JsonKeyDetailsView()
     addStringKeyView = new AddStringKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
@@ -283,6 +287,43 @@ describe('Key Details verifications', () => {
     expect(await setKeyDetailsView.getKeyLength()).greaterThan(0, 'Length is 0')
     expect(
       Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor)),
+    ).match(expectedTTL, 'The Key TTL is incorrect')
+  })
+  it('Verify that user can see JSON Key details', async function () {
+    keyName = Common.generateWord(20)
+    const jsonValue =
+      '{"employee":{ "name":"John", "age":30, "city":"New York" }}'
+    const jsonKeyParameters: JsonKeyParameters = {
+      keyName: keyName,
+      data: jsonValue,
+    }
+    await KeyAPIRequests.addJsonKeyApi(
+      jsonKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Open key details iframe
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    expect(
+      await jsonKeyDetailsView.getElementText(jsonKeyDetailsView.keyType),
+    ).contain('JSON', 'Type is incorrect')
+    expect(
+      await InputActions.getInputValue(jsonKeyDetailsView.keyNameInput),
+    ).eq(keyName, 'Name is incorrect')
+    expect(await jsonKeyDetailsView.getKeySize()).greaterThan(0, 'Size is 0')
+    expect(await jsonKeyDetailsView.getKeyLength()).greaterThan(
+      0,
+      'Length is 0',
+    )
+    expect(
+      Number(
+        await InputActions.getInputValue(jsonKeyDetailsView.inlineItemEditor),
+      ),
     ).match(expectedTTL, 'The Key TTL is incorrect')
   })
 })

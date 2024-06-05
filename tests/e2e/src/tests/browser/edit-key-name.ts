@@ -9,11 +9,13 @@ import {
   SetKeyDetailsView,
   InputWithButtons,
   KeyDetailsView,
+  JsonKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
+  JsonKeyParameters,
   ListKeyParameters,
   SetKeyParameters,
   SortedSetKeyParameters,
@@ -38,6 +40,7 @@ describe('Edit Key names verification', () => {
   let listKeyDetailsView: ListKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
   let setKeyDetailsView: SetKeyDetailsView
+  let jsonKeyDetailsView: JsonKeyDetailsView
   let keyDetailsView: KeyDetailsView
 
   before(async () => {
@@ -47,6 +50,7 @@ describe('Edit Key names verification', () => {
     listKeyDetailsView = new ListKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
     setKeyDetailsView = new SetKeyDetailsView()
+    jsonKeyDetailsView = new JsonKeyDetailsView()
     keyDetailsView = new KeyDetailsView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
@@ -253,6 +257,40 @@ describe('Edit Key names verification', () => {
     expect(keyNameFromDetails).eql(
       keyNameAfter,
       'The List Key Name not correct after editing',
+    )
+  })
+  it('Verify that user can edit JSON Key name', async function () {
+    keyNameBefore = Common.generateWord(10)
+    keyNameAfter = Common.generateWord(10)
+    const jsonKeyParameters: JsonKeyParameters = {
+      keyName: keyNameBefore,
+      data: '{"name":"xyz"}',
+    }
+    await KeyAPIRequests.addJsonKeyApi(
+      jsonKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Open key details iframe
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyNameBefore)
+    let keyNameFromDetails = await InputActions.getInputValue(
+      jsonKeyDetailsView.keyNameInput,
+    )
+    expect(keyNameFromDetails).eql(
+      keyNameBefore,
+      'The JSON Key Name not correct before editing',
+    )
+
+    await jsonKeyDetailsView.editKeyName(keyNameAfter)
+    keyNameFromDetails = await InputActions.getInputValue(
+      jsonKeyDetailsView.keyNameInput,
+    )
+    expect(keyNameFromDetails).eql(
+      keyNameAfter,
+      'The JSON Key Name not correct after editing',
     )
   })
 })
