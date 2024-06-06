@@ -190,7 +190,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
     this.panel.title = title || this._opts.title || ''
     this.panel.iconPath = vscode.Uri.joinPath(
       this._opts.context?.extensionUri as vscode.Uri,
-      'dist/webviews/resources/redisinsight_dark.svg',
+      'dist/webviews/resources/redisinsight.svg',
     )
     this.panel.webview.html = this._getContent(this.panel.webview)
 
