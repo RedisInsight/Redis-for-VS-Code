@@ -1,0 +1,166 @@
+.container {
+  @apply flex flex-1 w-full p-4 overflow-auto relative;
+}
+
+.fullWidthContainer {
+  @apply pl-3 w-full pt-3 pb-8;
+}
+
+.placeholder {
+  @apply flex justify-center items-center h-full p-3 w-full;
+}
+
+.jsonData {
+  @apply w-full grow leading-[25px] text-[14px];
+  letter-spacing: 0.15px;
+
+  input {
+    @apply w-full min-w-[140px];
+  }
+}
+
+.errorMessage {
+  @apply w-full;
+  padding: 4px 8px 0 8px;
+}
+
+.errorMessageForTextArea {
+  @apply absolute pt-0;
+}
+
+.controls,
+.controlsBottom {
+  @apply flex items-end h-6 z-[2];
+
+  &.controls {
+    @apply mb-[3px] ml-2 w-20;
+    border-radius: 0 10px 10px 0;
+  }
+
+  &.controlsBottom {
+    @apply absolute w-[46px] h-8 top-[calc(100%-10px)] right-0 left-auto;
+    border-radius: 0 0 10px 10px;
+  }
+}
+
+.row {
+  @apply min-h-[25px] relative flex items-end;
+
+  &:last-child {
+    @apply pb-3;
+  }
+
+  &:before {
+    @apply block absolute h-full top-0 left-0 right-0 z-0 mx-[-16px];
+    content: "";
+  }
+
+  &:nth-child(2n):before {
+    @apply bg-vscode-tab-inactiveBackground;
+  }
+
+  &:hover:before {
+    background-color: var(--vscode-panelStickyScroll-shadow);
+  }
+
+  > div, span, button {
+    @apply z-[1];
+  }
+
+  div, input {
+    @apply min-h-[25px];
+  }
+}
+
+.rowContainer {
+  @apply flex flex-row justify-between w-full;
+}
+
+.keyName {
+  @apply text-vscode-terminal-ansiMagenta w-max break-all max-w-[300px] shrink-0 box-content;
+}
+
+.quotedKeyName {
+  @apply flex flex-row items-center pl-4;
+}
+
+.defaultFontExpandArray,
+.defaultFontOpenIndex {
+  @apply inline-block cursor-pointer pl-2;
+}
+
+.jsonValue {
+  @apply truncate py-0 px-2 max-w-[1000px] text-[14px] leading-[25px];
+  letter-spacing: 0.15px;
+}
+
+.keyNameArray {
+  @apply text-vscode-terminal-ansiMagenta;
+}
+
+.jsonString {
+  @apply text-vscode-terminal-ansiGreen;
+}
+
+.jsonNumber {
+  @apply text-vscode-terminal-ansiBrightBlue;
+}
+
+.jsonBoolean {
+  @apply text-vscode-terminal-ansiYellow;
+}
+
+.jsonNull {
+  @apply text-vscode-terminal-ansiWhite;
+}
+
+.jsonNonStringPrimitive {
+  @apply text-vscode-terminal-ansiBlue;
+}
+
+.newValue {
+  @apply text-error;
+}
+
+.stringStyle {
+  @apply break-all
+}
+
+.quoted {
+  &:before,
+  &:after {
+    content: '"';
+  }
+}
+
+.actionButtons, .deleteBtn {
+  @apply ml-4 flex items-center min-w-6;
+}
+
+.actionButtons vscode-button {
+  @apply w-[26px];
+}
+
+.spinner {
+  @apply flex items-center justify-center;
+
+  span {
+    @apply w-6 h-6;
+  }
+}
+
+.keySpinner {
+  @apply absolute w-full;
+
+  span {
+    @apply w-full #{!important};
+  }
+}
+
+.fullWidthTextArea {
+  @apply h-[150px] w-full pb-[30px] max-w-none scroll-pb-5;
+}
+
+.buttonStyle, .jsonButtonStyle {
+  @apply z-[1];
+}

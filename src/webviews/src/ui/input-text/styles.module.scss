@@ -17,3 +17,7 @@ $inputMinWidth: 100px;
 .append {
   @apply absolute h-full;
 }
+
+.invalid {
+  @apply border-error #{!important};
+}

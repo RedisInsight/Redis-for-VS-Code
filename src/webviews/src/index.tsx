@@ -77,12 +77,10 @@ const container = document.getElementById('root')
 const root = createRoot(container!)
 
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Router initialEntries={[container?.dataset.route || '']} initialIndex={0}>
-        <Config />
-        <AppRoutes />
-      </Router>
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <Router initialEntries={[container?.dataset.route || '']} initialIndex={0}>
+      <Config />
+      <AppRoutes />
+    </Router>
+  </Provider>,
 )

@@ -2,20 +2,20 @@ import React, {
   MouseEvent,
   KeyboardEvent,
   Ref,
-  memo,
   useEffect,
   useRef,
   useState,
+  memo,
 } from 'react'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
-import { useDetectClickOutside } from 'react-detect-click-outside'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { VscCheck, VscError } from 'react-icons/vsc'
 import { RxCross1 } from 'react-icons/rx'
 import Popup from 'reactjs-popup'
 import { capitalize } from 'lodash'
 import { PopupActions } from 'reactjs-popup/dist/types'
+import useOnclickOutside from 'react-cool-onclickoutside'
 
 import { VSCodeToolkitEvent } from 'uiSrc/interfaces'
 import { InputText } from 'uiSrc/ui'
@@ -33,7 +33,7 @@ export interface Props {
   isActive?: boolean
   isLoading?: boolean
   isDisabled?: boolean
-  isInvalid?: boolean
+  invalid?: boolean
   disableEmpty?: boolean
   disableByValidation?: (value: string) => boolean
   children?: React.ReactElement
@@ -66,7 +66,7 @@ const InlineEditor = memo((props: Props) => {
     children,
     expandable,
     isLoading,
-    isInvalid,
+    invalid,
     autoSelect,
     autoFocus,
     disableEmpty,
@@ -88,7 +88,6 @@ const InlineEditor = memo((props: Props) => {
     inlineTestId = 'inline-item-editor',
   } = props
 
-  const containerEl: Ref<HTMLDivElement> = useRef(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const popupRef = useRef<PopupActions>(null)
   const [value, setValue] = useState<string>(initialValue)
@@ -97,17 +96,15 @@ const InlineEditor = memo((props: Props) => {
 
   const handleClickOutside = (event: any) => {
     if (preventOutsideClick) return
-    if (!containerEl?.current?.contains(event.target)) {
-      if (!isLoading) {
-        onDecline?.(event)
-      } else {
-        event.stopPropagation()
-        event.preventDefault()
-      }
+    if (!isLoading) {
+      onDecline?.(event)
+    } else {
+      event.stopPropagation()
+      event.preventDefault()
     }
   }
 
-  const outsideClickRef = useDetectClickOutside({ onTriggered: handleClickOutside })
+  const outsideClickRef = useOnclickOutside(handleClickOutside)
 
   useEffect(() => {
     setValue(initialValue)
@@ -120,6 +117,10 @@ const InlineEditor = memo((props: Props) => {
       declineOnUnmount && onDecline?.()
     }
   }, [])
+
+  useEffect(() => {
+    invalid && inputRef?.current?.focus()
+  }, [invalid])
 
   const handleInputValue: VSCodeToolkitEvent = (e) => {
     const target = e?.target as HTMLInputElement
@@ -140,6 +141,7 @@ const InlineEditor = memo((props: Props) => {
   const handleApplyClick = (event: MouseEvent | KeyboardEvent) => {
     if (approveByValidation && !approveByValidation?.(value)) {
       popupRef.current?.open()
+      inputRef.current?.focus()
     } else {
       handleFormSubmit(event)
       popupRef.current?.close()
@@ -193,26 +195,25 @@ const InlineEditor = memo((props: Props) => {
     <>
       {viewChildrenMode
         ? children : (
-          <div ref={containerEl} className={styles.container}>
-            <div ref={outsideClickRef} className="flex-1">
-              {children || (
-                <InputText
-                  type="text"
-                  name={fieldName}
-                  id={fieldName}
-                  className={cx(styles.field, inputClassName)}
-                  maxLength={maxLength}
-                  placeholder={placeholder}
-                  value={value}
-                  onBlur={handleBlur}
-                  onFocus={handleFocus}
-                  onInput={handleInputValue}
-                  onKeyDown={handleKeyDown}
-                  inputRef={inputRef}
-                  data-testid={inlineTestId}
-                />
-              )}
-            </div>
+          <div ref={outsideClickRef} className={styles.container}>
+            {children || (
+              <InputText
+                type="text"
+                name={fieldName}
+                id={fieldName}
+                invalid={invalid}
+                className={cx(styles.field, inputClassName)}
+                maxLength={maxLength}
+                placeholder={placeholder}
+                value={value}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                onInput={handleInputValue}
+                onKeyDown={handleKeyDown}
+                inputRef={inputRef}
+                data-testid={inlineTestId}
+              />
+            )}
             <div
               className={cx(
                 styles.controls,
@@ -271,7 +272,6 @@ const InlineEditor = memo((props: Props) => {
                       </VSCodeButton>
                     </div>
                   </div>
-
                 </Popup>
               )}
             </div>

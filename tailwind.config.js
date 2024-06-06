@@ -6,7 +6,7 @@ module.exports = {
   darkMode: ['class', '[data-mode="dark"]'], // or 'media' or 'class'
   theme: {
     colors: {
-      error: 'var(--vscode-inputValidation-errorBackground)',
+      error: 'var(--vscode-inputValidation-errorBorder)',
       primary: 'var(--vscode-button-background)',
     },
     extend: {

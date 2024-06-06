@@ -14,10 +14,16 @@
   }
 
   .json-pretty__number-value,
-  .json-pretty__bigint-value,
-  .json-pretty__null-value,
-  .json-pretty__other-value {
+  .json-pretty__bigint-value {
     @apply text-vscode-terminal-ansiBrightBlue;
+  }
+
+  .json-pretty__other-value {
+    @apply text-vscode-terminal-ansiBlue;
+  }
+
+  .json-pretty__null-value{
+    @apply text-vscode-terminal-ansiWhite;
   }
 
   .json-pretty__string-value {

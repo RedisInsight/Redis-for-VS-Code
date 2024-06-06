@@ -6,6 +6,7 @@ import styles from './styles.module.scss'
 
 export interface Props extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   inputRef?: React.Ref<HTMLTextAreaElement>
+  invalid?: boolean
   label?: {
     text?: string
     className?: string
@@ -13,14 +14,14 @@ export interface Props extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 }
 
 export const TextArea: FC<Props> = (props) => {
-  const { className, inputRef, label, name, id } = props
+  const { className, inputRef, label, name, id, invalid } = props
   const { text: labelText, className: labelClassName = '' } = label ?? {}
 
   const textareaEl = (
     <textarea
-      {...omit(props, 'inputRef', 'labelText')}
+      {...omit(props, 'inputRef', 'labelText', 'invalid')}
       ref={inputRef}
-      className={cx(styles.input, className)}
+      className={cx(styles.input, className, { [styles.invalid]: invalid })}
     />
   )
 

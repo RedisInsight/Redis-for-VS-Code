@@ -1,0 +1,10 @@
+.container {
+  @apply flex flex-1 text-error py-1 px-0;
+}
+.icon {
+  @apply mr-1
+}
+.message {
+  @apply text-[12px] leading-[16px];
+  letter-spacing: -0.12px
+}

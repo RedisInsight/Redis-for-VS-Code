@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import cx from 'classnames'
-import { BarLoader, BeatLoader } from 'react-spinners'
+import { BarLoader, BeatLoader, ClipLoader } from 'react-spinners'
 
 import styles from './styles.module.scss'
 
 export interface Props {
-  type?: 'bar' | 'beat'
+  type?: 'bar' | 'beat' | 'clip'
   loading?: boolean
 }
 
@@ -26,6 +26,15 @@ export const Spinner: FC<Props> = ({ type, loading }) => {
         <BeatLoader
           loading={loading}
           data-testid="beat-spinner"
+          color="var(--vscode-button-background)"
+        />
+      )
+
+    case 'clip':
+      return (
+        <ClipLoader
+          loading={loading}
+          data-testid="clip-spinner"
           color="var(--vscode-button-background)"
         />
       )
