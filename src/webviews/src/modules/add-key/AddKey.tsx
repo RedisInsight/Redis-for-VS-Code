@@ -16,8 +16,8 @@ import AddKeyCommonFields from './components/AddKeyCommonFields/AddKeyCommonFiel
 import { ADD_KEY_TYPE_OPTIONS } from './constants/key-type-options'
 // import AddKeyHash from './AddKeyHash/AddKeyHash'
 // import AddKeyZset from './AddKeyZset/AddKeyZset'
-import AddKeyString from './components/AddKeyString/AddKeyString'
-// import AddKeyList from './AddKeyList/AddKeyList'
+import { AddKeyString } from './components/AddKeyString/AddKeyString'
+import { AddKeyList } from './components/AddKeyList/AddKeyList'
 // import AddKeyReJSON from './AddKeyReJSON/AddKeyReJSON'
 // import AddKeyStream from './AddKeyStream/AddKeyStream'
 import { AddKeySet } from './components/AddKeySet/AddKeySet'
@@ -103,9 +103,9 @@ export const AddKey = () => {
       {typeSelected === KeyTypes.String && (
         <AddKeyString onClose={closeAddKeyPanel} {...defaultFields} />
       )}
-      {/* {typeSelected === KeyTypes.List && (
-            <AddKeyList onCancel={closeAddKeyPanel} {...defaultFields} />
-          )} */}
+      {typeSelected === KeyTypes.List && (
+        <AddKeyList onClose={closeAddKeyPanel} {...defaultFields} />
+      )}
       {/* {typeSelected === KeyTypes.ReJSON && (
             <>
               {!isContainJSONModule(modules) && (
