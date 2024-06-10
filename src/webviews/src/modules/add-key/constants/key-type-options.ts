@@ -1,10 +1,10 @@
 import { KeyTypes } from 'uiSrc/constants'
 
 export const ADD_KEY_TYPE_OPTIONS = [
-  // {
-  //   text: 'Hash',
-  //   value: KeyTypes.Hash,
-  // },
+  {
+    text: 'Hash',
+    value: KeyTypes.Hash,
+  },
   {
     text: 'List',
     value: KeyTypes.List,

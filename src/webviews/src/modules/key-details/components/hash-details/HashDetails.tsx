@@ -4,9 +4,12 @@ import * as l10n from '@vscode/l10n'
 
 import { KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
 import { HashDetailsTable } from './hash-details-table'
 import { AddHashFields } from './add-hash-fields'
+import { AddFieldsToHashDto, HashField } from './hooks/interface'
+import { updateHashFieldsAction } from './hooks/useHashStore'
 import { AddItemsAction } from '../key-details-actions'
 
 export interface Props extends KeyDetailsHeaderProps {
@@ -20,6 +23,7 @@ const HashDetails = (props: Props) => {
 
   const [isAddItemPanelOpen, setIsAddItemPanelOpen] = useState<boolean>(false)
 
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
   const loading = useSelectedKeyStore((state) => state.loading)
 
   const openAddItemPanel = () => {
@@ -30,6 +34,22 @@ const HashDetails = (props: Props) => {
   const closeAddItemPanel = (isCancelled = false) => {
     setIsAddItemPanelOpen(false)
     onCloseAddItemPanel(isCancelled)
+  }
+
+  const onSuccessAdded = (fields: HashField[]) => {
+    closeAddItemPanel()
+    sendEventTelemetry({
+      event: TelemetryEvent.TREE_VIEW_KEY_VALUE_ADDED,
+      eventData: {
+        databaseId,
+        keyType: KeyTypes.Hash,
+        numberOfAdded: fields.length,
+      },
+    })
+  }
+
+  const addHashFields = (data: AddFieldsToHashDto) => {
+    updateHashFieldsAction(data, true, () => onSuccessAdded(data.fields))
   }
 
   const Actions = () => (
@@ -52,7 +72,7 @@ const HashDetails = (props: Props) => {
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            <AddHashFields closePanel={closeAddItemPanel} />
+            <AddHashFields closePanel={closeAddItemPanel} onSubmitData={addHashFields} />
           </div>
         )}
       </div>
