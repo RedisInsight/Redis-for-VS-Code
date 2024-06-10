@@ -7,6 +7,7 @@ import {
   ListKeyDetailsView,
   StringKeyDetailsView,
   KeyDetailsView,
+  AddStringKeyView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -15,7 +16,6 @@ import {
   HashKeyParameters,
   ListKeyParameters,
   SortedSetKeyParameters,
-  StringKeyParameters,
 } from '@e2eSrc/helpers/types/types'
 import {
   ButtonActions,
@@ -36,6 +36,7 @@ describe('Edit Key values verification', () => {
   let listKeyDetailsView: ListKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
   let keyDetailsView: KeyDetailsView
+  let addStringKeyView: AddStringKeyView
 
   before(async () => {
     hashKeyDetailsView = new HashKeyDetailsView()
@@ -44,6 +45,7 @@ describe('Edit Key values verification', () => {
     listKeyDetailsView = new ListKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
     keyDetailsView = new KeyDetailsView()
+    addStringKeyView = new AddStringKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -153,17 +155,11 @@ describe('Edit Key values verification', () => {
   })
   it('Verify that user can edit String value', async function () {
     keyName = Common.generateWord(10)
-    const stringKeyParameters: StringKeyParameters = {
-      keyName: keyName,
-      value: keyValueBefore,
-    }
-    await KeyAPIRequests.addStringKeyApi(
-      stringKeyParameters,
-      Config.ossStandaloneConfig.databaseName,
-    )
-    // Refresh database
-    await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
+
+    // Verify that user can add String Key
+    await addStringKeyView.addStringKey(
+      keyName,
+      keyValueBefore,
     )
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
