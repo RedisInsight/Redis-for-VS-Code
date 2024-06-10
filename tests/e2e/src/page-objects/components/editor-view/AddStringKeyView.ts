@@ -6,16 +6,15 @@ import { AddKeyView } from '@e2eSrc/page-objects/components/editor-view/AddKeyVi
 import { InnerViews } from '../WebView'
 
 /**
- * Add Key details view
+ * Add String Key details view
  */
 export class AddStringKeyView extends AddKeyView {
   stringValueInput = By.xpath('//*[@data-testid="string-value"]')
-  addButton = By.xpath('//*[@data-testid="btn-add"]')
 
   /**
    * Create string key
    * @param name The name of the key
-   * @param value The type of the key
+   * @param value The value of the key
    * @param ttl The ttl of the key
    */
   async addStringKey(

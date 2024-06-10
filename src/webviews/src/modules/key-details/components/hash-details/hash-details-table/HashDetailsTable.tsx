@@ -365,7 +365,7 @@ const HashDetailsTable = (props: Props) => {
           return (
             <AutoSizer disableHeight onResize={() => setTimeout(updateTextAreaHeight, 0)}>
               {({ width }) => (
-                <div style={{ width: width + 117 }} className={styles.textareaContainer}>
+                <div style={{ width: width + 113 }} className={styles.textareaContainer}>
                   <StopPropagation>
                     <InlineEditor
                       expandable

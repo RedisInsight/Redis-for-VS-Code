@@ -18,7 +18,7 @@ export interface Props {
   onClose: (isCancelled?: boolean, keyType?: KeyTypes) => void
 }
 
-const AddKeyString = (props: Props) => {
+export const AddKeyString = (props: Props) => {
   const { keyName = '', keyTTL, onClose } = props
   const keysApi = useKeysApi()
   const loading = useKeysInContext((state) => state.addKeyLoading)
@@ -83,8 +83,8 @@ const AddKeyString = (props: Props) => {
               data-testid="string-value"
               inputRef={textAreaRef}
             />
-            <button type="submit" style={{ display: 'none' }}>
-              Submit
+            <button type="submit" className="hidden">
+              {l10n.t('Submit')}
             </button>
           </section>
           <section className={styles.controls}>
@@ -111,5 +111,3 @@ const AddKeyString = (props: Props) => {
     </form>
   )
 }
-
-export default AddKeyString

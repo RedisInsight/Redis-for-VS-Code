@@ -6,7 +6,7 @@ import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { AddKeyView } from '@e2eSrc/page-objects/components/editor-view/AddKeyView'
 
 /**
- * Add Key details view
+ * Add Set Key details view
  */
 export class AddSetKeyView extends AddKeyView {
   addMember = By.xpath(`//*[@data-testid='add-new-item']`)
@@ -16,9 +16,9 @@ export class AddSetKeyView extends AddKeyView {
     By.xpath(`//input[@id="member-${index}"]`)
 
   /**
-   * Create string key
+   * Create set key
    * @param name The name of the key
-   * @param value The type of the key
+   * @param value The member value of the key
    * @param ttl The ttl of the key
    */
   async addSetKey(

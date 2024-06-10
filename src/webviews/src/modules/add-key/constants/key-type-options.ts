@@ -5,10 +5,10 @@ export const ADD_KEY_TYPE_OPTIONS = [
   //   text: 'Hash',
   //   value: KeyTypes.Hash,
   // },
-  // {
-  //   text: 'List',
-  //   value: KeyTypes.List,
-  // },
+  {
+    text: 'List',
+    value: KeyTypes.List,
+  },
   {
     text: 'Set',
     value: KeyTypes.Set,

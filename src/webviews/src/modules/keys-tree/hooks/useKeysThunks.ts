@@ -18,7 +18,7 @@ import {
   getLengthByKeyType,
 } from 'uiSrc/utils'
 import { useSelectedKeyStore } from 'uiSrc/store'
-import { GetKeysWithDetailsResponse, KeysStore, KeysActions, SetStringWithExpire, KeysThunks, CreateSetWithExpireDto } from './interface'
+import { GetKeysWithDetailsResponse, KeysStore, KeysActions, SetStringWithExpire, KeysThunks, CreateSetWithExpireDto, CreateListWithExpireDto } from './interface'
 import { parseKeysListResponse } from '../utils'
 
 // eslint-disable-next-line import/no-mutable-exports
@@ -214,6 +214,12 @@ KeysThunks
     onSuccessAction?: () => void,
     onFailAction?: () => void,
   ) => get().addTypedKey(data, KeyTypes.Set, onSuccessAction, onFailAction),
+
+  addListKey: async (
+    data: CreateListWithExpireDto,
+    onSuccessAction?: () => void,
+    onFailAction?: () => void,
+  ) => get().addTypedKey(data, KeyTypes.List, onSuccessAction, onFailAction),
 
   addTypedKey: async (
     data: any,
