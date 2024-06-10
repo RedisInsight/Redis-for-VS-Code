@@ -94,7 +94,7 @@ abstract class Webview {
           window.appInfo=${JSON.stringify(appInfo)};
         </script>
 
-        <title>RedisInsight Webview</title>
+        <title>Redis Insight Webview</title>
       </head>
       <body>
         <div id="root" data-route="${this._opts.route}"></div>
@@ -190,7 +190,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
     this.panel.title = title || this._opts.title || ''
     this.panel.iconPath = vscode.Uri.joinPath(
       this._opts.context?.extensionUri as vscode.Uri,
-      'dist/webviews/resources/redisinsight_dark.svg',
+      'dist/webviews/resources/redisinsight.svg',
     )
     this.panel.webview.html = this._getContent(this.panel.webview)
 

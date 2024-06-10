@@ -31,7 +31,7 @@ export async function startBackend(): Promise<any> {
       console.debug(errorMessage)
       resolve('')
     } else {
-      const message = vscode.window.setStatusBarMessage('Starting RedisInsight...')
+      const message = vscode.window.setStatusBarMessage('Starting Redis Insight...')
       if (process.platform === 'win32') {
         PSinst = cp.spawn('powershell.exe', [
           '-NoProfile',

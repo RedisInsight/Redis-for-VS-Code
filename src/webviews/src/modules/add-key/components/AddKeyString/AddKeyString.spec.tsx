@@ -1,7 +1,7 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
 import { render, screen } from 'testSrc/helpers'
-import AddKeyString, { Props } from './AddKeyString'
+import { AddKeyString, Props } from './AddKeyString'
 
 const mockedProps = mock<Props>()
 

@@ -304,7 +304,7 @@ const ListDetailsTable = (props: Props) => {
           return (
             <AutoSizer disableHeight onResize={() => setTimeout(updateTextAreaHeight, 0)}>
               {({ width }) => (
-                <div style={{ width: width + 90 }} className={styles.textareaContainer}>
+                <div style={{ width: width + 89 }} className={styles.textareaContainer}>
                   <StopPropagation>
                     <InlineEditor
                       expandable

@@ -48,7 +48,7 @@ export const cliTexts = {
       {l10n.t({
         message: 'Use Pub/Sub available in the ',
         comment:
-          'Context: Use Pub/Sub available in the RedisInsight application to see the messages published to all channels in your database.',
+          'Context: Use Pub/Sub available in the Redis Insight application to see the messages published to all channels in your database.',
       })}
       <Link
         to={getUtmExternalLink(EXTERNAL_LINKS.riAppDownload, { campaign: UTM_CAMPAINGS.CLI })}
@@ -56,7 +56,7 @@ export const cliTexts = {
         target="_blank"
         data-test-subj="hello3-btn"
       >
-        {l10n.t('RedisInsight application')}
+        {l10n.t('Redis Insight application')}
       </Link>
       {l10n.t({
         message:
@@ -83,7 +83,7 @@ export const cliTexts = {
       {l10n.t({
         message: 'Use Profiler tool available in the ',
         comment:
-          'Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server.',
+          'Context: Use Profiler tool available in the Redis Insight application to see all the requests processed by the server.',
       })}
       <Link
         to={getUtmExternalLink(EXTERNAL_LINKS.riAppDownload, { campaign: UTM_CAMPAINGS.CLI })}
@@ -91,12 +91,12 @@ export const cliTexts = {
         target="_blank"
         data-test-subj="monitor-btn"
       >
-        {l10n.t('RedisInsight application')}
+        {l10n.t('Redis Insight application')}
       </Link>
       {l10n.t({
         message: ' to see all the requests processed by the server.',
         comment:
-          'Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server.',
+          'Context: Use Profiler tool available in the Redis Insight application to see all the requests processed by the server.',
       })}
     </span>
   ),
@@ -107,9 +107,9 @@ export const cliTexts = {
   HELLO3_COMMAND: () => (
     <span className="text-vscode-errorForeground" key={Date.now()}>
       {l10n.t({
-        message: 'RedisInsight does not support ',
+        message: 'Redis Insight does not support ',
         comment:
-          'Context: RedisInsight does not support "RESP3" at the moment, but we are working on it.',
+          'Context: Redis Insight does not support "RESP3" at the moment, but we are working on it.',
       })}
       <Link
         to="https://github.com/redis/redis-specifications/blob/master/protocol/RESP3.md"
@@ -123,7 +123,7 @@ export const cliTexts = {
       {l10n.t({
         message: ' at the moment, but we are working on it.',
         comment:
-          'Context: RedisInsight does not support "RESP3" at the moment, but we are working on it.',
+          'Context: Redis Insight does not support "RESP3" at the moment, but we are working on it.',
       })}
     </span>
   ),

@@ -31,7 +31,7 @@ const downloadBackend = async () => {
       console.debug('Done!')
     }
   } catch (err) {
-    console.debug('Failed to download RedisInsight backend')
+    console.debug('Failed to download Redis Insight backend')
     fs.rmdir(backendPath, () => { })
     throw Error('Failed to download and unzip Redis backend')
   }
@@ -66,7 +66,7 @@ async function downloadRedisBackendArchive(
     const requestOptions: https.RequestOptions = parseUrl(downloadUrl)
     https.get(requestOptions, (res) => {
       if (res.statusCode !== 200) {
-        reject(new Error('Failed to get RedisInsight backend archive location'))
+        reject(new Error('Failed to get Redis Insight backend archive location'))
       }
 
       // Expected that windows distribution package will be zipped

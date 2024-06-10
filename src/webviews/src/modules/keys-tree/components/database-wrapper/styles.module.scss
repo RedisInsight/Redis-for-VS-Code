@@ -1,5 +1,5 @@
 .databaseNameWrapper {
-  @apply flex pl-3.5 cursor-pointer text-ellipsis whitespace-nowrap overflow-hidden;
+  @apply flex pl-3.5 cursor-pointer text-ellipsis whitespace-nowrap overflow-hidden items-center;
 }
 
 .databaseName {
@@ -7,7 +7,7 @@
 }
 
 .icon {
-  @apply mr-2 w-4 h-full min-w-4;
+  @apply mr-2 w-[14px] h-[14px] min-w-[14px] ml-[3px];
 
   &Nested {
     @apply m-0;

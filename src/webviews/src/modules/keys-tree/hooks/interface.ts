@@ -54,6 +54,7 @@ export interface KeysThunks {
   deleteKeyAction: (key: RedisString, onSuccessAction?: (key: RedisString) => void) => void
   addStringKey: (data: SetStringWithExpire, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addSetKey: (data: CreateSetWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
+  addListKey: (data: CreateListWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addKeyIntoTree: (key: RedisString, keyType: KeyTypes) => void
   addTypedKey: (
     data: any,
@@ -98,4 +99,8 @@ export interface SetStringWithExpire extends KeyWithExpireDto {
 
 export interface CreateSetWithExpireDto extends KeyWithExpireDto {
   members: RedisString[]
+}
+
+export interface CreateListWithExpireDto extends KeyWithExpireDto {
+  element: RedisString
 }

@@ -1,9 +1,9 @@
 {
-  "name": "redisinsight-vsc-plugin",
-  "productName": "RedisInsight VSCode plugin",
+  "name": "redis-insight-vsc-plugin",
+  "productName": "Redis Insight VSCode plugin",
   "version": "0.0.1",
   "private": true,
-  "description": "RedisInsight Visual Studio Code plugin",
+  "description": "Redis Insight Visual Studio Code plugin",
   "main": "dist/extension.js",
   "l10n": "./l10n",
   "publisher": "Redis Ltd.",
@@ -18,7 +18,7 @@
       "activitybar": [
         {
           "id": "ri-sidebar-view",
-          "title": "RedisInsight",
+          "title": "Redis Insight",
           "icon": "dist/webviews/resources/redisinsight.svg"
         }
       ],
@@ -35,9 +35,9 @@
         {
           "type": "webview",
           "id": "ri-sidebar",
-          "name": "RedisInsight",
+          "name": "Redis Insight",
           "icon": "dist/webviews/resources/redisinsight.svg",
-          "contextualTitle": "RedisInsight"
+          "contextualTitle": "Redis Insight"
         }
       ],
       "ri-panel-view": [
@@ -53,19 +53,19 @@
       {
         "command": "RedisInsight.addCli",
         "title": "Add CLI",
-        "category": "RedisInsight",
+        "category": "Redis Insight",
         "icon": "$(add)"
       },
       {
         "command": "RedisInsight.openSettings",
-        "title": "Open RedisInsight settings",
-        "category": "RedisInsight",
+        "title": "Open Redis Insight settings",
+        "category": "Redis Insight",
         "icon": "$(settings-gear)"
       },
       {
         "command": "RedisInsight.addDatabase",
         "title": "Add Redis database",
-        "category": "RedisInsight",
+        "category": "Redis Insight",
         "icon": "$(add)"
       }
     ],
@@ -135,7 +135,7 @@
     "url": "https://github.com/RedisInsight/RedisInsight-VSCode-extension/issues"
   },
   "keywords": [
-    "redisinsight",
+    "redis insight",
     "redis",
     "vsc",
     "visual studio code",

@@ -3,6 +3,9 @@ import { WebView } from './WebView'
 
 import { KeyDetailsView } from './editor-view/KeyDetailsView'
 import { AddDatabaseView } from './editor-view/AddDatabaseView'
+import { AddListKeyView } from './editor-view/AddListKeyView'
+import { AddSetKeyView } from './editor-view/AddSetKeyView'
+import { AddStringKeyView } from './editor-view/AddStringKeyView'
 import { BottomBar } from './bottom-bar/BottomBar'
 import { CliViewPanel } from './bottom-bar/CliViewPanel'
 import { DatabaseDetailsView } from './editor-view/DatabaseDetailsView'
@@ -20,6 +23,9 @@ import { TreeView } from './tree-view/TreeView'
 export {
   KeyDetailsView,
   AddDatabaseView,
+  AddListKeyView,
+  AddSetKeyView,
+  AddStringKeyView,
   BaseComponent,
   BottomBar,
   CliViewPanel,

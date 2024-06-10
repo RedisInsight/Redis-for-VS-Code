@@ -57,7 +57,7 @@ describe('Settings', () => {
       'Analytics not switched properly',
     )
     await settingsView.switchBack()
-    await editorView.closeEditor('RedisInsight - Settings')
+    await editorView.closeEditor('Redis Insight - Settings')
     await ButtonActions.clickElement(treeView.settingsButton)
     await settingsView.switchToInnerViewFrame(InnerViews.SettingsInnerView)
     expect(await settingsView.getAnalyticsSwitcherValue()).not.eql(

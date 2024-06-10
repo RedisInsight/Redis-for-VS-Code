@@ -18,7 +18,7 @@ $controls-padding-y: 10px;
 }
 
 .controls {
-  @apply hidden z-[3];
+  @apply hidden z-[4];
 
   &Bottom {
     @apply absolute right-3 top-[calc(100%-#{$controls-height+$controls-padding-y})];

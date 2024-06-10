@@ -21,7 +21,7 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.StatusBarAlignment.Left,
     100,
   )
-  myStatusBarItem.text = 'RedisInsight' // Use the desired icon from the list
+  myStatusBarItem.text = 'Redis Insight' // Use the desired icon from the list
   myStatusBarItem.tooltip = 'Click me for more info'
   // myStatusBarItem.command = 'RedisInsight.openPage' // Command to execute on click
   // Show the status bar item
@@ -57,7 +57,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/add_key',
-        title: vscode.l10n.t('RedisInsight - Add new key'),
+        title: vscode.l10n.t('Redis Insight - Add new key'),
         viewId: ViewId.AddKey,
         handleMessage: (message) => handleMessage(message),
         message: args,
@@ -68,7 +68,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/add_database',
-        title: vscode.l10n.t('RedisInsight - Add Database connection'),
+        title: vscode.l10n.t('Redis Insight - Add Database connection'),
         viewId: ViewId.AddDatabase,
         handleMessage: (message) => handleMessage(message),
         message: args,
@@ -79,7 +79,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'settings',
-        title: vscode.l10n.t('RedisInsight - Settings'),
+        title: vscode.l10n.t('Redis Insight - Settings'),
         viewId: ViewId.Settings,
         handleMessage: (message) => handleMessage(message),
         message: args,
@@ -90,7 +90,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/edit_database',
-        title: vscode.l10n.t('RedisInsight - Edit Database connection'),
+        title: vscode.l10n.t('Redis Insight - Edit Database connection'),
         viewId: ViewId.EditDatabase,
         handleMessage: (message) => handleMessage(message),
         message: args,

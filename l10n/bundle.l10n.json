@@ -1,8 +1,8 @@
 {
-  "RedisInsight - Add new key": "RedisInsight - Add new key",
-  "RedisInsight - Add Database connection": "RedisInsight - Add Database connection",
-  "RedisInsight - Settings": "RedisInsight - Settings",
-  "RedisInsight - Edit Database connection": "RedisInsight - Edit Database connection",
+  "Redis Insight - Add new key": "Redis Insight - Add new key",
+  "Redis Insight - Add Database connection": "Redis Insight - Add Database connection",
+  "Redis Insight - Settings": "Redis Insight - Settings",
+  "Redis Insight - Edit Database connection": "Redis Insight - Edit Database connection",
   "now": "now",
   "< 1 min": "< 1 min",
   "Last Refresh": "Last Refresh",
@@ -10,7 +10,7 @@
   "Settings": "Settings",
   "Delimiter to separate namespaces": "Delimiter to separate namespaces",
   "Privacy": "Privacy",
-  "To optimize your experience, RedisInsight uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.": "To optimize your experience, RedisInsight uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.",
+  "To optimize your experience, Redis Insight uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.": "To optimize your experience, Redis Insight uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.",
   "Analytics": "Analytics",
   "loading...": "loading...",
   "key(s)": "key(s)",
@@ -36,7 +36,7 @@
   "Key Name": "Key Name",
   " will be deleted.": " will be deleted.",
   "Delete": "Delete",
-  "will be deleted from RedisInsight.": "will be deleted from RedisInsight.",
+  "will be deleted from Redis Insight.": "will be deleted from Redis Insight.",
   "Key Size": "Key Size",
   "Key Size: ": "Key Size: ",
   "Length": "Length",
@@ -70,7 +70,9 @@
   "Edit Redis database": "Edit Redis database",
   "Add Key": "Add Key",
   "value": "value",
+  "Submit": "Submit",
   "Members": "Members",
+  "Elements": "Elements",
   "TTL: No limit": "TTL: No limit",
   "Key name*": "Key name*",
   "Encrypted data": "Encrypted data",
@@ -84,13 +86,13 @@
   "free up-to-date": "free up-to-date",
   " Redis database.": " Redis database.",
   "Database has been added": "Database has been added",
-  " has been added to RedisInsight.": " has been added to RedisInsight.",
+  " has been added to Redis Insight.": " has been added to Redis Insight.",
   "Database has been edited": "Database has been edited",
-  " has been edited to RedisInsight.": " has been edited to RedisInsight.",
+  " has been edited to Redis Insight.": " has been edited to Redis Insight.",
   "Database has been deleted": "Database has been deleted",
-  " has been deleted to RedisInsight.": " has been deleted to RedisInsight.",
+  " has been deleted to Redis Insight.": " has been deleted to Redis Insight.",
   "Databases have been deleted": "Databases have been deleted",
-  " databases have been deleted from RedisInsight:": " databases have been deleted from RedisInsight:",
+  " databases have been deleted from Redis Insight:": " databases have been deleted from Redis Insight:",
   "Key has been added": "Key has been added",
   " has been added.": " has been added.",
   "{0} has been deleted.": "{0} has been deleted.",
@@ -111,9 +113,9 @@
   "Library has been deleted": "Library has been deleted",
   "Library has been added": "Library has been added",
   "API keys have been removed": "API keys have been removed",
-  "All API keys have been removed from RedisInsight.": "All API keys have been removed from RedisInsight.",
+  "All API keys have been removed from Redis Insight.": "All API keys have been removed from Redis Insight.",
   "API Key has been removed": "API Key has been removed",
-  "{0} has been removed from RedisInsight.": "{0} has been removed from RedisInsight.",
+  "{0} has been removed from Redis Insight.": "{0} has been removed from Redis Insight.",
   "Database already exists": "Database already exists",
   "No new database connections have been added.": "No new database connections have been added.",
   "Non-printable characters have been detected": "Non-printable characters have been detected",
@@ -191,41 +193,41 @@
   "Invalid repeat command option value": "Invalid repeat command option value",
   "Client connection previously closed. Run the command after the connection is re-created.": "Client connection previously closed. Run the command after the connection is re-created.",
   "Unable to decrypt. Check the system keychain or re-run the command.": "Unable to decrypt. Check the system keychain or re-run the command.",
-  "Use Pub/Sub available in the /Context: Use Pub/Sub available in the RedisInsight application to see the messages published to all channels in your database.": {
+  "Use Pub/Sub available in the /Context: Use Pub/Sub available in the Redis Insight application to see the messages published to all channels in your database.": {
     "message": "Use Pub/Sub available in the ",
     "comment": [
-      "Context: Use Pub/Sub available in the RedisInsight application to see the messages published to all channels in your database."
+      "Context: Use Pub/Sub available in the Redis Insight application to see the messages published to all channels in your database."
     ]
   },
-  "RedisInsight application": "RedisInsight application",
+  "Redis Insight application": "Redis Insight application",
   " to see the messages published to all channels in your database./Context: Use \"Pub/Sub\" to see the messages published to all channels in your database.": {
     "message": " to see the messages published to all channels in your database.",
     "comment": [
       "Context: Use \"Pub/Sub\" to see the messages published to all channels in your database."
     ]
   },
-  "Use Profiler tool available in the /Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server.": {
+  "Use Profiler tool available in the /Context: Use Profiler tool available in the Redis Insight application to see all the requests processed by the server.": {
     "message": "Use Profiler tool available in the ",
     "comment": [
-      "Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server."
+      "Context: Use Profiler tool available in the Redis Insight application to see all the requests processed by the server."
     ]
   },
-  " to see all the requests processed by the server./Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server.": {
+  " to see all the requests processed by the server./Context: Use Profiler tool available in the Redis Insight application to see all the requests processed by the server.": {
     "message": " to see all the requests processed by the server.",
     "comment": [
-      "Context: Use Profiler tool available in the RedisInsight application to see all the requests processed by the server."
+      "Context: Use Profiler tool available in the Redis Insight application to see all the requests processed by the server."
     ]
   },
-  "RedisInsight does not support /Context: RedisInsight does not support \"RESP3\" at the moment, but we are working on it.": {
-    "message": "RedisInsight does not support ",
+  "Redis Insight does not support /Context: Redis Insight does not support \"RESP3\" at the moment, but we are working on it.": {
+    "message": "Redis Insight does not support ",
     "comment": [
-      "Context: RedisInsight does not support \"RESP3\" at the moment, but we are working on it."
+      "Context: Redis Insight does not support \"RESP3\" at the moment, but we are working on it."
     ]
   },
-  " at the moment, but we are working on it./Context: RedisInsight does not support \"RESP3\" at the moment, but we are working on it.": {
+  " at the moment, but we are working on it./Context: Redis Insight does not support \"RESP3\" at the moment, but we are working on it.": {
     "message": " at the moment, but we are working on it.",
     "comment": [
-      "Context: RedisInsight does not support \"RESP3\" at the moment, but we are working on it."
+      "Context: Redis Insight does not support \"RESP3\" at the moment, but we are working on it."
     ]
   },
   "The entire database has been scanned.": "The entire database has been scanned.",
