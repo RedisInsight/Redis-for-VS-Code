@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { TreeView, ListKeyDetailsView } from '@e2eSrc/page-objects/components'
+import { TreeView, ListKeyDetailsView, AddListKeyView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   DatabasesActions,
@@ -22,10 +22,12 @@ const elements = [
 describe('List Key verification', () => {
   let listKeyDetailsView: ListKeyDetailsView
   let treeView: TreeView
+  let addListKeyView: AddListKeyView
 
   before(async () => {
     listKeyDetailsView = new ListKeyDetailsView()
     treeView = new TreeView()
+    addListKeyView = new AddListKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -33,10 +35,6 @@ describe('List Key verification', () => {
   })
   beforeEach(async () => {
     keyName = Common.generateWord(10)
-    const listKeyParameters: ListKeyParameters = {
-      keyName: keyName,
-      element: elements[0],
-    }
     const keyToAddParameters = {
       keyName,
       element: elements[1],
@@ -47,9 +45,10 @@ describe('List Key verification', () => {
       element: elements[2],
     }
 
-    await KeyAPIRequests.addListKeyApi(
-      listKeyParameters,
-      Config.ossStandaloneConfig.databaseName,
+    // Verify that user can add List Key
+    await addListKeyView.addListKey(
+      keyName,
+      elements[0]
     )
     // Add elements to the list key
     await KeyAPIRequests.addElementsToListKeyApi(
