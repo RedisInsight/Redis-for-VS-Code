@@ -42,7 +42,7 @@ const HashDetails = (props: Props) => {
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_ADDED,
       eventData: {
         databaseId,
-        keyType: KeyTypes.Hash,
+        keyType,
         numberOfAdded: fields.length,
       },
     })

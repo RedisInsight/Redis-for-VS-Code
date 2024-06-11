@@ -5,7 +5,7 @@ import { isUndefined } from 'lodash'
 
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { AllKeyTypes, VscodeMessageAction } from 'uiSrc/constants'
-import { TelemetryEvent, isShowScanMore, sendEventTelemetry } from 'uiSrc/utils'
+import { TelemetryEvent, getGroupTypeDisplay, isShowScanMore, sendEventTelemetry } from 'uiSrc/utils'
 import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString, isEqualBuffers } from 'uiSrc/utils/formatters'
 import { fetchKeyInfo, useContextApi, useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
@@ -110,7 +110,7 @@ export const KeysTree = () => {
     fetchKeyInfo({ key: name, databaseId }, false, () => {
       vscodeApi.postMessage({
         action: VscodeMessageAction.SelectKey,
-        data: { key: name, keyString, keyType: type, databaseId },
+        data: { key: name, keyString, keyType: type, databaseId, displayedKeyType: getGroupTypeDisplay(type) },
       })
     })
   }

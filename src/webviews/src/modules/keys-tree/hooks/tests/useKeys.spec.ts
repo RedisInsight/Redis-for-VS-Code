@@ -6,7 +6,7 @@ import * as utils from 'uiSrc/utils'
 import { apiService } from 'uiSrc/services'
 import { constants, mockedStore, waitForStack } from 'testSrc/helpers'
 import * as useKeys from '../useKeys'
-import { CreateHashWithExpireDto, CreateListWithExpireDto, CreateSetWithExpireDto, KeysActions, KeysStore, KeysStoreData, KeysThunks } from '../interface'
+import { CreateHashWithExpireDto, CreateListWithExpireDto, CreateSetWithExpireDto, CreateZSetWithExpireDto, KeysActions, KeysStore, KeysStoreData, KeysThunks } from '../interface'
 import { createKeysActionsSlice, initialKeysState as initialStateInit } from '../useKeysActions'
 import { createKeysThunksSlice } from '../useKeysThunks'
 import { successMessages } from 'uiSrc/constants'
@@ -501,6 +501,37 @@ describe('useKeys', () => {
             TTL: -1,
             databaseId: null,
             keyType: 'hash',
+            length: 1,
+          },
+        })
+        expect(utils.showInformationMessage).toBeCalledWith(successMessages.ADDED_NEW_KEY(data.keyName).title)
+      })
+    })
+
+    describe('addZSetKey', () => {
+      it('success to add key', async () => {
+        // Arrange
+        const data: CreateZSetWithExpireDto = {
+          keyName: 'keyName',
+          members: [{
+            name: 'member',
+            score: 123,
+          }]
+        }
+        const responsePayload = { data, status: 200 }
+
+        apiService.post = vi.fn().mockResolvedValue(responsePayload)
+
+        // Act
+        useKeysStore.getState().addZSetKey(data)
+        await waitForStack()
+        // Assert
+        expect(utils.sendEventTelemetry).toBeCalledWith({
+          event: 'TREE_VIEW_KEY_ADDED',
+          eventData:  {
+            TTL: -1,
+            databaseId: null,
+            keyType: 'zset',
             length: 1,
           },
         })
