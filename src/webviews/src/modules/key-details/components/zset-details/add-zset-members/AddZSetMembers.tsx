@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FocusEvent, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, FocusEvent, ReactElement, ReactNode, useEffect, useRef, useState } from 'react'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { toNumber } from 'lodash'
@@ -118,7 +118,7 @@ const AddZSetMembers = (props: Props) => {
   const isClearDisabled = (item: IZsetMemberState): boolean =>
     members.length === 1 && !(item.name.length || item.score.length)
 
-  const SubmitBtn = () => (
+  const SubmitBtn: ReactElement = (
     <VSCodeButton
       appearance="primary"
       onClick={submitData}
@@ -159,10 +159,6 @@ const AddZSetMembers = (props: Props) => {
                       setMembers(handleItemChange(members, 'score', item.id, validateScore(e.target.value)))}
                     onBlur={(e: FocusEvent<HTMLInputElement, HTMLButtonElement>) => {
                       handleScoreBlur(item)
-
-                      if (e.relatedTarget?.getAttribute('data-testid') === SAVE_MEMBERS_TEST_ID) {
-                        e.relatedTarget?.click?.()
-                      }
                     }}
                     disabled={loading}
                     data-testid="member-score"
@@ -212,7 +208,7 @@ const AddZSetMembers = (props: Props) => {
               <div className="font-bold pb-1">{disabledSubmitText}</div>
             </Popup>
           )}
-          {!disabledSubmitText && <SubmitBtn />}
+          {!disabledSubmitText && SubmitBtn}
         </div>
       </div>
     </>
