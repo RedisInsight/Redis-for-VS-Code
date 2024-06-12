@@ -7,7 +7,6 @@ import {
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { WebView } from '@e2eSrc/page-objects/components/WebView'
 import { InputWithButtons } from '../common/InputWithButtons'
-import { Formatters } from '@e2eSrc/helpers/constants'
 
 /**
  * Key details view
@@ -21,6 +20,7 @@ export class KeyDetailsView extends WebView {
   applyBtn = By.xpath(
     `//*[@class='key-details-body']//*[@data-testid='apply-btn']`,
   )
+  applyEditButton = By.xpath(`//*[@data-testid='apply-edit-btn']`);
   searchInput = By.xpath(`//*[@data-testid='search']`)
   clearSearchInput = By.xpath(`//*[@data-testid='decline-search-button']`)
   setMemberInput = By.xpath(`//*[@data-testid='member-name']`)

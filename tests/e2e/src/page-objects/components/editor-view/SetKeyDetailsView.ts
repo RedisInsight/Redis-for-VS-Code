@@ -3,7 +3,7 @@ import { KeyDetailsView } from '@e2eSrc/page-objects/components'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 
 /**
- * Sorted Set Key details view
+ * Set Key details view
  */
 export class SetKeyDetailsView extends KeyDetailsView {
   setFieldsList = By.xpath(`//*[contains(@data-testid, 'set-member-value-')]`)
