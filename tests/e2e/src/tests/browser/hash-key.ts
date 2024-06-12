@@ -187,7 +187,7 @@ describe('Hash Key fields verification', () => {
 
     await treeView.switchBack()
     const titles = await editorView.getOpenEditorTitles()
-    const isTitleCorrect = titles.some(t => t === `hash:${keyName}`)
+    const isTitleCorrect = titles.some((t: string) => t === `hash:${keyName}`)
     expect(isTitleCorrect).eql(true, 'tab name is unexpected')
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.deleteKeyFromListByName(keyName)

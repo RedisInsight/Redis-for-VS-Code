@@ -6,21 +6,23 @@ import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { AddKeyView } from '@e2eSrc/page-objects/components/editor-view/AddKeyView'
 
 /**
- * Add List Key details view
+ * Add Hash Key details view
  */
-export class AddListKeyView extends AddKeyView {
-  listElementInput = By.xpath('//*[@data-testid="element"]')
+export class AddHashKeyView extends AddKeyView {
+  listElementInput = By.xpath(`//input[starts-with(@data-testid, 'hash-field-')]`)
+
+  getMemberInputByIndex = (index: number): By =>
+    By.xpath(`//input[@data-testid="hash-field-${index}"]`)
 
   /**
-   * Adding a new List key
+   * Adding a new Hash key
    * @param keyName The name of the key
-   * @param element The key element
    * @param TTL The Time to live value of the key
+   * @param field The field name of the key
+   * @param value The value of the key
    */
-  async addListKey(
-    keyName: string,
-    element: string = '',
-    TTL: string = '',
+  async addHashKey(
+    keyName: string, TTL = '', field = '', value = '',
   ): Promise<void> {
     let treeView = new TreeView()
     await super.switchToInnerViewFrame(InnerViews.TreeInnerView)
@@ -28,14 +30,14 @@ export class AddListKeyView extends AddKeyView {
 
     await super.switchBack()
     await super.switchToInnerViewFrame(InnerViews.AddKeyInnerView)
-    await super.selectKeyTypeByValue(KeyTypesShort.List)
+    await super.selectKeyTypeByValue(KeyTypesShort.Hash)
 
     if (TTL.length > 0) {
       await InputActions.typeText(this.ttlInput, TTL)
     }
 
-    if (element.length > 0) {
-      await InputActions.typeText(this.listElementInput, element)
+    if (field.length > 0) {
+      await InputActions.typeText(this.listElementInput, field)
     }
 
     await InputActions.typeText(this.keyNameInput, keyName)
