@@ -47,7 +47,7 @@ export class BaseComponent extends WebElement {
     locator: Locator,
     timeout: number = 5000,
   ): Promise<WebElement> {
-    return this.getDriver().wait(until.elementLocated(locator), timeout)
+    return await this.getDriver().wait(until.elementLocated(locator), timeout)
   }
 
   /**
@@ -60,7 +60,13 @@ export class BaseComponent extends WebElement {
     locator: Locator,
     timeout: number = 5000,
   ): Promise<WebElement[]> {
-    return this.getDriver().wait(until.elementsLocated(locator), timeout)
+    const elements = await this.getDriver().wait(until.elementsLocated(locator), timeout);
+     // Ensure elements is always an array
+     if (Array.isArray(elements)) {
+      return elements;
+    } else {
+      return [elements];
+    }
   }
 
   /**
