@@ -1,6 +1,10 @@
 import { expect } from 'chai'
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import { TreeView, ListKeyDetailsView, AddListKeyView } from '@e2eSrc/page-objects/components'
+import {
+  TreeView,
+  ListKeyDetailsView,
+  AddListKeyView,
+} from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   DatabasesActions,
@@ -22,12 +26,10 @@ const elements = [
 describe('List Key verification', () => {
   let listKeyDetailsView: ListKeyDetailsView
   let treeView: TreeView
-  let addListKeyView: AddListKeyView
 
   before(async () => {
     listKeyDetailsView = new ListKeyDetailsView()
     treeView = new TreeView()
-    addListKeyView = new AddListKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -37,6 +39,10 @@ describe('List Key verification', () => {
     keyName = Common.generateWord(10)
     const keyToAddParameters = {
       keyName,
+      element: elements[0],
+    }
+    const keyToAddParameters1 = {
+      keyName,
       element: elements[1],
     }
 
@@ -45,14 +51,13 @@ describe('List Key verification', () => {
       element: elements[2],
     }
 
-    // Verify that user can add List Key
-    await addListKeyView.addListKey(
-      keyName,
-      elements[0]
+    await KeyAPIRequests.addListKeyApi(
+      keyToAddParameters,
+      Config.ossStandaloneConfig.databaseName,
     )
     // Add elements to the list key
     await KeyAPIRequests.addElementsToListKeyApi(
-      keyToAddParameters,
+      keyToAddParameters1,
       Config.ossStandaloneConfig.databaseName,
       'TAIL',
     )
@@ -148,11 +153,11 @@ describe('List Key verification', () => {
 
 describe('List Key verification for db with version <6.2', () => {
   let listKeyDetailsView: ListKeyDetailsView
-  let treeView: TreeView
+  let addListKeyView: AddListKeyView
 
   beforeEach(async () => {
     listKeyDetailsView = new ListKeyDetailsView()
-    treeView = new TreeView()
+    addListKeyView = new AddListKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneV5Config,
@@ -173,16 +178,9 @@ describe('List Key verification for db with version <6.2', () => {
       element: elements[0],
     }
 
-    await KeyAPIRequests.addListKeyApi(
-      listKeyParameters,
-      Config.ossStandaloneV5Config.databaseName,
-    )
-    // Refresh database
-    await treeView.refreshDatabaseByName(
-      Config.ossStandaloneV5Config.databaseName,
-    )
-    // Open key details iframe
-    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+    // Verify that user can add List Key
+    await addListKeyView.addListKey(listKeyParameters)
+    await addListKeyView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
     // Add a few elements to the List key
     await listKeyDetailsView.addListElementToTail(elements[1])
     // Verify that user can add element to List

@@ -4,12 +4,13 @@ import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { TreeView } from '@e2eSrc/page-objects/components'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { AddKeyView } from '@e2eSrc/page-objects/components/editor-view/AddKeyView'
+import { SetKeyParameters } from '@e2eSrc/helpers/types/types'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 /**
  * Add Set Key details view
  */
 export class AddSetKeyView extends AddKeyView {
-  addMember = By.xpath(`//*[@data-testid='add-new-item']`)
   addButton = By.xpath('//*[@data-testid="save-members-btn"]')
 
   getMemberInputByIndex = (index: number): By =>
@@ -17,17 +18,15 @@ export class AddSetKeyView extends AddKeyView {
 
   /**
    * Create set key
-   * @param name The name of the key
-   * @param value The member value of the key
+   * @param keyParameters The set key parameters
    * @param ttl The ttl of the key
    */
   async addSetKey(
-    name: string,
-    values: string[] = [],
+    keyParameters: SetKeyParameters,
     ttl: string = '',
   ): Promise<void> {
     let treeView = new TreeView()
-    await super.switchToInnerViewFrame(InnerViews.TreeInnerView)
+
     await ButtonActions.clickElement(treeView.addKeyButton)
 
     await super.switchBack()
@@ -38,21 +37,22 @@ export class AddSetKeyView extends AddKeyView {
       await InputActions.typeText(this.ttlInput, ttl)
     }
 
-    if (values.length > 0) {
-      await InputActions.typeText(this.getMemberInputByIndex(0), values[0])
-      if (values.length > 1) {
-        values.shift()
+    if (keyParameters.members.length > 0) {
+      await InputActions.typeText(this.getMemberInputByIndex(0), keyParameters.members[0])
+      if (keyParameters.members.length > 1) {
+        keyParameters.members.shift()
         let i = 1
-        for (const value of values) {
-          await ButtonActions.clickElement(this.addMember)
+        for (const value of keyParameters.members) {
+          await ButtonActions.clickElement(this.addNewItemBtn)
           await InputActions.typeText(this.getMemberInputByIndex(i), value)
           i++
         }
       }
     }
-    await InputActions.typeText(this.keyNameInput, name)
+    await InputActions.typeText(this.keyNameInput, keyParameters.keyName)
 
     await ButtonActions.clickElement(this.addButton)
     await super.switchBack()
+    await CommonDriverExtension.driverSleep(1000)
   }
 }
