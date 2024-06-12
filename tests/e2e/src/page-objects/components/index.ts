@@ -3,6 +3,7 @@ import { WebView } from './WebView'
 
 import { KeyDetailsView } from './editor-view/KeyDetailsView'
 import { AddDatabaseView } from './editor-view/AddDatabaseView'
+import { AddHashKeyView } from './editor-view/AddHashKeyView'
 import { AddListKeyView } from './editor-view/AddListKeyView'
 import { AddSetKeyView } from './editor-view/AddSetKeyView'
 import { AddStringKeyView } from './editor-view/AddStringKeyView'
@@ -23,6 +24,7 @@ import { TreeView } from './tree-view/TreeView'
 export {
   KeyDetailsView,
   AddDatabaseView,
+  AddHashKeyView,
   AddListKeyView,
   AddSetKeyView,
   AddStringKeyView,

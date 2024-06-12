@@ -166,8 +166,7 @@ describe('Edit Key values verification', () => {
       keyName,
       keyValueBefore,
     )
-    // Open key details iframe
-    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+    await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
 
     // Check the key value before edit
     let keyValue = await stringKeyDetailsView.getStringKeyValue()

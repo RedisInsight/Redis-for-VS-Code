@@ -6,7 +6,7 @@ import * as utils from 'uiSrc/utils'
 import { apiService } from 'uiSrc/services'
 import { constants, mockedStore, waitForStack } from 'testSrc/helpers'
 import * as useKeys from '../useKeys'
-import { CreateListWithExpireDto, CreateSetWithExpireDto, KeysActions, KeysStore, KeysStoreData, KeysThunks } from '../interface'
+import { CreateHashWithExpireDto, CreateListWithExpireDto, CreateSetWithExpireDto, KeysActions, KeysStore, KeysStoreData, KeysThunks } from '../interface'
 import { createKeysActionsSlice, initialKeysState as initialStateInit } from '../useKeysActions'
 import { createKeysThunksSlice } from '../useKeysThunks'
 import { successMessages } from 'uiSrc/constants'
@@ -470,6 +470,37 @@ describe('useKeys', () => {
             TTL: -1,
             databaseId: null,
             keyType: 'list',
+            length: 1,
+          },
+        })
+        expect(utils.showInformationMessage).toBeCalledWith(successMessages.ADDED_NEW_KEY(data.keyName).title)
+      })
+    })
+
+    describe('addHashKey', () => {
+      it('success to add key', async () => {
+        // Arrange
+        const data: CreateHashWithExpireDto = {
+          keyName: 'keyName',
+          fields: [{
+            field: 'field',
+            value: 'value',
+          }]
+        }
+        const responsePayload = { data, status: 200 }
+
+        apiService.post = vi.fn().mockResolvedValue(responsePayload)
+
+        // Act
+        useKeysStore.getState().addHashKey(data)
+        await waitForStack()
+        // Assert
+        expect(utils.sendEventTelemetry).toBeCalledWith({
+          event: 'TREE_VIEW_KEY_ADDED',
+          eventData:  {
+            TTL: -1,
+            databaseId: null,
+            keyType: 'hash',
             length: 1,
           },
         })

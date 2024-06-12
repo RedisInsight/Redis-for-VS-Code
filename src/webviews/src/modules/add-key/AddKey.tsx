@@ -14,13 +14,13 @@ import { stringToBuffer } from 'uiSrc/utils'
 import AddKeyCommonFields from './components/AddKeyCommonFields/AddKeyCommonFields'
 
 import { ADD_KEY_TYPE_OPTIONS } from './constants/key-type-options'
-// import AddKeyHash from './AddKeyHash/AddKeyHash'
 // import AddKeyZset from './AddKeyZset/AddKeyZset'
 import { AddKeyString } from './components/AddKeyString/AddKeyString'
 import { AddKeyList } from './components/AddKeyList/AddKeyList'
 // import AddKeyReJSON from './AddKeyReJSON/AddKeyReJSON'
 // import AddKeyStream from './AddKeyStream/AddKeyStream'
 import { AddKeySet } from './components/AddKeySet/AddKeySet'
+import { AddKeyHash } from './components/AddKeyHash/AddKeyHash'
 
 import { useKeysApi, useKeysInContext } from '../keys-tree/hooks/useKeys'
 import styles from './styles.module.scss'
@@ -91,9 +91,9 @@ export const AddKey = () => {
 
       <VSCodeDivider className={styles.divider} />
 
-      {/* {typeSelected === KeyTypes.Hash && (
-            <AddKeyHash onCancel={closeAddKeyPanel} {...defaultFields} />
-          )} */}
+      {typeSelected === KeyTypes.Hash && (
+        <AddKeyHash onClose={closeAddKeyPanel} {...defaultFields} />
+      )}
       {/* {typeSelected === KeyTypes.ZSet && (
             <AddKeyZset onCancel={closeAddKeyPanel} {...defaultFields} />
           )} */}

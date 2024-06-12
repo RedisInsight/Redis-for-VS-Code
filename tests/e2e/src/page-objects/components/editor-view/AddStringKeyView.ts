@@ -4,6 +4,7 @@ import { TreeView } from '@e2eSrc/page-objects/components'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { AddKeyView } from '@e2eSrc/page-objects/components/editor-view/AddKeyView'
 import { InnerViews } from '../WebView'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 /**
  * Add String Key details view
@@ -23,7 +24,7 @@ export class AddStringKeyView extends AddKeyView {
     ttl: string = '',
   ): Promise<void> {
     let treeView = new TreeView()
-    await super.switchToInnerViewFrame(InnerViews.TreeInnerView)
+
     await ButtonActions.clickElement(treeView.addKeyButton)
 
     await super.switchBack()
@@ -42,5 +43,6 @@ export class AddStringKeyView extends AddKeyView {
 
     await ButtonActions.clickElement(this.addButton)
     await super.switchBack()
+    await CommonDriverExtension.driverSleep(1000)
   }
 }

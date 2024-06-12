@@ -10,7 +10,8 @@ export class AddKeyView extends WebView {
   keyTypeDropdown = By.xpath('//*[@data-testid="select-key-type"]')
   ttlInput = By.xpath('//*[@data-testid="ttl-input"]')
   keyNameInput = By.xpath('//*[@data-testid="key-input"]')
-  addButton = By.xpath('//*[@data-testid="btn-add"]')
+  addButton = By.xpath('//*[@data-testid="btn-add"] | //*[@data-testid="save-fields-btn"]')
+  addNewItemBtn = By.xpath(`//*[@data-testid='add-new-item']`)
 
   /**
    * Select key type
