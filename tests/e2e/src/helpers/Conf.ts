@@ -18,8 +18,8 @@ export class Config {
   static uniqueId = chance.string({ length: 10 })
 
   static ossStandaloneConfig = {
-    host: process.env.OSS_STANDALONE_HOST || 'localhost',
-    port: process.env.OSS_STANDALONE_PORT || '8100',
+    host: process.env.OSS_STANDALONE_HOST || 'oss-standalone',
+    port: process.env.OSS_STANDALONE_PORT || '6379',
     databaseName: `${
       process.env.OSS_STANDALONE_DATABASE_NAME || 'test_standalone'
     }-${this.uniqueId}`,
