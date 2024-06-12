@@ -1,6 +1,10 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
-import { HashKeyDetailsView, TreeView } from '@e2eSrc/page-objects/components'
+import {
+  AddHashKeyView,
+  HashKeyDetailsView,
+  TreeView,
+} from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
@@ -21,11 +25,13 @@ describe('Hash Key fields verification', () => {
   let keyDetailsView: HashKeyDetailsView
   let treeView: TreeView
   let editorView: EditorView
+  let addHashKeyView: AddHashKeyView
 
   before(async () => {
     keyDetailsView = new HashKeyDetailsView()
     treeView = new TreeView()
     editorView = new EditorView()
+    addHashKeyView = new AddHashKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -56,16 +62,10 @@ describe('Hash Key fields verification', () => {
         },
       ],
     }
-    await KeyAPIRequests.addHashKeyApi(
-      hashKeyParameters,
-      Config.ossStandaloneConfig.databaseName,
-    )
-    // Refresh database
-    await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
-    )
-    // Open key details iframe
-    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    // Verify that user can add Hash Key
+    await addHashKeyView.addHashKey(hashKeyParameters)
+    await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
 
     const commands = ['hashField*', '*11111', 'hash*11111']
     await keyDetailsView.searchByTheValueInKeyDetails(keyFieldValue)

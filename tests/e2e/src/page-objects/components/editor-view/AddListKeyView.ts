@@ -4,6 +4,8 @@ import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { TreeView } from '@e2eSrc/page-objects/components'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { AddKeyView } from '@e2eSrc/page-objects/components/editor-view/AddKeyView'
+import { ListKeyParameters } from '@e2eSrc/helpers/types/types'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 /**
  * Add List Key details view
@@ -13,17 +15,15 @@ export class AddListKeyView extends AddKeyView {
 
   /**
    * Adding a new List key
-   * @param keyName The name of the key
-   * @param element The key element
+   * @param keyParameters The list key parameters
    * @param TTL The Time to live value of the key
    */
   async addListKey(
-    keyName: string,
-    element: string = '',
+    keyParameters: ListKeyParameters,
     TTL: string = '',
   ): Promise<void> {
     let treeView = new TreeView()
-    await super.switchToInnerViewFrame(InnerViews.TreeInnerView)
+
     await ButtonActions.clickElement(treeView.addKeyButton)
 
     await super.switchBack()
@@ -34,13 +34,14 @@ export class AddListKeyView extends AddKeyView {
       await InputActions.typeText(this.ttlInput, TTL)
     }
 
-    if (element.length > 0) {
-      await InputActions.typeText(this.listElementInput, element)
+    if (keyParameters.element.length > 0) {
+      await InputActions.typeText(this.listElementInput, keyParameters.element)
     }
 
-    await InputActions.typeText(this.keyNameInput, keyName)
+    await InputActions.typeText(this.keyNameInput, keyParameters.keyName)
 
     await ButtonActions.clickElement(this.addButton)
     await super.switchBack()
+    await CommonDriverExtension.driverSleep(1000)
   }
 }
