@@ -7,15 +7,18 @@ import {
   ListKeyDetailsView,
   StringKeyDetailsView,
   KeyDetailsView,
+  AddStringKeyView,
+  JsonKeyDetailsView,
+  InputWithButtons,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
   HashKeyParameters,
+  JsonKeyParameters,
   ListKeyParameters,
   SortedSetKeyParameters,
-  StringKeyParameters,
 } from '@e2eSrc/helpers/types/types'
 import {
   ButtonActions,
@@ -35,7 +38,9 @@ describe('Edit Key values verification', () => {
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
   let listKeyDetailsView: ListKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
+  let jsonKeyDetailsView: JsonKeyDetailsView
   let keyDetailsView: KeyDetailsView
+  let addStringKeyView: AddStringKeyView
 
   before(async () => {
     hashKeyDetailsView = new HashKeyDetailsView()
@@ -43,7 +48,9 @@ describe('Edit Key values verification', () => {
     sortedSetKeyDetailsView = new SortedSetKeyDetailsView()
     listKeyDetailsView = new ListKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
+    jsonKeyDetailsView = new JsonKeyDetailsView()
     keyDetailsView = new KeyDetailsView()
+    addStringKeyView = new AddStringKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -153,20 +160,13 @@ describe('Edit Key values verification', () => {
   })
   it('Verify that user can edit String value', async function () {
     keyName = Common.generateWord(10)
-    const stringKeyParameters: StringKeyParameters = {
-      keyName: keyName,
-      value: keyValueBefore,
-    }
-    await KeyAPIRequests.addStringKeyApi(
-      stringKeyParameters,
-      Config.ossStandaloneConfig.databaseName,
+
+    // Verify that user can add String Key
+    await addStringKeyView.addStringKey(
+      keyName,
+      keyValueBefore,
     )
-    // Refresh database
-    await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
-    )
-    // Open key details iframe
-    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+    await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
 
     // Check the key value before edit
     let keyValue = await stringKeyDetailsView.getStringKeyValue()
@@ -191,5 +191,45 @@ describe('Edit Key values verification', () => {
     // Check the key value after edit
     keyValue = await stringKeyDetailsView.getStringKeyValue()
     expect(keyValue).contains(keyValueAfter, 'Edited String value is incorrect')
+  })
+  it('Verify that user can edit JSON Key value', async function () {
+    keyName = Common.generateWord(10)
+    const jsonValueBefore = '{"name":"xyz"}'
+    const jsonEditedValue = '"xyz test"'
+    const jsonValueAfter = '{name:"xyz test"}'
+    const jsonKeyParameters: JsonKeyParameters = {
+      keyName: keyName,
+      data: jsonValueBefore,
+    }
+    await KeyAPIRequests.addJsonKeyApi(
+      jsonKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Open key details iframe
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+    // Edit JSON key value
+    await ButtonActions.clickElement(jsonKeyDetailsView.jsonScalarValue)
+    await InputActions.typeText(
+      jsonKeyDetailsView.inlineItemEditor,
+      jsonEditedValue,
+    )
+
+    // Verify that refresh is not disabled for JSON key when editing value
+    expect(
+      await jsonKeyDetailsView.isElementDisabled(
+        jsonKeyDetailsView.refreshKeyButton,
+        'class',
+      ),
+    ).eql(false, 'Refresh button disabled for JSON')
+
+    await ButtonActions.clickElement(InputWithButtons.applyInput)
+    // Check JSON key value after edit
+    expect(
+      Common.formatJsonString(await keyDetailsView.getElementText(jsonKeyDetailsView.jsonKeyValue)),
+    ).eql(jsonValueAfter, 'Edited JSON value is incorrect')
   })
 })

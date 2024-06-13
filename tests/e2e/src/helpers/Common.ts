@@ -99,4 +99,16 @@ export class Common {
     }
     return arr
   }
+
+  /**
+   * Format json string to normal
+   * @param input The input to format
+   */
+  static formatJsonString(input: string): string {
+    // Remove whitespace characters except those within the value
+    const withoutWhitespace = input.replace(/\s+/g, '');
+    // Ensure colons have no spaces around them
+    const formattedString = withoutWhitespace.replace(/:/g, ':');
+    return formattedString;
+}
 }

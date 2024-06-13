@@ -1,6 +1,10 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
-import { SetKeyDetailsView, TreeView } from '@e2eSrc/page-objects/components'
+import {
+  AddSetKeyView,
+  SetKeyDetailsView,
+  TreeView,
+} from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
@@ -14,7 +18,6 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { SetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
-import { AddSetKeyView } from '@e2eSrc/page-objects/components/editor-view/AddSetView'
 
 let keyName: string
 
@@ -54,12 +57,9 @@ describe('Set Key fields verification', () => {
       members: ['setField', 'setField2'],
     }
 
-    await addSetKeyView.addSetKey(
-      setKeyParameters.keyName,
-      setKeyParameters.members,
-    )
-    // Open key details iframe
-    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+    // Verify that user can add Set Key
+    await addSetKeyView.addSetKey(setKeyParameters)
+    await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
 
     // Verify that user can add member to Set
     await keyDetailsView.addMemberToSet(keyFieldValue)

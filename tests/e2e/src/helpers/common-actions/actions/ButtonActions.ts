@@ -86,7 +86,7 @@ export class ButtonActions {
       timeout,
     )
     await ButtonActions.driver
-      .actions()
+      .actions( { async: true, bridge: true })
       .move({ duration: 5000, origin: elementToHover, x: 0, y: 0 })
       .perform()
   }
