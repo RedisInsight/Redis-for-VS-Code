@@ -55,6 +55,7 @@ describe('JSONUtils', () => {
       expect(isRealArray({}, 'array')).toBeTruthy()
       expect(isRealArray({})).toBeFalsy()
       expect(isRealArray('')).toBeFalsy()
+      expect(isRealArray([], 'object')).toBeFalsy()
       expect(isRealArray(null)).toBeFalsy()
       expect(isRealArray(undefined)).toBeFalsy()
     })
