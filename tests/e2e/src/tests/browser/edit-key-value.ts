@@ -25,6 +25,7 @@ import {
   DatabasesActions,
   InputActions,
   KeyDetailsActions,
+  NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
@@ -166,6 +167,12 @@ describe('Edit Key values verification', () => {
       keyName,
       keyValueBefore,
     )
+    await addStringKeyView.switchBack()
+    // Check the notification message that key added
+    await NotificationActions.checkNotificationMessage(
+      `Key has been added`,
+    )
+
     await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
 
     // Check the key value before edit

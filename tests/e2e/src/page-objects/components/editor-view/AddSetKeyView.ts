@@ -11,8 +11,6 @@ import { CommonDriverExtension } from '@e2eSrc/helpers'
  * Add Set Key details view
  */
 export class AddSetKeyView extends AddKeyView {
-  addButton = By.xpath('//*[@data-testid="save-members-btn"]')
-
   getMemberInputByIndex = (index: number): By =>
     By.xpath(`//input[@id="member-${index}"]`)
 
@@ -51,7 +49,7 @@ export class AddSetKeyView extends AddKeyView {
     }
     await InputActions.typeText(this.keyNameInput, keyParameters.keyName)
 
-    await ButtonActions.clickElement(this.addButton)
+    await ButtonActions.clickElement(this.saveMembersButton)
     await super.switchBack()
     await CommonDriverExtension.driverSleep(1000)
   }

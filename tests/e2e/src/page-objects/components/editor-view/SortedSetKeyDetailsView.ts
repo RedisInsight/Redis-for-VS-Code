@@ -20,7 +20,7 @@ export class SortedSetKeyDetailsView extends DoubleColumnKeyDetailsView {
   sortedSetScoreEditor = By.xpath(
     `//*[@id = 'score' and @data-testId = 'inline-item-editor']`,
   )
-  zsetMemberScoreInput = By.xpath(`//*[@data-testid = 'member-score']`)
+  zsetMemberScoreInput = By.xpath(`//*[starts-with(@data-testid, 'member-score')]`)
 
   /**
    * Edit Sorted Set key value from details

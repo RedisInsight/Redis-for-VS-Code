@@ -5,11 +5,13 @@ import {
   SortedSetKeyDetailsView,
   TreeView,
   CliViewPanel,
+  AddSortedSetKeyView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
   DatabasesActions,
+  InputActions,
   KeyDetailsActions,
   NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
@@ -18,27 +20,35 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { SortedSetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { BottomBarPanel } from 'vscode-extension-tester'
 
 let keyName: string
 
 describe('ZSet Key fields verification', () => {
   let bottomBar: BottomBar
+  let bottomBarPanel: BottomBarPanel
   let keyDetailsView: SortedSetKeyDetailsView
   let treeView: TreeView
   let cliViewPanel: CliViewPanel
+  let addSortedSetKeyView: AddSortedSetKeyView
 
   before(async () => {
     bottomBar = new BottomBar()
+    bottomBarPanel = new BottomBarPanel()
     keyDetailsView = new SortedSetKeyDetailsView()
     treeView = new TreeView()
+    addSortedSetKeyView = new AddSortedSetKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
+    await keyDetailsView.switchBack()
+    // Open terminal to not overlap buttons by notifications
+    await bottomBarPanel.openTerminalView()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   afterEach(async () => {
     await keyDetailsView.switchBack()
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await KeyAPIRequests.deleteKeyIfExistsApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
@@ -63,16 +73,16 @@ describe('ZSet Key fields verification', () => {
       ],
     }
 
-    await KeyAPIRequests.addSortedSetKeyApi(
-      zsetKeyParameters,
-      Config.ossStandaloneConfig.databaseName,
+    // Verify that user can add ZSet Key
+    await addSortedSetKeyView.addSortedSetKey(zsetKeyParameters)
+    await keyDetailsView.switchBack()
+    // Check the notification message that key added
+    await NotificationActions.checkNotificationMessage(
+      `Key has been added`,
     )
-    // Refresh database
-    await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
-    )
-    // Open key details iframe
-    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
+
     // Verify that user can add members to Zset
     await keyDetailsView.addMemberToZSet(keyFieldValue, score)
     // Search the added member
@@ -85,10 +95,9 @@ describe('ZSet Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.scoreSortedSetFieldsList)
     )[0].getText()
     expect(result).contains(keyFieldValue)
-    expect(result.length).eqls(1)
+    expect(value.length).eqls(1)
     expect(value).eqls(`${score}`)
-    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
-    await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
+    await keyDetailsView.clearSearchInKeyDetails()
 
     // Verify that user can remove member from ZSet
     await keyDetailsView.removeRowByField(KeyTypesShort.ZSet, keyFieldValue)

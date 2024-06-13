@@ -4,26 +4,26 @@ import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { TreeView } from '@e2eSrc/page-objects/components'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { AddKeyView } from '@e2eSrc/page-objects/components/editor-view/AddKeyView'
-import { HashKeyParameters } from '@e2eSrc/helpers/types/types'
+import { SortedSetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 /**
- * Add Hash Key details view
+ * Add Sorted Set Key details view
  */
-export class AddHashKeyView extends AddKeyView {
-  getFieldInputByIndex = (index: number): By =>
-    By.xpath(`//input[@data-testid="hash-field-${index}"]`)
+export class AddSortedSetKeyView extends AddKeyView {
+  getMemberNameInputByIndex = (index: number): By =>
+    By.xpath(`//input[@data-testid="member-name-${index}"]`)
 
-  getFieldValueInputByIndex = (index: number): By =>
-    By.xpath(`//input[@data-testid="hash-value-${index}"]`)
+  getMemberScoreInputByIndex = (index: number): By =>
+    By.xpath(`//input[@data-testid="member-score-${index}"]`)
 
   /**
-   * Adding a new Hash key
-   * @param keyParameters The hash key parameters
+   * Adding a new Sorted Set key
+   * @param keyParameters The sorted set key parameters
    * @param TTL The Time to live value of the key
    */
-  async addHashKey(
-    keyParameters: HashKeyParameters,
+  async addSortedSetKey(
+    keyParameters: SortedSetKeyParameters,
     TTL = '',
   ): Promise<void> {
     let treeView = new TreeView()
@@ -32,30 +32,30 @@ export class AddHashKeyView extends AddKeyView {
 
     await super.switchBack()
     await super.switchToInnerViewFrame(InnerViews.AddKeyInnerView)
-    await super.selectKeyTypeByValue(KeyTypesShort.Hash)
+    await super.selectKeyTypeByValue(KeyTypesShort.ZSet)
 
     if (TTL.length > 0) {
       await InputActions.typeText(this.ttlInput, TTL)
     }
 
-    if (keyParameters.fields.length > 0) {
+    if (keyParameters.members.length > 0) {
       await InputActions.typeText(
-        this.getFieldInputByIndex(0),
-        keyParameters.fields[0].field,
+        this.getMemberNameInputByIndex(0),
+        keyParameters.members[0].name,
       )
       await InputActions.typeText(
-        this.getFieldValueInputByIndex(0),
-        keyParameters.fields[0].value,
+        this.getMemberScoreInputByIndex(0),
+        (keyParameters.members[0].score).toString(),
       )
-      if (keyParameters.fields.length > 1) {
-        keyParameters.fields.shift()
+      if (keyParameters.members.length > 1) {
+        keyParameters.members.shift()
         let i = 1
-        for (const field of keyParameters.fields) {
+        for (const member of keyParameters.members) {
           await ButtonActions.clickElement(this.addNewItemBtn)
-          await InputActions.typeText(this.getFieldInputByIndex(i), field.field)
+          await InputActions.typeText(this.getMemberNameInputByIndex(i), member.name)
           await InputActions.typeText(
-            this.getFieldValueInputByIndex(i),
-            field.value,
+            this.getMemberScoreInputByIndex(i),
+            (member.score).toString(),
           )
           i++
         }
@@ -64,7 +64,7 @@ export class AddHashKeyView extends AddKeyView {
 
     await InputActions.typeText(this.keyNameInput, keyParameters.keyName)
 
-    await ButtonActions.clickElement(this.addButton)
+    await ButtonActions.clickElement(this.saveMembersButton)
     await super.switchBack()
     await CommonDriverExtension.driverSleep(1000)
   }

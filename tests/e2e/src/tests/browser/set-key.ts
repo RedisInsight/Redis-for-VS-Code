@@ -59,6 +59,12 @@ describe('Set Key fields verification', () => {
 
     // Verify that user can add Set Key
     await addSetKeyView.addSetKey(setKeyParameters)
+    await keyDetailsView.switchBack()
+    // Check the notification message that key added
+    await NotificationActions.checkNotificationMessage(
+      `Key has been added`,
+    )
+
     await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
 
     // Verify that user can add member to Set

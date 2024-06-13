@@ -180,6 +180,12 @@ describe('List Key verification for db with version <6.2', () => {
 
     // Verify that user can add List Key
     await addListKeyView.addListKey(listKeyParameters)
+    await addListKeyView.switchBack()
+    // Check the notification message that key added
+    await NotificationActions.checkNotificationMessage(
+      `Key has been added`,
+    )
+
     await addListKeyView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
     // Add a few elements to the List key
     await listKeyDetailsView.addListElementToTail(elements[1])

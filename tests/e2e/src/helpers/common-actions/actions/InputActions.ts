@@ -23,10 +23,15 @@ export class InputActions {
    * Press key into input field
    * @param element input element where to pass key
    * @param key keyboard key to press
+   * @param timeout timeout to wait for element
    */
-  static async pressKey(element: WebElement, key: string): Promise<void> {
+  static async pressKey(inputLocator: Locator, key: string, timeout: number = 3000,): Promise<void> {
+    const inputElement = await InputActions.driver.wait(
+      until.elementLocated(inputLocator),
+      timeout,
+    )
     const keyToSend = InputActions.keyMap[key.toLowerCase()] || key
-    await element.sendKeys(keyToSend)
+    await inputElement.sendKeys(keyToSend)
   }
 
   /**
@@ -34,6 +39,7 @@ export class InputActions {
    * @param element input element where to pass key
    * @param text text to insert
    * @param delay to wait
+   * @param timeout timeout to wait for element
    */
   static async slowType(
     inputLocator: Locator,
