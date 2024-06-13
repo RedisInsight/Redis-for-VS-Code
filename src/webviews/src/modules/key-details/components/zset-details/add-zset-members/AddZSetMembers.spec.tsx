@@ -3,9 +3,7 @@ import { instance, mock } from 'ts-mockito'
 import { fireEvent, render, screen } from 'testSrc/helpers'
 import { AddZSetMembers, Props } from './AddZSetMembers'
 
-const MEMBER_NAME = 'member-name'
 const ADD_NEW_ITEM = 'add-new-item'
-const MEMBER_SCORE = 'member-score'
 
 const mockedProps = mock<Props>()
 
@@ -16,7 +14,7 @@ describe('AddZSetMembers', () => {
 
   it('should set member value properly', () => {
     render(<AddZSetMembers {...instance(mockedProps)} />)
-    const memberInput = screen.getByTestId(MEMBER_NAME)
+    const memberInput = screen.getByTestId('member-name-0')
     fireEvent.change(
       memberInput,
       { target: { value: 'member name' } },
@@ -33,25 +31,25 @@ describe('AddZSetMembers', () => {
     render(<AddZSetMembers {...instance(mockedProps)} />)
     fireEvent.click(screen.getByTestId(ADD_NEW_ITEM))
 
-    expect(screen.getAllByTestId(MEMBER_NAME)).toHaveLength(2)
+    expect(screen.getAllByTestId(/^member-name-/)).toHaveLength(2)
   })
 
   it('should remove one member input after add item & remove one', () => {
     render(<AddZSetMembers {...instance(mockedProps)} />)
     fireEvent.click(screen.getByTestId(ADD_NEW_ITEM))
 
-    expect(screen.getAllByTestId(MEMBER_NAME)).toHaveLength(2)
+    expect(screen.getAllByTestId(/^member-name-/)).toHaveLength(2)
 
     const removeButtons = screen.getAllByTestId('remove-item')
     fireEvent.click(removeButtons[1])
 
-    expect(screen.getAllByTestId(MEMBER_NAME)).toHaveLength(1)
+    expect(screen.getAllByTestId(/^member-name-/)).toHaveLength(1)
   })
 
   it('should clear member and score after click clear button', () => {
     render(<AddZSetMembers {...instance(mockedProps)} />)
-    const memberInput = screen.getByTestId(MEMBER_NAME)
-    const scoreInput = screen.getByTestId(MEMBER_SCORE)
+    const memberInput = screen.getByTestId('member-name-0')
+    const scoreInput = screen.getByTestId('member-score-0')
     fireEvent.change(
       memberInput,
       { target: { value: 'member' } },
@@ -68,7 +66,7 @@ describe('AddZSetMembers', () => {
 
   it('should set by blur score value properly if input wrong value', () => {
     render(<AddZSetMembers {...instance(mockedProps)} />)
-    const scoreInput = screen.getByTestId(MEMBER_SCORE)
+    const scoreInput = screen.getByTestId('member-score-0')
     fireEvent.change(
       scoreInput,
       { target: { value: '.1' } },
@@ -81,7 +79,7 @@ describe('AddZSetMembers', () => {
 
   it('add new item should be disabled if no score', () => {
     render(<AddZSetMembers {...instance(mockedProps)} />)
-    const memberInput = screen.getByTestId(MEMBER_NAME)
+    const memberInput = screen.getByTestId('member-name-0')
     fireEvent.change(
       memberInput,
       { target: { value: 'member' } },
