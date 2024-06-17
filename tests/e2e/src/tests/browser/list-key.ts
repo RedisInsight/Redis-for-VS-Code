@@ -15,6 +15,7 @@ import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ListKeyParameters } from '@e2eSrc/helpers/types/types'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
 let keyName: string
 const elements = [
@@ -179,7 +180,7 @@ describe('List Key verification for db with version <6.2', () => {
     }
 
     // Verify that user can add List Key
-    await addListKeyView.addListKey(listKeyParameters)
+    await addListKeyView.addKey(listKeyParameters, KeyTypesShort.List)
     await addListKeyView.switchBack()
     // Check the notification message that key added
     await NotificationActions.checkNotificationMessage(

@@ -74,7 +74,7 @@ describe('ZSet Key fields verification', () => {
     }
 
     // Verify that user can add ZSet Key
-    await addSortedSetKeyView.addSortedSetKey(zsetKeyParameters)
+    await addSortedSetKeyView.addKey(zsetKeyParameters, KeyTypesShort.ZSet)
     await keyDetailsView.switchBack()
     // Check the notification message that key added
     await NotificationActions.checkNotificationMessage(

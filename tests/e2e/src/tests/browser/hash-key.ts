@@ -64,7 +64,7 @@ describe('Hash Key fields verification', () => {
     }
 
     // Verify that user can add Hash Key
-    await addHashKeyView.addHashKey(hashKeyParameters)
+    await addHashKeyView.addKey(hashKeyParameters, KeyTypesShort.Hash)
     await keyDetailsView.switchBack()
     // Check the notification message that key added
     await NotificationActions.checkNotificationMessage(

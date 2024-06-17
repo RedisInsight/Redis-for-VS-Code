@@ -19,6 +19,7 @@ import {
   JsonKeyParameters,
   ListKeyParameters,
   SortedSetKeyParameters,
+  StringKeyParameters,
 } from '@e2eSrc/helpers/types/types'
 import {
   ButtonActions,
@@ -28,6 +29,7 @@ import {
   NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 
 let keyName: string
 const keyValueBefore = 'ValueBeforeEdit!'
@@ -137,7 +139,6 @@ describe('Edit Key values verification', () => {
   })
   it('Verify that user can edit List Key element', async function () {
     keyName = Common.generateWord(10)
-
     const listKeyParameters: ListKeyParameters = {
       keyName: keyName,
       element: keyValueBefore,
@@ -161,12 +162,13 @@ describe('Edit Key values verification', () => {
   })
   it('Verify that user can edit String value', async function () {
     keyName = Common.generateWord(10)
+    const stringKeyParameters: StringKeyParameters = {
+      keyName: keyName,
+      value: keyValueBefore,
+    }
 
     // Verify that user can add String Key
-    await addStringKeyView.addStringKey(
-      keyName,
-      keyValueBefore,
-    )
+    await addStringKeyView.addKey(stringKeyParameters, KeyTypesShort.String)
     await addStringKeyView.switchBack()
     // Check the notification message that key added
     await NotificationActions.checkNotificationMessage(
