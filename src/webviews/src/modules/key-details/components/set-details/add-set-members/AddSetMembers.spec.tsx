@@ -3,7 +3,6 @@ import { instance, mock } from 'ts-mockito'
 import { fireEvent, render, screen } from 'testSrc/helpers'
 import { AddSetMembers, Props } from './AddSetMembers'
 
-const MEMBER_NAME = 'member-name'
 const ADD_NEW_ITEM = 'add-new-item'
 const CANCEL_BTN = 'cancel-members-btn'
 
@@ -16,7 +15,7 @@ describe('AddSetMembers', () => {
 
   it('should set member value properly', () => {
     render(<AddSetMembers {...instance(mockedProps)} />)
-    const memberInput = screen.getByTestId(MEMBER_NAME)
+    const memberInput = screen.getByTestId('member-name-0')
     fireEvent.change(
       memberInput,
       { target: { value: 'member name' } },
@@ -33,24 +32,24 @@ describe('AddSetMembers', () => {
     render(<AddSetMembers {...instance(mockedProps)} />)
     fireEvent.click(screen.getByTestId(ADD_NEW_ITEM))
 
-    expect(screen.getAllByTestId(MEMBER_NAME)).toHaveLength(2)
+    expect(screen.getAllByTestId(/^member-name-/)).toHaveLength(2)
   })
 
   it('should remove one member input after add item & remove one', () => {
     render(<AddSetMembers {...instance(mockedProps)} />)
     fireEvent.click(screen.getByTestId(ADD_NEW_ITEM))
 
-    expect(screen.getAllByTestId(MEMBER_NAME)).toHaveLength(2)
+    expect(screen.getAllByTestId(/^member-name-/)).toHaveLength(2)
 
     const removeButtons = screen.getAllByTestId('remove-item')
     fireEvent.click(removeButtons[1])
 
-    expect(screen.getAllByTestId(MEMBER_NAME)).toHaveLength(1)
+    expect(screen.getAllByTestId(/^member-name-/)).toHaveLength(1)
   })
 
   it('should clear member after click clear button', () => {
     render(<AddSetMembers {...instance(mockedProps)} />)
-    const memberInput = screen.getByTestId(MEMBER_NAME)
+    const memberInput = screen.getByTestId('member-name-0')
     fireEvent.change(
       memberInput,
       { target: { value: 'member' } },

@@ -13,7 +13,7 @@ export enum KeyTypesShort {
   Hash = 'hash',
   List = 'list',
   Set = 'set',
-  ZSet = 'zSet',
+  ZSet = 'zset',
   String = 'string',
   ReJSON = 'json',
   // Stream = 'stream',

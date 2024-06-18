@@ -90,7 +90,7 @@ const AddSetMembers = (props: Props) => {
                       setMembers(handleItemChange(members, 'name', item.id, e.target.value))}
                     inputRef={index === members.length - 1 ? lastAddedMemberName : null}
                     disabled={disabled}
-                    data-testid="member-name"
+                    data-testid={`member-name-${index}`}
                   />
                 </div>
                 <AddItemsActions

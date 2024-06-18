@@ -146,7 +146,7 @@ const AddZSetMembers = (props: Props) => {
                       setMembers(handleItemChange(members, 'name', item.id, e.target.value))}
                     inputRef={index === members.length - 1 ? lastAddedMemberName : null}
                     disabled={loading}
-                    data-testid="member-name"
+                    data-testid={`member-name-${index}`}
                   />
                 </div>
                 <div className="w-1/2 mr-2">
@@ -161,7 +161,7 @@ const AddZSetMembers = (props: Props) => {
                       handleScoreBlur(item)
                     }}
                     disabled={loading}
-                    data-testid="member-score"
+                    data-testid={`member-score-${index}`}
                   />
                 </div>
                 <AddItemsActions

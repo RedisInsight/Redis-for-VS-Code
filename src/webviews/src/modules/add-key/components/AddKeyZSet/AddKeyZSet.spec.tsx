@@ -3,9 +3,6 @@ import { instance, mock } from 'ts-mockito'
 import { fireEvent, render, screen } from 'testSrc/helpers'
 import { AddKeyZSet, Props } from './AddKeyZSet'
 
-const MEMBER_SCORE = 'member-score'
-const MEMBER_NAME = 'member-name'
-
 const mockedProps = mock<Props>()
 
 describe('AddKeyZSet', () => {
@@ -15,7 +12,7 @@ describe('AddKeyZSet', () => {
 
   it('should set member name properly', () => {
     render(<AddKeyZSet {...instance(mockedProps)} />)
-    const memberInput = screen.getByTestId(MEMBER_NAME)
+    const memberInput = screen.getByTestId('member-name-0')
     fireEvent.input(
       memberInput,
       { target: { value: 'member name' } },
@@ -25,7 +22,7 @@ describe('AddKeyZSet', () => {
 
   it('should set member score properly', () => {
     render(<AddKeyZSet {...instance(mockedProps)} />)
-    const memberInput = screen.getByTestId(MEMBER_NAME)
+    const memberInput = screen.getByTestId('member-name-0')
     fireEvent.input(
       memberInput,
       { target: { value: '123' } },
@@ -42,14 +39,14 @@ describe('AddKeyZSet', () => {
     render(<AddKeyZSet {...instance(mockedProps)} />)
     fireEvent.click(screen.getByTestId('add-new-item'))
 
-    expect(screen.getAllByTestId(/^member-name/)).toHaveLength(2)
-    expect(screen.getAllByTestId(/^member-score/)).toHaveLength(2)
+    expect(screen.getAllByTestId(/^member-name-/)).toHaveLength(2)
+    expect(screen.getAllByTestId(/^member-score-/)).toHaveLength(2)
   })
 
   it('should clear memberName & memberValue after click clear button', () => {
     render(<AddKeyZSet {...instance(mockedProps)} />)
-    const memberInput = screen.getByTestId(MEMBER_SCORE)
-    const scoreInput = screen.getByTestId(MEMBER_NAME)
+    const memberInput = screen.getByTestId('member-name-0')
+    const scoreInput = screen.getByTestId('member-score-0')
     fireEvent.input(
       memberInput,
       { target: { value: 'name' } },
