@@ -8,6 +8,7 @@ import { useKeysApi, useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useK
 import { CreateZSetWithExpireDto } from 'uiSrc/modules/keys-tree/hooks/interface'
 import { AddMembersToZSetDto } from 'uiSrc/modules/key-details/components/zset-details/hooks/interface'
 import { AddZSetMembers } from 'uiSrc/modules/key-details/components/zset-details/add-zset-members'
+import { IZsetMemberState } from './constants'
 
 export interface Props {
   keyName: string
@@ -32,7 +33,16 @@ export const AddKeyZSet = (props: Props) => {
     keysApi.addZSetKey(data, () => onClose(false, KeyTypes.ZSet))
   }
 
-  const noKeyNameText = !keyName ? getRequiredFieldsText({ keyName: l10n.t('Key Name') }) : null
+  const getDisabledSubmitText = (members: IZsetMemberState[]) => {
+    const isScoreExists = members.every((member) => member.score?.toString().length)
+
+    const noKeyNameText = getRequiredFieldsText({
+      keyName: !keyName && l10n.t('Key Name'),
+      score: !isScoreExists && l10n.t('Score'),
+    }) || ''
+
+    return loading ? l10n.t('loading...') : noKeyNameText
+  }
 
   return (
     <>
@@ -41,7 +51,7 @@ export const AddKeyZSet = (props: Props) => {
         hideCancel
         autoFocus={false}
         disabled={loading}
-        disabledSubmitText={loading ? l10n.t('loading...') : noKeyNameText}
+        getDisabledSubmitText={getDisabledSubmitText}
         submitText={l10n.t('Add Key')}
         containerClassName="pl-0 pt-3 h-full"
         onSubmitData={submitData}
