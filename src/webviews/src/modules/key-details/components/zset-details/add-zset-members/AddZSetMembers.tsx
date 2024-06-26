@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FocusEvent, ReactElement, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useRef, useState } from 'react'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { toNumber } from 'lodash'
@@ -28,30 +28,32 @@ export interface Props {
   hideCancel?: boolean
   autoFocus?: boolean
   disabled?: boolean
-  disabledSubmitText?: ReactNode
   submitText?: string
   containerClassName?: string
   closePanel?: (isCancelled?: boolean) => void
   onSubmitData: (data: AddMembersToZSetDto, onSuccess?: (data: AddMembersToZSetDto) => void) => void
+  getDisabledSubmitText?: (members: IZsetMemberState[]) => any
 }
 
 const AddZSetMembers = (props: Props) => {
   const {
     hideCancel,
     disabled,
-    disabledSubmitText,
     submitText,
     autoFocus = true,
     containerClassName = '',
+    getDisabledSubmitText,
     closePanel,
     onSubmitData,
   } = props
+
   const loading = useZSetStore((state) => state.loading)
   const selectedKey = useSelectedKeyStore((state) => state.data?.name ?? '')
 
   const lastAddedMemberName = useRef<HTMLInputElement>(null)
   const [isFormValid, setIsFormValid] = useState<boolean>(false)
   const [members, setMembers] = useState<IZsetMemberState[]>([{ ...INITIAL_ZSET_MEMBER_STATE }])
+  const disabledSubmitText = getDisabledSubmitText?.(members) || ''
 
   useEffect(() => {
     if (autoFocus || members.length > 1) {
@@ -154,10 +156,11 @@ const AddZSetMembers = (props: Props) => {
                     name={`score-${item.id}`}
                     id={`score-${item.id}`}
                     placeholder={config.score.placeholder}
+                    maxLength={200}
                     value={item.score}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setMembers(handleItemChange(members, 'score', item.id, validateScore(e.target.value)))}
-                    onBlur={(e: FocusEvent<HTMLInputElement, HTMLButtonElement>) => {
+                    onBlur={() => {
                       handleScoreBlur(item)
                     }}
                     disabled={loading}
