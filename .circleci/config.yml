@@ -46,6 +46,13 @@ jobs:
 
   linux:
     executor: docker-node
+    resource_class: large
+    parameters:
+      env:
+        description: Build environment (stage || prod)
+        type: enum
+        default: stage
+        enum: ['stage', 'prod', 'dev']
     steps:
       - checkout
       - restore_cache:
