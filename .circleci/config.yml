@@ -6,6 +6,9 @@ aliases:
   ui-deps-cache-key: &uiDepsCacheKey
     key: ui-deps-{{ checksum "yarn.lock" }}
 
+orbs:
+  node: circleci/node@5.2.0
+
 executors:
   linux-executor:
     machine:
