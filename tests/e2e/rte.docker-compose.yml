@@ -1,16 +1,41 @@
-version: "1.0"
+version: "3.4"
 
 services:
-  # static-server:
-  #   logging: &logging
-  #     driver: none
+  static-server:
+    logging: &logging
+      driver: none
+    build:
+      context: .
+      dockerfile: static-server.Dockerfile
+    volumes:
+      - ./remote:/app/remote
+    ports:
+      - 5551:5551
+
+  #   # Add the VS Code service
+  # vscode:
   #   build:
   #     context: .
-  #     dockerfile: static-server.Dockerfile
+  #     dockerfile: vscode.Dockerfile
   #   volumes:
-  #     - ./remote:/app/remote
+  #     - ./remote:/home/coder/project
   #   ports:
-  #     - 5551:5551
+  #     - 8080:8080
+  #   networks:
+  #     default:
+  #       ipv4_address: 172.31.100.250
+  #     ssh:
+  #       ipv4_address: 172.33.100.250
+  # # RDI mocked
+  # rdi:
+  #   logging: *logging
+  #   build:
+  #     context: rte/rdi
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./rdi:/data
+  #   ports:
+  #     - 4000:4000
   # ssh
   ssh:
     logging: *logging
@@ -69,7 +94,6 @@ services:
         ipv4_address: 172.31.100.111
       ssh:
         ipv4_address: 172.33.100.111
-
   # oss standalone redisearch
   oss-standalone-redisearch:
     logging: *logging
@@ -77,11 +101,11 @@ services:
     ports:
       - 8102:6379
 
-  # oss-standalone-redisgears-2-0:
-  #   logging: *logging
-  #   image: redislabs/redisgears:edge
-  #   ports:
-  #     - 8106:6379
+  oss-standalone-redisgears-2-0:
+    logging: *logging
+    image: redislabs/redisgears:edge
+    ports:
+      - 8106:6379
 
   oss-standalone-big:
     logging: *logging
@@ -184,70 +208,71 @@ services:
       default:
         ipv4_address: 172.31.100.223
 
-  # # oss cluster with redisgears 2
-  # gears-cluster-2-0-creator:
-  #   logging: *logging
-  #   image: redis:latest
-  #   entrypoint: ['/bin/sh', '-c', 'redis-cli --cluster create 172.31.100.191:6379 172.31.100.192:6379 172.31.100.193:6379 172.31.100.194:6379 172.31.100.195:6379 172.31.100.196:6379 --cluster-replicas 1 --cluster-yes && tail -f /dev/null']
-  #   depends_on:
-  #     - gears-cluster-2-0-node-1
-  #     - gears-cluster-2-0-node-2
-  #     - gears-cluster-2-0-node-3
-  #     - gears-cluster-2-0-node-4
-  #     - gears-cluster-2-0-node-5
-  #     - gears-cluster-2-0-node-6
-  # gears-cluster-2-0-node-1:
-  #   logging: *logging
-  #   image: &gears-cluster-img redislabs/redisgears:edge
-  #   command: &gears-cluster-cmd redis-server --protected-mode no --loadmodule /build/target/release/libredisgears.so v8-plugin-path /build/target/release/libredisgears_v8_plugin.so --cluster-enabled yes
-  #   networks:
-  #     default:
-  #       ipv4_address: 172.31.100.191
-  # gears-cluster-2-0-node-2:
-  #   logging: *logging
-  #   image: *gears-cluster-img
-  #   command: *gears-cluster-cmd
-  #   networks:
-  #     default:
-  #       ipv4_address: 172.31.100.192
-  # gears-cluster-2-0-node-3:
-  #   logging: *logging
-  #   image: *gears-cluster-img
-  #   command: *gears-cluster-cmd
-  #   networks:
-  #     default:
-  #       ipv4_address: 172.31.100.193
-  # gears-cluster-2-0-node-4:
-  #   logging: *logging
-  #   image: *gears-cluster-img
-  #   command: *gears-cluster-cmd
-  #   networks:
-  #     default:
-  #       ipv4_address: 172.31.100.194
-  # gears-cluster-2-0-node-5:
-  #   logging: *logging
-  #   image: *gears-cluster-img
-  #   command: *gears-cluster-cmd
-  #   networks:
-  #     default:
-  #       ipv4_address: 172.31.100.195
-  # gears-cluster-2-0-node-6:
-  #   logging: *logging
-  #   image: *gears-cluster-img
-  #   command: *gears-cluster-cmd
-  #   networks:
-  #     default:
-  #       ipv4_address: 172.31.100.196
+  # oss cluster with redisgears 2
+  gears-cluster-2-0-creator:
+    logging: *logging
+    image: redis:latest
+    entrypoint: ['/bin/sh', '-c', 'redis-cli --cluster create 172.31.100.191:6379 172.31.100.192:6379 172.31.100.193:6379 172.31.100.194:6379 172.31.100.195:6379 172.31.100.196:6379 --cluster-replicas 1 --cluster-yes && tail -f /dev/null']
+    depends_on:
+      - gears-cluster-2-0-node-1
+      - gears-cluster-2-0-node-2
+      - gears-cluster-2-0-node-3
+      - gears-cluster-2-0-node-4
+      - gears-cluster-2-0-node-5
+      - gears-cluster-2-0-node-6
+  gears-cluster-2-0-node-1:
+    logging: *logging
+    image: &gears-cluster-img redislabs/redisgears:edge
+    command: &gears-cluster-cmd redis-server --protected-mode no --loadmodule /build/target/release/libredisgears.so v8-plugin-path /build/target/release/libredisgears_v8_plugin.so --cluster-enabled yes
+    networks:
+      default:
+        ipv4_address: 172.31.100.191
+  gears-cluster-2-0-node-2:
+    logging: *logging
+    image: *gears-cluster-img
+    command: *gears-cluster-cmd
+    networks:
+      default:
+        ipv4_address: 172.31.100.192
+  gears-cluster-2-0-node-3:
+    logging: *logging
+    image: *gears-cluster-img
+    command: *gears-cluster-cmd
+    networks:
+      default:
+        ipv4_address: 172.31.100.193
+  gears-cluster-2-0-node-4:
+    logging: *logging
+    image: *gears-cluster-img
+    command: *gears-cluster-cmd
+    networks:
+      default:
+        ipv4_address: 172.31.100.194
+  gears-cluster-2-0-node-5:
+    logging: *logging
+    image: *gears-cluster-img
+    command: *gears-cluster-cmd
+    networks:
+      default:
+        ipv4_address: 172.31.100.195
+  gears-cluster-2-0-node-6:
+    logging: *logging
+    image: *gears-cluster-img
+    command: *gears-cluster-cmd
+    networks:
+      default:
+        ipv4_address: 172.31.100.196
 
-  # # redis enterprise
-  # redis-enterprise:
-  #   logging: *logging
-  #   build: ./rte/redis-enterprise
-  #   cap_add:
-  #     - sys_resource
-  #   ports:
-  #     - 19443:9443
-  #     - 12000:12000
+  # redis enterprise
+  redis-enterprise:
+    logging: *logging
+    build: ./rte/redis-enterprise
+    cap_add:
+      - sys_resource
+    ports:
+      - 19443:9443
+      - 12000:12000
+
 networks:
   default:
     name: "e2e-private-network"
