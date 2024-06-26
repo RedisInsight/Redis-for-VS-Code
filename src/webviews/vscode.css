@@ -25,6 +25,7 @@ vscode-button::part(control) {
 
 @layer components {
   .key-details-edit {
+    @apply h-7;
     width: calc(100% + 80px);
     margin-right: -100px;
     z-index: 2;

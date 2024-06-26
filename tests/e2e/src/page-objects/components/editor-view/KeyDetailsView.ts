@@ -23,7 +23,7 @@ export class KeyDetailsView extends WebView {
   applyEditButton = By.xpath(`//*[@data-testid='apply-edit-btn']`);
   searchInput = By.xpath(`//*[@data-testid='search']`)
   clearSearchInput = By.xpath(`//*[@data-testid='decline-search-button']`)
-  setMemberInput = By.xpath(`//*[@data-testid='member-name']`)
+  setMemberInput = By.xpath(`//*[starts-with(@data-testid, 'member-name')]`)
   keyNameInput = By.xpath(`//*[@data-testid='edit-key-input']`)
   copyKeyNameBtn = By.xpath(`//*[@data-testid='copy-name-button']`)
   // BUTTONS
@@ -51,7 +51,8 @@ export class KeyDetailsView extends WebView {
       `//*[@data-testid="remove-${keyType}-button-${name}-icon"] 
       | //*[@data-testid="${keyType}-remove-button-${name}-icon"] 
       | //*[@data-testid="${keyType}-remove-btn-${name}-icon"]
-      | //*[@data-testid="remove-${keyType}-button-${name}-trigger"]`,
+      | //*[@data-testid="remove-${keyType}-button-${name}-trigger"]
+      | //*[@data-testid="${keyType}-remove-button-${name}-trigger"]`,
     )
   getCommonTrashIcon = (keyType: string): By =>
     By.xpath(
@@ -59,7 +60,7 @@ export class KeyDetailsView extends WebView {
     )
   getCommonRemoveButton = (keyType: string): By =>
     By.xpath(
-      `//*[contains(@data-testid, "${keyType}-remove-btn-") and not(contains(@data-testid, "-icon"))] | //*[contains(@data-testid, "${keyType}-remove-button-") and not(contains(@data-testid, "-icon"))]`,
+      `//*[contains(@data-testid, "${keyType}-remove-btn-") and not(contains(@data-testid, "-trigger"))] | //*[contains(@data-testid, "${keyType}-remove-button-") and not(contains(@data-testid, "-trigger"))]`,
     )
   getRemoveButton = (keyType: string, name: string): By =>
     By.xpath(
@@ -105,9 +106,8 @@ export class KeyDetailsView extends WebView {
         this.searchInput,
       )
     }
-    const inputField = await super.getElement(this.searchInput)
     await InputActions.typeText(this.searchInput, value)
-    await InputActions.pressKey(inputField, 'enter')
+    await InputActions.pressKey(this.searchInput, 'enter')
     await CommonDriverExtension.driverSleep(1000)
   }
 
@@ -121,9 +121,8 @@ export class KeyDetailsView extends WebView {
         this.searchInput,
       )
     }
-    const inputField = await super.getElement(this.searchInput)
     await ButtonActions.clickElement(this.clearSearchInput)
-    await InputActions.pressKey(inputField, 'enter')
+    await InputActions.pressKey(this.searchInput, 'enter')
     await CommonDriverExtension.driverSleep(1000)
   }
 

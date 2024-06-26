@@ -258,3 +258,12 @@ export type KeyData = {
   keyName: string
   keyType: KeyTypesShort
 }
+
+export type KeyParameters =
+  | HashKeyParameters
+  | StreamKeyParameters
+  | SetKeyParameters
+  | SortedSetKeyParameters
+  | ListKeyParameters
+  | StringKeyParameters
+  | JsonKeyParameters

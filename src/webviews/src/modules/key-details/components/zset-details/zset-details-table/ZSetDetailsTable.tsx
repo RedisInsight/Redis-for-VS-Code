@@ -188,6 +188,7 @@ const ZSetDetailsTable = (props: Props) => {
     }
     updateZSetMembersAction(
       data,
+      false,
       () => handleEditMember(rowIndex, name, false),
     )
   }

@@ -1,42 +1,64 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useRef, useState } from 'react'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { toNumber } from 'lodash'
+import Popup from 'reactjs-popup'
+import cx from 'classnames'
 
 import {
-  TelemetryEvent,
   addNewItem,
   handleItemChange,
   isNaNConvertedString,
   removeItem,
-  sendEventTelemetry,
   setEmptyItemById,
   stringToBuffer,
   validateScoreNumber,
 } from 'uiSrc/utils'
-import { AddZsetFormConfig as config, KeyTypes } from 'uiSrc/constants'
+import { AddZsetFormConfig as config } from 'uiSrc/constants'
 import { INITIAL_ZSET_MEMBER_STATE, IZsetMemberState } from 'uiSrc/modules/add-key'
-import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useSelectedKeyStore } from 'uiSrc/store'
 import { AddItemsActions } from 'uiSrc/components'
 import { InputText } from 'uiSrc/ui'
-import { addZSetMembersAction, useZSetStore } from '../hooks/useZSetStore'
+import { useZSetStore } from '../hooks/useZSetStore'
+import { AddMembersToZSetDto } from '../hooks/interface'
+
+const SAVE_MEMBERS_TEST_ID = 'save-members-btn'
 
 export interface Props {
-  closePanel: (isCancelled?: boolean) => void
+  hideCancel?: boolean
+  autoFocus?: boolean
+  disabled?: boolean
+  submitText?: string
+  containerClassName?: string
+  closePanel?: (isCancelled?: boolean) => void
+  onSubmitData: (data: AddMembersToZSetDto, onSuccess?: (data: AddMembersToZSetDto) => void) => void
+  getDisabledSubmitText?: (members: IZsetMemberState[]) => any
 }
 
 const AddZSetMembers = (props: Props) => {
-  const { closePanel } = props
+  const {
+    hideCancel,
+    disabled,
+    submitText,
+    autoFocus = true,
+    containerClassName = '',
+    getDisabledSubmitText,
+    closePanel,
+    onSubmitData,
+  } = props
+
   const loading = useZSetStore((state) => state.loading)
   const selectedKey = useSelectedKeyStore((state) => state.data?.name ?? '')
-  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
   const lastAddedMemberName = useRef<HTMLInputElement>(null)
   const [isFormValid, setIsFormValid] = useState<boolean>(false)
   const [members, setMembers] = useState<IZsetMemberState[]>([{ ...INITIAL_ZSET_MEMBER_STATE }])
+  const disabledSubmitText = getDisabledSubmitText?.(members) || ''
 
   useEffect(() => {
-    lastAddedMemberName.current?.focus()
+    if (autoFocus || members.length > 1) {
+      lastAddedMemberName.current?.focus()
+    }
   }, [members.length])
 
   useEffect(() => {
@@ -61,18 +83,6 @@ const AddZSetMembers = (props: Props) => {
     return validatedValue.toString().length ? validatedValue : ''
   }
 
-  const onSuccessAdded = () => {
-    closePanel()
-    sendEventTelemetry({
-      event: TelemetryEvent.TREE_VIEW_KEY_VALUE_ADDED,
-      eventData: {
-        databaseId,
-        keyType: KeyTypes.ZSet,
-        numberOfAdded: members.length,
-      },
-    })
-  }
-
   const submitData = (): void => {
     const data = {
       keyName: selectedKey,
@@ -81,7 +91,7 @@ const AddZSetMembers = (props: Props) => {
         score: toNumber(item.score),
       })),
     }
-    addZSetMembersAction(data, onSuccessAdded)
+    onSubmitData(data)
   }
 
   const handleScoreBlur = (item: IZsetMemberState) => {
@@ -110,9 +120,20 @@ const AddZSetMembers = (props: Props) => {
   const isClearDisabled = (item: IZsetMemberState): boolean =>
     members.length === 1 && !(item.name.length || item.score.length)
 
+  const SubmitBtn: ReactElement = (
+    <VSCodeButton
+      appearance="primary"
+      onClick={submitData}
+      disabled={!!disabledSubmitText || !isFormValid || !!disabled}
+      data-testid={SAVE_MEMBERS_TEST_ID}
+    >
+      {submitText || l10n.t('Save')}
+    </VSCodeButton>
+  )
+
   return (
     <>
-      <div className="key-footer-items-container" data-testid="add-zset-field-panel">
+      <div className={cx('key-footer-items-container', containerClassName)} data-testid="add-zset-field-panel">
         {members.map((item, index) => (
           <div key={item.id}>
             <div className="flex items-center mb-3">
@@ -127,7 +148,7 @@ const AddZSetMembers = (props: Props) => {
                       setMembers(handleItemChange(members, 'name', item.id, e.target.value))}
                     inputRef={index === members.length - 1 ? lastAddedMemberName : null}
                     disabled={loading}
-                    data-testid="member-name"
+                    data-testid={`member-name-${index}`}
                   />
                 </div>
                 <div className="w-1/2 mr-2">
@@ -135,6 +156,7 @@ const AddZSetMembers = (props: Props) => {
                     name={`score-${item.id}`}
                     id={`score-${item.id}`}
                     placeholder={config.score.placeholder}
+                    maxLength={200}
                     value={item.score}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setMembers(handleItemChange(members, 'score', item.id, validateScore(e.target.value)))}
@@ -142,7 +164,7 @@ const AddZSetMembers = (props: Props) => {
                       handleScoreBlur(item)
                     }}
                     disabled={loading}
-                    data-testid="member-score"
+                    data-testid={`member-score-${index}`}
                   />
                 </div>
                 <AddItemsActions
@@ -169,22 +191,27 @@ const AddZSetMembers = (props: Props) => {
 
       <div className="pr-4 pb-4">
         <div className="flex justify-end">
-          <VSCodeButton
-            appearance="secondary"
-            onClick={() => closePanel(true)}
-            className="mr-3"
-            data-testid="cancel-members-btn"
-          >
-            {l10n.t('Cancel')}
-          </VSCodeButton>
-          <VSCodeButton
-            appearance="primary"
-            onClick={submitData}
-            disabled={loading || !isFormValid}
-            data-testid="save-members-btn"
-          >
-            {l10n.t('Save')}
-          </VSCodeButton>
+          {!hideCancel && (
+            <VSCodeButton
+              appearance="secondary"
+              onClick={() => closePanel?.(true)}
+              className="mr-3"
+              data-testid="cancel-members-btn"
+            >
+              {l10n.t('Cancel')}
+            </VSCodeButton>
+          )}
+          {disabledSubmitText && (
+            <Popup
+              keepTooltipInside
+              on="hover"
+              position="top center"
+              trigger={SubmitBtn}
+            >
+              <div className="font-bold pb-1">{disabledSubmitText}</div>
+            </Popup>
+          )}
+          {!disabledSubmitText && SubmitBtn}
         </div>
       </div>
     </>

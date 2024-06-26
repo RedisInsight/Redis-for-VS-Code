@@ -65,17 +65,16 @@ describe('CLI critical', () => {
     await cliViewPanel.typeCommand(commandStartsWith)
     // Press tab while we won't find 'INFO' command
     // Avoid endless cycle
-    const inputField = await cliViewPanel.getElement(cliViewPanel.cliCommand)
     let operationsCount = 0
     while (
       (await cliViewPanel.getCommandText()) !== commandToAutoComplete &&
       operationsCount < maxAutocompleteExecutios
     ) {
-      await InputActions.pressKey(inputField, 'tab')
+      await InputActions.pressKey(cliViewPanel.cliCommand, 'tab')
       ++operationsCount
     }
 
-    await InputActions.pressKey(inputField, 'enter')
+    await InputActions.pressKey(cliViewPanel.cliCommand, 'enter')
 
     const text = await cliViewPanel.getCliLastCommandResponse()
     expect(text).contain('redis_version:')
@@ -149,14 +148,13 @@ describe('CLI critical', () => {
       await cliViewPanel.executeCommand(command)
     }
 
-    const inputField = await cliViewPanel.getElement(cliViewPanel.cliCommand)
     for (let i = cliCommands.length - 1; i >= 0; i--) {
-      await InputActions.pressKey(inputField, 'up')
+      await InputActions.pressKey(cliViewPanel.cliCommand, 'up')
       expect(await cliViewPanel.getCommandText()).eql(cliCommands[i])
     }
     for (let i = 0; i < cliCommands.length; i++) {
       expect(await cliViewPanel.getCommandText()).eql(cliCommands[i])
-      await InputActions.pressKey(inputField, 'down')
+      await InputActions.pressKey(cliViewPanel.cliCommand, 'down')
     }
   })
   it('Verify that user can send command via CLI', async function () {

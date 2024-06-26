@@ -12,7 +12,7 @@ describe('AddKeySet', () => {
 
   it('should set member value properly', () => {
     render(<AddKeySet {...instance(mockedProps)} />)
-    const memberInput = screen.getByTestId('member-name')
+    const memberInput = screen.getByTestId('member-name-0')
     fireEvent.change(
       memberInput,
       { target: { value: 'member name' } },
@@ -29,24 +29,24 @@ describe('AddKeySet', () => {
     render(<AddKeySet {...instance(mockedProps)} />)
     fireEvent.click(screen.getByTestId('add-new-item'))
 
-    expect(screen.getAllByTestId('member-name')).toHaveLength(2)
+    expect(screen.getAllByTestId(/^member-name-/)).toHaveLength(2)
   })
 
   it('should remove one member input after add item & remove one', () => {
     render(<AddKeySet {...instance(mockedProps)} />)
     fireEvent.click(screen.getByTestId('add-new-item'))
 
-    expect(screen.getAllByTestId('member-name')).toHaveLength(2)
+    expect(screen.getAllByTestId(/^member-name-/)).toHaveLength(2)
 
     const removeButtons = screen.getAllByTestId('remove-item')
     fireEvent.click(removeButtons[1])
 
-    expect(screen.getAllByTestId('member-name')).toHaveLength(1)
+    expect(screen.getAllByTestId(/^member-name-/)).toHaveLength(1)
   })
 
   it('should clear member after click clear button', () => {
     render(<AddKeySet {...instance(mockedProps)} />)
-    const memberInput = screen.getByTestId('member-name')
+    const memberInput = screen.getByTestId('member-name-0')
     fireEvent.change(
       memberInput,
       { target: { value: 'member' } },

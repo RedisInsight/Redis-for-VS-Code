@@ -1,5 +1,6 @@
 import { KeyTypes } from 'uiSrc/constants'
 import { KeyDto, KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
+import { ZSetMember } from 'uiSrc/modules/key-details/components/zset-details/hooks/interface'
 
 export interface KeysStore {
   databaseId: Nullable<string>
@@ -56,6 +57,7 @@ export interface KeysThunks {
   addSetKey: (data: CreateSetWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addListKey: (data: CreateListWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addHashKey: (data: CreateHashWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
+  addZSetKey: (data: CreateZSetWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addKeyIntoTree: (key: RedisString, keyType: KeyTypes) => void
   addTypedKey: (
     data: any,
@@ -113,4 +115,8 @@ export interface HashFieldDto {
 
 export interface CreateHashWithExpireDto extends KeyWithExpireDto {
   fields: HashFieldDto[]
+}
+
+export interface CreateZSetWithExpireDto extends KeyWithExpireDto {
+  members: ZSetMember[]
 }

@@ -4,9 +4,12 @@ import * as l10n from '@vscode/l10n'
 
 import { KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
 import { ZSetDetailsTable } from './zset-details-table'
 import { AddZSetMembers } from './add-zset-members'
+import { AddMembersToZSetDto, ZSetMember } from './hooks/interface'
+import { updateZSetMembersAction } from './hooks/useZSetStore'
 import { AddItemsAction } from '../key-details-actions'
 
 export interface Props extends KeyDetailsHeaderProps {
@@ -21,6 +24,8 @@ const ZSetDetails = (props: Props) => {
   const [isAddItemPanelOpen, setIsAddItemPanelOpen] = useState<boolean>(false)
   const loading = useSelectedKeyStore((state) => state.loading)
 
+  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
+
   const openAddItemPanel = () => {
     setIsAddItemPanelOpen(true)
     onOpenAddItemPanel()
@@ -29,6 +34,22 @@ const ZSetDetails = (props: Props) => {
   const closeAddItemPanel = (isCancelled = false) => {
     setIsAddItemPanelOpen(false)
     onCloseAddItemPanel(isCancelled)
+  }
+
+  const onSuccessAdded = (members: ZSetMember[]) => {
+    closeAddItemPanel()
+    sendEventTelemetry({
+      event: TelemetryEvent.TREE_VIEW_KEY_VALUE_ADDED,
+      eventData: {
+        databaseId,
+        keyType,
+        numberOfAdded: members.length,
+      },
+    })
+  }
+
+  const addZSetMembers = (data: AddMembersToZSetDto) => {
+    updateZSetMembersAction(data, true, () => onSuccessAdded(data.members))
   }
 
   const Actions = () => (
@@ -51,7 +72,7 @@ const ZSetDetails = (props: Props) => {
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            <AddZSetMembers closePanel={closeAddItemPanel} />
+            <AddZSetMembers closePanel={closeAddItemPanel} onSubmitData={addZSetMembers} />
           </div>
         )}
       </div>

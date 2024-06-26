@@ -15,7 +15,13 @@ export interface ResetSelectedKeyAction {
 
 export interface SelectKeyAction {
   action: VscodeMessageAction.SelectKey
-  data: { key: RedisString, keyString: string, keyType: AllKeyTypes, databaseId: string }
+  data: {
+    key: RedisString,
+    keyString: string,
+    keyType: AllKeyTypes,
+    databaseId: string,
+    displayedKeyType?: string,
+  }
 }
 
 export interface RefreshTreeAction {
@@ -39,7 +45,15 @@ export interface SelectedKeyAction {
   VscodeMessageAction.CloseAddKeyAndRefresh |
   VscodeMessageAction.RefreshTree |
   VscodeMessageAction.EditKeyName
-  data: { key?: RedisString, type: SelectedKeyActionType, databaseId: string, keyType?: KeyTypes, newKey?: RedisString, keyString?: string }
+  data: {
+    key?: RedisString,
+    type: SelectedKeyActionType,
+    databaseId: string,
+    keyType?: KeyTypes,
+    newKey?: RedisString,
+    keyString?: string
+    displayedKeyType?: string
+  }
 }
 
 export interface SelectedKeyCloseAction {

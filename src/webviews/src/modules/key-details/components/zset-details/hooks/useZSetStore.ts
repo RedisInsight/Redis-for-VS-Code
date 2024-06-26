@@ -187,6 +187,7 @@ export const deleteZSetMembers = (
 
 export const updateZSetMembersAction = (
   data: AddMembersToZSetDto,
+  fetchKeyValue: boolean,
   onSuccess?: () => void,
   onFail?: () => void,
 ) => useZSetStore.setState(async (state) => {
@@ -202,7 +203,7 @@ export const updateZSetMembersAction = (
     if (isStatusSuccessful(status)) {
       onSuccess?.()
       state.updateMembers(data)
-      refreshKeyInfo(data.keyName, false)
+      refreshKeyInfo(data.keyName, fetchKeyValue)
     }
   } catch (error) {
     showErrorMessage(getApiErrorMessage(error as AxiosError))

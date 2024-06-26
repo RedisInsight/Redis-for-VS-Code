@@ -6,6 +6,7 @@ import { AddDatabaseView } from './editor-view/AddDatabaseView'
 import { AddHashKeyView } from './editor-view/AddHashKeyView'
 import { AddListKeyView } from './editor-view/AddListKeyView'
 import { AddSetKeyView } from './editor-view/AddSetKeyView'
+import { AddSortedSetKeyView } from './editor-view/AddSortedSetKeyView'
 import { AddStringKeyView } from './editor-view/AddStringKeyView'
 import { BottomBar } from './bottom-bar/BottomBar'
 import { CliViewPanel } from './bottom-bar/CliViewPanel'
@@ -27,6 +28,7 @@ export {
   AddHashKeyView,
   AddListKeyView,
   AddSetKeyView,
+  AddSortedSetKeyView,
   AddStringKeyView,
   BaseComponent,
   BottomBar,

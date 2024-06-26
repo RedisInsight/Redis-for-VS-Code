@@ -41,7 +41,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('RedisInsight.openKey', (args) => {
-      const title = `${args?.data?.keyType}:${truncateText(args?.data?.keyString, MAX_TITLE_KEY_LENGTH)}`
+      const title = `${args?.data?.displayedKeyType?.toLowerCase()}:${truncateText(args?.data?.keyString, MAX_TITLE_KEY_LENGTH)}`
 
       WebviewPanel.getInstance({
         context,
