@@ -60,6 +60,8 @@ jobs:
       - checkout
       - restore_cache:
           <<: *uiDepsCacheKey
+      - attach_workspace:
+          at: .
       - run:
           name: Install dependencies
           command: |
@@ -75,6 +77,10 @@ jobs:
             fi
 
             yarn package:stage
+      - persist_to_workspace:
+          root: .
+          paths:
+            - redis-insight-vsc*.vsix
       - save_cache:
           <<: *uiDepsCacheKey
           paths:
