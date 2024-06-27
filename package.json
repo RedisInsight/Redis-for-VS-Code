@@ -246,7 +246,7 @@
     "whatwg-fetch": "^3.6.19"
   },
   "dependencies": {
-    "@hediet/node-reload": "^0.7.3",
+    "@hediet/node-reload": "^0.8.0",
     "@reduxjs/toolkit": "^1.9.7",
     "@vscode/codicons": "^0.0.35",
     "@vscode/l10n": "^0.0.18",
@@ -292,7 +292,7 @@
     "redux-thunk": "^2.4.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "ws": "^8.13.0",
+    "ws": "^8.17.1",
     "zustand": "^4.4.7"
   }
 }
