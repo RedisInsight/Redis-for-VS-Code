@@ -106,7 +106,7 @@ jobs:
           at: .
       - run: sudo apt-get install net-tools
       - run:
-          name: tests
+          name: Run e2e tests
           command: |
             cd tests/e2e && export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.ts" | circleci tests split --split-by=timings) && cd ../..
             .circleci/e2e/test.app.sh
