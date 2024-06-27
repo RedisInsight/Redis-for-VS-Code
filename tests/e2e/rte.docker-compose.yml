@@ -12,30 +12,6 @@ services:
     ports:
       - 5551:5551
 
-  #   # Add the VS Code service
-  # vscode:
-  #   build:
-  #     context: .
-  #     dockerfile: vscode.Dockerfile
-  #   volumes:
-  #     - ./remote:/home/coder/project
-  #   ports:
-  #     - 8080:8080
-  #   networks:
-  #     default:
-  #       ipv4_address: 172.31.100.250
-  #     ssh:
-  #       ipv4_address: 172.33.100.250
-  # # RDI mocked
-  # rdi:
-  #   logging: *logging
-  #   build:
-  #     context: rte/rdi
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - ./rdi:/data
-  #   ports:
-  #     - 4000:4000
   # ssh
   ssh:
     logging: *logging
