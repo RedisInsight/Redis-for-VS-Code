@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { describe, it, beforeEach, afterEach } from 'mocha'
-import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
+import { describe, it } from 'mocha'
+import { ActivityBar, VSBrowser, beforeEach, afterEach } from 'vscode-extension-tester'
 import {
   TreeView,
   KeyDetailsView,

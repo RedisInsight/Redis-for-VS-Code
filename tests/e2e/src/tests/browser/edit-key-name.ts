@@ -1,5 +1,6 @@
 import { expect } from 'chai'
-import { describe, it, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
+import { before, after, afterEach } from 'vscode-extension-tester'
 import {
   HashKeyDetailsView,
   TreeView,
