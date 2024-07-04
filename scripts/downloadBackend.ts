@@ -51,7 +51,7 @@ function ensureFolderExists(loc: string) {
 function getDownloadUrl(): string {
   // Download is temporary available only for non-windows platforms
   if (process.platform !== 'win32') {
-    return `${cdnPath}/RedisInsight-web-${process.platform}.${process.arch}.tar.gz`
+    return `${cdnPath}/Redis-Insight-web-${process.platform}.${process.arch}.tar.gz`
   } return tempWindowsDistPath
 }
 
