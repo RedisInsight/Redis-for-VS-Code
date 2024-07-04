@@ -125,6 +125,8 @@ jobs:
       - store_artifacts:
           path: tests/e2e/mochawesome-report
           destination: tests/e2e/mochawesome-report
+      - store_artifacts:
+          path: .tmp/test-resources/screenshots
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
