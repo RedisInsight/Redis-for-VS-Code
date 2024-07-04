@@ -59,7 +59,7 @@ describe('Add database', () => {
     await browser.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
     await ButtonActions.clickElement(treeView.addDatabaseBtn)
-    await CommonDriverExtension.driverSleep(1000)
+    await CommonDriverExtension.driverSleep(2000)
     await treeView.switchBack()
     await addDatabaseView.switchToInnerViewFrame(
       InnerViews.AddDatabaseInnerView,
