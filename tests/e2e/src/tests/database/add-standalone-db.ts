@@ -12,7 +12,7 @@ import {
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
-import { Common, Config } from '@e2eSrc/helpers'
+import { Common, CommonDriverExtension, Config } from '@e2eSrc/helpers'
 import {
   sshPrivateKey,
   sshPrivateKeyWithPasscode,
@@ -59,6 +59,8 @@ describe('Add database', () => {
     await browser.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
     await ButtonActions.clickElement(treeView.addDatabaseBtn)
+    await CommonDriverExtension.driverSleep(1000)
+    await treeView.switchBack()
     await addDatabaseView.switchToInnerViewFrame(
       InnerViews.AddDatabaseInnerView,
     )
