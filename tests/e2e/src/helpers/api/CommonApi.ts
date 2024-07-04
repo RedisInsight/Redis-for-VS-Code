@@ -76,20 +76,13 @@ export class CommonAPIRequests {
   ): Promise<any> {
     let requestEndpoint: any
     try {
-      console.log('Sending PATCH request to:', endpoint + resourcePath)
-      console.log('Request body:', body)
-
-      requestEndpoint = await request('https://127.0.0.1:5541/api')
+      requestEndpoint = await request(endpoint)
         .patch(resourcePath)
         .send(body)
         .set('Accept', jsonType)
 
-      console.log(requestEndpoint)
-
       return requestEndpoint
     } catch (error: any) {
-      console.error('Error sending PATCH request:', error.message)
-      console.error('Error details:', error)
       throw new Error(`Failed to send PATCH request: ${error}`)
     }
   }
