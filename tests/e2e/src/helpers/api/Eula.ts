@@ -11,7 +11,6 @@ export class Eula {
       `/settings`,
       spec,
     )
-    console.log('response message: ', await response)
     expect(await response.status).eql(200)
   }
 }

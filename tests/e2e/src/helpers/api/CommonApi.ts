@@ -79,7 +79,7 @@ export class CommonAPIRequests {
       console.log('Sending PATCH request to:', endpoint + resourcePath)
       console.log('Request body:', body)
 
-      requestEndpoint = await request(endpoint)
+      requestEndpoint = await request('https://127.0.0.1:5541/api')
         .patch(resourcePath)
         .send(body)
         .set('Accept', jsonType)
