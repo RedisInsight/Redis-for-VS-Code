@@ -31,8 +31,8 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
       `undefined_publisher.${Config.extensionName.replace('.vsix', '')}`,
     )
     // Install VSCode and Chromedriver
-    await exTester.downloadCode(Config.vscodeVersion)
-    await exTester.downloadChromeDriver(Config.vscodeVersion)
+    await exTester.downloadCode()
+    await exTester.downloadChromeDriver()
     // Install vsix if not installed yet
     if (!fs.existsSync(extensionDir)) {
       await exTester.installVsix({
