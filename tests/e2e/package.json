@@ -15,6 +15,7 @@
     "@types/chance": "^1.1.6",
     "@types/clone-deep": "^4.0.4",
     "@types/fs-extra": "^11.0.4",
+    "@types/lodash": "^4.17.5",
     "@types/mocha": "^10.0.2",
     "@types/mochawesome": "^6.2.4",
     "@types/node": "18.15.0",
@@ -25,6 +26,7 @@
     "@typescript-eslint/parser": "^5.1.0",
     "chai": "^4.3.10",
     "chance": "1.1.8",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^7.5.0",
     "fs-extra": "^11.1.1",
     "mocha": "^10.2.0",
@@ -37,6 +39,7 @@
     "vscode-extension-tester": "^8.2.0"
   },
   "dependencies": {
-    "clone-deep": "^4.0.1"
+    "clone-deep": "^4.0.1",
+    "lodash": "^4.17.21"
   }
 }
