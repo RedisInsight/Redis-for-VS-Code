@@ -6,7 +6,7 @@ const chance = new Chance()
 
 export class Config {
   static commonUrl = process.env.COMMON_URL || 'http://localhost:8080'
-  static apiUrl = process.env.API_URL || 'http://localhost:5541/api'
+  static apiUrl = process.env.API_URL || 'http://127.0.0.1:5541/api'
   static vscodeVersion = process.env.VSCODE_VERSION || '1.87.2'
   static extensionName =
     process.env.EXTENSION_NAME || 'redis-insight-vsc-plugin-0.0.1.vsix'
