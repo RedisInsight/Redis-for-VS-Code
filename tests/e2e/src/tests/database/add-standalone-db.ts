@@ -70,7 +70,7 @@ describe('Add database', () => {
       Config.ossClusterConfig.ossClusterDatabaseName,
     ])
   })
-  it('Verify that user can add Standalone Database', async function () {
+  it.only('Verify that user can add Standalone Database', async function () {
     const connectionTimeout = '20'
     databaseName = `test_standalone-${Common.generateString(10)}`
 
