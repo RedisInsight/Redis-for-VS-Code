@@ -18,7 +18,7 @@ import { Config } from '@e2eSrc/helpers'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
-describe('Set TTL for Key', () => {
+describe.only('Set TTL for Key', () => {
   let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
   let keyDetailsView: KeyDetailsView

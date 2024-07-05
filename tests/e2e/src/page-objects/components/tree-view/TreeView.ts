@@ -5,6 +5,7 @@ import {
   DropdownActions,
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
+import { Config } from '@e2eSrc/helpers'
 
 /**
  * Tree list view with databases and keys
@@ -50,7 +51,6 @@ export class TreeView extends WebView {
   )
   keysSummary = By.xpath(`//*[@data-testid='keys-summary']`)
   treeViewVirtualTable = By.xpath(`//*[@data-testid='virtual-tree']/div`)
-  loadingVirtualTree = By.xpath(`//*[@data-testid='virtual-tree']/div[contains(@class, "table-loading")]`)
 
   // mask
   keyMask = '//*[@data-testid="key-$name"]'
@@ -83,7 +83,7 @@ export class TreeView extends WebView {
   }
   getDatabaseByName = (name: string): Locator =>
     By.xpath(
-      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..`,
+      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/div`,
     )
   getEditDatabaseBtnByName = (name: string): Locator =>
     By.xpath(
@@ -92,6 +92,10 @@ export class TreeView extends WebView {
   getRefreshDatabaseBtnByName = (name: string): Locator =>
     By.xpath(
       `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid = 'refresh-keys']`,
+    )
+  getCLIDatabaseBtnByName = (name: string): Locator =>
+    By.xpath(
+      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid = 'terminal-button']`,
     )
   getKeySelectorByName = (name: string): Locator =>
     By.xpath(`//*[@data-testid="key-${name}"]`)
@@ -211,6 +215,10 @@ export class TreeView extends WebView {
     await ButtonActions.clickElement(
       this.getRefreshDatabaseBtnByName(databaseName),
     )
+    // Hover to CLI btn to not display refresh popover
+    await ButtonActions.hoverElement(this.getCLIDatabaseBtnByName(databaseName))
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, true)
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, false)
   }
 
   /**
@@ -227,6 +235,7 @@ export class TreeView extends WebView {
    * @param keyName The name of the key
    */
   async searchByKeyName(keyName: string): Promise<void> {
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, false)
     await ButtonActions.clickElement(this.keyTreeFilterTrigger)
     await InputActions.typeText(this.treeViewSearchInput, keyName)
     await ButtonActions.clickElement(this.keyTreeFilterApplyBtn)
