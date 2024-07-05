@@ -21,6 +21,7 @@ import {
   keyTypesShort,
   KeyTypesShort,
 } from '@e2eSrc/helpers/constants'
+import { ServerActions } from '@e2eSrc/helpers/common-actions/ServerActions'
 
 let keyName = `KeyForSearch*?[]789${Common.generateWord(10)}`
 let keyName2 = Common.generateWord(10)
@@ -42,6 +43,8 @@ describe.only('Filtering per key name', () => {
 
   before(async () => {
     treeView = new TreeView()
+
+    await ServerActions.waitForServerInitialized()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
