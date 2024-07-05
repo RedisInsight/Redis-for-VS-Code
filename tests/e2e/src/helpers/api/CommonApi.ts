@@ -1,35 +1,8 @@
 import * as request from 'supertest'
 import { Common } from '../Common'
-const axios = require('axios');
 
 const endpoint = Common.getEndpoint()
 const jsonType = 'application/json'
-
-// Create axios instance
-const axiosInstance = axios.create({
-  baseURL: endpoint,
-  headers: {
-    'Accept': jsonType, // Replace jsonType with the actual content type if different
-  },
-});
-
-// Request interceptor to log requests
-axiosInstance.interceptors.request.use((request: { method: string; url: any; headers: any; data: any; }) => {
-  console.log(`Request: ${request.method.toUpperCase()} ${request.url}`);
-  console.log('Request headers:', request.headers);
-  console.log('Request body:', request.data);
-  return request;
-});
-
-// Response interceptor to log responses
-axiosInstance.interceptors.response.use((response: { status: any; statusText: any; data: any; }) => {
-  console.log(`Response: ${response.status} ${response.statusText}`);
-  console.log('Response data:', response.data);
-  return response;
-}, (error: { response: { data: any; }; message: any; }) => {
-  console.error('Error response:', error.response ? error.response.data : error.message);
-  return Promise.reject(error);
-});
 
 export class CommonAPIRequests {
   /**
@@ -105,11 +78,10 @@ export class CommonAPIRequests {
     try {
       console.log(`Attempt to send PATCH request to:`, endpoint + resourcePath)
       console.log('Request body:', body)
-      // requestEndpoint = await request(endpoint)
-      //   .patch(resourcePath)
-      //   .send(body)
-      //   .set('Accept', jsonType)
-      requestEndpoint = await axiosInstance.patch(resourcePath, body);
+      requestEndpoint = await request(endpoint)
+        .patch(resourcePath)
+        .send(body)
+        .set('Accept', jsonType)
       console.log('Response status:', requestEndpoint.status)
       console.log('Response body:', requestEndpoint.body)
 

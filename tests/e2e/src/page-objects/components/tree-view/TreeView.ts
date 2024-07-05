@@ -12,7 +12,6 @@ import {
 export class TreeView extends WebView {
   treeViewPage = By.xpath(`//div[@data-testid='tree-view-page']`)
   scanMoreBtn = By.xpath(`//vscode-button[@data-testid='scan-more']`)
-  keyScannedNumber = By.xpath(`//span[@data-testid='keys-number-of-scanned']`)
   totalKeyNumber = By.xpath(`//span[@data-testid='keys-total']`)
   treeViewKey = By.xpath(
     `//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')]`,
@@ -50,6 +49,8 @@ export class TreeView extends WebView {
     `//vscode-button[@data-testid='key-tree-filter-clear-btn']`,
   )
   keysSummary = By.xpath(`//*[@data-testid='keys-summary']`)
+  treeViewVirtualTable = By.xpath(`//*[@data-testid='virtual-tree']/div`)
+  loadingVirtualTree = By.xpath(`//*[@data-testid='virtual-tree']/div[contains(@class, "table-loading")]`)
 
   // mask
   keyMask = '//*[@data-testid="key-$name"]'
@@ -237,10 +238,12 @@ export class TreeView extends WebView {
    * @param value The value to select
    */
   async selectFilterGroupType(value: string): Promise<void> {
-    await ButtonActions.clickElement(this.keyTreeFilterTrigger)
+    if (!(await this.isElementDisplayed(this.treeViewFilterSelect))) {
+      await ButtonActions.clickElement(this.keyTreeFilterTrigger)
+    }
     await DropdownActions.selectDropdownValueWithScroll(
       this.treeViewFilterSelect,
-      value
+      value,
     )
     await ButtonActions.clickElement(this.keyTreeFilterApplyBtn)
     await this.waitForElementVisibility(this.loadingIndicator, 1000, false)
@@ -250,7 +253,23 @@ export class TreeView extends WebView {
    * Clear keys filter
    */
   async clearFilter(): Promise<void> {
-    await ButtonActions.clickElement(this.keyTreeFilterTrigger)
+    if (!(await this.isElementDisplayed(this.treeViewFilterSelect))) {
+      await ButtonActions.clickElement(this.keyTreeFilterTrigger)
+    }
     await ButtonActions.clickElement(this.keyTreeFilterClearBtn)
+  }
+
+  /**
+   * Get scanned results from scan more
+   */
+  async getScannedResults(): Promise<number> {
+    let treeView = new TreeView()
+    const text = await treeView.getElementText(treeView.scanMoreBtn)
+    const match: any = text.match(/\((\d{1,3}(?: \d{3})*) Scanned\)/)
+
+    // Extract the matched number part
+    const scannedResults = Number(match[1].replace(/\s/g, ''))
+
+    return scannedResults
   }
 }

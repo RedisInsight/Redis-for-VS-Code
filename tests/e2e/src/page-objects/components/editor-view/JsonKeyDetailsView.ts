@@ -1,7 +1,6 @@
 import { By } from 'selenium-webdriver'
 import { KeyDetailsView } from '@e2eSrc/page-objects/components'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
-import { InputWithButtons } from '../common/InputWithButtons'
 import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 /**
@@ -15,7 +14,7 @@ export class JsonKeyDetailsView extends KeyDetailsView {
   expandJsonObject = By.xpath(`//*[@data-testid='expand-object']`)
   addJsonFieldButton = By.xpath(`//*[@data-testid='add-field-btn']`)
   jsonScalarValue = By.xpath(`//*[@data-testid='json-scalar-value']`)
-  inlineItemEditor = By.xpath(`//*[@data-testid='json-scalar-value']`)
+  inlineItemEditor = By.xpath(`//*[@data-testid='inline-item-editor']`)
   editJsonObjectButton = By.xpath(`//*[@data-testid='edit-json-field']`)
   jsonError = By.xpath(`//*[@data-testid='edit-json-error']`)
   removeJsonFieldIcon = By.xpath(
@@ -25,6 +24,8 @@ export class JsonKeyDetailsView extends KeyDetailsView {
   removeTrigger = By.xpath(`//*[@data-testid='remove-trigger']`)
   removeJsonKeyConfirmBtn = By.xpath(`//*[@data-testid='remove']`)
   applyJsonInput = By.xpath(`//*[@data-testid='json-data']//*[@data-testid='apply-btn']`)
+
+  getJsonScalarValueByText = (text: string): By => By.xpath(`//*[@data-testid='json-scalar-value' and contains(text(), '${text}')]`);
 
   /**
    * Add json key with value on the same level of the structure

@@ -36,7 +36,7 @@ describe('Connecting to the databases verifications', () => {
   afterEach(async () => {
     await addDatabaseView.switchBack()
   })
-  it.only('Verify that user can see error message if he can not connect to added Database', async function () {
+  it('Verify that user can see error message if he can not connect to added Database', async function () {
     const errorMessage = `Could not connect to ${Config.invalidOssStandaloneConfig.host}:${Config.invalidOssStandaloneConfig.port}, please check the connection details.`
 
     // Fill the add database form

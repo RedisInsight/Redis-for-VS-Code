@@ -28,8 +28,8 @@ export class Config {
   }
 
   static ossStandaloneConfigEmpty = {
-    host: process.env.OSS_STANDALONE_EMPTY_HOST || 'oss-standalone-empty',
-    port: process.env.OSS_STANDALONE_EMPTY_PORT || '6379',
+    host: process.env.OSS_STANDALONE_EMPTY_HOST || 'localhost',
+    port: process.env.OSS_STANDALONE_EMPTY_PORT || '8105',
     databaseName: `${
       process.env.OSS_STANDALONE_EMPTY_DATABASE_NAME || 'test_standalone_empty'
     }-${this.uniqueId}`,
@@ -38,8 +38,8 @@ export class Config {
   }
 
   static ossStandaloneV5Config = {
-    host: process.env.OSS_STANDALONE_V5_HOST || 'oss-standalone-v5',
-    port: process.env.OSS_STANDALONE_V5_PORT || '6379',
+    host: process.env.OSS_STANDALONE_V5_HOST || 'localhost',
+    port: process.env.OSS_STANDALONE_V5_PORT || '8101',
     databaseName: `${
       process.env.OSS_STANDALONE_V5_DATABASE_NAME || 'test_standalone-v5'
     }-${this.uniqueId}`,
@@ -49,8 +49,8 @@ export class Config {
 
   static ossStandaloneRedisearch = {
     host:
-      process.env.OSS_STANDALONE_REDISEARCH_HOST || 'oss-standalone-redisearch',
-    port: process.env.OSS_STANDALONE_REDISEARCH_PORT || '6379',
+      process.env.OSS_STANDALONE_REDISEARCH_HOST || 'localhost',
+    port: process.env.OSS_STANDALONE_REDISEARCH_PORT || '8102',
     databaseName: `${
       process.env.OSS_STANDALONE_REDISEARCH_DATABASE_NAME ||
       'test_standalone-redisearch'
@@ -60,16 +60,16 @@ export class Config {
   }
 
   static ossClusterConfig = {
-    ossClusterHost: process.env.OSS_CLUSTER_HOST || 'master-plain-7-1',
-    ossClusterPort: process.env.OSS_CLUSTER_PORT || '6379',
+    ossClusterHost: process.env.OSS_CLUSTER_HOST || 'localhost',
+    ossClusterPort: process.env.OSS_CLUSTER_PORT || '8200',
     ossClusterDatabaseName: `${
       process.env.OSS_CLUSTER_DATABASE_NAME || 'test_cluster'
     }-${this.uniqueId}`,
   }
 
   static ossSentinelConfig = {
-    sentinelHost: process.env.OSS_SENTINEL_HOST || 'oss-sentinel',
-    sentinelPort: process.env.OSS_SENTINEL_PORT || '26379',
+    sentinelHost: process.env.OSS_SENTINEL_HOST || 'localhost',
+    sentinelPort: process.env.OSS_SENTINEL_PORT || '28100',
     sentinelPassword: process.env.OSS_SENTINEL_PASSWORD || 'password',
     masters: [
       {
@@ -89,8 +89,8 @@ export class Config {
   }
 
   static redisEnterpriseClusterConfig = {
-    host: process.env.RE_CLUSTER_HOST || 'redis-enterprise',
-    port: process.env.RE_CLUSTER_PORT || '9443',
+    host: process.env.RE_CLUSTER_HOST || 'localhost',
+    port: process.env.RE_CLUSTER_PORT || '19443',
     databaseName: process.env.RE_CLUSTER_DATABASE_NAME || 'test-re-standalone',
     databaseUsername: process.env.RE_CLUSTER_ADMIN_USER || 'demo@redislabs.com',
     databasePassword: process.env.RE_CLUSTER_ADMIN_PASSWORD || '123456',
@@ -108,8 +108,8 @@ export class Config {
   }
 
   static ossStandaloneBigConfig = {
-    host: process.env.OSS_STANDALONE_BIG_HOST || 'oss-standalone-big',
-    port: process.env.OSS_STANDALONE_BIG_PORT || '6379',
+    host: process.env.OSS_STANDALONE_BIG_HOST || 'localhost',
+    port: process.env.OSS_STANDALONE_BIG_PORT || '8103',
     databaseName: `${
       process.env.OSS_STANDALONE_BIG_DATABASE_NAME || 'test_standalone_big'
     }-${this.uniqueId}`,
@@ -151,8 +151,8 @@ export class Config {
   }
 
   static ossStandaloneTlsConfig = {
-    host: process.env.OSS_STANDALONE_TLS_HOST || 'oss-standalone-tls',
-    port: process.env.OSS_STANDALONE_TLS_PORT || '6379',
+    host: process.env.OSS_STANDALONE_TLS_HOST || 'localhost',
+    port: process.env.OSS_STANDALONE_TLS_PORT || '8104',
     databaseName: `${process.env.OSS_STANDALONE_TLS_DATABASE_NAME || 'test_standalone_tls'}-${this.uniqueId}`,
     databaseUsername: process.env.OSS_STANDALONE_TLS_USERNAME,
     databasePassword: process.env.OSS_STANDALONE_TLS_PASSWORD,
@@ -185,8 +185,8 @@ export class Config {
   static ossStandaloneRedisGears = {
     host:
       process.env.OSS_STANDALONE_REDISGEARS_HOST ||
-      'oss-standalone-redisgears-2-0',
-    port: process.env.OSS_STANDALONE_REDISGEARS_PORT || '6379',
+      'localhost',
+    port: process.env.OSS_STANDALONE_REDISGEARS_PORT || '8106',
     databaseName: `${
       process.env.OSS_STANDALONE_REDISGEARS_DATABASE_NAME ||
       'test_standalone_redisgears'
@@ -197,8 +197,8 @@ export class Config {
 
   static ossClusterRedisGears = {
     ossClusterHost:
-      process.env.OSS_CLUSTER_REDISGEARS_2_HOST || 'gears-cluster-2-0-node-1',
-    ossClusterPort: process.env.OSS_CLUSTER_REDISGEARS_2_PORT || '6379',
+      process.env.OSS_CLUSTER_REDISGEARS_2_HOST || 'localhost',
+    ossClusterPort: process.env.OSS_CLUSTER_REDISGEARS_2_PORT || '8107',
     ossClusterDatabaseName: `${
       process.env.OSS_CLUSTER_REDISGEARS_2_NAME || 'test_cluster-gears-2.0'
     }-${this.uniqueId}`,

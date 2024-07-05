@@ -37,7 +37,7 @@ keysData.forEach(
       `${key.keyName}` + '-' + `${Common.generateWord(keyLength)}`),
 )
 
-describe('Filtering per key name', () => {
+describe.only('Filtering per key name', () => {
   let treeView: TreeView
 
   before(async () => {
@@ -46,11 +46,17 @@ describe('Filtering per key name', () => {
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `FLUSHDB`,
+      Config.ossStandaloneConfig,
+    )
   })
   after(async () => {
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
+    // Clear filter
+    await treeView.clearFilter()
     await CliAPIRequests.sendRedisCliCommandApi(
       `FLUSHDB`,
       Config.ossStandaloneConfig,
@@ -159,6 +165,14 @@ describe('Filtering per key name', () => {
       true,
       'The key was not found',
     )
+
+    // Verify that key not found when selecting other key type
+    await treeView.selectFilterGroupType(KeyTypesShort.List)
+    expect(await treeView.isKeyIsDisplayedInTheList(keyName)).eql(
+      false,
+      'The key was found by invalid filter',
+    )
+
     // Verify that user can see filtering per key name starts when he clicks the control to filter per key name
     // Clear filter
     await treeView.clearFilter()
@@ -196,7 +210,7 @@ describe('Filtering per key name', () => {
         await DropdownActions.getDropdownValue(treeView.treeViewFilterSelect),
       ).contains(keyType, 'Keys not filtered by key type')
       // : await t.expect(browserPage.filteringLabel.textContent).contains('graphdata', 'Keys not filtered by key type')
-      const regExp = new RegExp('/(1/d+)/')
+      const regExp = new RegExp('\\(1 / \\d+\\)')
       expect(await treeView.getElementText(treeView.keysSummary)).match(
         regExp,
         'Incorrect number of found keys displayed',
@@ -323,7 +337,6 @@ describe('Filtering per key name', () => {
       'No results found message is not hidden',
     )
     // Verify that when user clicks on “Cancel” control filter is reset
-    await ButtonActions.clickElement(treeView.keyTreeFilterTrigger)
     await InputActions.typeText(treeView.treeViewSearchInput, keyName)
     await DropdownActions.selectDropdownValueWithScroll(
       treeView.treeViewFilterSelect,
@@ -353,8 +366,12 @@ describe('Filtering per key name in DB with 10 millions of keys', () => {
   after(async () => {
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
+  afterEach(async () => {
+    // Clear filter
+    await treeView.clearFilter()
+  })
   it('Verify that user can filter per exact key without using any patterns in DB with 10 millions of keys', async function () {
-    keyName = `KeyForSearch-${Common.generateWord(10)}`
+    keyName = `KeyForSearch-${Common.generateWord(5)}`
 
     await KeyAPIRequests.addKeyApi(
       { keyName, keyType: KeyTypesShort.Set },

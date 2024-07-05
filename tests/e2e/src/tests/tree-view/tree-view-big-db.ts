@@ -41,8 +41,10 @@ describe('Tree view verifications', () => {
       true,
       'Tree view Scan more button not displayed for big database',
     )
-    expect(await treeView.isElementDisplayed(treeView.keyScannedNumber)).eql(
-      true,
+    expect(await treeView.getElementText(
+      treeView.scanMoreBtn,
+    )).contains(
+      'Scanned',
       'Scanned key is not correct',
     )
     expect(await treeView.isElementDisplayed(treeView.totalKeyNumber)).eql(

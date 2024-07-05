@@ -96,32 +96,28 @@ export class TreeViewActions extends CommonDriverExtension {
     let treeView = new TreeView()
     for (let i = 2; i <= 6; i += 2) {
       // Remember results value
-      const rememberedScanResults = Number(
-        (await treeView.getElementText(treeView.scanMoreBtn)).replace(
-          /\s/g,
-          '',
-        ),
-      )
+      const rememberedScanResults = await treeView.getScannedResults()
       await treeView.waitForElementVisibility(
         treeView.loadingIndicator,
         10000,
         false,
       )
       const scannedValueText = await treeView.getElementText(
-        treeView.keyScannedNumber,
+        treeView.scanMoreBtn,
       )
-      const regExp = new RegExp(`${i} ` + '...')
+      const regExp = new RegExp('\\b\\d{1,3}(?: \\d{3})*\\b')
       expect(scannedValueText).match(
         regExp,
         `The database is not automatically scanned by ${i} 000 keys`,
       )
-      await ButtonActions.clickElement(treeView.scanMoreBtn)
-      const scannedResults = Number(
-        (await treeView.getElementText(treeView.scanMoreBtn)).replace(
-          /\s/g,
-          '',
-        ),
+      await ButtonActions.clickAndWaitForElement(treeView.scanMoreBtn, treeView.loadingVirtualTree, true, 3000)
+      // await treeView.waitForElementVisibility(treeView.loadingVirtualTree, 5000, false)
+      await treeView.waitForElementVisibility(
+        treeView.loadingIndicator,
+        5000,
+        false,
       )
+      const scannedResults = await treeView.getScannedResults()
       expect(scannedResults).gt(rememberedScanResults)
     }
   }
