@@ -27,6 +27,7 @@ export class NotificationActions {
     )
     await NotificationActions.closeNotification()
   }
+
   /**
    * Close all notifications
    */

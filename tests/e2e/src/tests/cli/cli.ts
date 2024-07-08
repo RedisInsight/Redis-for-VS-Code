@@ -1,5 +1,6 @@
 import { expect } from 'chai'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import {
   BottomBar,
   CliViewPanel,
@@ -23,6 +24,7 @@ describe('CLI critical', () => {
 
   before(async () => {
     bottomBar = new BottomBar()
+    cliViewPanel = new CliViewPanel()
     treeView = new TreeView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
@@ -30,8 +32,12 @@ describe('CLI critical', () => {
     )
   })
   beforeEach(async () => {
+    await cliViewPanel.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await treeView.openCliByDatabaseName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     await treeView.switchBack()
-    cliViewPanel = await bottomBar.openCliViewPanel()
     await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
   })
   afterEach(async () => {
@@ -44,9 +50,9 @@ describe('CLI critical', () => {
   })
   after(async () => {
     await cliViewPanel.switchBack()
-
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
+
   it('Verify that Redis returns error if command is not correct when user works with CLI', async function () {
     await cliViewPanel.executeCommand('SET key')
     let cliOutput = await cliViewPanel.getCliLastCommandResponse()
@@ -57,6 +63,7 @@ describe('CLI critical', () => {
       'ERR unknown command `lorem`, with args beginning with: ',
     )
   })
+
   it('Verify that user can scroll commands using "Tab" in CLI & execute it', async function () {
     const commandToAutoComplete = 'INFO'
     const commandStartsWith = 'I'
@@ -79,6 +86,7 @@ describe('CLI critical', () => {
     const text = await cliViewPanel.getCliLastCommandResponse()
     expect(text).contain('redis_version:')
   })
+
   it('Verify that when user enters in CLI RediSearch/JSON commands (FT.CREATE, FT.DROPINDEX/JSON.GET, JSON.DEL), he can see hints with arguments', async function () {
     const commandHints = [
       'index [data_type] [prefix] [filter] [default_lang] [lang_attribute] [default_score] [score_attribute] [payload_attribute] [maxtextfields] [seconds] [nooffsets] [nohl] [nofields] [nofreqs] [stopwords] [skipinitialscan] schema field [field ...]',
@@ -106,6 +114,7 @@ describe('CLI critical', () => {
       )
     }
   })
+
   it('Verify that user can repeat commands by entering a number of repeats before the Redis command in CLI', async function () {
     keyName = Common.generateWord(20)
     const command = `SET ${keyName} a`
@@ -118,6 +127,7 @@ describe('CLI critical', () => {
 
     expect(count).eql(repeats, `CLI not contains ${repeats} results`)
   })
+
   it('Verify that user can run command json.get and see JSON object with escaped quotes (" instead of ")', async function () {
     keyName = Common.generateWord(20)
     const jsonValueCli = '"{\\"name\\":\\"xyz\\"}"'
@@ -141,6 +151,7 @@ describe('CLI critical', () => {
       'The user can not see JSON object with escaped quotes',
     )
   })
+
   it('Verify that user can use "Up" and "Down" keys to view previous commands in CLI in the application', async function () {
     const cliCommands = ['get test', 'acl help', 'client list']
 
@@ -157,12 +168,14 @@ describe('CLI critical', () => {
       await InputActions.pressKey(cliViewPanel.cliCommand, 'down')
     }
   })
+
   it('Verify that user can send command via CLI', async function () {
     keyName = Common.generateWord(10)
     await cliViewPanel.executeCommand('info')
     const text = await cliViewPanel.getCliLastCommandResponse()
     expect(text).contain('redis_version:')
   })
+
   it('Verify that user can add data via CLI', async function () {
     await cliViewPanel.executeCommand(
       `SADD ${keyName} "chinese" "japanese" "german"`,
@@ -170,15 +183,21 @@ describe('CLI critical', () => {
 
     await cliViewPanel.switchBack()
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
     await treeView.openKeyDetailsByKeyName(keyName)
   })
+
   it('Verify that user can use blocking command', async function () {
     await cliViewPanel.executeCommand('blpop newKey 10000')
     await CommonDriverExtension.driverSleep(2000)
     const text = await cliViewPanel.getCliText()
     expect(text).contain('Executing command...')
   })
-  it('Verify that user can switch between CLI instances', async function () {
+  // Unskip after CLI refactoring if switching functionality will be returned
+  it.skip('Verify that user can switch between CLI instances', async function () {
     const dbAddress =
       Config.ossStandaloneConfig.host + ':' + Config.ossStandaloneConfig.port
     const text = await cliViewPanel.getCliText()

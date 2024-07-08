@@ -1,4 +1,5 @@
-import { Locator } from 'vscode-extension-tester'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach, Locator } from 'vscode-extension-tester'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { TreeView, EditDatabaseView } from '@e2eSrc/page-objects/components'
 import { DatabasesActions } from '@e2eSrc/helpers/common-actions'
@@ -15,16 +16,18 @@ describe('Database modules', () => {
     databaseName: `test_standalone-redisearch-${uniqueId}`,
   }
 
-  beforeEach(async () => {
+  before(async () => {
     treeView = new TreeView()
     editDatabaseView = new EditDatabaseView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(database)
+  })
+  beforeEach(async () => {
+    await CommonDriverExtension.driverSleep(1000)
     await treeView.editDatabaseByName(database.databaseName)
-    await CommonDriverExtension.driverSleep(2000)
     await treeView.switchBack()
     await editDatabaseView.switchToInnerViewFrame(
-      InnerViews.AddDatabaseInnerView,
+      InnerViews.EditDatabaseInnerView,
     )
   })
   afterEach(async () => {

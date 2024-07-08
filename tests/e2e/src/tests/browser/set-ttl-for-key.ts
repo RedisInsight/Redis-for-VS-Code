@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import {
   BottomBar,
   KeyDetailsView,

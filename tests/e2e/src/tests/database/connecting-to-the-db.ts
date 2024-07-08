@@ -1,6 +1,13 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { ActivityBar, VSBrowser, beforeEach, afterEach } from 'vscode-extension-tester'
+import {
+  ActivityBar,
+  VSBrowser,
+  beforeEach,
+  afterEach,
+  before,
+  after
+} from 'vscode-extension-tester'
 import {
   TreeView,
   KeyDetailsView,
@@ -20,7 +27,7 @@ describe('Connecting to the databases verifications', () => {
   let treeView: TreeView
   let addDatabaseView: AddDatabaseView
 
-  beforeEach(async () => {
+  before(async () => {
     browser = VSBrowser.instance
     keyDetailsView = new KeyDetailsView()
     treeView = new TreeView()
@@ -28,7 +35,10 @@ describe('Connecting to the databases verifications', () => {
 
     await browser.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
+  })
+  beforeEach(async () => {
     await ButtonActions.clickElement(treeView.addDatabaseBtn)
+    await treeView.switchBack()
     await addDatabaseView.switchToInnerViewFrame(
       InnerViews.AddDatabaseInnerView,
     )
@@ -36,6 +46,7 @@ describe('Connecting to the databases verifications', () => {
   afterEach(async () => {
     await addDatabaseView.switchBack()
   })
+
   it('Verify that user can see error message if he can not connect to added Database', async function () {
     const errorMessage = `Could not connect to ${Config.invalidOssStandaloneConfig.host}:${Config.invalidOssStandaloneConfig.port}, please check the connection details.`
 

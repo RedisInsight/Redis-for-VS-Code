@@ -1,26 +1,28 @@
 import { expect } from 'chai'
-import { describe, it, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach, BottomBarPanel } from 'vscode-extension-tester'
 import {
   BottomBar,
   SortedSetKeyDetailsView,
   TreeView,
-  CliViewPanel,
   AddSortedSetKeyView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
   DatabasesActions,
-  InputActions,
   KeyDetailsActions,
   NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
-import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
+import {
+  CliAPIRequests,
+  DatabaseAPIRequests,
+  KeyAPIRequests,
+} from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { SortedSetKeyParameters } from '@e2eSrc/helpers/types/types'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
-import { BottomBarPanel } from 'vscode-extension-tester'
 
 let keyName: string
 
@@ -29,7 +31,6 @@ describe('ZSet Key fields verification', () => {
   let bottomBarPanel: BottomBarPanel
   let keyDetailsView: SortedSetKeyDetailsView
   let treeView: TreeView
-  let cliViewPanel: CliViewPanel
   let addSortedSetKeyView: AddSortedSetKeyView
 
   before(async () => {
@@ -42,13 +43,11 @@ describe('ZSet Key fields verification', () => {
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
-    await keyDetailsView.switchBack()
-    // Open terminal to not overlap buttons by notifications
-    await bottomBarPanel.openTerminalView()
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await NotificationActions.closeAllNotifications()
   })
   afterEach(async () => {
     await keyDetailsView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await KeyAPIRequests.deleteKeyIfExistsApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
@@ -56,9 +55,9 @@ describe('ZSet Key fields verification', () => {
   })
   after(async () => {
     await keyDetailsView.switchBack()
-
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
+
   it('Verify that user can search and delete by member in Zset', async function () {
     keyName = Common.generateWord(10)
     const keyFieldValue = 'sortedSetField'
@@ -77,9 +76,7 @@ describe('ZSet Key fields verification', () => {
     await addSortedSetKeyView.addKey(zsetKeyParameters, KeyTypesShort.ZSet)
     await keyDetailsView.switchBack()
     // Check the notification message that key added
-    await NotificationActions.checkNotificationMessage(
-      `Key has been added`,
-    )
+    await NotificationActions.checkNotificationMessage(`Key has been added`)
 
     await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
 
@@ -129,15 +126,10 @@ describe('ZSet Key fields verification', () => {
     const arr = await Common.createArray(100)
     let command = `ZADD ${keyName} ${arr.join(' ')}`
 
-    await treeView.switchBack()
-    cliViewPanel = await bottomBar.openCliViewPanel()
-    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
-    await cliViewPanel.executeCommand(command)
-
-    await cliViewPanel.switchBack()
-
-    // Refresh database
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await CliAPIRequests.sendRedisCliCommandApi(
+      command,
+      Config.ossStandaloneConfig,
+    )
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )

@@ -12,7 +12,6 @@ import { InputWithButtons } from '../common/InputWithButtons'
  * Key details view
  */
 export class KeyDetailsView extends WebView {
-  inlineItemEditor = By.xpath(`//*[@data-testid='inline-item-editor']`)
   keyType = By.xpath(`//div[contains(@class, '_keyFlexGroup')]`)
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
   keyLength = By.xpath(`//div[@data-testid='key-length-text']`)
@@ -145,6 +144,7 @@ export class KeyDetailsView extends WebView {
    * Click on copy button
    */
   async clickCopyKeyName(): Promise<void> {
+    await ButtonActions.hoverElement(this.keyType)
     await ButtonActions.clickElement(this.copyButton)
   }
 

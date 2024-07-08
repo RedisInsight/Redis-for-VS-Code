@@ -28,7 +28,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
       __dirname,
       '..',
       'test-extensions',
-      `undefined_publisher.${Config.extensionName.replace('.vsix', '')}`,
+      `redis ltd..${Config.extensionName.replace('.vsix', '')}`,
     )
     // Install VSCode and Chromedriver
     await exTester.downloadCode()

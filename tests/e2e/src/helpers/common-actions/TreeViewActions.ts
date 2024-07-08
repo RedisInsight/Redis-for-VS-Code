@@ -111,7 +111,6 @@ export class TreeViewActions extends CommonDriverExtension {
         `The database is not automatically scanned by ${i} 000 keys`,
       )
       await ButtonActions.clickAndWaitForElement(treeView.scanMoreBtn, treeView.loadingIndicator, true, 1000)
-      // await treeView.waitForElementVisibility(treeView.loadingVirtualTree, 5000, false)
       await treeView.waitForElementVisibility(
         treeView.loadingIndicator,
         1000,

@@ -178,6 +178,7 @@ export class TreeView extends WebView {
     await ButtonActions.hoverElement(this.treeViewKey)
     await ButtonActions.clickElement(this.deleteKeyInListBtn)
     await ButtonActions.clickElement(this.submitDeleteKeyButton)
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, false)
   }
 
   /**
@@ -273,6 +274,7 @@ export class TreeView extends WebView {
    */
   async getScannedResults(): Promise<number> {
     let treeView = new TreeView()
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, false)
     const text = await treeView.getElementText(treeView.scanMoreBtn)
     const match: any = text.match(/\((\d{1,3}(?: \d{3})*) Scanned\)/)
 
@@ -280,5 +282,15 @@ export class TreeView extends WebView {
     const scannedResults = Number(match[1].replace(/\s/g, ''))
 
     return scannedResults
+  }
+
+  /**
+   * Click on CLI database in list by its name
+   * @param databaseName The name of the database
+   */
+  async openCliByDatabaseName(databaseName: string): Promise<void> {
+    await ButtonActions.clickElement(this.getCLIDatabaseBtnByName(databaseName))
+    // TODO delete after fixing CLI issue with invalid db id
+    await ButtonActions.clickElement(this.getCLIDatabaseBtnByName(databaseName))
   }
 }

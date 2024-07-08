@@ -1,4 +1,6 @@
 import { expect } from 'chai'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Common } from '@e2eSrc/helpers/Common'
 import { Config } from '@e2eSrc/helpers/Conf'

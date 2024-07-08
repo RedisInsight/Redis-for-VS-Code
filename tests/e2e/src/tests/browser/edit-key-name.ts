@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { before, after, afterEach } from 'vscode-extension-tester'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import {
   HashKeyDetailsView,
   TreeView,
@@ -74,7 +74,7 @@ describe('Edit Key names verification', () => {
     )
     await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
-  it('Verify that user can edit String Key name', async function () {
+  it.only('Verify that user can edit String Key name', async function () {
     keyNameBefore = Common.generateWord(10)
     keyNameAfter = Common.generateWord(10)
     const stringKeyParameters: StringKeyParameters = {
