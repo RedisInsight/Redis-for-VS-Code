@@ -35,9 +35,6 @@ describe('Set Key fields verification', () => {
       Config.ossStandaloneConfig,
     )
   })
-  beforeEach(async () => {
-    await keyDetailsView.switchBack()
-  })
   afterEach(async () => {
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
@@ -54,7 +51,7 @@ describe('Set Key fields verification', () => {
     const keyFieldValue = 'setField11111'
     const setKeyParameters: SetKeyParameters = {
       keyName: keyName,
-      members: ['setField', 'setField2'],
+      members: ['setField'],
     }
 
     // Verify that user can add Set Key
@@ -76,8 +73,7 @@ describe('Set Key fields verification', () => {
       await keyDetailsView.getElements(keyDetailsView.setFieldsList)
     )[0].getText()
     expect(result).contains(keyFieldValue)
-    await ButtonActions.clickElement(keyDetailsView.clearSearchInput)
-    await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
+    await keyDetailsView.clearSearchInKeyDetails()
 
     // Verify that user can remove member from Set
     await keyDetailsView.removeRowByField(KeyTypesShort.Set, keyFieldValue)
@@ -107,10 +103,11 @@ describe('Set Key fields verification', () => {
   it('Verify that add button is disabled in Set', async function () {
     keyName = Common.generateWord(10)
 
-    await NotificationActions.closeAllNotifications()
-
-    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await ButtonActions.clickElement(treeView.addKeyButton)
+    await this.switchBack()
+    await this.switchToInnerViewFrame(InnerViews.AddKeyInnerView)
+    await this.selectKeyTypeByValue(KeyTypesShort.Set)
+
     expect(
       await addSetKeyView.isElementDisabled(addSetKeyView.addButton, 'class'),
     ).eql(true, 'add button is not disabled if name in not entered')

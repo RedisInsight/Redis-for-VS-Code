@@ -31,7 +31,7 @@ describe('Cases with large data', () => {
     await hashKeyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
-      Config.ossStandaloneConfig.databaseName,
+      Config.ossStandaloneBigConfig.databaseName,
     )
   })
   after(async () => {
@@ -53,40 +53,41 @@ describe('Cases with large data', () => {
     }
     const keyToAddParameters = {
       fieldsCount: 20000,
-      KeyName: keyName,
+      keyName: keyName,
       fieldStartWith: 'hashField',
       fieldValueStartWith: 'hashValue',
     }
 
     const keyToAddParameters2 = {
       fieldsCount: 1,
-      KeyName: keyName,
+      keyName: keyName,
       fieldStartWith: 'hastToSearch',
       fieldValueStartWith: 'hashValue',
     }
 
     await KeyAPIRequests.addHashKeyApi(
       hashKeyParameters,
-      Config.ossStandaloneConfig.databaseName,
+      Config.ossStandaloneBigConfig.databaseName,
     )
 
     // Add 20000 fields to the hash key
     await KeyActions.populateHashWithFields(
-      Config.ossStandaloneConfig.host,
-      Config.ossStandaloneConfig.port,
+      Config.ossStandaloneBigConfig.host,
+      Config.ossStandaloneBigConfig.port,
       keyToAddParameters,
     )
 
     // Add 1 fields to the hash key
     await KeyActions.populateHashWithFields(
-      Config.ossStandaloneConfig.host,
-      Config.ossStandaloneConfig.port,
+      Config.ossStandaloneBigConfig.host,
+      Config.ossStandaloneBigConfig.port,
       keyToAddParameters2,
     )
     // Refresh database
     await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
+      Config.ossStandaloneBigConfig.databaseName,
     )
+    await treeView.searchByKeyName(keyName)
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 

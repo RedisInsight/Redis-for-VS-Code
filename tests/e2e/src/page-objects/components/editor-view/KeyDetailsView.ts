@@ -26,6 +26,7 @@ export class KeyDetailsView extends WebView {
   setMemberInput = By.xpath(`//*[starts-with(@data-testid, 'member-name')]`)
   keyNameInput = By.xpath(`//*[@data-testid='edit-key-input']`)
   copyKeyNameBtn = By.xpath(`//*[@data-testid='copy-name-button']`)
+  editTtlInput = By.xpath(`//*[@data-testid='edit-ttl-input']`)
   // BUTTONS
   searchButtonInKeyDetails = By.xpath(
     `//vscode-button[@data-testid='search-button']`,
@@ -45,6 +46,7 @@ export class KeyDetailsView extends WebView {
   saveMemberButton = By.xpath(`//*[@data-testid='save-members-btn']`)
   formatSwitcher = By.xpath(`//*[@data-testid='select-format-key-value']`)
   saveButton = By.xpath(`//vscode-button[@data-testid='save-btn']`)
+  applyTtlInputBtn = By.xpath(`//*[@data-testid='edit-ttl-btn']//*[@data-testid='apply-btn']`)
 
   getTrashIcon = (keyType: string, name: string): By =>
     By.xpath(

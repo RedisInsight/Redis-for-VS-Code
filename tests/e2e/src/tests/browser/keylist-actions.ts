@@ -2,10 +2,7 @@ import { expect } from 'chai'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Common } from '@e2eSrc/helpers/Common'
 import { Config } from '@e2eSrc/helpers/Conf'
-import {
-  StringKeyDetailsView,
-  TreeView,
-} from '@e2eSrc/page-objects/components'
+import { StringKeyDetailsView, TreeView } from '@e2eSrc/page-objects/components'
 import {
   DatabasesActions,
   KeyDetailsActions,
@@ -33,7 +30,6 @@ describe('Actions with Key List', () => {
     await keyDetailsView.switchBack()
     await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
-
   it('Verify that key deleted properly from the list', async function () {
     // Adding a string key
     const keyName = Common.generateWord(10)
@@ -52,11 +48,15 @@ describe('Actions with Key List', () => {
 
     let actualItemsArray = await treeView.getAllKeysArray()
     expect(actualItemsArray).contains(keyName, 'Key added properly')
-
     await treeView.deleteKeyFromListByName(keyName)
-    expect(actualItemsArray.includes(keyName)).eql(
+    expect(await treeView.isKeyIsDisplayedInTheList(keyName)).eql(
       false,
-      'Key deleted from the list properly',
+      'The key was not deleted',
+    )
+    await treeView.switchBack()
+    // Check the notification message that key deleted
+    await NotificationActions.checkNotificationMessage(
+      `${keyName} has been deleted.`,
     )
   })
 

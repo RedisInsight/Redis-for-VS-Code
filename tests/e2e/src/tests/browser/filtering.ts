@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it, afterEach } from 'mocha'
-import { TreeView } from '@e2eSrc/page-objects/components'
+import { AddDatabaseView, TreeView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
@@ -22,6 +22,7 @@ import {
   KeyTypesShort,
 } from '@e2eSrc/helpers/constants'
 import { ServerActions } from '@e2eSrc/helpers/common-actions/ServerActions'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName = `KeyForSearch*?[]789${Common.generateWord(10)}`
 let keyName2 = Common.generateWord(10)
@@ -38,7 +39,7 @@ keysData.forEach(
       `${key.keyName}` + '-' + `${Common.generateWord(keyLength)}`),
 )
 
-describe.only('Filtering per key name', () => {
+describe('Filtering per key name', () => {
   let treeView: TreeView
 
   before(async () => {
@@ -359,12 +360,23 @@ describe.only('Filtering per key name', () => {
 
 describe('Filtering per key name in DB with 10 millions of keys', () => {
   let treeView: TreeView
+  let addDatabaseView: AddDatabaseView
 
   before(async () => {
     treeView = new TreeView()
-    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
-      Config.ossStandaloneBigConfig,
+    addDatabaseView = new AddDatabaseView()
+
+    await treeView.switchBack()
+    await ButtonActions.clickElement(treeView.addDatabaseBtn)
+    await addDatabaseView.switchToInnerViewFrame(
+      InnerViews.AddDatabaseInnerView,
     )
+    await addDatabaseView.addRedisDataBase(Config.ossStandaloneBigConfig)
+    // Click for saving
+    await ButtonActions.clickElement(addDatabaseView.saveDatabaseButton)
+    await treeView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await treeView.clickDatabaseByName(Config.ossStandaloneBigConfig.databaseName!)
   })
   after(async () => {
     await DatabaseAPIRequests.deleteAllDatabasesApi()
@@ -401,7 +413,7 @@ describe('Filtering per key name in DB with 10 millions of keys', () => {
     for (let i = 1; i < 10; i++) {
       // Verify that keys are filtered
       const treeItemName = await treeView.getElementText(
-        treeView.getTreeViewItemByIndex(i),
+        treeView.getTreeViewItemByIndex(i + 1),
       )
       expect(treeItemName).contains(
         'device',
@@ -421,7 +433,7 @@ describe('Filtering per key name in DB with 10 millions of keys', () => {
       await treeView.selectFilterGroupType(keyTypes[i].keyName)
       // Verify that all results have the same type as in filter
       expect(
-        await treeView.getElementText(treeView.getTreeViewItemByIndex(i)),
+        await treeView.getElementText(treeView.getTreeViewItemByIndex(i + 1)),
       ).contains(keyTypes[i].keyName, 'Keys filtered incorrectly by key type')
     }
   })
