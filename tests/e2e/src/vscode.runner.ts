@@ -42,7 +42,7 @@ import { Config } from './helpers/Conf'
     // Run tests
     await exTester.runTests(
       [
-        path.join(__dirname, '..', 'dist', 'tests', '00_setup.js'),
+        path.join(__dirname, '..', 'dist', 'tests', 'setup.js'),
         path.join(__dirname, '..', 'dist', 'tests', '**', '*.js'),
       ],
       {
