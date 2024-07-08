@@ -22,6 +22,8 @@ export enum VscodeMessageAction {
   UpdateSettings = 'UpdateSettings',
   UpdateSettingsDelimiter = 'UpdateSettingsDelimiter',
   SaveAppInfo = 'SaveAppInfo',
+  ShowEula = 'ShowEula',
+  CloseEula = 'CloseEula',
 }
 
 export enum VscodeStateItem {

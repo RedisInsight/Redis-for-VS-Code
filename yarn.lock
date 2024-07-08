@@ -4632,15 +4632,15 @@
     loupe "^2.3.7"
     pretty-format "^29.7.0"
 
-"@vscode/codicons@^0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@vscode/codicons/-/codicons-0.0.35.tgz#7424a647f39c6e71c86c1edf12bfc27196c8fba1"
-  integrity sha512-7iiKdA5wHVYSbO7/Mm0hiHD3i4h+9hKUe1O4hISAe/nHhagMwb2ZbFC8jU6d7Cw+JNT2dWXN2j+WHbkhT5/l2w==
+"@vscode/codicons@^0.0.36":
+  version "0.0.36"
+  resolved "https://registry.yarnpkg.com/@vscode/codicons/-/codicons-0.0.36.tgz#ccdabfaef5db596b266644ab85fc25aa701058f0"
+  integrity sha512-wsNOvNMMJ2BY8rC2N2MNBG7yOowV3ov8KlvUE/AiVUlHKTfWsw3OgAOQduX7h0Un6GssKD3aoTVH+TF3DSQwKQ==
 
-"@vscode/l10n-dev@^0.0.34":
-  version "0.0.34"
-  resolved "https://registry.yarnpkg.com/@vscode/l10n-dev/-/l10n-dev-0.0.34.tgz#6881e91360421566752f2e8d905bca3007b552a0"
-  integrity sha512-0y6FDDPG0BZltGl+yDxl3jQRB4Jn9B8kaSw1cMKJoHM5IYLovl4B635eKf6KtAY8/MNfv8T9j9xF1qsm2jvstg==
+"@vscode/l10n-dev@^0.0.35":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@vscode/l10n-dev/-/l10n-dev-0.0.35.tgz#cdd8106a56b7dc8feef62d10c413d6d8d94b2d5c"
+  integrity sha512-s6uzBXsVDSL69Z85HSqpc5dfKswQkeucY8L00t1TWzGalw7wkLQUKMRwuzqTq+AMwQKrRd7Po14cMoTcd11iDw==
   dependencies:
     "@azure-rest/ai-translation-text" "^1.0.0-beta.1"
     debug "^4.3.4"

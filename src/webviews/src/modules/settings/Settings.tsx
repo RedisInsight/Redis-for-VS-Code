@@ -3,12 +3,11 @@ import * as l10n from '@vscode/l10n'
 import cx from 'classnames'
 
 import { Separator } from 'uiSrc/ui'
-import { InlineEditor } from 'uiSrc/components'
+import { InlineEditor, ConsentsPrivacy } from 'uiSrc/components'
 import { DEFAULT_DELIMITER, MAX_DELIMITER_LENGTH, VscodeMessageAction } from 'uiSrc/constants'
 import { vscodeApi } from 'uiSrc/services'
 import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
-import { ConsentsPrivacy } from './ConsentsPrivacy'
 import styles from './styles.module.scss'
 
 export const Settings = () => {

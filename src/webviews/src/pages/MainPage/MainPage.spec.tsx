@@ -1,10 +1,10 @@
 import React from 'react'
 
 import { render } from 'testSrc/helpers'
-import { DatabasePage } from './DatabasePage'
+import { MainPage } from './MainPage'
 
 describe('DatabasePage', () => {
   it('should render', () => {
-    expect(render(<DatabasePage />)).toBeTruthy()
+    expect(render(<MainPage />)).toBeTruthy()
   })
 })
