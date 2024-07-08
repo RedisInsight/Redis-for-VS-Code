@@ -1,9 +1,7 @@
 import { expect } from 'chai'
-import { describe, it, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
 import {
   BottomBar,
-  CliViewPanel,
-  InputWithButtons,
   KeyDetailsView,
   TreeView,
 } from '@e2eSrc/page-objects/components'
@@ -14,13 +12,12 @@ import {
   DatabasesActions,
 } from '@e2eSrc/helpers/common-actions'
 import { Common } from '@e2eSrc/helpers/Common'
-import { Config } from '@e2eSrc/helpers'
-import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
-import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { CommonDriverExtension, Config } from '@e2eSrc/helpers'
+import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
+import { SetKeyParameters } from '@e2eSrc/helpers/types/types'
 
-describe.only('Set TTL for Key', () => {
+describe('Set TTL for Key', () => {
   let bottomBar: BottomBar
-  let cliViewPanel: CliViewPanel
   let keyDetailsView: KeyDetailsView
   let treeView: TreeView
 
@@ -38,37 +35,31 @@ describe.only('Set TTL for Key', () => {
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
 
-  afterEach(async () => {
-    await keyDetailsView.switchBack()
-    await bottomBar.openTerminalView()
-    cliViewPanel = await bottomBar.openCliViewPanel()
-    await keyDetailsView.switchToInnerViewFrame(InnerViews.CliInnerView)
-    await cliViewPanel.executeCommand(`FLUSHDB`)
-  })
   it('Verify that user can specify TTL for Key', async function () {
     const ttlValue = '2147476121'
-
-    await keyDetailsView.switchBack()
-    cliViewPanel = await bottomBar.openCliViewPanel()
-    await keyDetailsView.switchToInnerViewFrame(InnerViews.CliInnerView)
     const keyName = Common.generateWord(20)
-    const command = `SET ${keyName} a`
-    await cliViewPanel.executeCommand(`${command}`)
-    await keyDetailsView.switchBack()
+    const setKeyParameters: SetKeyParameters = {
+      keyName,
+      members: ['a'],
+    }
+
+    await KeyAPIRequests.addSetKeyApi(
+      setKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
     // Refresh database
-    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
-    await InputActions.slowType(keyDetailsView.inlineItemEditor, ttlValue)
-    await ButtonActions.clickElement(InputWithButtons.applyInput)
-
+    await InputActions.slowType(keyDetailsView.editTtlInput, ttlValue)
+    await ButtonActions.clickElement(keyDetailsView.applyTtlInputBtn)
+    await CommonDriverExtension.driverSleep(1000)
     await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
-
+    await CommonDriverExtension.driverSleep(1000)
     const newTtlValue = Number(
-      await InputActions.getInputValue(keyDetailsView.inlineItemEditor),
+      await InputActions.getInputValue(keyDetailsView.editTtlInput),
     )
     expect(Number(ttlValue)).gt(newTtlValue)
   })
