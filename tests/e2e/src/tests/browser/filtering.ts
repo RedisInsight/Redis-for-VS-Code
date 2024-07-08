@@ -21,7 +21,6 @@ import {
   keyTypesShort,
   KeyTypesShort,
 } from '@e2eSrc/helpers/constants'
-import { ServerActions } from '@e2eSrc/helpers/common-actions/ServerActions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName = `KeyForSearch*?[]789${Common.generateWord(10)}`
@@ -44,8 +43,6 @@ describe('Filtering per key name', () => {
 
   before(async () => {
     treeView = new TreeView()
-
-    await ServerActions.waitForServerInitialized()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
