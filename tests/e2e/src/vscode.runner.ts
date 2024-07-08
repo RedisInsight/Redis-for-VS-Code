@@ -8,9 +8,6 @@ import * as fs from 'fs'
 import path = require('path')
 import { Config } from './helpers/Conf'
 
-// Delay function
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-
 ;(async (): Promise<void> => {
   try {
     // Delete mochawesome-report directory
@@ -42,13 +39,10 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
       })
     }
 
-    // Wait for 10 seconds
-    await delay(10000)
-
     // Run tests
     await exTester.runTests(
       [
-        path.join(__dirname, '..', 'dist', 'tests', 'setup.js'),
+        path.join(__dirname, '..', 'dist', 'tests', '00_setup.js'),
         path.join(__dirname, '..', 'dist', 'tests', '**', '*.js'),
       ],
       {
