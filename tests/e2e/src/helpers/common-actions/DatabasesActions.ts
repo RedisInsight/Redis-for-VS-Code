@@ -58,8 +58,6 @@ export class DatabasesActions extends CommonDriverExtension {
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {
     let treeView = new TreeView()
-    // TODO move to the first test only
-    await ServerActions.waitForServerInitialized()
     await DatabaseAPIRequests.addNewStandaloneDatabaseApi(databaseParameters)
     await VSBrowser.instance.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()

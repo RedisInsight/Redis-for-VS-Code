@@ -71,7 +71,7 @@ describe('Edit Key values verification', () => {
     )
     await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
-  it.only('Verify that user can edit Hash Key field', async function () {
+  it('Verify that user can edit Hash Key field', async function () {
     const fieldName = 'test'
     keyName = Common.generateWord(10)
 
