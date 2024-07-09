@@ -1,7 +1,7 @@
 import React from 'react'
 import parse from 'html-react-parser'
 
-import { Checkbox, Spacer } from 'uiSrc/ui'
+import { Checkbox } from 'uiSrc/ui'
 import { IConsent } from 'uiSrc/components'
 
 export interface Props {
@@ -9,7 +9,6 @@ export interface Props {
   onChangeAgreement: (checked: boolean, name: string) => void
   checked: boolean
   isSettingsPage?: boolean
-  withoutSpacer?: boolean
 }
 
 export const ConsentsOption = (props: Props) => {

@@ -272,7 +272,6 @@ export const Eula = ({ onSubmitted }: Props) => {
                   consent={consent}
                   checked={formik.values[consent.agreementName] ?? false}
                   onChangeAgreement={onChangeAgreement}
-                  withoutSpacer
                   key={consent.agreementName}
                 />
               ))}
