@@ -1,18 +1,9 @@
-import { cloneDeep } from 'lodash'
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { cleanup, mockedStore } from 'testSrc/helpers'
 import { CliInput, Props } from './CliInput'
 
 const mockedProps = mock<Props>()
-
-let store: typeof mockedStore
-beforeEach(() => {
-  cleanup()
-  store = cloneDeep(mockedStore)
-  store.clearActions()
-})
 
 describe('CliInput', () => {
   it('should render', () => {

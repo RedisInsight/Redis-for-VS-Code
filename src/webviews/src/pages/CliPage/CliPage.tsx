@@ -1,15 +1,12 @@
 import React, { FC, useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import { StorageItem } from 'uiSrc/constants'
 import { Cli } from 'uiSrc/modules/cli/Cli'
-import { cliSettingsSelector } from 'uiSrc/modules/cli/slice/cli-settings'
+import { useCliSettingsStore } from 'uiSrc/modules/cli/hooks/cli-settings/useCliSettingsStore'
 import { localStorageService, sessionStorageService } from 'uiSrc/services'
 import { useDatabasesStore } from 'uiSrc/store'
 
 export const CliPage: FC<any> = () => {
-  const {
-    cliConnectionsHistory,
-  } = useSelector(cliSettingsSelector)
+  const cliConnectionsHistory = useCliSettingsStore((state) => state.cliConnectionsHistory)
 
   const setConnectedDatabase = useDatabasesStore((state) => state.setConnectedDatabase)
 

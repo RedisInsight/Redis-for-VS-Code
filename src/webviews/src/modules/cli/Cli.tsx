@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef, MouseEvent } from 'react'
 import cx from 'classnames'
-import { useDispatch, useSelector } from 'react-redux'
-import { cliSettingsSelector, closeAllCliConnections, deleteCli, fetchUnsupportedCliCommandsAction, selectCli } from 'uiSrc/modules/cli/slice/cli-settings'
-import { AppDispatch } from 'uiSrc/store'
 
 import { ConnectionHistory } from 'uiSrc/interfaces'
 import { CliBodyWrapper } from './components/cli-body'
 import { CliHistory } from './components/cli-history'
+import {
+  closeAllCliConnections,
+  deleteCli,
+  fetchUnsupportedCliCommandsAction,
+  selectCli,
+} from './hooks/cli-settings/useCliSettingsThunks'
+import { useCliSettingsStore } from './hooks/cli-settings/useCliSettingsStore'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -17,17 +21,14 @@ export const Cli = (props: Props) => {
   const { cliConnectionsHistory } = props
   const cliTableRef = useRef<HTMLTableElement>(null)
 
-  const {
-    activeCliId,
-  } = useSelector(cliSettingsSelector)
+  const activeCliId = useCliSettingsStore((state) => state.activeCliId)
 
-  const dispatch = useDispatch<AppDispatch>()
   const [dragged, setDragged] = useState<boolean>(false)
   const [width, setWidth] = useState<number>(365)
 
   useEffect(() => () => {
-    dispatch(closeAllCliConnections())
-    dispatch(fetchUnsupportedCliCommandsAction())
+    closeAllCliConnections()
+    fetchUnsupportedCliCommandsAction()
   }, [])
 
   const enableDragging = () => setDragged(true)
@@ -41,12 +42,12 @@ export const Cli = (props: Props) => {
 
   const cliClickHandle = (item: ConnectionHistory) => {
     if (item.id !== activeCliId) {
-      dispatch(selectCli(item.id))
+      selectCli(item.id)
     }
   }
 
   const cliDeleteHandle = (item: ConnectionHistory) => {
-    dispatch(deleteCli(item.id))
+    deleteCli(item.id)
   }
 
   return (

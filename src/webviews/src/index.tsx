@@ -3,10 +3,8 @@ import { createRoot } from 'react-dom/client'
 import {
   MemoryRouter as Router,
 } from 'react-router-dom'
-import { Provider } from 'react-redux'
 
 import {
-  store,
   useSelectedKeyStore,
   fetchEditedDatabase,
   Database,
@@ -80,10 +78,8 @@ const container = document.getElementById('root')
 const root = createRoot(container!)
 
 root.render(
-  <Provider store={store}>
-    <Router initialEntries={[container?.dataset.route || '']} initialIndex={0}>
-      <Config />
-      <AppRoutes />
-    </Router>
-  </Provider>,
+  <Router initialEntries={[container?.dataset.route || '']} initialIndex={0}>
+    <Config />
+    <AppRoutes />
+  </Router>,
 )

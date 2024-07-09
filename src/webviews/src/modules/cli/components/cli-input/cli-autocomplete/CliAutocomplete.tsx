@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react'
 import { findIndex } from 'lodash'
-import { useDispatch } from 'react-redux'
 
 import { ICommandArg } from 'uiSrc/constants'
 import { generateArgsNames } from 'uiSrc/utils'
-import { setMatchedCommand, clearSearchingCommand } from 'uiSrc/modules/cli/slice/cli-settings'
 
-import { AppDispatch } from 'uiSrc/store'
+import { useCliSettingsStore } from 'uiSrc/modules/cli/hooks/cli-settings/useCliSettingsStore'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -19,16 +17,19 @@ export interface Props {
 export const CliAutocomplete = (props: Props) => {
   const { commandName = '', provider = '', arguments: args = [], wordsTyped } = props
 
-  const dispatch = useDispatch<AppDispatch>()
+  const { setMatchedCommand, clearSearchingCommand } = useCliSettingsStore((state) => ({
+    setMatchedCommand: state.setMatchedCommand,
+    clearSearchingCommand: state.clearSearchingCommand,
+  }))
 
   useEffect(() => {
-    dispatch(setMatchedCommand(commandName))
-    dispatch(clearSearchingCommand())
+    setMatchedCommand(commandName)
+    clearSearchingCommand()
   }, [commandName])
 
   useEffect(() => () => {
-    dispatch(setMatchedCommand(''))
-    dispatch(clearSearchingCommand())
+    setMatchedCommand('')
+    clearSearchingCommand()
   }, [])
 
   let argsList: any[] | string = []
