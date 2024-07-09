@@ -1,6 +1,7 @@
 import { expect } from 'chai'
-import { describe, it, afterEach } from 'mocha'
-import { TreeView } from '@e2eSrc/page-objects/components'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
+import { AddDatabaseView, TreeView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
@@ -21,6 +22,7 @@ import {
   keyTypesShort,
   KeyTypesShort,
 } from '@e2eSrc/helpers/constants'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 let keyName = `KeyForSearch*?[]789${Common.generateWord(10)}`
 let keyName2 = Common.generateWord(10)
@@ -46,11 +48,17 @@ describe('Filtering per key name', () => {
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `FLUSHDB`,
+      Config.ossStandaloneConfig,
+    )
   })
   after(async () => {
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
+    // Clear filter
+    await treeView.clearFilter()
     await CliAPIRequests.sendRedisCliCommandApi(
       `FLUSHDB`,
       Config.ossStandaloneConfig,
@@ -159,6 +167,14 @@ describe('Filtering per key name', () => {
       true,
       'The key was not found',
     )
+
+    // Verify that key not found when selecting other key type
+    await treeView.selectFilterGroupType(KeyTypesShort.List)
+    expect(await treeView.isKeyIsDisplayedInTheList(keyName)).eql(
+      false,
+      'The key was found by invalid filter',
+    )
+
     // Verify that user can see filtering per key name starts when he clicks the control to filter per key name
     // Clear filter
     await treeView.clearFilter()
@@ -196,7 +212,7 @@ describe('Filtering per key name', () => {
         await DropdownActions.getDropdownValue(treeView.treeViewFilterSelect),
       ).contains(keyType, 'Keys not filtered by key type')
       // : await t.expect(browserPage.filteringLabel.textContent).contains('graphdata', 'Keys not filtered by key type')
-      const regExp = new RegExp('/(1/d+)/')
+      const regExp = new RegExp('\\(1 / \\d+\\)')
       expect(await treeView.getElementText(treeView.keysSummary)).match(
         regExp,
         'Incorrect number of found keys displayed',
@@ -323,7 +339,6 @@ describe('Filtering per key name', () => {
       'No results found message is not hidden',
     )
     // Verify that when user clicks on “Cancel” control filter is reset
-    await ButtonActions.clickElement(treeView.keyTreeFilterTrigger)
     await InputActions.typeText(treeView.treeViewSearchInput, keyName)
     await DropdownActions.selectDropdownValueWithScroll(
       treeView.treeViewFilterSelect,
@@ -343,18 +358,33 @@ describe('Filtering per key name', () => {
 
 describe('Filtering per key name in DB with 10 millions of keys', () => {
   let treeView: TreeView
+  let addDatabaseView: AddDatabaseView
 
   before(async () => {
     treeView = new TreeView()
-    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
-      Config.ossStandaloneBigConfig,
+    addDatabaseView = new AddDatabaseView()
+
+    await treeView.switchBack()
+    await ButtonActions.clickElement(treeView.addDatabaseBtn)
+    await addDatabaseView.switchToInnerViewFrame(
+      InnerViews.AddDatabaseInnerView,
     )
+    await addDatabaseView.addRedisDataBase(Config.ossStandaloneBigConfig)
+    // Click for saving
+    await ButtonActions.clickElement(addDatabaseView.saveDatabaseButton)
+    await treeView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await treeView.clickDatabaseByName(Config.ossStandaloneBigConfig.databaseName!)
   })
   after(async () => {
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
+  afterEach(async () => {
+    // Clear filter
+    await treeView.clearFilter()
+  })
   it('Verify that user can filter per exact key without using any patterns in DB with 10 millions of keys', async function () {
-    keyName = `KeyForSearch-${Common.generateWord(10)}`
+    keyName = `KeyForSearch-${Common.generateWord(5)}`
 
     await KeyAPIRequests.addKeyApi(
       { keyName, keyType: KeyTypesShort.Set },
@@ -381,7 +411,7 @@ describe('Filtering per key name in DB with 10 millions of keys', () => {
     for (let i = 1; i < 10; i++) {
       // Verify that keys are filtered
       const treeItemName = await treeView.getElementText(
-        treeView.getTreeViewItemByIndex(i),
+        treeView.getTreeViewItemByIndex(i + 1),
       )
       expect(treeItemName).contains(
         'device',
@@ -401,7 +431,7 @@ describe('Filtering per key name in DB with 10 millions of keys', () => {
       await treeView.selectFilterGroupType(keyTypes[i].keyName)
       // Verify that all results have the same type as in filter
       expect(
-        await treeView.getElementText(treeView.getTreeViewItemByIndex(i)),
+        await treeView.getElementText(treeView.getTreeViewItemByIndex(i + 1)),
       ).contains(keyTypes[i].keyName, 'Keys filtered incorrectly by key type')
     }
   })

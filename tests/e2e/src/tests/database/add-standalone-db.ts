@@ -1,5 +1,13 @@
 import { expect } from 'chai'
-import { ActivityBar, VSBrowser } from 'vscode-extension-tester'
+import { describe, it } from 'mocha'
+import {
+  before,
+  beforeEach,
+  after,
+  afterEach,
+  VSBrowser,
+  ActivityBar,
+} from 'vscode-extension-tester'
 import {
   TreeView,
   AddDatabaseView,
@@ -12,7 +20,7 @@ import {
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
-import { Common, Config } from '@e2eSrc/helpers'
+import { Common, CommonDriverExtension, Config } from '@e2eSrc/helpers'
 import {
   sshPrivateKey,
   sshPrivateKeyWithPasscode,
@@ -50,7 +58,7 @@ describe('Add database', () => {
 
   let databaseName = `test_standalone-${Common.generateString(10)}`
 
-  beforeEach(async () => {
+  before(async () => {
     browser = VSBrowser.instance
     treeView = new TreeView()
     addDatabaseView = new AddDatabaseView()
@@ -58,7 +66,12 @@ describe('Add database', () => {
 
     await browser.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
+  })
+  beforeEach(async () => {
+    await ButtonActions.clickElement(treeView.settingsButton)
+    await CommonDriverExtension.driverSleep(500)
     await ButtonActions.clickElement(treeView.addDatabaseBtn)
+    await treeView.switchBack()
     await addDatabaseView.switchToInnerViewFrame(
       InnerViews.AddDatabaseInnerView,
     )
@@ -70,6 +83,7 @@ describe('Add database', () => {
       Config.ossClusterConfig.ossClusterDatabaseName,
     ])
   })
+
   it('Verify that user can add Standalone Database', async function () {
     const connectionTimeout = '20'
     databaseName = `test_standalone-${Common.generateString(10)}`
@@ -103,6 +117,7 @@ describe('Add database', () => {
     // Verify that user can't see an indicator of databases that were opened
     // Verify that connection timeout value saved
   })
+
   it('Verify that user can add OSS Cluster DB', async function () {
     await addDatabaseView.addOssClusterDatabase(Config.ossClusterConfig)
     // Check for info message that DB was added
@@ -121,6 +136,7 @@ describe('Add database', () => {
     )
     // TODO Verify new connection badge for OSS cluster
   })
+
   it('Fields to add database prepopulation', async function () {
     const defaultHost = '127.0.0.1'
     const defaultPort = '6379'
@@ -142,6 +158,7 @@ describe('Add database', () => {
     // TODO add once db autodiscovery implemented:
     // Verify that the Host, Port, Database Alias values pre-populated by default for Sentinel
   })
+
   it('Verify that user can add SSH tunnel with Password for Standalone database', async function () {
     const sshWithPass = {
       ...sshParams,
@@ -159,6 +176,7 @@ describe('Add database', () => {
       ),
     ).true(`${databaseName} not added to database list`)
   })
+
   it('Verify that user can add SSH tunnel with Private Key', async function () {
     const hiddenPass = '••••••••••••'
     const sshWithPrivateKey = {
@@ -214,6 +232,7 @@ describe('Add database', () => {
       await InputActions.getInputValue(editDatabaseView.sshPassphraseInput),
     ).eql(hiddenPass, 'Passphrase not hidden for SSH on edit')
   })
+
   it('Verify that user can add SSH tunnel with Passcode', async function () {
     await addDatabaseView.addStandaloneSSHDatabase(
       sshDbPasscode,
@@ -229,6 +248,7 @@ describe('Add database', () => {
       ),
     ).true(`${databaseName} not added to database list`)
   })
+
   it('Verify that Add database button disabled when mandatory ssh fields not specified', async function () {
     await CheckboxActions.toggleCheckbox(addDatabaseView.useSSHCheckbox)
     await ButtonActions.clickElement(addDatabaseView.sshPrivateKeyRadioBtn)

@@ -1,5 +1,6 @@
 import { expect } from 'chai'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import { TreeView } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
@@ -23,20 +24,18 @@ describe('Tree view verifications', () => {
     )
   })
   beforeEach(async () => {
+    await treeView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+  })
+  afterEach(async () => {
     await CliAPIRequests.sendRedisCliCommandApi(
       'flushdb',
       Config.ossStandaloneConfig,
     )
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
-  })
-  afterEach(async () => {
     await treeView.switchBack()
-    for (const keyName of keyNames) {
-      await KeyAPIRequests.deleteKeyIfExistsApi(
-        keyName,
-        Config.ossStandaloneConfig.databaseName,
-      )
-    }
   })
   after(async () => {
     await treeView.switchBack()
@@ -105,7 +104,7 @@ describe('Tree view verifications', () => {
   it('Verify that user can see message "No keys to display." when there are no keys in the database', async function () {
     const message = 'Keys are the foundation of Redis.'
 
-    expect(await treeView.getElementText(treeView.treeViewPage)).eql(
+    expect(await treeView.getElementText(treeView.treeViewPage)).contains(
       message,
       'Tree view no keys message not shown',
     )

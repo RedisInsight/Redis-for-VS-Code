@@ -1,14 +1,14 @@
 import { expect } from 'chai'
-import { describe, it, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import { TreeView } from '@e2eSrc/page-objects/components'
-import { KeyAPIRequests, DatabaseAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Tree view verifications', () => {
   let treeView: TreeView
-  let keyNames: string[] = []
 
   before(async () => {
     treeView = new TreeView()
@@ -17,42 +17,34 @@ describe('Tree view verifications', () => {
       Config.ossStandaloneBigConfig,
     )
   })
+  afterEach(async () => {
+    await treeView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+  })
   after(async () => {
     await treeView.switchBack()
 
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
-  afterEach(async () => {
-    await treeView.switchBack()
-    for (const keyName of keyNames) {
-      await KeyAPIRequests.deleteKeyIfExistsApi(
-        keyName,
-        Config.ossStandaloneBigConfig.databaseName,
-      )
-    }
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
-  })
 
   it('Verify that user can see the total number of keys, the number of keys scanned, the “Scan more” control displayed at the top of Tree view', async function () {
-    const number = 10500
-
     // Verify the controls on the Tree view
-    expect(await treeView.isElementDisplayed(treeView.scanMoreBtn)).eql(
+    expect(await treeView.waitForElementVisibility(treeView.scanMoreBtn)).eql(
       true,
       'Tree view Scan more button not displayed for big database',
     )
-    expect(await treeView.isElementDisplayed(treeView.keyScannedNumber)).eql(
-      true,
+    expect(await treeView.getElementText(treeView.scanMoreBtn)).contains(
+      'Scanned',
       'Scanned key is not correct',
     )
     expect(await treeView.isElementDisplayed(treeView.totalKeyNumber)).eql(
       true,
       'incorrect count is displayed',
     )
-    const count = parseInt(await treeView.getElementText(treeView.scanMoreBtn))
-     await ButtonActions.clickElement(treeView.scanMoreBtn)
+    const count = await treeView.getScannedResults()
+    await ButtonActions.clickElement(treeView.scanMoreBtn)
 
-    expect(parseInt (await treeView.getElementText(treeView.scanMoreBtn))).gt(
+    expect(await treeView.getScannedResults()).gt(
       count,
       'the keys were not scanned',
     )

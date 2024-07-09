@@ -1,5 +1,6 @@
 import { Chance } from 'chance'
 import { Config } from './Conf'
+import { By, Locator } from 'vscode-extension-tester'
 
 const chance = new Chance()
 
@@ -106,9 +107,30 @@ export class Common {
    */
   static formatJsonString(input: string): string {
     // Remove whitespace characters except those within the value
-    const withoutWhitespace = input.replace(/\s+/g, '');
+    const withoutWhitespace = input.replace(/\s+/g, '')
     // Ensure colons have no spaces around them
-    const formattedString = withoutWhitespace.replace(/:/g, ':');
-    return formattedString;
-}
+    const formattedString = withoutWhitespace.replace(/:/g, ':')
+    return formattedString
+  }
+
+  /**
+   * Modify locator by adding additional path
+   * @param locator The locator to modify
+   * @param path The path to add to locator
+   */
+  static async modifyLocator(locator: Locator, path: string): Promise<Locator> {
+    const locatorString = locator.toString()
+    let originalXPath: string
+    if (locatorString.startsWith('By(xpath, ')) {
+      originalXPath = locatorString.replace('By(xpath, ', '').replace(')', '')
+    } else {
+      throw new Error('Provided locator is not an XPath locator.')
+    }
+
+    // Adjust the XPath to locate the correct element to click
+    const newXPath = `${originalXPath}` + `${path}`
+
+    // Create a new locator using the adjusted XPath
+    return By.xpath(newXPath)
+  }
 }

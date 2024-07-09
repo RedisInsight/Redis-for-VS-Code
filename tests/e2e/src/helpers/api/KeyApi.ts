@@ -200,9 +200,13 @@ export class KeyAPIRequests {
   ): Promise<void> {
     const databaseId =
       await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
-    const requestBody = {
+    const requestBody: { keyName: Buffer; value: Buffer; expire?: number } = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       value: Buffer.from(keyParameters.value, 'utf-8'),
+    }
+
+    if (keyParameters.hasOwnProperty('expire')) {
+      requestBody.expire = keyParameters.expire
     }
     const response = await CommonAPIRequests.sendPostRequest(
       `/databases/${databaseId}/string?encoding=buffer`,
@@ -226,9 +230,13 @@ export class KeyAPIRequests {
   ): Promise<void> {
     const databaseId =
       await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
-    const requestBody = {
+    const requestBody: { keyName: Buffer; data: string; expire?: number } = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       data: keyParameters.data,
+    }
+
+    if (keyParameters.hasOwnProperty('expire')) {
+      requestBody.expire = keyParameters.expire
     }
     const response = await CommonAPIRequests.sendPostRequest(
       `/databases/${databaseId}/rejson-rl?encoding=buffer`,

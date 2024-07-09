@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import { expect } from 'chai'
 import { ActivityBar, Locator, VSBrowser, until } from 'vscode-extension-tester'
 import { CommonDriverExtension } from '../CommonDriverExtension'
 import { TreeView } from '@e2eSrc/page-objects/components'
@@ -8,6 +7,7 @@ import { AddNewDatabaseParameters } from '../types/types'
 import { DatabaseAPIRequests } from '../api'
 import { NotificationActions } from './actions'
 import { KeyDetailsActions } from './KeyDetailsActions'
+import { ServerActions } from './ServerActions'
 
 /**
  * Database details actions
@@ -20,10 +20,8 @@ export class DatabasesActions extends CommonDriverExtension {
   static async checkModulesOnPage(moduleList: Locator[]): Promise<void> {
     for (const item of moduleList) {
       await super.initializeDriver()
-      expect(await super.driver.wait(until.elementLocated(item), 5000)).eql(
-        true,
-        `${item} icon not found`,
-      )
+      const element = await super.driver.wait(until.elementLocated(item), 5000)
+      await this.driver.wait(until.elementIsVisible(element), 5000)
     }
   }
   /**
@@ -63,8 +61,18 @@ export class DatabasesActions extends CommonDriverExtension {
     await DatabaseAPIRequests.addNewStandaloneDatabaseApi(databaseParameters)
     await VSBrowser.instance.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
+    await super.driverSleep(500)
+    await (await new ActivityBar().getViewControl('Redis Insight'))?.closeView()
+    await super.driverSleep(500)
+    await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
-    await treeView.clickDatabaseByName(databaseParameters.databaseName!)
+    if (
+      !(await treeView.isElementDisplayed(
+        treeView.getRefreshDatabaseBtnByName(databaseParameters.databaseName!),
+      ))
+    ) {
+      await treeView.clickDatabaseByName(databaseParameters.databaseName!)
+    }
   }
 
   /**

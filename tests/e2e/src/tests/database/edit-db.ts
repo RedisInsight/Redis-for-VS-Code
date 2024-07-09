@@ -1,4 +1,6 @@
 import { expect } from 'chai'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { TreeView, EditDatabaseView } from '@e2eSrc/page-objects/components'
 import {
@@ -6,8 +8,8 @@ import {
   DatabasesActions,
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
+import { Common, Config } from '@e2eSrc/helpers'
 import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
-import { Common, CommonDriverExtension, Config } from '@e2eSrc/helpers'
 
 describe('Edit Databases', () => {
   let treeView: TreeView
@@ -16,15 +18,17 @@ describe('Edit Databases', () => {
   const database = Object.assign({}, Config.ossStandaloneTlsConfig)
   const newDatabaseName = Common.generateWord(20)
 
-  beforeEach(async () => {
+  before(async () => {
     treeView = new TreeView()
     editDatabaseView = new EditDatabaseView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(database)
+  })
+  beforeEach(async () => {
     await treeView.editDatabaseByName(database.databaseName)
     await treeView.switchBack()
     await editDatabaseView.switchToInnerViewFrame(
-      InnerViews.AddDatabaseInnerView,
+      InnerViews.EditDatabaseInnerView,
     )
   })
   afterEach(async () => {
@@ -45,9 +49,9 @@ describe('Edit Databases', () => {
     await ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
     // TODO Verify that database has new alias
   })
+
   it('Verify that user can edit Standalone DB', async function () {
     const connectionTimeout = '20'
-    await CommonDriverExtension.driverSleep(10000)
     const caCertFieldValue = await editDatabaseView.getElementText(
       editDatabaseView.caCertField,
     )
