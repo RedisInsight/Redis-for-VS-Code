@@ -50,10 +50,10 @@ export const RejsonScalar = (props: JSONScalarProps) => {
       return
     }
 
-    setReJSONDataAction(selectedKey, path, String(value), undefined, (isEditMode, keyLevel) => {
+    setReJSONDataAction(selectedKey, path, String(value), undefined, (keyLevel) => {
       setEditing(false)
       sendEventTelemetry({
-        event: isEditMode ? TelemetryEvent.TREE_VIEW_JSON_PROPERTY_EDITED : TelemetryEvent.TREE_VIEW_JSON_PROPERTY_ADDED,
+        event: TelemetryEvent.TREE_VIEW_JSON_PROPERTY_EDITED,
         eventData: {
           databaseId,
           keyLevel,

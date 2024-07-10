@@ -50,9 +50,9 @@ export const RejsonDetails = (props: BaseProps) => {
   }
 
   const handleSetRejsonDataAction = (keyName: RedisString, path: string, data: string) => {
-    setReJSONDataAction(keyName, path, data, length, (isEditMode, keyLevel) => {
+    setReJSONDataAction(keyName, path, data, length, (keyLevel) => {
       sendEventTelemetry({
-        event: isEditMode ? TelemetryEvent.TREE_VIEW_JSON_PROPERTY_EDITED : TelemetryEvent.TREE_VIEW_JSON_PROPERTY_ADDED,
+        event: TelemetryEvent.TREE_VIEW_JSON_PROPERTY_ADDED,
         eventData: {
           databaseId,
           keyLevel,
