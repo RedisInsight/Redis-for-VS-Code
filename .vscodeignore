@@ -14,6 +14,7 @@ patches
 *.vsix
 *.config.js
 node_modules
+!node_modules/dotenv
 !node_modules/detect-port
 !node_modules/ms/index.js
 !node_modules/address

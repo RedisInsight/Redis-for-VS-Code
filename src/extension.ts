@@ -1,17 +1,27 @@
 import * as vscode from 'vscode'
+import * as dotenv from 'dotenv'
+import * as path from 'path'
 import { WebviewPanel } from './Webview'
-import { startBackend, closeBackend } from './server/bootstrapBackend'
+import { startBackend, getBackendGracefulShutdown } from './server/bootstrapBackend'
 import { initWorkspaceState } from './lib'
 import { WebViewProvider } from './WebViewProvider'
 import { handleMessage, truncateText } from './utils'
 import { MAX_TITLE_KEY_LENGTH, ViewId } from './constants'
+import { logger } from './logger'
+
+dotenv.config({ path: path.join(__dirname, '..', '.env') })
 
 let myStatusBarItem: vscode.StatusBarItem
 export async function activate(context: vscode.ExtensionContext) {
+  logger.log('Extension activated')
   await initWorkspaceState(context)
 
-  if (process.env.RI_WITHOUT_BACKEND !== 'true') {
-    await startBackend()
+  try {
+    if (process.env.RI_WITHOUT_BACKEND !== 'true') {
+      await startBackend(logger)
+    }
+  } catch (error) {
+    logger.log(`startBackend error: ${error}`)
   }
   const sidebarProvider = new WebViewProvider('sidebar', context)
   const panelProvider = new WebViewProvider('cli', context)
@@ -153,5 +163,9 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-  closeBackend()
+  try {
+    getBackendGracefulShutdown()
+  } catch (error) {
+    logger.log(`Deactivating error: ${error}`)
+  }
 }

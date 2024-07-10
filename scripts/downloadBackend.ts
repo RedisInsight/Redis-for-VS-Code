@@ -7,14 +7,12 @@ import { parse as parseUrl } from 'url'
 
 dotenv.config({
   path: [
-    path.join(__dirname, '..', '.env.local'),
     path.join(__dirname, '..', '.env'),
   ]
 })
 const cdnPath = process.env.RI_CDN_PATH
 const backendPath = path.join(__dirname, '..', 'dist', 'redis-backend')
 const staticPath = path.join(backendPath, 'static')
-const tempWindowsDistPath = process.env.RI_TEMP_WINDOWS_DIST_PATH as string
 
 const downloadBackend = async () => {
   if (fs.existsSync(backendPath)) {
@@ -49,10 +47,7 @@ function ensureFolderExists(loc: string) {
 }
 
 function getDownloadUrl(): string {
-  // Download is temporary available only for non-windows platforms
-  if (process.platform !== 'win32') {
-    return `${cdnPath}/Redis-Insight-web-${process.platform}.${process.arch}.tar.gz`
-  } return tempWindowsDistPath
+  return `${cdnPath}/Redis-Insight-web-${process.platform}.${process.arch}.tar.gz`
 }
 
 async function downloadRedisBackendArchive(
@@ -69,56 +64,29 @@ async function downloadRedisBackendArchive(
         reject(new Error('Failed to get Redis Insight backend archive location'))
       }
 
-      // Expected that windows distribution package will be zipped
-      if (downloadUrl.endsWith('.zip')) {
-        const archivePath = path.resolve(destDir, `redisinsight-backend-${platform}.zip`)
-        const outStream = fs.createWriteStream(archivePath)
-        outStream.on('close', () => {
-          resolve(archivePath)
-        })
-        https.get(downloadUrl, (res) => {
-          res.pipe(outStream)
-        })
-      } else { // Other non-windows distribution packages
-        const zipPath = path.resolve(destDir, `redisinsight-backend-${platform}.tar.gz`)
-        const outStream = fs.createWriteStream(zipPath)
-        https.get(downloadUrl, (res) => {
-          res.pipe(outStream)
-        })
-        outStream.on('close', () => {
-          resolve(zipPath)
-        })
-      }
+      // Expected that the distribution package will be zipped
+      const zipPath = path.resolve(destDir, `redisinsight-backend-${platform}.tar.gz`)
+      const outStream = fs.createWriteStream(zipPath)
+      https.get(downloadUrl, (res) => {
+        res.pipe(outStream)
+      })
+      outStream.on('close', () => {
+        resolve(zipPath)
+      })
     })
   })
 }
 
 function unzipRedisServer(redisInsideArchivePath: string, extractDir: string) {
-  if (redisInsideArchivePath.endsWith('.zip')) {
-    if (process.platform === 'win32') {
-      cp.spawnSync('powershell.exe', [
-        '-NoProfile',
-        '-ExecutionPolicy', 'Bypass',
-        '-NonInteractive',
-        '-NoLogo',
-        '-Command',
-        `Microsoft.PowerShell.Archive\\Expand-Archive -Path "${redisInsideArchivePath}" -DestinationPath "${extractDir}"`,
-      ])
-    } else {
-      cp.spawnSync('unzip', [redisInsideArchivePath, '-d', `${extractDir}`])
-    }
-  } else {
-    // tar does not create extractDir by default
-    if (!fs.existsSync(extractDir)) {
-      fs.mkdirSync(extractDir)
-    }
-    cp.spawnSync('tar', ['-xzf', redisInsideArchivePath, '-C', extractDir, '--strip-components', '2', 'api/dist'])
-    // Temporary: there's no some dependencies in current dist's, starting re-install
-    cp.spawnSync('yarn', ['--cwd', extractDir, 'install'])
-
-    // remove plugins
-    fs.rmSync(staticPath, { recursive: true, force: true });
+  // tar does not create extractDir by default
+  if (!fs.existsSync(extractDir)) {
+    fs.mkdirSync(extractDir)
   }
+
+  cp.spawnSync('tar', ['-xzf', redisInsideArchivePath, '-C', extractDir, '--strip-components', '1', 'api'])
+
+  // remove plugins
+  fs.rmSync(staticPath, { recursive: true, force: true });
 }
 
 downloadBackend()
