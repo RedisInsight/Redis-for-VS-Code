@@ -31,13 +31,16 @@ export class CommonAPIRequests {
     body?: Record<string, unknown>,
   ): Promise<any> {
     let requestEndpoint: any
+    try {
+      requestEndpoint = await request(endpoint)
+        .post(resourcePath)
+        .send(body)
+        .set('Accept', jsonType)
 
-    requestEndpoint = request(endpoint)
-      .post(resourcePath)
-      .send(body)
-      .set('Accept', jsonType)
-
-    return requestEndpoint
+      return requestEndpoint
+    } catch (error: any) {
+      throw new Error(`Failed to send POST request: ${error}`)
+    }
   }
 
   /**
@@ -50,13 +53,16 @@ export class CommonAPIRequests {
     body?: Record<string, unknown>,
   ): Promise<any> {
     let requestEndpoint: any
+    try {
+      requestEndpoint = await request(endpoint)
+        .delete(resourcePath)
+        .send(body)
+        .set('Accept', jsonType)
 
-    requestEndpoint = request(endpoint)
-      .delete(resourcePath)
-      .send(body)
-      .set('Accept', jsonType)
-
-    return requestEndpoint
+      return requestEndpoint
+    } catch (error: any) {
+      throw new Error(`Failed to send DELETE request: ${error}`)
+    }
   }
 
   /**
@@ -69,13 +75,16 @@ export class CommonAPIRequests {
     body?: Record<string, unknown>,
   ): Promise<any> {
     let requestEndpoint: any
+    try {
+      requestEndpoint = await request(endpoint)
+        .patch(resourcePath)
+        .send(body)
+        .set('Accept', jsonType)
 
-    requestEndpoint = request(endpoint)
-      .patch(resourcePath)
-      .send(body)
-      .set('Accept', jsonType)
-
-    return requestEndpoint
+      return requestEndpoint
+    } catch (error: any) {
+      throw new Error(`Failed to send PATCH request: ${error}`)
+    }
   }
 
   /**
@@ -87,13 +96,15 @@ export class CommonAPIRequests {
     resourcePath: string,
     body?: Record<string, unknown>,
   ): Promise<any> {
-    let requestEndpoint: any
+    try {
+      const requestEndpoint = await request(endpoint)
+        .put(resourcePath)
+        .send(body)
+        .set('Accept', jsonType)
 
-    requestEndpoint = request(endpoint)
-      .put(resourcePath)
-      .send(body)
-      .set('Accept', jsonType)
-
-    return requestEndpoint
+      return requestEndpoint
+    } catch (error) {
+      throw new Error(`Failed to send PUT request: ${error}`)
+    }
   }
 }

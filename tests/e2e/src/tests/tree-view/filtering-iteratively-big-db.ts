@@ -1,13 +1,13 @@
 import { expect } from 'chai'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import { TreeView } from '@e2eSrc/page-objects/components'
-import { KeyAPIRequests, DatabaseAPIRequests } from '@e2eSrc/helpers/api'
+import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
 
 describe('Filtering iteratively in Tree view for Big database', () => {
   let treeView: TreeView
-  let keys: string[]
 
   beforeEach(async () => {
     treeView = new TreeView()
@@ -18,24 +18,20 @@ describe('Filtering iteratively in Tree view for Big database', () => {
   })
   afterEach(async () => {
     await treeView.switchBack()
-    for (const keyName of keys) {
-      await KeyAPIRequests.deleteKeyIfExistsApi(
-        keyName,
-        Config.ossStandaloneBigConfig.databaseName,
-      )
-    }
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   it('Verify that user use Scan More in DB with 10-50 millions of keys (when search by pattern/)', async function () {
-    // TODO Search all string keys - add tests after search and filter will be implemented
-
+    // Search all keys
+    await treeView.searchByKeyName('*')
     // Verify that scan more button is shown
     expect(await treeView.isElementDisplayed(treeView.scanMoreBtn)).eql(
       true,
       'Scan more is not shown',
     )
     await ButtonActions.clickElement(treeView.scanMoreBtn)
-    const regExp = new RegExp('1 0' + '.')
-    // TODO Verify that number of results is 1000 - add tests when total number of keys is implemented
+    const regExp = new RegExp(`1000[0-9]`)
+    // Verify that number of results is 10000
+    const scannedValueText = await treeView.getScannedResults()
+    expect(scannedValueText).match(regExp, 'Number of results is not 10000')
   })
 })

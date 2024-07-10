@@ -11,6 +11,6 @@ export class Eula {
       `/settings`,
       spec,
     )
-    expect(response.status).eql(200)
+    expect(await response.status).eql(200)
   }
 }

@@ -1,4 +1,4 @@
-import { Key, VSBrowser, WebDriver, WebElement } from 'vscode-extension-tester'
+import { Key, VSBrowser, WebDriver} from 'vscode-extension-tester'
 import { Locator, until } from 'selenium-webdriver'
 
 /**
@@ -26,6 +26,7 @@ export class InputActions {
    * @param timeout timeout to wait for element
    */
   static async pressKey(inputLocator: Locator, key: string, timeout: number = 3000,): Promise<void> {
+    InputActions.initializeDriver()
     const inputElement = await InputActions.driver.wait(
       until.elementLocated(inputLocator),
       timeout,

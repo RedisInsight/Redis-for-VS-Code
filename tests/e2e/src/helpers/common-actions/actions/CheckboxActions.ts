@@ -1,5 +1,6 @@
 import { VSBrowser, WebDriver, WebElement } from 'vscode-extension-tester'
 import { Locator, until } from 'selenium-webdriver'
+import { Common } from '@e2eSrc/helpers'
 
 /**
  * Checkboxes
@@ -18,12 +19,14 @@ export class CheckboxActions {
    * @param timeout timeout to wait for element
    */
   static async getCheckboxState(element: WebElement): Promise<boolean> {
-    return (await element.getAttribute('current-checked')) === 'true'
+    const classAttribute = await element.getAttribute('class')
+    return classAttribute.includes('ri-checkbox-checked')
   }
 
   /**
    * Toggle checkbox
    * @param locator checkbox locator
+   * @param desiredState state of checkbox after
    * @param timeout timeout to wait for element
    */
   static async toggleCheckbox(
@@ -38,7 +41,14 @@ export class CheckboxActions {
     )
     const currentState = await this.getCheckboxState(checkbox)
     if (currentState !== desiredState) {
-      await checkbox.click()
+      const clickElementLocator = await Common.modifyLocator(locator, '/../div')
+
+      const clickElement = await CheckboxActions.driver.wait(
+        until.elementLocated(clickElementLocator),
+        timeout,
+      )
+
+      await clickElement.click()
     }
   }
 }

@@ -3,6 +3,7 @@ import { expect } from 'chai'
 import { DoubleColumnKeyDetailsView } from '@e2eSrc/page-objects/components/editor-view/DoubleColumnKeyDetailsView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 /**
  * List Key details view
@@ -27,7 +28,7 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
   confirmRemoveListElementButton = By.xpath(
     `//*[@data-testid='remove-elements-btn']`,
   )
-  destinationSelect = By.xpath(`//vscode-dropdown[@role='combobox']`)
+  destinationSelect = By.xpath(`//vscode-dropdown[@data-testid='destination-select']`)
   fromHeadSelection = By.xpath(`//*[@data-testid='HEAD']`)
   countInput = By.xpath(`//*[@data-testid='count-input']`)
 

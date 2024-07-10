@@ -12,7 +12,6 @@ import { InputWithButtons } from '../common/InputWithButtons'
  * Key details view
  */
 export class KeyDetailsView extends WebView {
-  inlineItemEditor = By.xpath(`//*[@data-testid='inline-item-editor']`)
   keyType = By.xpath(`//div[contains(@class, '_keyFlexGroup')]`)
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
   keyLength = By.xpath(`//div[@data-testid='key-length-text']`)
@@ -26,6 +25,7 @@ export class KeyDetailsView extends WebView {
   setMemberInput = By.xpath(`//*[starts-with(@data-testid, 'member-name')]`)
   keyNameInput = By.xpath(`//*[@data-testid='edit-key-input']`)
   copyKeyNameBtn = By.xpath(`//*[@data-testid='copy-name-button']`)
+  editTtlInput = By.xpath(`//*[@data-testid='edit-ttl-input']`)
   // BUTTONS
   searchButtonInKeyDetails = By.xpath(
     `//vscode-button[@data-testid='search-button']`,
@@ -45,6 +45,7 @@ export class KeyDetailsView extends WebView {
   saveMemberButton = By.xpath(`//*[@data-testid='save-members-btn']`)
   formatSwitcher = By.xpath(`//*[@data-testid='select-format-key-value']`)
   saveButton = By.xpath(`//vscode-button[@data-testid='save-btn']`)
+  applyTtlInputBtn = By.xpath(`//*[@data-testid='edit-ttl-btn']//*[@data-testid='apply-btn']`)
 
   getTrashIcon = (keyType: string, name: string): By =>
     By.xpath(
@@ -143,6 +144,7 @@ export class KeyDetailsView extends WebView {
    * Click on copy button
    */
   async clickCopyKeyName(): Promise<void> {
+    await ButtonActions.hoverElement(this.keyType)
     await ButtonActions.clickElement(this.copyButton)
   }
 
