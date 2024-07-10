@@ -17,7 +17,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { ButtonActions, CheckboxActions } from '@e2eSrc/helpers/common-actions'
 
-describe('Agreements Verification', () => {
+describe.only('Agreements Verification', () => {
   let browser: VSBrowser
   let treeView: TreeView
   let eulaView: EulaView
