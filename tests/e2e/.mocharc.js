@@ -4,6 +4,7 @@ module.exports = {
   color: true,
   delay: false,
   diff: true,
+  file: ['./tests/setup.js'],
   package: './package.json',
   parallel: false,
   recursive: false,

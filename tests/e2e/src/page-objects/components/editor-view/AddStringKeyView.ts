@@ -1,6 +1,7 @@
 import { By } from 'selenium-webdriver'
 import { InputActions } from '@e2eSrc/helpers/common-actions'
 import { AddKeyView } from '@e2eSrc/page-objects/components/editor-view/AddKeyView'
+import { StringKeyParameters } from '@e2eSrc/helpers/types/types'
 
 /**
  * Add String Key details view
@@ -10,11 +11,11 @@ export class AddStringKeyView extends AddKeyView {
 
   /**
    * Create string key
-   * @param value The value of the key
+   * @param keyParameters The string key parameters
    */
-  async addStringKey(value: string = ''): Promise<void> {
-    if (value.length > 0) {
-      await InputActions.typeText(this.stringValueInput, value)
+  async addStringKey(keyParameters: StringKeyParameters): Promise<void> {
+    if (keyParameters.value.length > 0) {
+      await InputActions.typeText(this.stringValueInput, keyParameters.value)
     }
   }
 }

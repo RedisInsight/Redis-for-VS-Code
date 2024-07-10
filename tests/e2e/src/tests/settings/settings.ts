@@ -1,5 +1,6 @@
 import { expect } from 'chai'
-import { EditorView } from 'vscode-extension-tester'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach, EditorView } from 'vscode-extension-tester'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import {
   TreeView,
@@ -34,6 +35,15 @@ describe('Settings', () => {
     await ButtonActions.clickElement(treeView.settingsButton)
     await settingsView.switchToInnerViewFrame(InnerViews.SettingsInnerView)
   })
+  beforeEach(async () => {
+    await treeView.switchBack()
+    // Go to Settings page
+    await ButtonActions.clickElement(treeView.settingsButton)
+    await settingsView.switchToInnerViewFrame(InnerViews.SettingsInnerView)
+  })
+  afterEach(async () => {
+    await treeView.switchBack()
+  })
   after(async () => {
     await settingsView.switchBack()
     await ButtonActions.clickElement(treeView.settingsButton)
@@ -45,13 +55,13 @@ describe('Settings', () => {
     await settingsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
+
   it('Verify that user can turn on/off Analytics in Settings in the application', async function () {
     const currentValue = await settingsView.getAnalyticsSwitcherValue()
     await CheckboxActions.toggleCheckbox(
       settingsView.switchAnalyticsOption,
       !currentValue,
     )
-
     expect(await settingsView.getAnalyticsSwitcherValue()).not.eql(
       currentValue,
       'Analytics not switched properly',
@@ -65,6 +75,7 @@ describe('Settings', () => {
       'Analytics not switched properly',
     )
   })
+
   it('Verify that when user changes the delimiter and clicks on Save button delimiter is applied', async function () {
     // Check the default delimiter value
     expect(await InputActions.getInputValue(settingsView.delimiterInput)).eql(

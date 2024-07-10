@@ -21,7 +21,9 @@ export class AddKeyView extends WebView {
   ttlInput = By.xpath('//*[@data-testid="ttl-input"]')
   keyNameInput = By.xpath('//*[@data-testid="key-input"]')
   addButton = By.xpath(
-    '//*[@data-testid="btn-add"] | //*[@data-testid="save-fields-btn"]',
+    `//*[@data-testid="btn-add"] 
+    | //*[@data-testid="save-fields-btn"] 
+    | //*[@data-testid="save-members-btn"]`,
   )
   addNewItemBtn = By.xpath(`//*[@data-testid='add-new-item']`)
   saveMembersButton = By.xpath('//*[@data-testid="save-members-btn"]')
@@ -64,7 +66,7 @@ export class AddKeyView extends WebView {
     await this.addKeyByType(keyType, keyParameters)
 
     await InputActions.typeText(this.keyNameInput, keyParameters.keyName)
-    await ButtonActions.clickElement(this.saveMembersButton)
+    await ButtonActions.clickElement(this.addButton)
     await this.switchBack()
     await CommonDriverExtension.driverSleep(1000)
   }

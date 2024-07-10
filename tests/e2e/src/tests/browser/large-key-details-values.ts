@@ -1,5 +1,6 @@
 import { expect } from 'chai'
-import { describe, it, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import {
   SortedSetKeyDetailsView,
   TreeView,
@@ -313,7 +314,7 @@ describe('Large key details verification', () => {
       ).length,
     ).eql(
       stringKeyParameters.value.length + 3,
-      'String key > 5000 value is not fully loaded after clicking Load All',
+      'String key > 5000 is not truncated',
     )
 
     await ButtonActions.clickElement(stringKeyDetailsView.loadAllBtn)
@@ -336,7 +337,10 @@ describe('Large key details verification', () => {
       ),
     ).eql(false, 'Edit key value button not disabled')
     // Verify that user can see not fully loaded String key with > 5000 characters after clicking on Refresh button
-    await ButtonActions.clickElement(stringKeyDetailsView.refreshKeyButton)
+    await ButtonActions.clickAndWaitForElement(
+      stringKeyDetailsView.refreshKeyButton,
+      stringKeyDetailsView.loadAllBtn,
+    )
     expect(
       await stringKeyDetailsView.isElementDisplayed(
         stringKeyDetailsView.loadAllBtn,

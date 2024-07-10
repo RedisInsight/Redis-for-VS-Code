@@ -1,5 +1,6 @@
 import { expect } from 'chai'
-import { describe, it, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import {
   HashKeyDetailsView,
   TreeView,
@@ -9,7 +10,6 @@ import {
   KeyDetailsView,
   AddStringKeyView,
   JsonKeyDetailsView,
-  InputWithButtons,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -171,9 +171,7 @@ describe('Edit Key values verification', () => {
     await addStringKeyView.addKey(stringKeyParameters, KeyTypesShort.String)
     await addStringKeyView.switchBack()
     // Check the notification message that key added
-    await NotificationActions.checkNotificationMessage(
-      `Key has been added`,
-    )
+    await NotificationActions.checkNotificationMessage(`Key has been added`)
 
     await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
 
@@ -204,8 +202,8 @@ describe('Edit Key values verification', () => {
   it('Verify that user can edit JSON Key value', async function () {
     keyName = Common.generateWord(10)
     const jsonValueBefore = '{"name":"xyz"}'
-    const jsonEditedValue = '"xyz test"'
-    const jsonValueAfter = '{name:"xyz test"}'
+    const jsonEditedValue = '"xyztest"'
+    const jsonValueAfter = '{name:"xyztest"}'
     const jsonKeyParameters: JsonKeyParameters = {
       keyName: keyName,
       data: jsonValueBefore,
@@ -222,7 +220,7 @@ describe('Edit Key values verification', () => {
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
     // Edit JSON key value
     await ButtonActions.clickElement(jsonKeyDetailsView.jsonScalarValue)
-    await InputActions.typeText(
+    await InputActions.slowType(
       jsonKeyDetailsView.inlineItemEditor,
       jsonEditedValue,
     )
@@ -234,11 +232,15 @@ describe('Edit Key values verification', () => {
         'class',
       ),
     ).eql(false, 'Refresh button disabled for JSON')
-
-    await ButtonActions.clickElement(InputWithButtons.applyInput)
+    await ButtonActions.clickAndWaitForElement(
+      jsonKeyDetailsView.applyJsonInput,
+      jsonKeyDetailsView.getJsonScalarValueByText(jsonEditedValue),
+    )
     // Check JSON key value after edit
     expect(
-      Common.formatJsonString(await keyDetailsView.getElementText(jsonKeyDetailsView.jsonKeyValue)),
+      Common.formatJsonString(
+        await keyDetailsView.getElementText(jsonKeyDetailsView.jsonKeyValue),
+      ),
     ).eql(jsonValueAfter, 'Edited JSON value is incorrect')
   })
 })

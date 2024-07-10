@@ -1,8 +1,7 @@
 import { expect } from 'chai'
-import { describe, it, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import {
-  BottomBar,
-  CliViewPanel,
   StringKeyDetailsView,
   TreeView,
   HashKeyDetailsView,
@@ -12,7 +11,11 @@ import {
   JsonKeyDetailsView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
+import {
+  CliAPIRequests,
+  DatabaseAPIRequests,
+  KeyAPIRequests,
+} from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
   ButtonActions,
@@ -30,8 +33,6 @@ const expectedTTL = /214747612*/
 let keyName: string
 
 describe('Key Details verifications', () => {
-  let bottomBar: BottomBar
-  let cliViewPanel: CliViewPanel
   let keyDetailsView: StringKeyDetailsView
   let treeView: TreeView
   let stringKeyDetailsView: StringKeyDetailsView
@@ -43,7 +44,6 @@ describe('Key Details verifications', () => {
   let addStringKeyView: AddStringKeyView
 
   before(async () => {
-    bottomBar = new BottomBar()
     keyDetailsView = new StringKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
     treeView = new TreeView()
@@ -78,8 +78,8 @@ describe('Key Details verifications', () => {
     const testStringValue = 'stringValue'
     keyName = Common.generateWord(20)
 
-    await treeView.switchBack()
     await ButtonActions.clickElement(treeView.addKeyButton)
+    await treeView.switchBack()
     await treeView.switchToInnerViewFrame(InnerViews.AddKeyInnerView)
     await addStringKeyView.selectKeyTypeByValue(KeyTypesShort.String)
     await InputActions.typeText(addStringKeyView.ttlInput, ttlValue)
@@ -92,7 +92,10 @@ describe('Key Details verifications', () => {
       addStringKeyView.addButton,
       'class',
     )
-    expect(isDisabled).true
+    expect(isDisabled).eql(
+      true,
+      'Add button not disabled when required fields not filled',
+    )
 
     await InputActions.typeText(addStringKeyView.keyNameInput, keyName)
 
@@ -112,15 +115,11 @@ describe('Key Details verifications', () => {
     const keySize = await stringKeyDetailsView.getKeySize()
     const keyLength = await stringKeyDetailsView.getKeyLength()
     const keyTtl = Number(
-      await InputActions.getInputValue(keyDetailsView.inlineItemEditor),
+      await InputActions.getInputValue(keyDetailsView.editTtlInput),
     )
     const keyValue = await stringKeyDetailsView.getElementText(
       stringKeyDetailsView.stringKeyValueInput,
     )
-
-    await stringKeyDetailsView.clickCopyKeyName()
-    const clipboard = await navigator.clipboard.read()
-    expect(clipboard).contain(keyName, 'Name is not copied to clipboard')
 
     expect(keyType).contain('String', 'Type is incorrect')
     expect(enteredKeyName).eq(keyName, 'Name is incorrect')
@@ -132,19 +131,16 @@ describe('Key Details verifications', () => {
 
   it('Verify that user can see Hash Key details', async function () {
     keyName = Common.generateWord(10)
-    await treeView.switchBack()
-    cliViewPanel = await bottomBar.openCliViewPanel()
-    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
-
-    const command = `HSET ${keyName} \"\" \"\"`
-    await cliViewPanel.executeCommand(`${command}`)
-    const command2 = `expire ${keyName} \"${keyTTL}\" `
-    await cliViewPanel.executeCommand(`${command2}`)
-    await cliViewPanel.switchBack()
-    await bottomBar.toggle(false)
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `HSET ${keyName} \"\" \"\"`,
+      Config.ossStandaloneConfig,
+    )
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `expire ${keyName} ${keyTTL}`,
+      Config.ossStandaloneConfig,
+    )
 
     // Refresh database
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
@@ -160,9 +156,8 @@ describe('Key Details verifications', () => {
     const keySize = await hashKeyDetailsView.getKeySize()
     const keyLength = await hashKeyDetailsView.getKeyLength()
     const keyTtl = Number(
-      await InputActions.getInputValue(keyDetailsView.inlineItemEditor),
+      await InputActions.getInputValue(keyDetailsView.editTtlInput),
     )
-
     expect(keyType).contains('Hash', 'Type is incorrect')
     expect(enteredKeyName).eq(keyName, 'Name is incorrect')
     expect(keySize).greaterThan(0, 'Size is 0')
@@ -175,19 +170,16 @@ describe('Key Details verifications', () => {
     const value = 'value'
     const score = 1
 
-    await treeView.switchBack()
-    cliViewPanel = await bottomBar.openCliViewPanel()
-    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
-
-    const command = `ZADD ${keyName} ${score} \"${value}\"`
-    await cliViewPanel.executeCommand(`${command}`)
-    const command2 = `expire ${keyName} \"${keyTTL}\" `
-    await cliViewPanel.executeCommand(`${command2}`)
-    await cliViewPanel.switchBack()
-    await bottomBar.toggle(false)
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `ZADD ${keyName} ${score} \"${value}\"`,
+      Config.ossStandaloneConfig,
+    )
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `expire ${keyName} ${keyTTL}`,
+      Config.ossStandaloneConfig,
+    )
 
     // Refresh database
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
@@ -211,7 +203,7 @@ describe('Key Details verifications', () => {
       'Length is 0',
     )
     expect(
-      Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor)),
+      Number(await InputActions.getInputValue(keyDetailsView.editTtlInput)),
     ).match(expectedTTL, 'The Key TTL is incorrect')
   })
 
@@ -220,19 +212,16 @@ describe('Key Details verifications', () => {
     const ttl = '121212'
     const element = 'element1'
 
-    await treeView.switchBack()
-    cliViewPanel = await bottomBar.openCliViewPanel()
-    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
-
-    const command = `LPUSH ${keyName} \"${element}\"`
-    await cliViewPanel.executeCommand(`${command}`)
-    const command2 = `expire ${keyName} \"${ttl}\" `
-    await cliViewPanel.executeCommand(`${command2}`)
-    await cliViewPanel.switchBack()
-    await bottomBar.toggle(false)
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `LPUSH ${keyName} \"${element}\"`,
+      Config.ossStandaloneConfig,
+    )
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `expire ${keyName} ${keyTTL}`,
+      Config.ossStandaloneConfig,
+    )
 
     // Refresh database
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
@@ -251,26 +240,24 @@ describe('Key Details verifications', () => {
       'Length is 0',
     )
     expect(
-      Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor)),
+      Number(await InputActions.getInputValue(keyDetailsView.editTtlInput)),
     ).match(expectedTTL, 'The Key TTL is incorrect')
   })
+
   it('Verify that user can see Set Key details', async function () {
     keyName = Common.generateWord(20)
     const value = 'value'
 
-    await treeView.switchBack()
-    cliViewPanel = await bottomBar.openCliViewPanel()
-    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
-
-    const command = `SADD ${keyName} \"${value}\"`
-    await cliViewPanel.executeCommand(`${command}`)
-    const command2 = `expire ${keyName} \"${keyTTL}\" `
-    await cliViewPanel.executeCommand(`${command2}`)
-    await cliViewPanel.switchBack()
-    await bottomBar.toggle(false)
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `SADD ${keyName} \"${value}\"`,
+      Config.ossStandaloneConfig,
+    )
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `expire ${keyName} ${keyTTL}`,
+      Config.ossStandaloneConfig,
+    )
 
     // Refresh database
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
     )
@@ -286,9 +273,10 @@ describe('Key Details verifications', () => {
     expect(await setKeyDetailsView.getKeySize()).greaterThan(0, 'Size is 0')
     expect(await setKeyDetailsView.getKeyLength()).greaterThan(0, 'Length is 0')
     expect(
-      Number(await InputActions.getInputValue(keyDetailsView.inlineItemEditor)),
+      Number(await InputActions.getInputValue(keyDetailsView.editTtlInput)),
     ).match(expectedTTL, 'The Key TTL is incorrect')
   })
+
   it('Verify that user can see JSON Key details', async function () {
     keyName = Common.generateWord(20)
     const jsonValue =
@@ -296,6 +284,7 @@ describe('Key Details verifications', () => {
     const jsonKeyParameters: JsonKeyParameters = {
       keyName: keyName,
       data: jsonValue,
+      expire: +keyTTL,
     }
     await KeyAPIRequests.addJsonKeyApi(
       jsonKeyParameters,
@@ -321,9 +310,7 @@ describe('Key Details verifications', () => {
       'Length is 0',
     )
     expect(
-      Number(
-        await InputActions.getInputValue(jsonKeyDetailsView.inlineItemEditor),
-      ),
+      Number(await InputActions.getInputValue(jsonKeyDetailsView.editTtlInput)),
     ).match(expectedTTL, 'The Key TTL is incorrect')
   })
 })

@@ -121,10 +121,13 @@ jobs:
                   APP_BUILD_TYPE="VSCode (Linux)" node ./.circleci/e2e-results.js
                   # curl -H "Content-type: application/json" --data @e2e.report.json -H "Authorization: Bearer $SLACK_TEST_REPORT_KEY" -X POST https://slack.com/api/chat.postMessage
       - store_test_results:
-          path: ./tests/e2e/results
+          path: tests/e2e/results
       - store_artifacts:
-          path: tests/e2e/report
-          destination: tests/e2e/report
+          path: tests/e2e/mochawesome-report
+          destination: tests/e2e/mochawesome-report
+      - store_artifacts:
+          path: /tmp/test-resources/screenshots
+          destination: test-resources/screenshots
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows

@@ -1,7 +1,6 @@
-import { VSBrowser, Workbench } from 'vscode-extension-tester'
+import { Workbench } from 'vscode-extension-tester'
 import { expect } from 'chai'
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
-import { By } from 'selenium-webdriver'
 
 /**
  * Notifications
@@ -26,22 +25,27 @@ export class NotificationActions {
       true,
       `No notification found with the text: ${text}`,
     )
+    await NotificationActions.closeNotification()
   }
 
-  // it does not work for now - can't find elements
   /**
-   * close all notifications
+   * Close all notifications
    */
   static async closeAllNotifications(): Promise<void> {
-    const closeNotification = By.xpath(
-      `//a[contains(@class,'codicon-notifications-clear')]`,
-    )
-    const elements =
-      await CommonDriverExtension.driver.findElements(closeNotification)
-    let notifications = await new Workbench().getNotifications()
-    console.log(notifications.length)
-    for (const element of elements) {
-      await element.click()
+    const notifications = await new Workbench().getNotifications()
+    for (const notification of notifications) {
+      await notification.dismiss()
     }
+  }
+
+  /**
+   * Close first Notification
+   */
+  static async closeNotification(): Promise<void> {
+    await CommonDriverExtension.driverSleep(1000)
+    let notifications = await new Workbench().getNotifications()
+    const notification = notifications[0]
+    // dismiss the notification
+    await notification.dismiss()
   }
 }

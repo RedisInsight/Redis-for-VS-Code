@@ -95,7 +95,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/eula',
-        title: vscode.l10n.t('Redis Insight'),
+        title: vscode.l10n.t('Redis Insight - EULA'),
         viewId: ViewId.Eula,
         handleMessage: (message) => handleMessage(message),
         message: args,

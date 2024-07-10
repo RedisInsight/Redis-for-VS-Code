@@ -1,12 +1,15 @@
 import { expect } from 'chai'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it } from 'mocha'
+import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import {
   TreeView,
   ListKeyDetailsView,
   AddListKeyView,
+  AddDatabaseView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
+  ButtonActions,
   DatabasesActions,
   KeyDetailsActions,
   NotificationActions,
@@ -155,13 +158,27 @@ describe('List Key verification', () => {
 describe('List Key verification for db with version <6.2', () => {
   let listKeyDetailsView: ListKeyDetailsView
   let addListKeyView: AddListKeyView
+  let treeView: TreeView
+  let addDatabaseView: AddDatabaseView
 
-  beforeEach(async () => {
+  before(async () => {
+    treeView = new TreeView()
+    addDatabaseView = new AddDatabaseView()
     listKeyDetailsView = new ListKeyDetailsView()
     addListKeyView = new AddListKeyView()
 
-    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
-      Config.ossStandaloneV5Config,
+    await treeView.switchBack()
+    await ButtonActions.clickElement(treeView.addDatabaseBtn)
+    await addDatabaseView.switchToInnerViewFrame(
+      InnerViews.AddDatabaseInnerView,
+    )
+    await addDatabaseView.addRedisDataBase(Config.ossStandaloneV5Config)
+    // Click for saving
+    await ButtonActions.clickElement(addDatabaseView.saveDatabaseButton)
+    await treeView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await treeView.clickDatabaseByName(
+      Config.ossStandaloneV5Config.databaseName!,
     )
   })
   afterEach(async () => {
@@ -183,9 +200,7 @@ describe('List Key verification for db with version <6.2', () => {
     await addListKeyView.addKey(listKeyParameters, KeyTypesShort.List)
     await addListKeyView.switchBack()
     // Check the notification message that key added
-    await NotificationActions.checkNotificationMessage(
-      `Key has been added`,
-    )
+    await NotificationActions.checkNotificationMessage(`Key has been added`)
 
     await addListKeyView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
     // Add a few elements to the List key

@@ -198,20 +198,24 @@ export type ListKeyParameters = {
  * String key parameters
  * @param keyName The name of the key
  * @param value The value in the string
+ * @param expire The ttl value in the string
  */
 export type StringKeyParameters = {
   keyName: string
   value: string
+  expire?: number
 }
 
 /**
  * Json key parameters
  * @param keyName The name of the key
  * @param data The value in the json
+ * @param expire The ttl value in the json
  */
 export type JsonKeyParameters = {
   keyName: string
   data: string
+  expire?: number
 }
 
 /**

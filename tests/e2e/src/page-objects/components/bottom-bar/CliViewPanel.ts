@@ -1,4 +1,4 @@
-import { By, until } from 'selenium-webdriver'
+import { By } from 'selenium-webdriver'
 import { Key } from 'vscode-extension-tester'
 import { WebView } from '@e2eSrc/page-objects/components/WebView'
 
