@@ -63,6 +63,12 @@
         "icon": "$(settings-gear)"
       },
       {
+        "command": "RedisInsight.openEula",
+        "title": "Open Redis Insight eula",
+        "category": "Redis Insight",
+        "icon": "$(settings-gear)"
+      },
+      {
         "command": "RedisInsight.addDatabase",
         "title": "Add Redis database",
         "category": "Redis Insight",
@@ -74,12 +80,17 @@
         {
           "command": "RedisInsight.addDatabase",
           "group": "navigation",
-          "when": "view == ri-sidebar"
+          "when": "view == ri-sidebar && !ri.openEula"
         },
         {
           "command": "RedisInsight.openSettings",
           "group": "navigation",
-          "when": "view == ri-sidebar"
+          "when": "view == ri-sidebar && !ri.openEula"
+        },
+        {
+          "command": "RedisInsight.openEula",
+          "group": "navigation",
+          "when": "view == ri-sidebar && ri.openEula"
         }
       ]
     }
@@ -188,7 +199,7 @@
     "@vitejs/plugin-react-swc": "^3.6.0",
     "@vitest/coverage-v8": "^1.3.1",
     "@vitest/ui": "^1.3.1",
-    "@vscode/l10n-dev": "^0.0.34",
+    "@vscode/l10n-dev": "^0.0.35",
     "autoprefixer": "^10.4.16",
     "cross-env": "^7.0.3",
     "esbuild": "^0.19.5",
@@ -248,7 +259,7 @@
   "dependencies": {
     "@hediet/node-reload": "^0.8.0",
     "@reduxjs/toolkit": "^1.9.7",
-    "@vscode/codicons": "^0.0.35",
+    "@vscode/codicons": "^0.0.36",
     "@vscode/l10n": "^0.0.18",
     "@vscode/webview-ui-toolkit": "^1.4.0",
     "axios": "^1.5.1",

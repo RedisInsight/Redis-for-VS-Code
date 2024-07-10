@@ -18,7 +18,7 @@ import {
 
 export const initialAppInfoState: AppInfoStore = {
   loading: false,
-  isShowConceptsPopup: null,
+  isShowConcepts: null,
   encoding: RedisResponseEncoding.Buffer,
   config: null,
   spec: null,
@@ -42,11 +42,11 @@ export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
     processAppInfoFinal: () => set({ loading: false }),
     processAppInfoSuccess: (appInfo) => set({ ...appInfo }),
 
-    setIsShowConceptsPopup: (isShowConceptsPopup) => set({ isShowConceptsPopup }),
+    setIsShowConcepts: (isShowConcepts) => set({ isShowConcepts }),
 
     updateUserConfigSettingsSuccess: (config) => set({
       config,
-      isShowConceptsPopup: false,
+      isShowConcepts: false,
     }),
 
     setDelimiter: (delimiter) => set((state) => {

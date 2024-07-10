@@ -3,11 +3,10 @@ import cx from 'classnames'
 import { FormikProps } from 'formik'
 import * as l10n from '@vscode/l10n'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
-import { CheckboxChangeEvent } from 'rc-checkbox'
 
 import { validateNumber } from 'uiSrc/utils'
 import { DbConnectionInfo } from 'uiSrc/interfaces'
-import { Checkbox, InputText } from 'uiSrc/ui'
+import { Checkbox, InputText, CheckboxChangeEvent } from 'uiSrc/ui'
 
 export interface Props {
 

@@ -8,9 +8,9 @@ import { updateUserConfigSettingsAction, useAppInfoStore } from 'uiSrc/store/hoo
 import { GetUserAgreementsResponse } from 'uiSrc/store/hooks/use-app-info-store/interface'
 import { vscodeApi } from 'uiSrc/services'
 import { VscodeMessageAction } from 'uiSrc/constants'
+import { ConsentsOption } from 'uiSrc/components'
 
-import { ConsentOption } from '../ConsentOption'
-import { IConsent, ConsentCategories } from '../interface'
+import { IConsent, ConsentCategories } from './interface'
 
 export const ConsentsPrivacy = () => {
   const [consents, setConsents] = useState<IConsent[]>([])
@@ -22,7 +22,6 @@ export const ConsentsPrivacy = () => {
     spec: state.spec,
   }))
 
-  // const formik = undefined
   const formik = useFormik({
     initialValues,
     enableReinitialize: true,
@@ -78,16 +77,15 @@ export const ConsentsPrivacy = () => {
         {l10n.t('To optimize your experience, Redis Insight uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.')}
       </div>
       <h4 className="font-bold text-[11px] uppercase">{l10n.t('Analytics')}</h4>
-      { privacyConsents
-        .map((consent: IConsent) => (
-          <ConsentOption
-            consent={consent}
-            checked={formik.values[consent.agreementName] ?? false}
-            onChangeAgreement={onChangeAgreement}
-            isSettingsPage
-            key={consent.agreementName}
-          />
-        ))}
+      {privacyConsents.map((consent: IConsent) => (
+        <ConsentsOption
+          consent={consent}
+          checked={formik.values[consent.agreementName] ?? false}
+          onChangeAgreement={onChangeAgreement}
+          isSettingsPage
+          key={consent.agreementName}
+        />
+      ))}
     </div>
   )
 }

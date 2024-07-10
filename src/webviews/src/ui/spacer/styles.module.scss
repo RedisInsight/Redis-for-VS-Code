@@ -1,0 +1,22 @@
+.spacer {
+  &_xxs {
+    @apply h-0.5;
+  }
+
+  &_xs {
+    @apply h-1;
+  }
+
+  &_s {
+    @apply h-2;
+  }
+
+  &_m {
+    @apply h-4;
+  }
+
+  &_l {
+    @apply h-6;
+  }
+}
+

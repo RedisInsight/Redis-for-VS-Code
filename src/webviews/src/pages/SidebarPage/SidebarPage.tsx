@@ -2,9 +2,15 @@ import React, { FC } from 'react'
 import { DatabaseWrapper, KeysTree, KeysTreeHeader } from 'uiSrc/modules'
 import { KeysStoreProvider } from 'uiSrc/modules/keys-tree/hooks/useKeys'
 import { ContextStoreProvider, useDatabasesStore } from 'uiSrc/store'
+import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 
 export const SidebarPage: FC<any> = () => {
   const databases = useDatabasesStore((state) => state.data)
+  const isShowConcepts = useAppInfoStore((state) => state.isShowConcepts)
+
+  if (isShowConcepts) {
+    return null
+  }
 
   return (
     <div className="flex w-full flex-wrap flex-col min-h-full text-vscode-icon-foreground" data-testid="tree-view-page">

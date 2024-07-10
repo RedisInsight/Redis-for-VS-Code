@@ -1,5 +1,5 @@
 .container {
-  @apply flex items-center font-medium;
+  @apply flex items-center font-medium cursor-pointer;
 }
 
 :global(.ri-checkbox-input) {

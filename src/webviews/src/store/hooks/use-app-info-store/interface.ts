@@ -4,7 +4,7 @@ import { Nullable, RedisResponseEncoding } from 'uiSrc/interfaces'
 export interface AppInfoStore {
   loading: boolean
   encoding: RedisResponseEncoding
-  isShowConceptsPopup: Nullable<boolean>
+  isShowConcepts: Nullable<boolean>
   config: Nullable<GetAppSettingsResponse>
   spec: Nullable<GetAgreementsSpecResponse>
   server: Nullable<GetServerInfoResponse>
@@ -26,7 +26,7 @@ export interface AppInfoActions {
     commandsArray,
     commandGroups,
   }: Partial<AppInfoStore>) => void
-  setIsShowConceptsPopup: (isShowConceptsPopup: boolean) => void
+  setIsShowConcepts: (isShowConcepts: boolean) => void
 
   updateUserConfigSettingsSuccess: (config: GetAppSettingsResponse) => void
   setDelimiter: (delimiter: string) => void
@@ -77,6 +77,7 @@ export interface IAgreement {
   displayInSetting: boolean
   required: boolean
   category?: string
+  requiredText?: string
   since: string
   editable: boolean
   disabled: boolean

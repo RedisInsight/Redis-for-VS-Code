@@ -45,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         break
 
       // Sidebar
+      case VscodeMessageAction.CloseEula:
+        useAppInfoStore.getState().setIsShowConcepts(false)
+        break
       case VscodeMessageAction.RefreshTree:
         refreshTreeAction(message)
         break
