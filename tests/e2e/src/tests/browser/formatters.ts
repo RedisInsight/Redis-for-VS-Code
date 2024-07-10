@@ -109,6 +109,7 @@ describe('Formatters', () => {
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
+    await keyDetailsView.selectFormatter(defaultFormatter)
     await CliAPIRequests.sendRedisCliCommandApi(
       `FLUSHDB`,
       Config.ossStandaloneConfig,

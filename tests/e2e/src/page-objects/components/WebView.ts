@@ -21,81 +21,6 @@ export class WebView extends BaseComponent {
     )
   }
 
-/**
- * Switch the underlying webdriver context to directly inner view iframe
- * @param switchInnerView webdriver inner view iframe
- * @returns Promise resolving when switched to Inner WebView iframe
- */
-async switchToInnerViewFrame(switchInnerView: InnerViews): Promise<void> {
-  const maxRetries = 3;
-  const retryDelay = 1000; // 1 second delay between retries
-
-  const innerFrameLocator = By.xpath(InnerViewLocators[switchInnerView]);
-  const innerFrameElement = By.xpath(InnerViewElements[switchInnerView]);
-
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      // Waiting for any parent iframe to be visible
-      await super.waitForElementVisibility(this.webViewIframe);
-
-      // Find all parent iframes
-      const mainIframes = await super.getElements(this.webViewIframe);
-
-      for (const mainIframe of mainIframes) {
-        await WebView.driver.switchTo().frame(mainIframe);
-        
-        try {
-          // Check that parent iframe has child iframe
-          await super.waitForElementVisibility(this.webViewViewIframe);
-
-          // Check if the child iframe is the right one
-          if (await super.isElementDisplayed(innerFrameLocator)) {
-            const innerView = await super.getElement(innerFrameLocator);
-            await WebView.driver.switchTo().frame(innerView);
-            await super.waitForElementVisibility(innerFrameElement);
-            return;
-          } else {
-            await this.switchBack();
-          }
-        } catch (err: any) {
-          console.warn(`Attempt ${attempt} - Unable to switch to inner frame: ${err.message}`);
-          await this.switchBack();
-        }
-      }
-
-      // If only one parent iframe exists
-      if (mainIframes.length === 1) {
-        const firstView = await super.getElement(this.webViewIframe);
-        await WebView.driver.switchTo().frame(firstView);
-
-        try {
-          // Check that parent iframe has child iframe
-          await super.waitForElementVisibility(this.webViewViewIframe);
-
-          // Check if the child iframe is the right one
-          await super.waitForElementVisibility(innerFrameLocator);
-          const innerView = await super.getElement(innerFrameLocator);
-          await WebView.driver.switchTo().frame(innerView);
-          await super.waitForElementVisibility(innerFrameElement);
-          return;
-        } catch (err: any) {
-          console.warn(`Attempt ${attempt} - Unable to switch to inner frame: ${err.message}`);
-        }
-      }
-
-    } catch (err: any) {
-      console.warn(`Attempt ${attempt} failed: ${err.message}`);
-    }
-
-    // Retry delay
-    if (attempt < maxRetries) {
-      await new Promise(resolve => setTimeout(resolve, retryDelay));
-    }
-  }
-
-  throw new Error('Unable to switch to inner view iframe after multiple attempts');
-}
-
   /**
    * Switch the underlying webdriver back to the original window
    */
@@ -104,6 +29,86 @@ async switchToInnerViewFrame(switchInnerView: InnerViews): Promise<void> {
       this.handle = await WebView.driver.getWindowHandle()
     }
     return await WebView.driver.switchTo().window(this.handle)
+  }
+
+  /**
+   * Switch the underlying webdriver context to directly inner view iframe
+   * @param switchInnerView webdriver inner view iframe
+   * @returns Promise resolving when switched to Inner WebView iframe
+   */
+  async switchToInnerViewFrame(switchInnerView: InnerViews): Promise<void> {
+    const maxRetries = 3
+    const retryDelay = 1000 // 1 second delay between retries
+
+    const innerFrameLocator = By.xpath(InnerViewLocators[switchInnerView])
+    const innerFrameElement = By.xpath(InnerViewElements[switchInnerView])
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        // Waiting for any parent iframe to be visible
+        await super.waitForElementVisibility(this.webViewIframe)
+
+        // Find all parent iframes
+        const mainIframes = await super.getElements(this.webViewIframe)
+
+        for (const mainIframe of mainIframes) {
+          await WebView.driver.switchTo().frame(mainIframe)
+
+          try {
+            // Check that parent iframe has child iframe
+            await super.waitForElementVisibility(this.webViewViewIframe)
+
+            // Check if the child iframe is the right one
+            if (await super.isElementDisplayed(innerFrameLocator)) {
+              const innerView = await super.getElement(innerFrameLocator)
+              await WebView.driver.switchTo().frame(innerView)
+              await super.waitForElementVisibility(innerFrameElement)
+              return
+            } else {
+              await this.switchBack()
+            }
+          } catch (err: any) {
+            console.warn(
+              `Attempt ${attempt} - Unable to switch to inner frame: ${err.message}`,
+            )
+            await this.switchBack()
+          }
+        }
+
+        // If only one parent iframe exists
+        if (mainIframes.length === 1) {
+          const firstView = await super.getElement(this.webViewIframe)
+          await WebView.driver.switchTo().frame(firstView)
+
+          try {
+            // Check that parent iframe has child iframe
+            await super.waitForElementVisibility(this.webViewViewIframe)
+
+            // Check if the child iframe is the right one
+            await super.waitForElementVisibility(innerFrameLocator)
+            const innerView = await super.getElement(innerFrameLocator)
+            await WebView.driver.switchTo().frame(innerView)
+            await super.waitForElementVisibility(innerFrameElement)
+            return
+          } catch (err: any) {
+            console.warn(
+              `Attempt ${attempt} - Unable to switch to inner frame: ${err.message}`,
+            )
+          }
+        }
+      } catch (err: any) {
+        console.warn(`Attempt ${attempt} failed: ${err.message}`)
+      }
+
+      // Retry delay
+      if (attempt < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, retryDelay))
+      }
+    }
+
+    throw new Error(
+      'Unable to switch to inner view iframe after multiple attempts',
+    )
   }
 }
 

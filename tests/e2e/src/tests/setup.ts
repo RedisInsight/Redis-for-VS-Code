@@ -7,6 +7,7 @@ import {
   afterEach,
   VSBrowser,
   ActivityBar,
+  TitleBar,
 } from 'vscode-extension-tester'
 import { ServerActions } from '@e2eSrc/helpers/common-actions/ServerActions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
@@ -31,6 +32,7 @@ describe('Agreements Verification', () => {
 
     await ServerActions.waitForServerInitialized()
     await browser.waitForWorkbench(20_000)
+    await  new TitleBar().getWindowControls().maximize();
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
   })
   beforeEach(async () => {
