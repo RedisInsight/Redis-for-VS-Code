@@ -109,7 +109,6 @@ describe('Formatters', () => {
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
-    await keyDetailsView.selectFormatter(defaultFormatter)
     await CliAPIRequests.sendRedisCliCommandApi(
       `FLUSHDB`,
       Config.ossStandaloneConfig,
@@ -156,6 +155,7 @@ describe('Formatters', () => {
           // Verify that value is formatted and highlighted
           await verifyValueHighlighted(highlightedValueSelector)
         }
+        await keyDetailsView.selectFormatter(defaultFormatter)
         await keyDetailsView.switchBack()
         await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
       }
@@ -316,6 +316,7 @@ describe('Formatters', () => {
         // Verify that tooltip with convertion failed message displayed
         // const failedMessage = `Failed to convert to ${formatter.format}`
         // skipped because imposible to test tooltips for now
+        await keyDetailsView.selectFormatter(defaultFormatter)
         await keyDetailsView.switchBack()
         await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
       }
@@ -373,6 +374,7 @@ describe('Formatters', () => {
             `Value is not formatted to ${formatter.format}`,
           )
         }
+        await keyDetailsView.selectFormatter(defaultFormatter)
         await keyDetailsView.switchBack()
         await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
       }
@@ -525,6 +527,7 @@ describe('Formatters', () => {
             `Key ${key.textType} is disabled for ${formatter.format} formatter`,
           )
         }
+        await keyDetailsView.selectFormatter(defaultFormatter)
         await keyDetailsView.switchBack()
         await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
       }
