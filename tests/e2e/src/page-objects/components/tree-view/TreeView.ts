@@ -51,6 +51,7 @@ export class TreeView extends WebView {
   )
   keysSummary = By.xpath(`//*[@data-testid='keys-summary']`)
   treeViewVirtualTable = By.xpath(`//*[@data-testid='virtual-tree']/div`)
+  databaseInstance = By.xpath(`//div[starts-with(@data-testid, 'database-')]`)
 
   // mask
   keyMask = '//*[@data-testid="key-$name"]'

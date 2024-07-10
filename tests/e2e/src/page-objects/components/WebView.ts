@@ -69,31 +69,34 @@ export class WebView extends BaseComponent {
 }
 
 export enum InnerViews {
-  TreeInnerView,
+  AddDatabaseInnerView,
+  AddKeyInnerView,
+  CliInnerView,
+  EditDatabaseInnerView,
+  EulaInnerView,
   KeyDetailsInnerView,
   SettingsInnerView,
-  CliInnerView,
-  AddDatabaseInnerView,
-  EditDatabaseInnerView,
-  AddKeyInnerView,
+  TreeInnerView,
 }
 
 export const InnerViewLocators = {
-  [InnerViews.TreeInnerView]: `//iframe[@title='Redis Insight']`,
+  [InnerViews.AddDatabaseInnerView]: `//iframe[@title='Redis Insight - Add Database connection']`,
+  [InnerViews.AddKeyInnerView]: `//iframe[@title='Redis Insight - Add new key']`,
+  [InnerViews.CliInnerView]: `//iframe[@title='Redis CLI']`,
+  [InnerViews.EditDatabaseInnerView]: `//iframe[@title='Redis Insight - Edit Database connection']`,
+  [InnerViews.EulaInnerView]: `//iframe[@title='Redis Insight - EULA']`,
   [InnerViews.KeyDetailsInnerView]: `//iframe[contains(@title,':')]`,
   [InnerViews.SettingsInnerView]: `//iframe[@title='Redis Insight - Settings']`,
-  [InnerViews.CliInnerView]: `//iframe[@title='Redis CLI']`,
-  [InnerViews.AddDatabaseInnerView]: `//iframe[@title='Redis Insight - Add Database connection']`,
-  [InnerViews.EditDatabaseInnerView]: `//iframe[@title='Redis Insight - Edit Database connection']`,
-  [InnerViews.AddKeyInnerView]: `//iframe[@title='Redis Insight - Add new key']`,
+  [InnerViews.TreeInnerView]: `//iframe[@title='Redis Insight']`,
 }
 
 export const InnerViewElements = {
-  [InnerViews.TreeInnerView]: `//div[@data-testid='tree-view-page']`,
+  [InnerViews.AddDatabaseInnerView]: `//input[@data-testid='host']`,
+  [InnerViews.AddKeyInnerView]: `//input[@data-testid='key-input']`,
+  [InnerViews.CliInnerView]: `//div[@data-testid='cli']`,
+  [InnerViews.EditDatabaseInnerView]: `//input[@data-testid='port']`,
+  [InnerViews.EulaInnerView]: `//*[@data-testid='check-option-eula']`,
   [InnerViews.KeyDetailsInnerView]: `//div[contains(@data-testid, '-value')]`,
   [InnerViews.SettingsInnerView]: `//input[@data-testid='input-delimiter']`,
-  [InnerViews.CliInnerView]: `//div[@data-testid='cli']`,
-  [InnerViews.AddDatabaseInnerView]: `//input[@data-testid='host']`,
-  [InnerViews.EditDatabaseInnerView]: `//input[@data-testid='port']`,
-  [InnerViews.AddKeyInnerView]: `//input[@data-testid='key-input']`,
+  [InnerViews.TreeInnerView]: `//div[@data-testid='tree-view-page']`,
 }
