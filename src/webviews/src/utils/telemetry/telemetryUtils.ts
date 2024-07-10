@@ -1,6 +1,6 @@
 import isGlob from 'is-glob'
 import { cloneDeep, get } from 'lodash'
-import * as jsonpath from 'jsonpath'
+import jsonpath from 'jsonpath'
 
 import { AdditionalRedisModule } from 'uiSrc/store'
 import { apiService } from 'uiSrc/services'
@@ -100,10 +100,10 @@ export const getJsonPathLevel = (path: string): string => {
       return 'root'
     }
     const levelsLength = jsonpath.parse(
-      `$${path.startsWith('.') ? '' : '..'}${path}`,
+      `$${path.startsWith('.') ? '.' : '..'}${path}`,
     ).length
 
-    return levelsLength === 1 ? 'root' : `${levelsLength - 2}`
+    return levelsLength === 2 ? 'root' : `${levelsLength - 2}`
   } catch (e) {
     return 'root'
   }

@@ -48,7 +48,7 @@ export const AddKeyList = (props: Props) => {
   return (
     <>
       <form onSubmit={onFormSubmit} className="key-footer-items-container pl-0 h-full">
-        <h3 className="font-bold uppercase pb-3">{l10n.t('Elements')}</h3>
+        <h3 className="font-bold uppercase pb-3">{l10n.t('Element')}</h3>
         <InputText
           name="element"
           id="element"
