@@ -104,7 +104,7 @@
   },
   "scripts": {
     "vscode:prepublish": "yarn compile && cross-env NODE_ENV=production BUILD_EXIT=true yarn build",
-    "compile": "tsc -p ./ && tsc ./scripts/replaceEnvVariables.ts && node ./scripts/replaceEnvVariables.js",
+    "compile": "tsc -p ./",
     "postinstall": "patch-package",
     "build": "cross-env NODE_ENV=production vite build",
     "download:backend": "tsc ./scripts/downloadBackend.ts && node ./scripts/downloadBackend.js",
@@ -265,6 +265,7 @@
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
     "detect-port": "^1.5.1",
+    "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
     "formik": "^2.4.5",
     "helmet": "^7.0.0",

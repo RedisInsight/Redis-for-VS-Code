@@ -13,9 +13,11 @@
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
       "envFile": "${workspaceFolder}/.env",
-      "env": {
-        "NODE_ENV": "development"
-      }
+      "sourceMaps": false,
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ]
     },
     {
       "name": "Run Dev Extension",
@@ -26,9 +28,11 @@
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
       "preLaunchTask": "${defaultBuildTask}",
       "envFile": "${workspaceFolder}/.env",
-      "env": {
-        "NODE_ENV": "development"
-      }
+      "sourceMaps": false,
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ]
     }
   ]
 }

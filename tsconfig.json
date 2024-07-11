@@ -4,7 +4,7 @@
     "target": "es2022",
     "lib": ["dom", "es2022"],
     "outDir": "dist",
-    "sourceMap": true,
+    "sourceMap": false,
     "strict": true,
     "esModuleInterop": true,
     "rootDir": "src",
