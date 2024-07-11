@@ -6,7 +6,6 @@ import { ConnectionType } from 'uiSrc/constants'
 import * as utils from 'uiSrc/utils'
 import {
   cleanup,
-  mockedStore,
   waitForStack,
 } from 'testSrc/helpers'
 import {
@@ -20,7 +19,6 @@ import {
   fetchDatabaseOverview,
 } from './useDatabasesStore'
 
-let store: typeof mockedStore
 let databases: any[]
 
 vi.spyOn(utils, 'showErrorMessage')
@@ -36,10 +34,6 @@ const errorResponsePayload = {
 }
 
 beforeEach(() => {
-  cleanup()
-  store = cloneDeep(mockedStore)
-  store.clearActions()
-
   databases = [
     {
       id: 'e37cc441-a4f2-402c-8bdb-fc2413cbbaff',

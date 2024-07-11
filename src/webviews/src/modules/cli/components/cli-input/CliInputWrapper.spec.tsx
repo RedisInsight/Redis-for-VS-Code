@@ -1,18 +1,10 @@
-import { cloneDeep } from 'lodash'
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
 import { screen } from '@testing-library/react'
-import { cleanup, mockedStore, render } from 'testSrc/helpers'
+import { render } from 'testSrc/helpers'
 import { CliInputWrapper, Props } from './CliInputWrapper'
 
 const mockedProps = mock<Props>()
-
-let store: typeof mockedStore
-beforeEach(() => {
-  cleanup()
-  store = cloneDeep(mockedStore)
-  store.clearActions()
-})
 
 vi.mock('uiSrc/slices/app/redis-commands', async () => {
   const defaultState = await vi.importActual<object>('uiSrc/slices/app/redis-commands')

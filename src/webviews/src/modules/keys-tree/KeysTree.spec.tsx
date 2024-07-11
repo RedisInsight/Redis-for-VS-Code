@@ -1,6 +1,5 @@
-import { cloneDeep } from 'lodash'
 import React from 'react'
-import { cleanup, fireEvent } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 
 import { stringToBuffer } from 'uiSrc/utils'
 import { KeyTypes, VscodeMessageAction } from 'uiSrc/constants'
@@ -9,7 +8,7 @@ import * as storeContext from 'uiSrc/store'
 import { apiService, vscodeApi } from 'uiSrc/services'
 import * as useCommonHooks from 'uiSrc/hooks'
 import * as utils from 'uiSrc/utils'
-import { mockedStore, render, waitForStack } from 'testSrc/helpers'
+import { render, waitForStack } from 'testSrc/helpers'
 import { KeysTree } from './KeysTree'
 import { KeysStoreData } from './hooks/interface'
 import * as useKeys from './hooks/useKeys'
@@ -23,13 +22,6 @@ vi.spyOn(useCommonHooks, 'useDisposableWebworker').mockImplementation(() => ({
   result: mockWebWorkerResult,
   error: null,
 }))
-
-let store: typeof mockedStore
-beforeEach(() => {
-  cleanup()
-  store = cloneDeep(mockedStore)
-  store.clearActions()
-})
 
 const leafRootFullName = 'test'
 const folderFullName = 'car:'

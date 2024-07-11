@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { isString, uniqBy } from 'lodash'
 
@@ -30,7 +30,7 @@ export const initialAppInfoState: AppInfoStore = {
 }
 
 export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
-  immer(devtools(persist((set) => ({
+  immer(devtools((set) => ({
     ...initialAppInfoState,
     // localStorage can't be called before initialization
     setInitialState: () => set({
@@ -55,8 +55,7 @@ export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
       return state
     }),
 
-  }),
-  { name: 'appInfo' }))),
+  }))),
 )
 
 // Asynchronous thunk action

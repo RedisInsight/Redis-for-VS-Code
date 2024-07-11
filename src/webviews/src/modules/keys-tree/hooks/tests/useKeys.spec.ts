@@ -4,7 +4,7 @@ import { Mock, SpyInstance } from 'vitest'
 import { createStore } from 'zustand'
 import * as utils from 'uiSrc/utils'
 import { apiService } from 'uiSrc/services'
-import { constants, mockedStore, waitForStack } from 'testSrc/helpers'
+import { constants, waitForStack } from 'testSrc/helpers'
 import * as useKeys from '../useKeys'
 import { CreateHashWithExpireDto, CreateListWithExpireDto, CreateSetWithExpireDto, CreateZSetWithExpireDto, KeysActions, KeysStore, KeysStoreData, KeysThunks } from '../interface'
 import { createKeysActionsSlice, initialKeysState as initialStateInit } from '../useKeysActions'
@@ -12,13 +12,7 @@ import { createKeysThunksSlice } from '../useKeysThunks'
 import { successMessages } from 'uiSrc/constants'
 
 const { stringToBuffer } = utils
-let store: typeof mockedStore
 let dateNow: SpyInstance<[], number>
-beforeEach(() => {
-  cleanup()
-  store = cloneDeep(mockedStore)
-  store.clearActions()
-})
 
 vi.spyOn(utils, 'sendEventTelemetry')
 vi.spyOn(utils, 'showErrorMessage')

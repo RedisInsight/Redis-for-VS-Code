@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import cx from 'classnames'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 import * as l10n from '@vscode/l10n'
@@ -35,8 +34,6 @@ const DatabasePanel = React.memo((props: Props) => {
   // const { credentials: cloudCredentials } = useSelector(cloudSelector)
   // const { data: sentinelMasters } = useSelector(sentinelSelector)
   // const { action, dbConnection } = useSelector(appRedirectionSelector)
-
-  const dispatch = useDispatch()
 
   useEffect(() => {
     if (editMode) {

@@ -13,12 +13,13 @@ export interface Props extends CheckboxProps {
 export interface CheckboxEvent extends CheckboxChangeEvent {}
 
 export const Checkbox: FC<Props> = (props) => {
-  const { className, labelText, ...restProps } = props
+  const { className, labelText, disabled, ...restProps } = props
 
   return (
-    <label className={styles.container}>
+    <label className={cx(styles.container, { [styles.disabled]: disabled })}>
       <CheckboxRC
         {...restProps}
+        disabled={disabled}
         prefixCls="ri-checkbox"
         className={cx(styles.checkbox, className)}
       />

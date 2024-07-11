@@ -17,6 +17,8 @@ executors:
     machine:
       image: ubuntu-2004:2023.04.2
       docker_layer_caching: true
+    environment:
+      DISPLAY: ":99"
   docker-node:
     docker:
       - image: cimg/node:18.15.0
@@ -105,6 +107,11 @@ jobs:
       - attach_workspace:
           at: .
       - run: sudo apt-get install net-tools
+      - run:
+          name: Start Xvfb
+          command: |
+            sudo apt-get install -y xvfb
+            Xvfb :99 -screen 0 1920x1080x24 &
       - run:
           name: Run e2e tests
           command: |

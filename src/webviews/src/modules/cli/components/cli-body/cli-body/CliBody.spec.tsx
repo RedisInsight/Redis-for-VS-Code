@@ -1,33 +1,19 @@
-import { cloneDeep } from 'lodash'
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
 import { screen, fireEvent } from '@testing-library/react'
 import { Keys } from 'uiSrc/constants'
-import { render, cleanup, mockedStore } from 'testSrc/helpers'
+import * as useCliOutput from 'uiSrc/modules/cli/hooks/cli-output/useCliOutputStore'
+import { render } from 'testSrc/helpers'
 import { CliBody, Props } from './CliBody'
 
 const mockedProps = mock<Props>()
 
-let store: typeof mockedStore
 const commandHistory = ['info', 'hello', 'keys *', 'clear']
 
-beforeEach(() => {
-  cleanup()
-  store = cloneDeep(mockedStore)
-  store.clearActions()
-})
-
-vi.mock('uiSrc/slices/cli/cli-output', async () => {
-  const defaultState = await vi.importActual<object>('uiSrc/slices/cli/cli-output')
-  return {
-    ...(await vi.importActual<object>('uiSrc/slices/cli/cli-output')),
-    setOutputInitialState: vi.fn,
-    outputSelector: vi.fn().mockReturnValue({
-      ...defaultState,
-      commandHistory,
-    }),
-  }
-})
+const spy = vi.spyOn(useCliOutput, 'useCliOutputStore').mockImplementation(() => ({
+  loading: false,
+  commandHistory,
+}))
 
 vi.mock('uiSrc/slices/app/redis-commands', async () => {
   const defaultState = await vi.importActual<object>('uiSrc/slices/app/redis-commands')
@@ -47,6 +33,10 @@ vi.mock('uiSrc/utils/cliHelper', async () => ({
   updateCliHistoryStorage: vi.fn(),
   clearOutput: vi.fn(),
 }))
+
+beforeEach(() => {
+  spy.mockRestore()
+})
 
 describe('CliBody', () => {
   it('should render', () => {

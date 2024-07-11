@@ -32,7 +32,7 @@ const TEST_KEYS = [
 export const constants = {
   MOCK_TIMESTAMP: 1629128049027,
 
-  INSTANCE_ID: 'instanceId',
+  DATABASE_ID: 'databaseId',
 
   TEST_KEYS,
   TEST_KEYS_RESPONSE: [{ keys: TEST_KEYS, total: 3000, scanned: 3000, nextCursor: 0 }],
@@ -225,6 +225,8 @@ export const constants = {
       },
     },
   },
+
+  COMMAND: 'keys *',
 }
 
 const KEY_INFO: KeyInfo = {
