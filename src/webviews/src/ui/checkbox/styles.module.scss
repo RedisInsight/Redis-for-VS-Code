@@ -25,3 +25,11 @@
   border: calc(var(--border-width)* 1px) solid var(--checkbox-border);
   background: var(--checkbox-background);
 }
+
+.disabled {
+  @apply opacity-70 cursor-default;
+
+  .checkmarkContainer {
+    @apply cursor-not-allowed;
+  }
+}

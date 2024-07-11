@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import axios, { AxiosError, CancelTokenSource } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
-import { query } from 'jsonpath'
 import { isNumber } from 'lodash'
 
 import { refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
@@ -95,7 +94,7 @@ export const setReJSONDataAction = (
   path: string,
   data: string,
   length?: number,
-  onSuccessAction?: (isEditMode: boolean, keyLevel: string) => void,
+  onSuccessAction?: (keyLevel: string) => void,
 ) => useRejsonStore.setState(async (state) => {
   state.processRejson()
 
@@ -111,8 +110,7 @@ export const setReJSONDataAction = (
 
     if (isStatusSuccessful(status)) {
       try {
-        const isEditMode = query(state.data.data, `$..${path}`).length > 0
-        onSuccessAction?.(isEditMode, getJsonPathLevel(path))
+        onSuccessAction?.(getJsonPathLevel(path))
       } catch (error) {
         // console.log(error)
       }
