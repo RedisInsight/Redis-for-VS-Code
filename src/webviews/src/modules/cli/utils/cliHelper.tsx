@@ -1,5 +1,4 @@
 import React from 'react'
-import { Dispatch, PayloadAction } from '@reduxjs/toolkit'
 import parse from 'html-react-parser'
 import { isUndefined } from 'lodash'
 
@@ -21,8 +20,8 @@ import {
 
 // import { AdditionalRedisModule } from 'apiSrc/modules/database/models/additional.redis.module'
 import { getDbIndex } from 'uiSrc/utils'
-import { resetOutput, updateCliCommandHistory } from 'uiSrc/modules/cli/slice/cli-output'
 import { formatToText } from './cliTextFormatter'
+import { useCliOutputStore } from '../hooks/cli-output/useCliOutputStore'
 
 export enum CliPrefix {
   Cli = 'cli',
@@ -106,8 +105,8 @@ const cliCommandWrapper = (command: string) => (
 //   </span>
 // )
 
-const clearOutput = (dispatch: any) => {
-  dispatch(resetOutput())
+const clearOutput = () => {
+  useCliOutputStore.getState().resetOutput()
 }
 
 // const cliParseCommandsGroupResult = (
@@ -128,7 +127,6 @@ const clearOutput = (dispatch: any) => {
 
 const updateCliHistoryStorage = (
   command: string = '',
-  dispatch: Dispatch<PayloadAction<string[]>>,
 ) => {
   if (!command) {
     return
@@ -146,7 +144,7 @@ const updateCliHistoryStorage = (
     commandHistory.slice(0, maxCountCommandHistory),
   )
 
-  dispatch?.(updateCliCommandHistory?.(commandHistory))
+  useCliOutputStore.getState().updateCliCommandHistory?.(commandHistory)
 }
 
 const checkUnsupportedCommand = (unsupportedCommands: string[], commandLine: string) =>

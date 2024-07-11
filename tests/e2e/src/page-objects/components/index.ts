@@ -12,8 +12,9 @@ import { BottomBar } from './bottom-bar/BottomBar'
 import { CliViewPanel } from './bottom-bar/CliViewPanel'
 import { DatabaseDetailsView } from './editor-view/DatabaseDetailsView'
 import { EditDatabaseView } from './editor-view/EditDatabaseView'
-import { JsonKeyDetailsView } from './editor-view/JsonKeyDetailsView'
+import { EulaView } from './editor-view/EulaView'
 import { HashKeyDetailsView } from './editor-view/HashKeyDetailsView'
+import { JsonKeyDetailsView } from './editor-view/JsonKeyDetailsView'
 import { InputWithButtons } from './common/InputWithButtons'
 import { ListKeyDetailsView } from './editor-view/ListKeyDetailsView'
 import { SetKeyDetailsView } from './editor-view/SetKeyDetailsView'
@@ -35,8 +36,9 @@ export {
   CliViewPanel,
   DatabaseDetailsView,
   EditDatabaseView,
-  JsonKeyDetailsView,
+  EulaView,
   HashKeyDetailsView,
+  JsonKeyDetailsView,
   InputWithButtons,
   ListKeyDetailsView,
   SetKeyDetailsView,

@@ -1,0 +1,1 @@
+export { ConsentsOption } from './ConsentsOption'

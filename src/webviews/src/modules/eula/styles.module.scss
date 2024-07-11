@@ -1,0 +1,9 @@
+.title {
+  @apply font-bold;
+  font-size: 14px;
+
+}
+
+.footer {
+  @apply flex fixed bottom-4 items-center justify-between w-[calc(100%-32px)];
+}

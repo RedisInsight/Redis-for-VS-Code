@@ -1,7 +1,7 @@
 import { createStore } from 'zustand'
 import * as modules from 'uiSrc/modules'
 import { SortOrder } from 'uiSrc/constants'
-import { DATABASE_ID_MOCK } from 'uiSrc/modules/cli/slice/tests/cli-settings.spec'
+import { constants } from 'testSrc/helpers'
 import {
   initialContextState as initialStateInit,
 } from './useContext'
@@ -28,7 +28,7 @@ describe('useContextStore', () => {
       // Arrange
       const sorting = SortOrder.DESC
       expect(useContextStore.getState().dbConfig.treeViewSort).toEqual(SortOrder.ASC)
-      useContextStore.getState().setKeysTreeSort(DATABASE_ID_MOCK, sorting)
+      useContextStore.getState().setKeysTreeSort(constants.DATABASE_ID, sorting)
 
       expect(useContextStore.getState().dbConfig.treeViewSort).toEqual(sorting)
     })

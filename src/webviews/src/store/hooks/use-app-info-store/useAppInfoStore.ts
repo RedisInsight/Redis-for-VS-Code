@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { isString, uniqBy } from 'lodash'
 
@@ -18,7 +18,7 @@ import {
 
 export const initialAppInfoState: AppInfoStore = {
   loading: false,
-  isShowConceptsPopup: null,
+  isShowConcepts: null,
   encoding: RedisResponseEncoding.Buffer,
   config: null,
   spec: null,
@@ -30,7 +30,7 @@ export const initialAppInfoState: AppInfoStore = {
 }
 
 export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
-  immer(devtools(persist((set) => ({
+  immer(devtools((set) => ({
     ...initialAppInfoState,
     // localStorage can't be called before initialization
     setInitialState: () => set({
@@ -42,11 +42,11 @@ export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
     processAppInfoFinal: () => set({ loading: false }),
     processAppInfoSuccess: (appInfo) => set({ ...appInfo }),
 
-    setIsShowConceptsPopup: (isShowConceptsPopup) => set({ isShowConceptsPopup }),
+    setIsShowConcepts: (isShowConcepts) => set({ isShowConcepts }),
 
     updateUserConfigSettingsSuccess: (config) => set({
       config,
-      isShowConceptsPopup: false,
+      isShowConcepts: false,
     }),
 
     setDelimiter: (delimiter) => set((state) => {
@@ -55,8 +55,7 @@ export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
       return state
     }),
 
-  }),
-  { name: 'appInfo' }))),
+  }))),
 )
 
 // Asynchronous thunk action

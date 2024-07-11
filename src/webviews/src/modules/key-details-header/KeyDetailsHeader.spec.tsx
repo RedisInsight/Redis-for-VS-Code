@@ -1,11 +1,10 @@
 import React from 'react'
 import { mock } from 'ts-mockito'
-import { cloneDeep } from 'lodash'
 import { Mock } from 'vitest'
 import { KeyTypes } from 'uiSrc/constants'
 import { useSelectedKeyStore, initialCertsState as initialSelectedKeyState } from 'uiSrc/store'
 import { bufferToString } from 'uiSrc/utils'
-import { render, screen, fireEvent, mockedStore, cleanup, waitFor, constants } from 'testSrc/helpers'
+import { render, screen, fireEvent, waitFor, constants } from 'testSrc/helpers'
 import { KeyDetailsHeaderProps, KeyDetailsHeader } from './KeyDetailsHeader'
 import * as useKeys from '../keys-tree/hooks/useKeys'
 
@@ -28,11 +27,7 @@ const deleteKeyActionMock = vi.fn();
   deleteKeyAction: deleteKeyActionMock,
 }))
 
-let store: typeof mockedStore
 beforeEach(() => {
-  cleanup()
-  store = cloneDeep(mockedStore)
-  store.clearActions()
   useSelectedKeyStore.setState(initialSelectedKeyState)
 })
 

@@ -1,11 +1,7 @@
 import React from 'react'
-import { Provider } from 'react-redux'
 import type { StoryObj } from '@storybook/react'
 import { HttpResponse, http } from 'msw'
-import { combineReducers, configureStore, createSlice } from '@reduxjs/toolkit'
 
-import { rootReducers, store } from 'uiSrc/store'
-import { initialKeysState } from 'uiSrc/modules/keys-tree/hooks/useKeys'
 import { constants, getMWSUrl } from 'testSrc/helpers'
 import { SidebarPage } from '.'
 
@@ -16,9 +12,7 @@ export default {
   decorators: [
     (Story: any) =>
       (
-        <Provider store={store}>
-          <Story />
-        </Provider>
+        <Story />
       ),
   ],
 }
@@ -27,29 +21,7 @@ type Story = StoryObj<typeof SidebarPage>
 
 // A super-simple mock of a redux store
 const MockStore = ({ keysState: keysStateData, children }: any) => (
-  <Provider
-    store={configureStore({
-      reducer: {
-        ...rootReducers,
-        browser: combineReducers({
-          keys: createSlice({
-            name: 'keys',
-            initialState:
-            {
-              ...initialKeysState,
-              data: {
-                ...initialKeysState.data,
-                ...keysStateData,
-              },
-            },
-            reducers: {},
-          }).reducer,
-        }),
-      },
-    })}
-  >
-    {children}
-  </Provider>
+  children
 )
 
 const noKeysData = [{ total: 0, scanned: 500, keys: [], nextCursor: 0 }]

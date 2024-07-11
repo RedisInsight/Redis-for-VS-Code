@@ -65,16 +65,16 @@ describe('useAppInfoStore', () => {
     expect(useAppInfoStore.getState().commandGroups).toEqual(constants.REDIS_COMMANDS_GROUPS)
   })
 
-  it('setIsShowConceptsPopup', () => {
+  it('setIsShowConcepts', () => {
     // Arrange
-    const initialState = { ...initialStateInit, isShowConceptsPopup: false } // Custom initial state
+    const initialState = { ...initialStateInit, isShowConcepts: false } // Custom initial state
     useAppInfoStore.setState((state) => ({ ...state, ...initialState }))
 
-    const { setIsShowConceptsPopup } = useAppInfoStore.getState()
+    const { setIsShowConcepts } = useAppInfoStore.getState()
     // Act
-    setIsShowConceptsPopup(true)
+    setIsShowConcepts(true)
     // Assert
-    expect(useAppInfoStore.getState().isShowConceptsPopup).toEqual(true)
+    expect(useAppInfoStore.getState().isShowConcepts).toEqual(true)
   })
 
   it('setDelimiter', () => {
@@ -103,7 +103,7 @@ describe('thunks', () => {
 
   describe('updateUserConfigSettingsAction', () => {
     it('succeed to update user config', async () => {
-      const initialState = { ...initialStateInit, isShowConceptsPopup: true } // Custom initial state
+      const initialState = { ...initialStateInit } // Custom initial state
       useAppInfoStore.setState((state) => ({ ...state, ...initialState }))
       // Arrange
       const data = {
@@ -120,7 +120,6 @@ describe('thunks', () => {
 
       // Assert
       expect(useAppInfoStore.getState().config).toEqual(data)
-      expect(useAppInfoStore.getState().isShowConceptsPopup).toEqual(false)
     })
   })
 })

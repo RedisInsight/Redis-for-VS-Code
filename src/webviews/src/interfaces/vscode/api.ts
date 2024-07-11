@@ -84,6 +84,14 @@ export interface SaveAppInfoAction {
   data: Partial<AppInfoStore>
 }
 
+export interface ShowEulaAction {
+  action: VscodeMessageAction.ShowEula,
+}
+
+export interface CloseEulaAction {
+  action: VscodeMessageAction.CloseEula
+}
+
 export type PostMessage =
   SelectKeyAction |
   DatabaseAction |
@@ -95,4 +103,6 @@ export type PostMessage =
   UpdateSettingsDelimiterAction |
   SelectedKeyCloseAction |
   SaveAppInfoAction |
+  ShowEulaAction |
+  CloseEulaAction |
   ResetSelectedKeyAction

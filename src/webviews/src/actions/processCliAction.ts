@@ -1,8 +1,8 @@
 import { StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import { PostMessage } from 'uiSrc/interfaces'
-import { addCli } from 'uiSrc/modules/cli/slice/cli-settings'
+import { addCli } from 'uiSrc/modules/cli/hooks/cli-settings/useCliSettingsThunks'
 import { localStorageService, sessionStorageService } from 'uiSrc/services'
-import { Database, store, useDatabasesStore } from 'uiSrc/store'
+import { Database, useDatabasesStore } from 'uiSrc/store'
 
 export const processCliAction = (message: PostMessage) => {
   if (
@@ -17,5 +17,5 @@ export const processCliAction = (message: PostMessage) => {
   sessionStorageService.set(StorageItem.databaseId, database.id)
 
   useDatabasesStore.getState().setConnectedDatabase(database)
-  store.dispatch(addCli(database))
+  addCli(database)
 }

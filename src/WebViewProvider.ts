@@ -60,7 +60,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
 
     const contentSecurity = [
       `img-src ${webview.cspSource} 'self' data:`,
-      `style-src ${webview.cspSource}`,
+      `style-src ${webview.cspSource} 'unsafe-inline'`,
       `script-src 'nonce-${nonce}'`,
       'default-src * self blob:',
       'worker-src blob:',
@@ -70,17 +70,13 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
       <html lang="en">
       <head>
         <meta charset="UTF-8">
-        <link href="${styleUri}" rel="stylesheet" />
+        <link href="${styleUri}" rel="stylesheet"/>
         <!--
           Use a content security policy to only allow loading images from https or from our extension directory,
           and only allow scripts that have a specific nonce.
         -->
         <meta http-equiv="Content-Security-Policy" content="${contentSecurity.join(';')}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta
-          http-equiv="Content-Security-Policy"
-          content="style-src 'self' https://*.vscode-cdn.net 'unsafe-inline';"
-        />
         <script nonce="${nonce}">
           window.appPort=${appPort};
           window.appInfo=${JSON.stringify(appInfo)};

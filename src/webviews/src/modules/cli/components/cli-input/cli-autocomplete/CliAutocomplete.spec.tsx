@@ -1,18 +1,10 @@
-import { cloneDeep } from 'lodash'
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
-import { setMatchedCommand, clearSearchingCommand } from 'uiSrc/modules/cli/slice/cli-settings'
-import { cleanup, mockedStore, render } from 'testSrc/helpers'
+import * as useCliSettings from 'uiSrc/modules/cli/hooks/cli-settings/useCliSettingsStore'
+import { render } from 'testSrc/helpers'
 import { CliAutocomplete, Props } from './CliAutocomplete'
 
 const mockedProps = mock<Props>()
-
-let store: typeof mockedStore
-beforeEach(() => {
-  cleanup()
-  store = cloneDeep(mockedStore)
-  store.clearActions()
-})
 
 const CliAutocompleteTestId = 'cli-command-autocomplete'
 const scanCommand = 'scan'
@@ -69,14 +61,21 @@ describe('CliAutocomplete', () => {
   })
 
   it('should "setMatchedCommand" & "clearSearchingCommand" action be called after unmount with empty string', () => {
+    const setMatchedCommandMock = vi.fn()
+    const clearSearchingCommandMock = vi.fn()
+    const spy = vi.spyOn(useCliSettings, 'useCliSettingsStore').mockImplementation(() => ({
+      setMatchedCommand: setMatchedCommandMock,
+      clearSearchingCommand: clearSearchingCommandMock,
+    }))
     const { unmount } = render(
       <CliAutocomplete {...instance(mockedProps)} commandName={scanCommand} arguments={scanArgs} />,
     )
 
     unmount()
 
-    const expectedActions = [setMatchedCommand(''), clearSearchingCommand()]
-    expect(store.getActions().slice(-2)).toEqual(expectedActions)
+    expect(setMatchedCommandMock).toBeCalled()
+    expect(clearSearchingCommandMock).toBeCalled()
+    spy.mockRestore()
   })
 
   it('Autocomplete should be only with optional args for "scan" command with filled in required args (new realization)', () => {

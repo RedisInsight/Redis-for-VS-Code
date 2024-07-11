@@ -8,13 +8,14 @@ import {
 import {
   SidebarPage,
   CliPage,
-  DatabasePage,
+  MainPage,
   AddKeyPage,
   KeyDetailsPage,
   NotFoundPage,
   AddDatabasePage,
   EditDatabasePage,
   SettingsPage,
+  EulaPage,
 } from 'uiSrc/pages'
 
 const rootEl = document.getElementById('root')
@@ -29,13 +30,14 @@ export const AppRoutes = () => {
     <Routes>
       <Route path="sidebar" element={<SidebarPage />} />
       <Route path="cli" element={<CliPage />} />
-      <Route path="main" element={<DatabasePage />}>
+      <Route path="main" element={<MainPage />}>
         <Route path="key" element={<KeyDetailsPage />} />
         <Route path="add_key" element={<AddKeyPage />} />
         <Route path="add_database" element={<AddDatabasePage />} />
         <Route path="edit_database" element={<EditDatabasePage />} />
+        <Route path="settings" element={<SettingsPage />} />
+        <Route path="eula" element={<EulaPage />} />
       </Route>
-      <Route path="settings" element={<SettingsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
