@@ -1,26 +1,8 @@
 import { decode } from 'html-entities'
 import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { useHotkeys } from 'react-hotkeys-hook'
 
 import { useShallow } from 'zustand/react/shallow'
-import {
-  cliSettingsSelector,
-  createCliClientAction,
-  setCliEnteringCommand,
-  clearSearchingCommand,
-  deleteCliClientAction,
-  resetCliSettings,
-} from 'uiSrc/modules/cli/slice/cli-settings'
-import {
-  concatToOutput,
-  outputSelector,
-  sendCliCommandAction,
-  sendCliClusterCommandAction,
-  processUnsupportedCommand,
-  processUnrepeatableNumber,
-  resetOutputLoading,
-} from 'uiSrc/modules/cli/slice/cli-output'
 import {
   cliTexts,
   ConnectionType,
@@ -34,36 +16,43 @@ import {
 import { getCommandRepeat, isRepeatCountCorrect, sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { ClusterNodeRole } from 'uiSrc/interfaces'
 import { checkUnsupportedCommand, clearOutput, cliCommandOutput } from 'uiSrc/modules/cli/utils/cliHelper'
-// import { showMonitor } from 'uiSrc/slices/cli/monitor'
-// import { SendClusterCommandDto } from 'apiSrc/modules/cli/dto/cli.dto'
+import { useDatabasesStore } from 'uiSrc/store'
 
-import { AppDispatch, useDatabasesStore } from 'uiSrc/store'
 import { CliBody } from './cli-body'
 
 import styles from './cli-body/styles.module.scss'
+import { useCliOutputStore } from '../../hooks/cli-output/useCliOutputStore'
+import { useCliSettingsStore } from '../../hooks/cli-settings/useCliSettingsStore'
+import { createCliClientAction, deleteCliClientAction } from '../../hooks/cli-settings/useCliSettingsThunks'
+import { processUnrepeatableNumber, processUnsupportedCommand, sendCliClusterCommandAction, sendCliCommandAction } from '../../hooks/cli-output/useCliOutputThunks'
 
 export const CliBodyWrapper = () => {
   const [command, setCommand] = useState('')
 
-  // const navigate = useNavigate()
-  const dispatch = useDispatch<AppDispatch>()
-  const { data = [] } = useSelector(outputSelector)
   const {
-    errorClient: error,
+    error,
     unsupportedCommands,
-    isEnteringCommand,
-    isSearching,
-    matchedCommand,
     cliClientUuid,
-  } = useSelector(cliSettingsSelector)
+    resetCliSettings,
+  } = useCliSettingsStore((state) => ({
+    error: state.errorClient,
+    unsupportedCommands: state.unsupportedCommands,
+    cliClientUuid: state.cliClientUuid,
+    resetCliSettings: state.resetCliSettings,
+  }))
   const database = useDatabasesStore(useShallow((state) => state.connectedDatabase))
   const { id, host, port, connectionType } = database || {}
-  const { db: currentDbIndex } = useSelector(outputSelector)
+
+  const data = useCliOutputStore((state) => state.data || [])
+
+  const currentDbIndex = useCliOutputStore((state) => state.db)
+  const sendCliCommandFinal = useCliOutputStore((state) => state.sendCliCommandFinal)
+  const concatToOutput = useCliOutputStore((state) => state.concatToOutput)
 
   const removeCliClient = () => {
-    cliClientUuid && dispatch(deleteCliClientAction(cliClientUuid))
-    dispatch(resetCliSettings())
-    dispatch(resetOutputLoading())
+    cliClientUuid && deleteCliClientAction(cliClientUuid)
+    resetCliSettings()
+    sendCliCommandFinal()
     sendEventTelemetry({
       event: TelemetryEvent.CLI_CLOSED,
       eventData: {
@@ -73,23 +62,14 @@ export const CliBodyWrapper = () => {
   }
 
   useEffect(() => {
-    !cliClientUuid && host && dispatch(createCliClientAction(database!))
+    !cliClientUuid && host && createCliClientAction(database!)
     return () => {
       removeCliClient()
     }
   }, [database])
 
-  useEffect(() => {
-    if (!isEnteringCommand) {
-      dispatch(setCliEnteringCommand())
-    }
-    if (isSearching && matchedCommand) {
-      dispatch(clearSearchingCommand())
-    }
-  }, [command])
-
   const handleClearOutput = () => {
-    clearOutput(dispatch)
+    clearOutput()
   }
 
   const refHotkeys = useHotkeys<HTMLDivElement>('command+k,ctrl+l', handleClearOutput)
@@ -98,50 +78,50 @@ export const CliBodyWrapper = () => {
     const [commandLine, countRepeat] = getCommandRepeat(decode(command).trim() || '')
 
     const unsupportedCommand = checkUnsupportedCommand(unsupportedCommands, commandLine)
-    dispatch(concatToOutput(cliCommandOutput(decode(command), currentDbIndex)))
+    concatToOutput(cliCommandOutput(decode(command), currentDbIndex))
 
     if (!isRepeatCountCorrect(countRepeat)) {
-      dispatch(processUnrepeatableNumber(commandLine, resetCommand))
+      processUnrepeatableNumber(commandLine, resetCommand)
       return
     }
 
     // Flow if MONITOR command was executed
     if (checkUnsupportedCommand([CommandMonitor.toLowerCase()], commandLine)) {
-      dispatch(concatToOutput(cliTexts.MONITOR_COMMAND_CLI()))
+      concatToOutput(cliTexts.MONITOR_COMMAND_CLI())
       resetCommand()
       return
     }
 
     // Flow if PSUBSCRIBE command was executed
     if (checkUnsupportedCommand([CommandPSubscribe.toLowerCase()], commandLine)) {
-      dispatch(concatToOutput(cliTexts.PSUBSCRIBE_COMMAND_CLI()))
+      concatToOutput(cliTexts.PSUBSCRIBE_COMMAND_CLI())
       resetCommand()
       return
     }
 
     // Flow if SUBSCRIBE command was executed
     if (checkUnsupportedCommand([CommandSubscribe.toLowerCase()], commandLine)) {
-      dispatch(concatToOutput(cliTexts.SUBSCRIBE_COMMAND_CLI()))
+      concatToOutput(cliTexts.SUBSCRIBE_COMMAND_CLI())
       resetCommand()
       return
     }
 
     // Flow if SSUBSCRIBE command was executed
     if (checkUnsupportedCommand([CommandSSubscribe.toLowerCase()], commandLine)) {
-      dispatch(concatToOutput(cliTexts.SSUBSCRIBE_COMMAND_CLI()))
+      concatToOutput(cliTexts.SSUBSCRIBE_COMMAND_CLI())
       resetCommand()
       return
     }
 
     // Flow if HELLO 3 command was executed
     if (checkUnsupportedCommand([CommandHello3.toLowerCase()], commandLine)) {
-      dispatch(concatToOutput(cliTexts.HELLO3_COMMAND_CLI()))
+      concatToOutput(cliTexts.HELLO3_COMMAND_CLI())
       resetCommand()
       return
     }
 
     if (unsupportedCommand) {
-      dispatch(processUnsupportedCommand(commandLine, unsupportedCommand, resetCommand))
+      processUnsupportedCommand(commandLine, unsupportedCommand, resetCommand)
       return
     }
 
@@ -158,7 +138,7 @@ export const CliBodyWrapper = () => {
       },
     })
     if (connectionType !== ConnectionType.Cluster) {
-      dispatch(sendCliCommandAction(command, resetCommand))
+      sendCliCommandAction(command, resetCommand)
       return
     }
 
@@ -171,7 +151,7 @@ export const CliBodyWrapper = () => {
       },
       role: ClusterNodeRole.All,
     }
-    dispatch(sendCliClusterCommandAction(command, options, resetCommand))
+    sendCliClusterCommandAction(command, options, resetCommand)
   }
 
   const resetCommand = () => {

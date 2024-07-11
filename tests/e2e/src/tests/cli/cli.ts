@@ -170,13 +170,13 @@ describe('CLI critical', () => {
   })
 
   it('Verify that user can send command via CLI', async function () {
-    keyName = Common.generateWord(10)
     await cliViewPanel.executeCommand('info')
     const text = await cliViewPanel.getCliLastCommandResponse()
     expect(text).contain('redis_version:')
   })
 
   it('Verify that user can add data via CLI', async function () {
+    keyName = Common.generateWord(10)
     await cliViewPanel.executeCommand(
       `SADD ${keyName} "chinese" "japanese" "german"`,
     )

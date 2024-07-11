@@ -1,6 +1,5 @@
 import React from 'react'
 import { mock } from 'ts-mockito'
-import { cloneDeep } from 'lodash'
 import { Mock } from 'vitest'
 
 import { KeyTypes, SelectedKeyActionType } from 'uiSrc/constants'
@@ -8,9 +7,8 @@ import * as utils from 'uiSrc/utils'
 import { apiService, vscodeApi } from 'uiSrc/services'
 import * as useContext from 'uiSrc/store/hooks/use-context/useContext'
 import * as useSelectedKeyStore from 'uiSrc/store/hooks/use-selected-key-store/useSelectedKeyStore'
-import { DATABASE_ID_MOCK } from 'uiSrc/modules/cli/slice/tests/cli-settings.spec'
 import { Database } from 'uiSrc/store'
-import { cleanup, constants, fireEvent, mockedStore, render, waitForStack } from 'testSrc/helpers'
+import { constants, fireEvent, render, waitForStack } from 'testSrc/helpers'
 import { DatabaseWrapper, Props } from './DatabaseWrapper'
 import * as useKeys from '../../hooks/useKeys'
 
@@ -19,12 +17,7 @@ const mockedProps = {
   ...mock<Props>(<div />),
   database: mockDatabase,
 }
-let store: typeof mockedStore
 beforeEach(() => {
-  cleanup()
-  store = cloneDeep(mockedStore)
-  store.clearActions()
-
   apiService.get = vi.fn().mockResolvedValue({ status: 200 })
 })
 
@@ -69,7 +62,7 @@ describe('DatabaseWrapper', () => {
     const spySelectedKey = vi.spyOn(useSelectedKeyStore, 'useSelectedKeyStore') as Mock
 
     const selectedKeyAction = {
-      databaseId: DATABASE_ID_MOCK,
+      databaseId: constants.DATABASE_ID,
       key: constants.KEY_NAME_1,
       keyType: KeyTypes.Hash,
       type: SelectedKeyActionType.Removed,
@@ -85,7 +78,7 @@ describe('DatabaseWrapper', () => {
     })
 
     it('should call deleteKeyFromTree and setSelectedKeyAction action after if selected key action is Removed', async () => {
-      render(<DatabaseWrapper {...mockedProps} database={{ id: DATABASE_ID_MOCK } as Database} />)
+      render(<DatabaseWrapper {...mockedProps} database={{ id: constants.DATABASE_ID } as Database} />)
 
       await waitForStack()
 
@@ -104,7 +97,7 @@ describe('DatabaseWrapper', () => {
     })
 
     it('should not call any mocks if type is not defined', async () => {
-      render(<DatabaseWrapper {...mockedProps} database={{ id: DATABASE_ID_MOCK } as Database} />)
+      render(<DatabaseWrapper {...mockedProps} database={{ id: constants.DATABASE_ID } as Database} />)
 
       await waitForStack()
 
@@ -123,7 +116,7 @@ describe('DatabaseWrapper', () => {
         },
       }))
 
-      render(<DatabaseWrapper {...mockedProps} database={{ id: DATABASE_ID_MOCK } as Database} />)
+      render(<DatabaseWrapper {...mockedProps} database={{ id: constants.DATABASE_ID } as Database} />)
 
       expect(setSelectedKeyActionMock).not.toBeCalled()
       expect(deleteKeyFromTreeMock).not.toBeCalled()

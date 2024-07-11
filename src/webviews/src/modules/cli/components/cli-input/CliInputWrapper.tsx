@@ -1,13 +1,12 @@
 import { isUndefined } from 'lodash'
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { getCommandRepeat } from 'uiSrc/utils'
-import { outputSelector } from 'uiSrc/modules/cli/slice/cli-output'
 import { CommandProvider } from 'uiSrc/constants'
 import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 import { CliAutocomplete } from './cli-autocomplete'
 
 import { CliInput } from './cli-input'
+import { useCliOutputStore } from '../../hooks/cli-output/useCliOutputStore'
 
 export interface Props {
   command: string
@@ -20,7 +19,7 @@ export interface Props {
 export const CliInputWrapper = (props: Props) => {
   const { command = '', wordsTyped, setInputEl, setCommand, onKeyDown } = props
 
-  const { db } = useSelector(outputSelector)
+  const db = useCliOutputStore((state) => state.db)
   const ALL_REDIS_COMMANDS = useAppInfoStore((state) => state.commandsSpec)
 
   const [commandLine, repeatCommand] = getCommandRepeat(command || '')

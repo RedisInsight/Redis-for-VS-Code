@@ -1,6 +1,5 @@
 /** @type { import('@storybook/react').Preview } */
 import React from 'react'
-import { Provider } from 'react-redux'
 import { Decorator, Preview } from '@storybook/react'
 import { DocsContainer } from '@storybook/addon-docs'
 import { themes } from '@storybook/theming'
@@ -9,7 +8,6 @@ import { initialize, mswLoader, mswDecorator } from 'msw-storybook-addon'
 
 import { mswHandlers } from './helpers'
 
-import { store } from '../src/webviews/src/store'
 import '../src/webviews/vscode.css'
 
 /*
@@ -44,16 +42,6 @@ export const preview: Preview = {
 export const decorators: Decorator[] = [
   mswDecorator,
   (Story) => (
-    <Provider store={store}>
-      <Story />
-    </Provider>
+    <Story />
   ),
-  withThemeByDataAttribute({
-    themes: {
-      light: 'light',
-      dark: 'dark',
-    },
-    defaultTheme: 'dark',
-    attributeName: 'data-mode',
-  }),
 ]

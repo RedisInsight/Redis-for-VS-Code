@@ -1,6 +1,7 @@
 import { By } from 'selenium-webdriver'
 import { Key } from 'vscode-extension-tester'
 import { WebView } from '@e2eSrc/page-objects/components/WebView'
+import { InputActions } from '@e2eSrc/helpers/common-actions'
 
 /**
  * CLI view on the bottom panel
@@ -43,10 +44,10 @@ export class CliViewPanel extends WebView {
     await super.getElement(this.cliPanel)
     const input = await super.getElement(this.cliCommand)
 
-    try {
-      await input.clear()
-    } catch (err) {
-      // try clearing, ignore if not available
+    const currentValue = await input.getText()
+    for (let i = 0; i < currentValue.length; i++) {
+      await input.sendKeys(Key.BACK_SPACE)
+      await InputActions.driver.sleep(100)
     }
 
     await input.sendKeys(Key.SPACE)
@@ -65,10 +66,10 @@ export class CliViewPanel extends WebView {
     await super.getElement(this.cliPanel)
     const input = await super.getElement(this.cliCommand)
 
-    try {
-      await input.clear()
-    } catch (err) {
-      // try clearing, ignore if not available
+    const currentValue = await input.getText()
+    for (let i = 0; i < currentValue.length; i++) {
+      await input.sendKeys(Key.BACK_SPACE)
+      await InputActions.driver.sleep(100)
     }
 
     await input.sendKeys(Key.SPACE)

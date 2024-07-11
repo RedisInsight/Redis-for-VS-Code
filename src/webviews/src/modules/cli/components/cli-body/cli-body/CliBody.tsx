@@ -1,16 +1,14 @@
 import React, { Ref, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 import { Nullable } from 'uiSrc/interfaces'
 import { scrollIntoView } from 'uiSrc/utils'
 import { clearOutput, updateCliHistoryStorage } from 'uiSrc/modules/cli/utils/cliHelper'
 import { isModifiedEvent } from 'uiSrc/services'
 import { ClearCommand, Keys } from 'uiSrc/constants'
-import { outputSelector } from 'uiSrc/modules/cli/slice/cli-output'
-import { cliSettingsSelector } from 'uiSrc/modules/cli/slice/cli-settings'
 import { CliInputWrapper } from 'uiSrc/modules/cli/components/cli-input'
-import { AppDispatch } from 'uiSrc/store'
 import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
+import { useCliOutputStore } from 'uiSrc/modules/cli/hooks/cli-output/useCliOutputStore'
+import { useCliSettingsStore } from 'uiSrc/modules/cli/hooks/cli-settings/useCliSettingsStore'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -28,20 +26,23 @@ const TIME_FOR_DOUBLE_CLICK = 300
 export const CliBody = (props: Props) => {
   const { data, command = '', error, setCommand, onSubmit } = props
 
+  const settingsLoading = useCliSettingsStore((state) => state.loading)
+  const { loading, commandHistoryStore } = useCliOutputStore((state) => ({
+    loading: state.loading,
+    commandHistoryStore: state.commandHistory,
+  }))
+
   const [inputEl, setInputEl] = useState<Nullable<HTMLSpanElement>>(null)
   const [commandHistory, setCommandHistory] = useState<string[]>([])
   const [commandHistoryPos, setCommandHistoryPos] = useState<number>(commandHistoryPosInit)
   const [commandTabPos, setCommandTabPos] = useState<number>(commandTabPosInit)
   const [wordsTyped, setWordsTyped] = useState<number>(0)
   const [matchingCmds, setMatchingCmds] = useState<string[]>([])
-  const { loading: settingsLoading } = useSelector(cliSettingsSelector)
-  const { loading, commandHistory: commandHistoryStore } = useSelector(outputSelector)
 
   const commandsArray = useAppInfoStore((state) => state.commandsArray)
 
   const timerClickRef = useRef<NodeJS.Timeout>()
   const scrollDivRef: Ref<HTMLDivElement> = useRef(null)
-  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
     inputEl?.focus()
@@ -67,7 +68,7 @@ export const CliBody = (props: Props) => {
   const onClearOutput = (event: React.KeyboardEvent<HTMLSpanElement>) => {
     event.preventDefault()
 
-    clearOutput(dispatch)
+    clearOutput()
     setCommand('')
   }
 
@@ -76,7 +77,7 @@ export const CliBody = (props: Props) => {
 
     setWordsTyped(0)
     setCommandHistoryPos(commandHistoryPosInit)
-    updateCliHistoryStorage(commandLine, dispatch)
+    updateCliHistoryStorage(commandLine)
 
     if (commandLine === ClearCommand) {
       onClearOutput(event)
