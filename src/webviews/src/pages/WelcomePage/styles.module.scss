@@ -1,0 +1,19 @@
+.container {
+  @apply flex flex-col h-full w-full px-5 py-1 overflow-x-auto;
+
+  h3 {
+    @apply text-[20px] pb-3;
+  }
+}
+
+.content {
+  @apply flex flex-col md:flex-row;
+}
+
+.section {
+  @apply w-[90%] md:w-[40%];
+}
+
+.data {
+  @apply max-w-[300px];
+}

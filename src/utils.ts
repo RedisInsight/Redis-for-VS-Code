@@ -61,6 +61,9 @@ export const handleMessage = async (message: any = {}) => {
     case 'EditKeyName':
       vscode.commands.executeCommand('RedisInsight.editKeyName', message.data)
       break
+    case 'OpenAddDatabase':
+      vscode.commands.executeCommand('RedisInsight.addDatabase')
+      break
     case 'CloseAddDatabase':
       vscode.commands.executeCommand('RedisInsight.addDatabaseClose')
       break

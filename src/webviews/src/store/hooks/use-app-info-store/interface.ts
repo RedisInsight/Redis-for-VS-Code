@@ -8,6 +8,7 @@ export interface AppInfoStore {
   config: Nullable<GetAppSettingsResponse>
   spec: Nullable<GetAgreementsSpecResponse>
   server: Nullable<GetServerInfoResponse>
+  createDbContent: Nullable<Record<string, ContentCreateRedis>>
   delimiter: string
   commandsSpec: ICommands
   commandsArray: string[]
@@ -22,6 +23,7 @@ export interface AppInfoActions {
     server,
     config,
     spec,
+    createDbContent,
     commandsSpec,
     commandsArray,
     commandGroups,
@@ -37,6 +39,9 @@ export type AppInfoResponses = [
   GetAppSettingsResponse,
   GetAgreementsSpecResponse,
   ICommands,
+]
+export type AppResourcesResponses = [
+  Record<string, ContentCreateRedis>,
 ]
 
 export interface GetServerInfoResponse {
@@ -88,4 +93,15 @@ export interface IAgreement {
 
 export interface IAgreementSpec {
   [key: string]: IAgreement
+}
+
+export interface ContentFeatureCreateRedis {
+  title: string
+  url: string
+  description?: string
+  links: Record<string, {
+    altText: string
+    url: string
+    event?: string
+  }>
 }

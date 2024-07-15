@@ -98,6 +98,7 @@ describe('thunks', () => {
     expect(useAppInfoStore.getState().spec).toEqual(constants.SETTINGS_AGREEMENTS_SPEC)
     expect(useAppInfoStore.getState().commandsArray).toEqual(constants.REDIS_COMMANDS_ARRAY)
     expect(useAppInfoStore.getState().commandGroups).toEqual(constants.REDIS_COMMANDS_GROUPS)
+    expect(useAppInfoStore.getState().createDbContent).toEqual(constants.CONTENT_CREATE_DATABASE)
     expect(useAppInfoStore.getState().loading).toEqual(false)
   })
 

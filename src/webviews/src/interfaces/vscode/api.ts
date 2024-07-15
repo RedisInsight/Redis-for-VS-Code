@@ -61,7 +61,9 @@ export interface SelectedKeyCloseAction {
 }
 
 export interface NoDataAction {
-  action: VscodeMessageAction.CloseAddDatabase | VscodeMessageAction.CloseEditDatabase
+  action: VscodeMessageAction.CloseAddDatabase
+  | VscodeMessageAction.OpenAddDatabase
+  | VscodeMessageAction.CloseEditDatabase
 }
 
 export interface CloseAddKeyAction {

@@ -1,4 +1,6 @@
+import { isNull } from 'lodash'
 import React, { FC } from 'react'
+import { NoDatabases } from 'uiSrc/components'
 import { DatabaseWrapper, KeysTree, KeysTreeHeader } from 'uiSrc/modules'
 import { KeysStoreProvider } from 'uiSrc/modules/keys-tree/hooks/useKeys'
 import { ContextStoreProvider, useDatabasesStore } from 'uiSrc/store'
@@ -6,9 +8,12 @@ import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfo
 
 export const SidebarPage: FC<any> = () => {
   const databases = useDatabasesStore((state) => state.data)
-  const isShowConcepts = useAppInfoStore((state) => state.isShowConcepts)
+  const { isShowConcepts, config } = useAppInfoStore((state) => ({
+    isShowConcepts: state.isShowConcepts,
+    config: state.config,
+  }))
 
-  if (isShowConcepts) {
+  if (isShowConcepts || isNull(config)) {
     return null
   }
 
@@ -24,6 +29,7 @@ export const SidebarPage: FC<any> = () => {
           </KeysStoreProvider>
         </ContextStoreProvider>
       ))}
+      {!databases.length && <NoDatabases />}
     </div>
   )
 }

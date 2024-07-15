@@ -6,7 +6,7 @@ import styles from './styles.module.scss'
 
 export interface Props {
   className?: string
-  size?: 's' | 'm' | 'l' | 'xs' | 'xxs',
+  size?: 'xl' | 's' | 'm' | 'l' | 'xs' | 'xxs',
 }
 
 export const Spacer: FC<Props> = (props) => {
