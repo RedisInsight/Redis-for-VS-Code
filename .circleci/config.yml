@@ -21,7 +21,7 @@ executors:
       DISPLAY: ":99"
   docker-node:
     docker:
-      - image: cimg/node:18.15.0
+      - image: cimg/node:20.15
   docker:
     docker:
       - image: cibuilds/docker:19.03.5
@@ -103,7 +103,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: '18.15.0'
+          node-version: '20.15'
       - attach_workspace:
           at: .
       - run: sudo apt-get install net-tools

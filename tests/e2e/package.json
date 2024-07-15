@@ -8,7 +8,7 @@
     "install:deps": "yarn install:vs-code && yarn install:chrome-driver",
     "install:extension": "extest install-vsix -f redis-insight-vsc-plugin-0.0.1.vsix -e ./test-extensions",
     "test": "yarn run compile && dotenv -e .env extest run-tests dist/setup.js dist/tests/**/*.js --code_settings settings.json -r . --extensions_dir ./test-extensions",
-    "test:ci": "yarn compile && dotenv -e .ci.env ts-node ./src/vscode.runner.ts",
+    "test:ci": "yarn compile && dotenv -e .env ts-node ./src/vscode.runner.ts",
     "test:ci:clear": "rimraf ./test-extensions && yarn --cwd ../../ package:prod &&  yarn compile && dotenv -e .ci.env ts-node ./src/vscode.runner.ts"
   },
   "devDependencies": {
@@ -19,7 +19,7 @@
     "@types/lodash": "^4.17.5",
     "@types/mocha": "^10.0.2",
     "@types/mochawesome": "^6.2.4",
-    "@types/node": "18.15.0",
+    "@types/node": "20.14.0",
     "@types/redis": "^4.0.11",
     "@types/supertest": "^2.0.8",
     "@types/vscode": "^1.83.2",
