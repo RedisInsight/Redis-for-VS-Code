@@ -7,8 +7,9 @@
     "install:chrome-driver": "extest get-chromedriver -s ./test-resources",
     "install:deps": "yarn install:vs-code && yarn install:chrome-driver",
     "install:extension": "extest install-vsix -f redis-insight-vsc-plugin-0.0.1.vsix -e ./test-extensions",
-    "test": "yarn run compile && extest run-tests dist/setup.js dist/tests/**/*.js --code_settings settings.json -r . --extensions_dir ./test-extensions",
-    "test:ci": "yarn compile && ts-node ./src/vscode.runner.ts"
+    "test": "yarn run compile && dotenv -e .env extest run-tests dist/setup.js dist/tests/**/*.js --code_settings settings.json -r . --extensions_dir ./test-extensions",
+    "test:ci": "yarn compile && dotenv -e .ci.env ts-node ./src/vscode.runner.ts",
+    "test:ci:clear": "rimraf ./test-extensions && yarn --cwd ../../ package:prod &&  yarn compile && dotenv -e .ci.env ts-node ./src/vscode.runner.ts"
   },
   "devDependencies": {
     "@types/chai": "^4.3.6",
@@ -32,6 +33,7 @@
     "mocha": "^10.2.0",
     "mochawesome": "^7.1.3",
     "redis": "^4.6.11",
+    "rimraf": "^6.0.1",
     "supertest": "^4.0.2",
     "ts-node": "10.9.1",
     "tsc-alias": "^1.8.8",

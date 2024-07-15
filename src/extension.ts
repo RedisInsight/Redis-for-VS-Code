@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv'
 import * as path from 'path'
 import { WebviewPanel } from './Webview'
 import { startBackend, getBackendGracefulShutdown } from './server/bootstrapBackend'
+import { startBackendE2E } from './server/bootstrapBackendE2E'
 import { initWorkspaceState } from './lib'
 import { WebViewProvider } from './WebViewProvider'
 import { handleMessage, truncateText } from './utils'
@@ -18,7 +19,11 @@ export async function activate(context: vscode.ExtensionContext) {
 
   try {
     if (process.env.RI_WITHOUT_BACKEND !== 'true') {
-      await startBackend(logger)
+      if (process.env.RI_TEST !== 'true') {
+        await startBackend(logger)
+      } else {
+        await startBackendE2E(logger)
+      }
     }
   } catch (error) {
     logger.log(`startBackend error: ${error}`)
