@@ -103,6 +103,7 @@ jobs:
     steps:
       - checkout
       - node/install:
+          install-yarn: true
           node-version: '20.15'
       - attach_workspace:
           at: .
