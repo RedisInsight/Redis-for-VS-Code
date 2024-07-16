@@ -228,21 +228,27 @@ jobs:
           name: Build .vsix package
           command: |
             packagePath=./release/redis-insight-vsc-extension-mac
-            yarn download:backend
 
             if [ << parameters.target >> ]; then
+              yarn download:backend << parameters.target >>
+
               yarn package:prod:mac:<< parameters.target >> --out ${packagePath}-<< parameters.target >>.vsix
               exit 0;
             fi
 
             if [ << parameters.env >> == 'prod' ]; then
+              yarn download:backend arm64
               yarn package:prod --target darwin-arm64 --out ${packagePath}-arm64.vsix
 
+              yarn download:backend x64
               yarn package:prod --target darwin-x64 --out ${packagePath}-x64.vsix
               exit 0;
             fi
 
+            yarn download:backend arm64
             yarn package:stage --target darwin-arm64 --out ${packagePath}-arm64.vsix
+
+            yarn download:backend x64
             yarn package:stage --target darwin-x64 --out ${packagePath}-x64.vsix
       - persist_to_workspace:
           root: .
