@@ -334,6 +334,7 @@ jobs:
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   frontend-tests:
+    <<: *ignore-for-manual-build
     jobs:
       - unit-tests-ui:
           name: Run Unit Tests
