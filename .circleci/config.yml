@@ -166,6 +166,10 @@ jobs:
         type: enum
         default: stage
         enum: ['stage', 'prod', 'dev']
+      target:
+        description: Build target
+        type: string
+        default: ""
     steps:
       - checkout
       - restore_cache:
@@ -368,6 +372,7 @@ workflows:
           name: Store build artifacts (stage)
           requires:
             - Build extension - Linux (stage)
+
   manual-build-mac:
     when: << pipeline.parameters.mac >>
     jobs:
@@ -385,6 +390,7 @@ workflows:
           name: Store build artifacts (stage)
           requires:
             - Build extension - MacOS (stage)
+
   manual-build-windows:
     when: << pipeline.parameters.windows >>
     jobs:
