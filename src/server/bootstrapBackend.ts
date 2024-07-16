@@ -4,8 +4,6 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { workspaceStateService } from '../lib'
 import { CustomLogger } from '../logger'
-// @ts-ignore
-import server from '../../dist/redis-backend/dist/src/main'
 
 const appPort = process.env.RI_APP_PORT
 
@@ -28,7 +26,9 @@ export async function startBackend(logger: CustomLogger): Promise<any> {
     const message = vscode.window.setStatusBarMessage('Starting Redis Insight...')
 
     try {
-      const { gracefulShutdown: gracefulShutdownFn, app: apiApp } = await server(port, logger)
+      // @ts-ignore
+      const server = await import('../../dist/redis-backend/dist/src/main')
+      const { gracefulShutdown: gracefulShutdownFn, app: apiApp } = await server.default(port, logger)
       gracefulShutdown = gracefulShutdownFn
       beApp = apiApp
       logger.log('BE started')
