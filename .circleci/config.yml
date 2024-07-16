@@ -327,7 +327,7 @@ jobs:
             .circleci/build/sum_sha256.sh
             applicationVersion=$(jq -r '.version' package.json)
 
-            aws s3 cp release/ s3://${AWS_BUCKET_NAME}/vscode/private/${applicationVersion} --recursive
+            aws s3 cp release/ s3://${AWS_BUCKET_NAME}/private/vscode/${applicationVersion} --recursive
 
 
 # Orchestrate jobs using workflows
