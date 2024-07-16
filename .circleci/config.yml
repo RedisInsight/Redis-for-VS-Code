@@ -31,7 +31,6 @@ aliases:
       - << pipeline.parameters.linux >>
       - << pipeline.parameters.mac >>
       - << pipeline.parameters.windows >>
-      - << pipeline.parameters.docker >>
   ignore-for-manual-build: &ignore-for-manual-build
     when:
       not: *manual-build-conditions
