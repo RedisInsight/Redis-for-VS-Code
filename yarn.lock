@@ -12035,11 +12035,6 @@ store2@^2.12.0, store2@^2.14.2:
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.14.2.tgz#56138d200f9fe5f582ad63bc2704dbc0e4a45068"
   integrity sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==
 
-storybook-addon-data-theme-switcher@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/storybook-addon-data-theme-switcher/-/storybook-addon-data-theme-switcher-0.1.7.tgz#afe9defb2612992cc88f08c795baa6cb28ac8836"
-  integrity sha512-UsUQjvah+Sq2UXVluofJqhrMshXdb20BUX4MsMDTlmh9XtF3rAJ8Wg2GZSVysZdX/jdLSEpdP6ln8c5i+g4RvA==
-
 storybook-addon-themes@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/storybook-addon-themes/-/storybook-addon-themes-6.1.0.tgz#5d7afe293cd4bc28a8f634aa466dbd8fd2f9222e"

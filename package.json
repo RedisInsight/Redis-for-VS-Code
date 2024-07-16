@@ -122,8 +122,6 @@
     "test:cov": "vitest run --silent --coverage --dir ./src/webviews/src",
     "package:prod": "npx mkdirp release && npx @vscode/vsce package",
     "package:stage": "npx mkdirp release && npx @vscode/vsce package --pre-release",
-    "package:prod:mac:arm64": "npx mkdirp release && npx @vscode/vsce package --target darwin-arm64 --out ./release/redis-insight-vsc-extension-arm64.vsix",
-    "package:prod:mac:x64": "npx mkdirp release && npx @vscode/vsce package --target darwin-arm64 --out ./release/redis-insight-vsc-extension-x64.vsix",
     "prepare": "husky install"
   },
   "vsce": {
@@ -239,7 +237,6 @@
     "sass": "^1.69.5",
     "source-map-support": "^0.5.21",
     "storybook": "^7.6.4",
-    "storybook-addon-data-theme-switcher": "^0.1.7",
     "storybook-addon-themes": "^6.1.0",
     "storybook-addon-variants": "^0.2.0",
     "storybook-dark-mode": "^3.0.3",
