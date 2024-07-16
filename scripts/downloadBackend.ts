@@ -25,7 +25,7 @@ const downloadBackend = async () => {
     if (fs.existsSync(redisInsightArchivePath)) {
       unzipRedisServer(redisInsightArchivePath, backendPath)
       // Remove archive for non-windows platforms
-      if (process.platform !== 'win32') fs.unlinkSync(redisInsightArchivePath)
+      fs.rmSync(redisInsightArchivePath)
       console.debug('Done!')
     }
   } catch (err) {
@@ -83,7 +83,7 @@ function unzipRedisServer(redisInsideArchivePath: string, extractDir: string) {
     fs.mkdirSync(extractDir)
   }
 
-  cp.spawnSync('tar', ['-xzf', redisInsideArchivePath, '-C', extractDir, '--strip-components', '1', 'api'])
+  cp.spawnSync('tar', ['-xf', redisInsideArchivePath, '-C', extractDir, '--strip-components', '1', 'api'])
 
   // remove plugins
   fs.rmSync(staticPath, { recursive: true, force: true });
