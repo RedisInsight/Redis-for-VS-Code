@@ -43,7 +43,7 @@ export const NoDatabases: FC = () => {
   }
 
   return (
-    <div className="flex flex-col flex-grow items-center justify-between p-3 pt-20" data-testid="no-databases-page">
+    <div className="flex flex-col flex-grow justify-between p-3 pt-20" data-testid="no-databases-page">
       <div className="flex flex-col items-center pb-1">
         <NoDatabasesIcon />
         <div className="pt-10 pb-2">{l10n.t('No databases added')}</div>
