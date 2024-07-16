@@ -444,21 +444,19 @@ workflows:
       # build extensions (stage)
       - linux:
           name: Build extension - Linux (stage)
-          requires: &stageBuildRequires
-            - UTest
+          <<: *stageFilter
       - macosx:
           name: Build extension - MacOS (stage)
-          requires: *stageBuildRequires
+          <<: *stageFilter
       - windows:
           name: Build extension - Windows (stage)
-          requires: *stageBuildRequires
-      # e2e tests on AppImage build
+          <<: *stageFilter
+      # e2e tests on linux build
       - e2e-app-image:
           name: E2ETest (linux)
           parallelism: 2
           requires:
             - Build extension - Linux (stage)
-      # e2e docker tests
 
       - store-build-artifacts:
           name: Store build artifacts (stage)
@@ -481,17 +479,15 @@ workflows:
       - linux:
           name: Build extension - Linux (prod)
           env: prod
-          requires: &prodElectronBuildRequires
-            - UTest
-            <<: *prodFilter
+          <<: *prodFilter
       - macosx:
           name: Build extension - MacOS (prod)
           env: prod
-          requires: *prodElectronBuildRequires
+          <<: *prodFilter
       - windows:
           name: Build extension - Windows (prod)
           env: prod
-          requires: *prodElectronBuildRequires
+          <<: *prodFilter
 
       # e2e desktop tests on linux build
       - e2e-app-image:
@@ -514,7 +510,6 @@ workflows:
           type: approval
           requires:
             - Release AWS S3 Private (prod)
-          <<: *prodFilter # double check for "latest"
       # # Publish release
       # - publish-prod-aws:
       #     name: Publish AWS S3
