@@ -25,7 +25,7 @@ const downloadBackend = async () => {
     if (fs.existsSync(redisInsightArchivePath)) {
       unzipRedisServer(redisInsightArchivePath, backendPath)
       // Remove archive for non-windows platforms
-      if (process.platform !== 'win32') fs.unlinkSync(redisInsightArchivePath)
+      fs.rmSync(redisInsightArchivePath)
       console.debug('Done!')
     }
   } catch (err) {
