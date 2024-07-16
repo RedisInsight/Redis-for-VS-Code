@@ -120,11 +120,10 @@
     "test:watch": "vitest watch --dir ./src/webviews/src",
     "test:watch:ui": "vitest watch --ui --coverage --dir ./src/webviews/src",
     "test:cov": "vitest run --silent --coverage --dir ./src/webviews/src",
-    "package:prod": "npx @vscode/vsce package",
-    "package:stage": "npx -y mkdirp release && npx @vscode/vsce package --pre-release ",
-    "package:stage:mac": "npx @vscode/vsce package --pre-release --target darwin-x64",
-    "package:stage:win": "npx @vscode/vsce package --pre-release --target win32-x64",
-    "package:stage:linux": "npx @vscode/vsce package --pre-release --target linux-x64",
+    "package:prod": "npx mkdirp release && npx @vscode/vsce package",
+    "package:stage": "npx mkdirp release && npx @vscode/vsce package --pre-release",
+    "package:prod:mac:arm64": "npx mkdirp release && npx @vscode/vsce package --target darwin-arm64 --out ./release/redis-insight-vsc-extension-arm64.vsix",
+    "package:prod:mac:x64": "npx mkdirp release && npx @vscode/vsce package --target darwin-arm64 --out ./release/redis-insight-vsc-extension-x64.vsix",
     "prepare": "husky install"
   },
   "vsce": {

@@ -11,6 +11,11 @@ aliases:
         only:
           - main
           - /^build\/.*/
+  build-filter: &buildFilter
+    filters:
+      branches:
+        only:
+          - /^build.*/
   stage-filter: &stageFilter
     filters:
       branches:
@@ -152,31 +157,6 @@ jobs:
           command: |
             node .circleci/build/manual-build-validate.js << parameters.os >> << parameters.target >>
 
-  setup-build:
-    executor: docker
-    parameters:
-      env:
-        description: Build environment (stage || prod)
-        type: enum
-        default: stage
-        enum: [ 'dev', 'stage', 'prod' ]
-    steps:
-      - checkout
-      - run:
-          command: |
-            mkdir vscode
-
-            CURRENT_VERSION=$(jq -r ".version" package.json)
-            echo "Build version: $CURRENT_VERSION"
-            cp ./package.json ./vscode/package.json
-            echo "$VERSION" > vscode/version
-            exit 0
-
-      - persist_to_workspace:
-          root: /root/project
-          paths:
-            - vscode
-
   linux:
     executor: docker-node
     resource_class: large
@@ -192,9 +172,6 @@ jobs:
           <<: *uiDepsCacheKey
       - attach_workspace:
           at: .
-      - run:
-          command: |
-            cp ./vscode/package.json ./
       - run:
           name: Install dependencies
           command: |
@@ -213,7 +190,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - redis-insight-vsc*.vsix
+            - release/redis-insight-vsc-*.vsix
       - save_cache:
           <<: *uiDepsCacheKey
           paths:
@@ -239,9 +216,6 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          command: |
-            cp ./vscode/package.json ./redisinsight/
-      - run:
           name: Install dependencies
           command: |
             yarn install
@@ -251,8 +225,15 @@ jobs:
           command: |
             yarn download:backend
 
+            if [ << parameters.target >> ]; then
+              yarn package:prod:mac:<< parameters.target >>
+              exit 0;
+            fi
+
             if [ << parameters.env >> == 'prod' ]; then
-              yarn package:prod
+              yarn package:prod:mac:arm64
+
+              yarn package:prod:mac:x64
               exit 0;
             fi
 
@@ -260,7 +241,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - redis-insight-vsc*.vsix
+            - release/redis-insight-vsc-*.vsix
 
   windows:
     executor:
@@ -279,9 +260,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run:
-          command: |
-            cp ./vscode/package.json ./redisinsight/
       - run:
           name: Install dependencies
           command: |
@@ -304,7 +282,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - redis-insight-vsc*.vsix
+            - release/redis-insight-vsc-*.vsix
 
   # Release jobs
   store-build-artifacts:
@@ -325,10 +303,6 @@ jobs:
       - store_artifacts:
           path: release
           destination: release
-      - run:
-          name: prepare release
-          command: |
-            rm release/._* ||:
       - run:
           name: publish
           command: |
@@ -384,17 +358,12 @@ workflows:
           name: Validating build parameters
           os: linux
           target: << pipeline.parameters.linux >>
-      - setup-build:
-          name: Setup build (stage)
-          env: stage
-          requires:
-            - Setup sign certificates (stage)
       - linux:
           name: Build extension - Linux (stage)
           env: stage
           target: << pipeline.parameters.linux >>
           requires:
-            - Setup build (stage)
+            - Validating build parameters
       - store-build-artifacts:
           name: Store build artifacts (stage)
           requires:
@@ -406,17 +375,12 @@ workflows:
           name: Validating build parameters
           os: mac
           target: << pipeline.parameters.mac >>
-      - setup-build:
-          name: Setup build (stage)
-          env: stage
-          requires:
-            - Setup sign certificates (stage)
       - macosx:
           name: Build extension - MacOS (stage)
           env: stage
           target: << pipeline.parameters.mac >>
           requires:
-            - Setup build (stage)
+            - Validating build parameters
       - store-build-artifacts:
           name: Store build artifacts (stage)
           requires:
@@ -428,21 +392,39 @@ workflows:
           name: Validating build parameters
           os: windows
           target: << pipeline.parameters.windows >>
-      - setup-build:
-          name: Setup build (stage)
-          env: stage
-          requires:
-            - Setup sign certificates (stage)
       - windows:
           name: Build extension - Windows (stage)
           env: stage
           target: << pipeline.parameters.windows >>
           requires:
-            - Setup build (stage)
+            - Validating build parameters
       - store-build-artifacts:
           name: Store build artifacts (stage)
           requires:
             - Build extension - Windows (stage)
+
+   # build vscode extension (dev) from "build" branches
+  build:
+    <<: *ignore-for-manual-build
+    jobs:
+      - linux:
+          name: Build extension - Linux (dev)
+          env: dev
+          <<: *buildFilter
+      - macosx:
+          name: Build extension - MacOS (dev)
+          env: dev
+          <<: *buildFilter
+      - windows:
+          name: Build extension - Windows (dev)
+          env: dev
+          <<: *buildFilter
+      - store-build-artifacts:
+          name: Store build artifacts (dev)
+          requires:
+            - Build extension - Linux (dev)
+            - Build extension - MacOS (dev)
+            - Build extension - Windows (dev)
 
 
   # Main workflow for release/* and latest branches only
@@ -459,22 +441,18 @@ workflows:
                 - latest
 
       # ================== STAGE ==================
-      # prebuild (stage)
-      - setup-build:
-          name: Setup build (stage)
-
-      # build electron app (stage)
+      # build extensions (stage)
       - linux:
           name: Build extension - Linux (stage)
-          requires: &stageElectronBuildRequires
-            - Setup build (stage)
+          requires: &stageBuildRequires
+            - UTest
       - macosx:
           name: Build extension - MacOS (stage)
-          requires: *stageElectronBuildRequires
+          requires: *stageBuildRequires
       - windows:
           name: Build extension - Windows (stage)
-          requires: *stageElectronBuildRequires
-      # e2e desktop tests on AppImage build
+          requires: *stageBuildRequires
+      # e2e tests on AppImage build
       - e2e-app-image:
           name: E2ETest (linux)
           parallelism: 2
@@ -500,17 +478,12 @@ workflows:
 
       # ================== PROD ==================
       # build and release vscode extension (prod)
-      - setup-build:
-          name: Setup build (prod)
-          env: prod
-          requires:
-            - UTest
-          <<: *prodFilter
       - linux:
           name: Build extension - Linux (prod)
           env: prod
           requires: &prodElectronBuildRequires
-            - Setup build (prod)
+            - UTest
+            <<: *prodFilter
       - macosx:
           name: Build extension - MacOS (prod)
           env: prod
