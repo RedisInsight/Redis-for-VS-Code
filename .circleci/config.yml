@@ -83,7 +83,7 @@ jobs:
           command: |
             yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
       - run:
-          name: Unit tests UI
+          name: Run Unit tests UI
           command: |
             yarn test:cov
       - save_cache:
@@ -266,6 +266,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            nvm install 20.15
+            nvm use 20.15
+            npm install --global yarn
+
             yarn install
           shell: bash.exe
           no_output_timeout: 15m
@@ -322,6 +326,7 @@ workflows:
   frontend-tests:
     jobs:
       - unit-tests-ui:
+          name: Run Unit Tests
           filters:
             branches:
               only:
@@ -431,14 +436,13 @@ workflows:
             - Build extension - MacOS (dev)
             - Build extension - Windows (dev)
 
-
   # Main workflow for release/* and latest branches only
   release:
     <<: *ignore-for-manual-build
     jobs:
       # unit tests (on any commit)
       - unit-tests-ui:
-          name: UTest
+          name: Run Unit Tests
           filters: &releaseAndLatestFilter
             branches:
               only:

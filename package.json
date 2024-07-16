@@ -103,7 +103,7 @@
     "jackspeak": "2.1.1"
   },
   "scripts": {
-    "vscode:prepublish:old": "yarn compile && cross-env NODE_ENV=production BUILD_EXIT=true yarn build",
+    "vscode:prepublish": "yarn compile && cross-env NODE_ENV=production BUILD_EXIT=true yarn build",
     "compile": "tsc -p ./",
     "postinstall": "patch-package",
     "build": "cross-env NODE_ENV=production vite build",
