@@ -59,9 +59,11 @@ export class DatabasesActions extends CommonDriverExtension {
     databaseParameters: AddNewDatabaseParameters,
   ): Promise<void> {
     let treeView = new TreeView()
+    await ServerActions.waitForServerInitialized()
     await Eula.accept()
     await DatabaseAPIRequests.addNewStandaloneDatabaseApi(databaseParameters)
     await VSBrowser.instance.waitForWorkbench(20_000)
+    await NotificationActions.closeAllNotifications()
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
     await super.driverSleep(500)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.closeView()
