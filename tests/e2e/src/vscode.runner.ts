@@ -33,7 +33,7 @@ import { Config } from './helpers/Conf'
     // Install vsix if not installed yet
     if (!fs.existsSync(extensionDir)) {
       await exTester.installVsix({
-        vsixFile: path.join(__dirname, '..', '..', '..', Config.extensionName),
+        vsixFile: path.join(__dirname, '..', '..', '..', 'release', Config.extensionName),
         useYarn: true,
         installDependencies: true,
       })

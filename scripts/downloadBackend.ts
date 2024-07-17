@@ -10,6 +10,7 @@ dotenv.config({
     path.join(__dirname, '..', '.env'),
   ]
 })
+const target = process.argv[2];
 const cdnPath = process.env.RI_CDN_PATH
 const backendPath = path.join(__dirname, '..', 'dist', 'redis-backend')
 const staticPath = path.join(backendPath, 'static')
@@ -47,7 +48,7 @@ function ensureFolderExists(loc: string) {
 }
 
 function getDownloadUrl(): string {
-  return `${cdnPath}/Redis-Insight-web-${process.platform}.${process.arch}.tar.gz`
+  return `${cdnPath}/Redis-Insight-web-${process.platform}.${target || process.arch}.tar.gz`
 }
 
 async function downloadRedisBackendArchive(
