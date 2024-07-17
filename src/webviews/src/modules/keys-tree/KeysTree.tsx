@@ -8,9 +8,10 @@ import { AllKeyTypes, VscodeMessageAction } from 'uiSrc/constants'
 import { TelemetryEvent, getGroupTypeDisplay, isShowScanMore, sendEventTelemetry } from 'uiSrc/utils'
 import { NoKeysMessage } from 'uiSrc/components'
 import { bufferToString, isEqualBuffers } from 'uiSrc/utils/formatters'
-import { fetchKeyInfo, useContextApi, useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
+import { Database, fetchKeyInfo, useContextApi, useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
 import { vscodeApi } from 'uiSrc/services'
 import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
+import { Spinner } from 'uiSrc/ui'
 
 import { constructKeysToTree } from './utils/constructKeysToTree'
 import { VirtualTree } from './components/virtual-tree'
@@ -21,7 +22,11 @@ const parseKeyNames = (keys: KeyInfo[] = []) =>
   keys.map((item) =>
     ({ ...item, nameString: item.nameString ?? bufferToString(item.name) }))
 
-export const KeysTree = () => {
+export interface Props {
+  database: Database
+}
+
+export const KeysTree = ({ database }: Props) => {
   const delimiter = useAppInfoStore((state) => state.delimiter)
   const openNodes = useContextInContext((state) => state.keys.tree.openNodes)
   const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
@@ -31,7 +36,6 @@ export const KeysTree = () => {
 
   const keysState = useKeysInContext((state) => state.data)
   const loading = useKeysInContext((state) => state.loading)
-  const databaseId = useKeysInContext((state) => state.databaseId) || ''
 
   const keysApi = useKeysApi()
   const contextApi = useContextApi()
@@ -107,10 +111,10 @@ export const KeysTree = () => {
     if (isUndefined(type)) {
       return
     }
-    fetchKeyInfo({ key: name, databaseId }, false, () => {
+    fetchKeyInfo({ key: name, databaseId: database.id }, false, () => {
       vscodeApi.postMessage({
         action: VscodeMessageAction.SelectKey,
-        data: { key: name, keyString, keyType: type, databaseId, displayedKeyType: getGroupTypeDisplay(type) },
+        data: { key: name, keyString, keyType: type, databaseId: database.id, displayedKeyType: getGroupTypeDisplay(type) },
       })
     })
   }
@@ -131,7 +135,7 @@ export const KeysTree = () => {
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_DELETE_CLICKED,
       eventData: {
-        databaseId,
+        databaseId: database?.id,
         keyType: type,
         source: 'keyList',
       },
@@ -140,12 +144,12 @@ export const KeysTree = () => {
 
   if (keysState.keys?.length === 0) {
     if (loading || !firstDataLoaded) {
-      return <div className="px-8">{l10n.t('loading...')}</div>
+      return <div className="text-center"><Spinner type="clip" /></div>
     }
 
     return (
-      <div className="pl-10">
-        <NoKeysMessage total={keysState.total} />
+      <div className="pl-8">
+        <NoKeysMessage total={keysState.total} database={database} />
       </div>
     )
   }
