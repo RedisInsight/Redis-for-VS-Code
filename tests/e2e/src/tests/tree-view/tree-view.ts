@@ -90,6 +90,11 @@ describe('Tree view verifications', () => {
     // Verify that if there are keys without namespaces, they are displayed in the root directory after all folders by default in the Tree view
     await treeView.openTreeFolders([`${keyNames[0]}`.split(':')[0]])
     await treeView.openTreeFolders([`${keyNames[2]}`.split(':')[0]])
+    expect(await treeView.verifyElementExpanded(treeView.getFolderSelectorByName(keyNames[2].split(':')[0]))).eql(
+      true,
+      'The main folder is not expanded',
+    )
+
     let actualItemsArray = await treeView.getAllKeysArray()
     // Verify that user can see all folders and keys sorted by name ASC by default
     expect(actualItemsArray).eql(expectedSortedByASC)
@@ -98,6 +103,10 @@ describe('Tree view verifications', () => {
     await ButtonActions.clickElement(treeView.sortKeysBtn)
     await treeView.openTreeFolders([`${keyNames[2]}`.split(':')[0]])
     await treeView.openTreeFolders([`${keyNames[0]}`.split(':')[0]])
+    expect(await treeView.verifyElementExpanded(treeView.getFolderSelectorByName(keyNames[0].split(':')[0]))).eql(
+      true,
+      'The main folder is not expanded',
+    )
     actualItemsArray = await treeView.getAllKeysArray()
     expect(actualItemsArray).eql(expectedSortedByDESC)
   })

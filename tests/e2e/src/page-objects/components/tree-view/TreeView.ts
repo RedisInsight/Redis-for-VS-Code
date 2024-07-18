@@ -5,7 +5,7 @@ import {
   DropdownActions,
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
-import { Config } from '@e2eSrc/helpers'
+import { CommonDriverExtension, Config } from '@e2eSrc/helpers'
 
 /**
  * Tree list view with databases and keys
@@ -52,6 +52,7 @@ export class TreeView extends WebView {
   keysSummary = By.xpath(`//*[@data-testid='keys-summary']`)
   treeViewVirtualTable = By.xpath(`//*[@data-testid='virtual-tree']/div`)
   databaseInstance = By.xpath(`//div[starts-with(@data-testid, 'database-')]`)
+  keyInFolder = By.xpath(`//*[contains(@data-testid, "keys:")]`)
 
   // mask
   keyMask = '//*[@data-testid="key-$name"]'
@@ -130,6 +131,7 @@ export class TreeView extends WebView {
         await this.clickElementIfNotExpanded(base)
       }
     }
+    await CommonDriverExtension.driverSleep(500)
   }
 
   /**

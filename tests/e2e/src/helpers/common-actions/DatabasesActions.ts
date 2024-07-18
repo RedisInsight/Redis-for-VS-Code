@@ -76,6 +76,7 @@ export class DatabasesActions extends CommonDriverExtension {
       ))
     ) {
       await treeView.clickDatabaseByName(databaseParameters.databaseName!)
+      await super.driverSleep(500)
     }
   }
 
