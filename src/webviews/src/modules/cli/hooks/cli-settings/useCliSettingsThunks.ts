@@ -50,6 +50,8 @@ export function createCliClientAction(
       state.processCliClientFailure(errorMessage)
       concatToOutput(cliTexts.CLI_ERROR_MESSAGE(errorMessage))
       onFailAction?.(errorMessage)
+    } finally {
+      state.processCliClientFinal()
     }
   })
 }
@@ -78,6 +80,8 @@ export function updateCliClientAction(
       const errorMessage = getApiErrorMessage(error as AxiosError)
       state.processCliClientFailure(errorMessage)
       onFailAction?.(errorMessage)
+    } finally {
+      state.processCliClientFinal()
     }
   })
 }
@@ -104,6 +108,8 @@ export function deleteCliClientAction(
       const errorMessage = getApiErrorMessage(error as AxiosError)
       state.processCliClientFailure(errorMessage)
       onFailAction?.()
+    } finally {
+      state.processCliClientFinal()
     }
   })
 }

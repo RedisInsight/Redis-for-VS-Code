@@ -229,7 +229,7 @@ export const CliBody = (props: Props) => {
       <section className={styles.outputWrapper}>
         <div className={styles.output}>{data}</div>
         {!error && !(loading || settingsLoading) ? (
-          <span style={{ paddingBottom: 5, paddingTop: 17 }}>
+          <span className="pb-1 pt-4">
             <CliInputWrapper
               command={command}
               setCommand={setCommand}

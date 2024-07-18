@@ -41,7 +41,7 @@ const DbIndex = (props: Props) => {
       </div>
 
       {formik.values.showDb && (
-        <div className={cx('w-[200px]')}>
+        <div className="w-[200px] mb-3">
           <InputText
             name="db"
             id="db"
@@ -62,7 +62,6 @@ const DbIndex = (props: Props) => {
           />
         </div>
       )}
-      {formik.values.showDb && (<VSCodeDivider className="divider mt-6 mb-3" />)}
     </>
   )
 }
