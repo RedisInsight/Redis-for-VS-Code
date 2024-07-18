@@ -110,7 +110,7 @@ jobs:
           node-version: '20.15'
       - attach_workspace:
           at: .
-      - run: sudo apt-get install net-tools
+      - run: sudo apt-get install net-tools libsecret-1-dev
       - run:
           name: Start Xvfb
           command: |
