@@ -20,6 +20,7 @@ export class TreeView extends WebView {
   keyStarts = By.xpath(`//div[starts-with(@data-testid, 'key-')]`)
   refreshButton = By.xpath(`//vscode-button[@data-testid='refresh-keys']`)
   addKeyButton = By.xpath(`//vscode-button[@data-testid='add-key-button']`)
+  addKeyFromTreeBtn = By.xpath(`//vscode-button[@data-testid='add-key-from-tree']`)
   sortKeysBtn = By.xpath(`//vscode-button[@data-testid='sort-keys']`)
   addDatabaseBtn = By.xpath(`//a[@aria-label='Add Redis database']`)
   editDatabaseBtn = By.xpath(`//vscode-button[@data-testid='edit-database']`)

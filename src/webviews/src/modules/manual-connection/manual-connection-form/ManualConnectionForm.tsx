@@ -287,7 +287,7 @@ const ManualConnectionForm = (props: Props) => {
                 isEditMode
                 formik={formik}
                 showFields={{
-                  alias: !isEditMode || isCloneMode,
+                  alias: true,
                   host: (!isEditMode || isCloneMode),
                   port: true,
                   timeout: true,

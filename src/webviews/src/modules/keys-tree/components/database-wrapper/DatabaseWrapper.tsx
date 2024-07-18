@@ -32,9 +32,10 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   const { id, name } = database
 
   const lastRefreshTime = useKeysInContext((state) => state.data.lastRefreshTime)
-  const { selectedKeyAction, setSelectedKeyAction } = useSelectedKeyStore(useShallow((state) => ({
+  const { selectedKeyAction, setSelectedKeyAction, setSelectedKey } = useSelectedKeyStore(useShallow((state) => ({
     selectedKeyAction: state.action,
     setSelectedKeyAction: state.setSelectedKeyAction,
+    setSelectedKey: state.processSelectedKeySuccess,
   })))
 
   const [showTree, setShowTree] = useState<boolean>(false)
@@ -51,6 +52,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
     switch (type) {
       case SelectedKeyActionType.Added:
         keysApi.addKeyIntoTree(key!, keyType!)
+        setSelectedKey({ name: key! })
         break
       case SelectedKeyActionType.Removed:
         keysApi.deleteKeyFromTree(key!)
