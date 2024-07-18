@@ -7,6 +7,7 @@ import {
   afterEach,
   VSBrowser,
   ActivityBar,
+  EditorView,
 } from 'vscode-extension-tester'
 import {
   TreeView,
@@ -55,6 +56,7 @@ describe('Add database', () => {
   let treeView: TreeView
   let addDatabaseView: AddDatabaseView
   let editDatabaseView: EditDatabaseView
+  let editorView: EditorView
 
   let databaseName = `test_standalone-${Common.generateString(10)}`
 
@@ -63,6 +65,7 @@ describe('Add database', () => {
     treeView = new TreeView()
     addDatabaseView = new AddDatabaseView()
     editDatabaseView = new EditDatabaseView()
+    editorView = new EditorView()
 
     await browser.waitForWorkbench(20_000)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
@@ -257,5 +260,6 @@ describe('Add database', () => {
       'class',
     )
     expect(isDisabled).eql(true)
+    await editorView.closeEditor('Redis Insight - Add Database connection')
   })
 })
