@@ -144,6 +144,7 @@ describe('Agreements Verification', () => {
     // Verify that user is able to add database after accepting EULA
     await eulaView.switchBack()
 
+   // Verify that user can see  Welcome page with connect links
     await eulaView.switchToInnerViewFrame(InnerViews.Welcome)
     expect(await welcomeView.verifyConnectLinks(expectedWelcomeLinks)).eql(true,
       'Links are not expected on the Welcome page ')

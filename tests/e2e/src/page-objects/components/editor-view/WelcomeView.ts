@@ -9,6 +9,7 @@ export class WelcomeView extends WebView {
     `//a[@data-testid='connect-database-btn']/following-sibling::a`,
   )
 
+  //verify that view has all expected links
   async verifyConnectLinks(expectedLinks: string[]): Promise<Boolean> {
     const links = await this.getElements(this.connectLinks)
 

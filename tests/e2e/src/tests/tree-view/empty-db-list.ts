@@ -39,10 +39,10 @@ describe('Empty database', () => {
   it('Verify that form to add database can be opened from empty db page', async function () {
     const expectedWelcomeLinks = ['https://redis.io/docs/install/install-stack/docker/?utm_source=redisinsight&utm_medium=main&utm_campaign=docker']
 
-    await ButtonActions.clickElement(emptyView.connectDatabaseView)
+    await ButtonActions.clickElement(emptyView.connectDatabaseButton)
 
     expect(await emptyView.verifyConnectLinks(expectedWelcomeLinks)).eql(true,
-      'Links are not expected on the Welcome page ')
+      'Links are not expected on the empty db screen page ')
     await treeView.switchBack()
     await addDatabaseView.switchToInnerViewFrame(
       InnerViews.AddDatabaseInnerView,

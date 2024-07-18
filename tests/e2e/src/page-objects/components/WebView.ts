@@ -148,5 +148,5 @@ export const InnerViewElements = {
   [InnerViews.SettingsInnerView]: `//input[@data-testid='input-delimiter']`,
   [InnerViews.TreeInnerView]: `//div[@data-testid='tree-view-page']`,
   [InnerViews.Welcome]: `//div[@data-testid='welcome-page']`,
-  [InnerViews.EmptyDatabaseView]: `//div[@data-testid='tree-view-page']`,
+  [InnerViews.EmptyDatabaseView]: `//div[@data-testid='no-databases-page']`,
 }
