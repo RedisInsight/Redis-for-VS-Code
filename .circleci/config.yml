@@ -110,7 +110,7 @@ jobs:
           node-version: '20.15'
       - attach_workspace:
           at: .
-      - run: sudo apt-get install net-tools libsecret-1-dev dbus-x11 gnome-keyring
+      - run: sudo apt-get update && sudo apt-get install net-tools libsecret-1-dev dbus-x11 gnome-keyring
       # - run: sudo dbus-uuidgen > /var/lib/dbus/machine-id
       - run:
           name: Start Xvfb
