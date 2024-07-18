@@ -92,7 +92,7 @@ jobs:
             - ~/.cache/yarn
 
   e2e-app-image:
-    executor: docker-node
+    executor: linux-executor-dlc
     parameters:
       report:
         description: Send report for test run to slack
