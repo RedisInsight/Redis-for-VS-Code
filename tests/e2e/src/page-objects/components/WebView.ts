@@ -1,6 +1,5 @@
 import { By } from 'selenium-webdriver'
 import { BaseComponent } from './BaseComponent'
-
 /**
  * Returns a class that has the ability to access a webview.
  */
@@ -12,6 +11,7 @@ export class WebView extends BaseComponent {
     `//iframe[@class='webview ready' and not(@data-parent-flow-to-element-id)]`,
   )
   webViewViewIframe = By.xpath(`//iframe`)
+  completedProgressBar = By.xpath(`//div[@class = 'content']//div[@class = 'monaco-progress-container done']`)
 
   constructor() {
     super(
@@ -121,6 +121,8 @@ export enum InnerViews {
   KeyDetailsInnerView,
   SettingsInnerView,
   TreeInnerView,
+  WelcomeInnerView,
+  EmptyDatabaseInnerView
 }
 
 export const InnerViewLocators = {
@@ -132,6 +134,8 @@ export const InnerViewLocators = {
   [InnerViews.KeyDetailsInnerView]: `//iframe[contains(@title,':')]`,
   [InnerViews.SettingsInnerView]: `//iframe[@title='Redis Insight - Settings']`,
   [InnerViews.TreeInnerView]: `//iframe[@title='Redis Insight']`,
+  [InnerViews.WelcomeInnerView]: `//iframe[@title='Redis Insight - Welcome']`,
+  [InnerViews.EmptyDatabaseInnerView]: `//iframe[@title='Redis Insight']`,
 }
 
 export const InnerViewElements = {
@@ -143,4 +147,6 @@ export const InnerViewElements = {
   [InnerViews.KeyDetailsInnerView]: `//div[contains(@data-testid, '-value')]`,
   [InnerViews.SettingsInnerView]: `//input[@data-testid='input-delimiter']`,
   [InnerViews.TreeInnerView]: `//div[@data-testid='tree-view-page']`,
+  [InnerViews.WelcomeInnerView]: `//div[@data-testid='welcome-page']`,
+  [InnerViews.EmptyDatabaseInnerView]: `//div[@data-testid='no-databases-page']`,
 }
