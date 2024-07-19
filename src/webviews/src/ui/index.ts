@@ -9,6 +9,7 @@ export { Separator } from './separator/Separator'
 export { JSONViewer } from './json-viewer/JSONViewer'
 export { Spinner } from './spinner/Spinner'
 export { Spacer } from './spacer/Spacer'
+export { PromoLink } from './promo-link/PromoLink'
 
 export type { RadioGroupOption } from './radio-group/RadioGroup'
 export type { SelectOption } from './select/Select'

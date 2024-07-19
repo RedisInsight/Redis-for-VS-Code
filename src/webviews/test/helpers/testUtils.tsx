@@ -3,7 +3,7 @@ import { RenderResult, render as rtlRender, waitFor } from '@testing-library/rea
 import { BrowserRouter } from 'react-router-dom'
 
 import { ContextStoreProvider } from 'uiSrc/store'
-import { BASE_URL } from 'uiSrc/constants'
+import { BASE_RESOURCES_URL, BASE_URL } from 'uiSrc/constants'
 import { KeysStoreProvider } from 'uiSrc/modules/keys-tree/hooks/useKeys'
 
 interface Options {
@@ -46,3 +46,6 @@ export const waitForStack = async (timeout = 0) => {
 
 export const getMWSUrl = (url: string) =>
   `${BASE_URL}${url.startsWith('/') ? url.slice(1) : url}`
+
+export const getMWSResourceUrl = (url: string) =>
+  `${BASE_RESOURCES_URL}${url.startsWith('/') ? url.slice(1) : url}`

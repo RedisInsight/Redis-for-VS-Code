@@ -4,6 +4,7 @@ export enum ViewId {
   AddDatabase = 'ri-add-database',
   Settings = 'ri-settings',
   EditDatabase = 'ri-edit-database',
+  Welcome = 'ri-welcome',
   Eula = 'ri-eula',
 }
 

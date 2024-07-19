@@ -226,6 +226,11 @@ export const constants = {
     },
   },
 
+  CONTENT_CREATE_DATABASE: {
+    cloud: { title: 'Limited offer', description: 'Try Redis Cloud', testId: 'cloud-test-id' },
+    docker: { title: 'Docker', description: 'Try Docker', testId: 'docker-test-id' },
+  },
+
   COMMAND: 'keys *',
 }
 

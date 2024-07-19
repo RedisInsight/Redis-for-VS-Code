@@ -4,7 +4,7 @@ import { devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { isString, uniqBy } from 'lodash'
 
-import { apiService, localStorageService } from 'uiSrc/services'
+import { apiService, localStorageService, resourcesService } from 'uiSrc/services'
 import { ApiEndpoints, DEFAULT_DELIMITER, ICommand, StorageItem } from 'uiSrc/constants'
 import { getApiErrorMessage, showErrorMessage } from 'uiSrc/utils'
 import { RedisResponseEncoding } from 'uiSrc/interfaces'
@@ -14,6 +14,7 @@ import {
   AppInfoActions,
   AppInfoResponses,
   GetAppSettingsResponse,
+  AppResourcesResponses,
 } from './interface'
 
 export const initialAppInfoState: AppInfoStore = {
@@ -23,6 +24,7 @@ export const initialAppInfoState: AppInfoStore = {
   config: null,
   spec: null,
   server: null,
+  createDbContent: null,
   delimiter: DEFAULT_DELIMITER,
   commandsSpec: {},
   commandsArray: [],
@@ -70,10 +72,16 @@ export const fetchAppInfo = (onSuccess?: (data: Partial<AppInfoStore>) => void) 
         ApiEndpoints.REDIS_COMMANDS,
       ].map((url) => apiService.get(url)))).map(({ data }) => data) as AppInfoResponses
 
+      // default resources
+      const [createDbContent] = (await Promise.all([
+        ApiEndpoints.CONTENT_CREATE_DATABASE,
+      ].map((url) => resourcesService.get(url)))).map(({ data }) => data) as AppResourcesResponses
+
       const appInfo = {
         server,
         config,
         spec,
+        createDbContent,
         commandsSpec,
         commandsArray: Object.keys(commandsSpec).sort(),
         commandGroups: uniqBy(Object.values(commandsSpec), 'group')

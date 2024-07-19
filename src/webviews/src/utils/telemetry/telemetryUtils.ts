@@ -47,6 +47,7 @@ export const getRedisModulesSummary = (modules: AdditionalRedisModule[] = []): I
   const summary = cloneDeep(DEFAULT_SUMMARY)
   try {
     modules.forEach(((module) => {
+      // @ts-ignore
       if (SUPPORTED_REDIS_MODULES[module.name as any]) {
         const moduleName = getEnumKeyBValue(RedisModules, module.name)
         summary[moduleName as RedisModulesKeyType] = getModuleSummaryToSent(module)

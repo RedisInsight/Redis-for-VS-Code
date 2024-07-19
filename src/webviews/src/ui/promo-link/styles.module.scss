@@ -1,0 +1,17 @@
+.link {
+  @apply flex rounded py-[10px] px-3 bg-vscode-tab-inactiveBackground hover:underline mb-2;
+
+  color: var(--vscode-foreground) !important;
+
+  * {
+    @apply text-vscode-foreground #{!important};
+  }
+}
+
+.title {
+  @apply text-[13px] uppercase font-bold pb-0.5;
+}
+
+.description {
+  @apply text-[11px] leading-[13px];
+}

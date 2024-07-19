@@ -17,11 +17,14 @@ import {
   TreeView,
 } from '@e2eSrc/page-objects/components'
 import { ButtonActions, CheckboxActions } from '@e2eSrc/helpers/common-actions'
+import { WelcomeView } from '@e2eSrc/page-objects/components/editor-view/WelcomeView'
+import { CommonElementActions } from '@e2eSrc/helpers/common-actions/actions/CommonElementActions'
 
 describe('Agreements Verification', () => {
   let browser: VSBrowser
   let treeView: TreeView
   let eulaView: EulaView
+  let welcomeView: WelcomeView
   let addDatabaseView: AddDatabaseView
 
   before(async () => {
@@ -29,10 +32,11 @@ describe('Agreements Verification', () => {
     treeView = new TreeView()
     eulaView = new EulaView()
     addDatabaseView = new AddDatabaseView()
+    welcomeView = new WelcomeView()
 
     await ServerActions.waitForServerInitialized()
     await browser.waitForWorkbench(20_000)
-    await  new TitleBar().getWindowControls().maximize();
+    await  new TitleBar().getWindowControls().maximize()
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
   })
   beforeEach(async () => {
@@ -129,6 +133,7 @@ describe('Agreements Verification', () => {
   })
 
   it('Verify that user can accept User Agreements', async () => {
+    const expectedWelcomeLinks = ['https://redis.io/docs/install/install-stack/docker/?utm_source=redisinsight&utm_medium=main&utm_campaign=docker']
     await CheckboxActions.toggleCheckbox(eulaView.useRecommendedCheckbox, true)
     await CheckboxActions.toggleCheckbox(eulaView.eulaCheckbox, true)
     await ButtonActions.clickElement(eulaView.submitButton)
@@ -139,7 +144,14 @@ describe('Agreements Verification', () => {
     )
     // Verify that user is able to add database after accepting EULA
     await eulaView.switchBack()
-    expect(await eulaView.isElementDisplayed(treeView.addDatabaseBtn)).eql(
+
+   // Verify that user can see  Welcome page with connect links
+    await eulaView.switchToInnerViewFrame(InnerViews.WelcomeInnerView)
+    expect(await CommonElementActions.verifyConnectLinks(expectedWelcomeLinks, welcomeView.connectLinks)).eql(true,
+      'Links are not expected on the Welcome page ')
+    await welcomeView.switchBack()
+
+    expect(await treeView.isElementDisplayed(treeView.addDatabaseBtn)).eql(
       true,
       'User can not add a database',
     )

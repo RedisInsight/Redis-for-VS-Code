@@ -142,6 +142,7 @@ enum ApiEndpoints {
 }
 
 export const BASE_URL = `${BASE_APP_URL}:${APP_PORT}/${APP_PREFIX}/`
+export const BASE_RESOURCES_URL = `${BASE_APP_URL}:${APP_PORT}/`
 
 export enum CustomHeaders {
   DbIndex = 'ri-db-index',

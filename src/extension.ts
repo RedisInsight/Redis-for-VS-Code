@@ -118,10 +118,20 @@ export async function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('RedisInsight.closeEula', (args) => {
-      vscode.commands.executeCommand('setContext', 'ri.openEula', false)
       WebviewPanel.instances[ViewId.Eula]?.dispose()
+
+      vscode.commands.executeCommand('setContext', 'ri.openEula', false)
       sidebarProvider.view?.webview.postMessage({ action: 'CloseEula', data: args })
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
+
+      WebviewPanel.getInstance({
+        context,
+        route: 'main/welcome',
+        title: vscode.l10n.t('Redis Insight - Welcome'),
+        viewId: ViewId.Welcome,
+        handleMessage: (message) => handleMessage(message),
+        message: args,
+      })
     }),
 
     vscode.commands.registerCommand('RedisInsight.editDatabase', (args) => {
