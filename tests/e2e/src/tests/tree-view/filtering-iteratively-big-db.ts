@@ -28,7 +28,7 @@ describe('Filtering iteratively in Tree view for Big database', () => {
       true,
       'Scan more is not shown',
     )
-    await ButtonActions.clickAndWaitForElement(treeView.scanMoreBtn, treeView.loadingIndicator, false, 1000)
+    await ButtonActions.clickElement(treeView.scanMoreBtn)
     const regExp = new RegExp(`2000[0-9]`)
     // Verify that number of results is 20000
     const scannedValueText = await treeView.getScannedResults()

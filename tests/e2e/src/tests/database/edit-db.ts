@@ -35,19 +35,29 @@ describe('Edit Databases', () => {
     await editDatabaseView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
-  // TODO unskip after implementing edit of DB alias
-  it.skip('Verify that user can edit DB alias of Standalone DB', async function () {
+
+  it('Verify that user can edit DB alias of Standalone DB', async function () {
     // Verify that timeout input is displayed for edit db window with default value when it wasn't specified
     const timeoutValue = await (
       await editDatabaseView.getElement(editDatabaseView.timeoutInput)
     ).getAttribute('value')
     expect(timeoutValue).eql('30', 'Timeout is not defaulted to 30')
 
-    await ButtonActions.clickElement(editDatabaseView.editAliasButton)
-    // Fill the add database form
     await InputActions.typeText(editDatabaseView.aliasInput, newDatabaseName)
     await ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
-    // TODO Verify that database has new alias
+    // Verify that database has new alias
+    await treeView.switchBack()
+    await editDatabaseView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    expect(
+      await treeView.waitForElementVisibility(
+        treeView.getDatabaseByName(newDatabaseName),
+      ),
+    ).eql(true, `The database with new alias is in not the list`)
+    expect(
+      await treeView.isElementDisplayed(
+        treeView.getDatabaseByName(database.databaseName),
+      ),
+    ).eql(false, `The database with previous alias is still in the list`)
   })
 
   it('Verify that user can edit Standalone DB', async function () {
