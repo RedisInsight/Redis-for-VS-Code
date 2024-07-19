@@ -110,12 +110,12 @@ jobs:
           node-version: '20.15'
       - attach_workspace:
           at: .
-      - run: sudo apt-get update && sudo apt-get install net-tools libsecret-1-dev dbus-x11 gnome-keyring
+      - run: apt-get update && apt-get install net-tools libsecret-1-dev dbus-x11 gnome-keyring
       # - run: sudo dbus-uuidgen > /var/lib/dbus/machine-id
       - run:
           name: Start Xvfb
           command: |
-            sudo apt-get install -y xvfb
+            apt-get install -y xvfb
             Xvfb :99 -screen 0 1920x1080x24 &
       - run:
           name: Run e2e tests
