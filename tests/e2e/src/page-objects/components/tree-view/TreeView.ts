@@ -125,13 +125,13 @@ export class TreeView extends WebView {
   async openTreeFolders(names: string[]): Promise<void> {
     let base = `node-item_${names[0]}:`
     await this.clickElementIfNotExpanded(base)
+    await this.verifyElementExpanded(this.getKey(base))
     if (names.length > 1) {
       for (let i = 1; i < names.length; i++) {
         base = `${base}${names[i]}:`
         await this.clickElementIfNotExpanded(base)
       }
     }
-    await CommonDriverExtension.driverSleep(500)
   }
 
   /**
