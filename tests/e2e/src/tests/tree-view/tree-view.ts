@@ -11,6 +11,7 @@ import {
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 describe('Tree view verifications', () => {
   let treeView: TreeView
@@ -90,17 +91,30 @@ describe('Tree view verifications', () => {
     // Verify that if there are keys without namespaces, they are displayed in the root directory after all folders by default in the Tree view
     await treeView.openTreeFolders([`${keyNames[0]}`.split(':')[0]])
     await treeView.openTreeFolders([`${keyNames[2]}`.split(':')[0]])
+    expect(
+      await treeView.verifyElementExpanded(
+        treeView.getFolderSelectorByName(keyNames[2].split(':')[0]),
+      ),
+    ).eql(true, 'The main folder is not expanded')
+
     let actualItemsArray = await treeView.getAllKeysArray()
     // Verify that user can see all folders and keys sorted by name ASC by default
     expect(actualItemsArray).eql(expectedSortedByASC)
 
     // Verify that user can change the sorting ASC-DESC
     await ButtonActions.clickElement(treeView.sortKeysBtn)
+    await CommonDriverExtension.driverSleep(500)
     await treeView.openTreeFolders([`${keyNames[2]}`.split(':')[0]])
     await treeView.openTreeFolders([`${keyNames[0]}`.split(':')[0]])
+    expect(
+      await treeView.verifyElementExpanded(
+        treeView.getFolderSelectorByName(keyNames[0].split(':')[0]),
+      ),
+    ).eql(true, 'The main folder is not expanded')
     actualItemsArray = await treeView.getAllKeysArray()
     expect(actualItemsArray).eql(expectedSortedByDESC)
   })
+
   it('Verify that user can see message "No keys to display." when there are no keys in the database', async function () {
     const message = 'Keys are the foundation of Redis.'
 

@@ -44,7 +44,6 @@ describe('Filtering per key name', () => {
 
   before(async () => {
     treeView = new TreeView()
-
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
@@ -54,6 +53,7 @@ describe('Filtering per key name', () => {
     )
   })
   after(async () => {
+    await treeView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
@@ -63,6 +63,8 @@ describe('Filtering per key name', () => {
       `FLUSHDB`,
       Config.ossStandaloneConfig,
     )
+    await treeView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   it('Verify that user can search per full key name', async function () {
     randomValue = Common.generateWord(10)
@@ -364,24 +366,19 @@ describe('Filtering per key name in DB with 10 millions of keys', () => {
     treeView = new TreeView()
     addDatabaseView = new AddDatabaseView()
 
-    await treeView.switchBack()
-    await ButtonActions.clickElement(treeView.addDatabaseBtn)
-    await addDatabaseView.switchToInnerViewFrame(
-      InnerViews.AddDatabaseInnerView,
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneBigConfig,
     )
-    await addDatabaseView.addRedisDataBase(Config.ossStandaloneBigConfig)
-    // Click for saving
-    await ButtonActions.clickElement(addDatabaseView.saveDatabaseButton)
-    await treeView.switchBack()
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
-    await treeView.clickDatabaseByName(Config.ossStandaloneBigConfig.databaseName!)
   })
   after(async () => {
+    await treeView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
     // Clear filter
     await treeView.clearFilter()
+    await treeView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   it('Verify that user can filter per exact key without using any patterns in DB with 10 millions of keys', async function () {
     keyName = `KeyForSearch-${Common.generateWord(5)}`

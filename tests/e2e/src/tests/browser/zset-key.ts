@@ -43,7 +43,6 @@ describe('ZSet Key fields verification', () => {
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
     )
-    await NotificationActions.closeAllNotifications()
   })
   afterEach(async () => {
     await keyDetailsView.switchBack()

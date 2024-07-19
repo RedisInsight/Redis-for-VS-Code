@@ -19,7 +19,7 @@ export class KeyDetailsView extends WebView {
   applyBtn = By.xpath(
     `//*[@class='key-details-body']//*[@data-testid='apply-btn']`,
   )
-  applyEditButton = By.xpath(`//*[@data-testid='apply-edit-btn']`);
+  applyEditButton = By.xpath(`//*[@data-testid='apply-edit-btn']`)
   searchInput = By.xpath(`//*[@data-testid='search']`)
   clearSearchInput = By.xpath(`//*[@data-testid='decline-search-button']`)
   setMemberInput = By.xpath(`//*[starts-with(@data-testid, 'member-name')]`)
@@ -45,7 +45,9 @@ export class KeyDetailsView extends WebView {
   saveMemberButton = By.xpath(`//*[@data-testid='save-members-btn']`)
   formatSwitcher = By.xpath(`//*[@data-testid='select-format-key-value']`)
   saveButton = By.xpath(`//vscode-button[@data-testid='save-btn']`)
-  applyTtlInputBtn = By.xpath(`//*[@data-testid='edit-ttl-btn']//*[@data-testid='apply-btn']`)
+  applyTtlInputBtn = By.xpath(
+    `//*[@data-testid='edit-ttl-btn']//*[@data-testid='apply-btn']`,
+  )
 
   getTrashIcon = (keyType: string, name: string): By =>
     By.xpath(
@@ -83,7 +85,7 @@ export class KeyDetailsView extends WebView {
     const keySizeText = await super.getElementText(this.keySize)
     const regex = /Key Size: (\d+)/
     const match = keySizeText.match(regex)
-    return match ? parseInt(match[1], 10) : NaN
+    return match ? parseInt(match[1], 10) : parseInt(keySizeText, 10)
   }
 
   /**
@@ -208,7 +210,7 @@ export class KeyDetailsView extends WebView {
   async selectFormatter(formatter: string): Promise<void> {
     await DropdownActions.selectDropdownValueWithScroll(
       this.formatSwitcher,
-      formatter
+      formatter,
     )
   }
 }

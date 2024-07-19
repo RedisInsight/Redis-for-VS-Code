@@ -25,8 +25,8 @@ export class DatabaseDetailsView extends WebView {
   caCertField = By.xpath(`//*[@data-testid='select-ca-cert']`)
   clientCertField = By.xpath(`//*[@data-testid='select-cert']`)
   // Checkboxes
-  useTlsCheckbox = By.xpath(`//input[@data-testid='tls']/../../div[contains(@class, 'checkmarkContainer')]`)
-  useSSHCheckbox = By.xpath(`//input[@data-testid='use-ssh']/../../div[contains(@class, 'checkmarkContainer')]`)
+  useTlsCheckbox = By.xpath(`//*[@data-testid='tls']/..`)
+  useSSHCheckbox = By.xpath(`//*[@data-testid='use-ssh']/..`)
   // Radiobuttons
   passwordRadioBtn = By.xpath(`//vscode-radio[@data-testid='radio-btn-password']`)
   sshPrivateKeyRadioBtn = By.xpath(`//vscode-radio[@data-testid='radio-btn-privateKey']`)
