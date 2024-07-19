@@ -57,7 +57,6 @@ export const KeysSummary = (props: Props) => {
   return (
     <div className="flex flex-row justify-between pl-5 ">
       <div className={styles.content} data-testid="keys-summary">
-        {(!!total || isNull(total)) && !!scanned && (
         <span>
           (
           <span data-testid="keys-number-of-results">{numberWithSpaces(resultsLength)}</span>
@@ -68,7 +67,6 @@ export const KeysSummary = (props: Props) => {
             className={cx([styles.loading, { [styles.loadingShow]: loading }])}
           />
         </span>
-        )}
       </div>
       {/* {loading && !total && !isNull(total) && (
         <div data-testid="scanning-text">

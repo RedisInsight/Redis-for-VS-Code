@@ -81,8 +81,27 @@ const DatabaseForm = (props: Props) => {
   // </EuiToolTip>
   // )
 
+  const DatabaseAlias = () => (
+    <div className={cx('flex-1', { 'mr-6': !isEditMode })}>
+      <InputText
+        name="name"
+        id="name"
+        data-testid="name"
+        label={{ text: l10n.t('Database Alias*'), className: 'min-w-[110px]' }}
+        placeholder={l10n.t('Enter Database Alias')}
+        onFocus={selectOnFocus}
+        value={formik.values.name ?? ''}
+        maxLength={500}
+        onChange={formik.handleChange}
+      />
+    </div>
+  )
+
   return (
-    <div className={styles.formContainer}>
+    <div className={cx(styles.formContainer, { 'pt-5': isEditMode })}>
+      <div className="flex">
+        {showFields.alias && isEditMode && DatabaseAlias()}
+      </div>
       <div className="flex">
         {showFields.host && (
           <div className="flex-1 mr-6">
@@ -153,45 +172,33 @@ const DatabaseForm = (props: Props) => {
         )}
       </div>
 
-      <div className="flex">
-        {showFields.alias && (
-          <div className="flex-1 mr-6">
-            <InputText
-              name="name"
-              id="name"
-              data-testid="name"
-              label={{ text: l10n.t('Database Alias*'), className: 'min-w-[110px]' }}
-              placeholder={l10n.t('Enter Database Alias')}
-              onFocus={selectOnFocus}
-              value={formik.values.name ?? ''}
-              maxLength={500}
-              onChange={formik.handleChange}
-            />
-          </div>
-        )}
-        {showFields.timeout && !isEditMode && (
-          <div>
-            <InputText
-              name="timeout"
-              id="timeout"
-              data-testid="timeout"
-              label={{ text: l10n.t('Timeout (s)'), className: 'min-w-[76px]' }}
-              placeholder={l10n.t('Enter Timeout (in seconds)')}
-              value={formik.values.timeout ?? ''}
-              maxLength={7}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                formik.setFieldValue(
-                  e.target.name,
-                  validateTimeoutNumber(e.target.value.trim()),
-                )
-              }}
-              onFocus={selectOnFocus}
-              min={1}
-              max={MAX_TIMEOUT_NUMBER}
-            />
-          </div>
-        )}
-      </div>
+      {!isEditMode && (
+        <div className="flex">
+          {showFields.alias && DatabaseAlias()}
+          {showFields.timeout && (
+            <div>
+              <InputText
+                name="timeout"
+                id="timeout"
+                data-testid="timeout"
+                label={{ text: l10n.t('Timeout (s)'), className: 'min-w-[76px]' }}
+                placeholder={l10n.t('Enter Timeout (in seconds)')}
+                value={formik.values.timeout ?? ''}
+                maxLength={7}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  formik.setFieldValue(
+                    e.target.name,
+                    validateTimeoutNumber(e.target.value.trim()),
+                  )
+                }}
+                onFocus={selectOnFocus}
+                min={1}
+                max={MAX_TIMEOUT_NUMBER}
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="flex">
         <div className="flex-1">

@@ -59,6 +59,7 @@ describe('DatabaseWrapper', () => {
 
   describe('selectedKeyAction', () => {
     const setSelectedKeyActionMock = vi.fn()
+    const setSelectedKeyMock = vi.fn()
     const spySelectedKey = vi.spyOn(useSelectedKeyStore, 'useSelectedKeyStore') as Mock
 
     const selectedKeyAction = {
@@ -70,6 +71,7 @@ describe('DatabaseWrapper', () => {
 
     spySelectedKey.mockImplementation(() => ({
       setSelectedKeyAction: setSelectedKeyActionMock,
+      setSelectedKey: setSelectedKeyMock,
       selectedKeyAction,
     }))
 
@@ -109,16 +111,22 @@ describe('DatabaseWrapper', () => {
     it('should call addKeyIntoTree action after if selected key action is Added', async () => {
       const spySelectedKey = vi.spyOn(useSelectedKeyStore, 'useSelectedKeyStore') as Mock
 
+      const setSelectedKeyActionMock = vi.fn()
+      const setSelectedKeyMock = vi.fn()
+
       spySelectedKey.mockImplementation(() => ({
         selectedKeyAction: {
           ...selectedKeyAction,
-          type: null,
+          type: SelectedKeyActionType.Added,
         },
+        setSelectedKeyAction: setSelectedKeyActionMock,
+        setSelectedKey: setSelectedKeyMock,
       }))
 
       render(<DatabaseWrapper {...mockedProps} database={{ id: constants.DATABASE_ID } as Database} />)
 
-      expect(setSelectedKeyActionMock).not.toBeCalled()
+      expect(setSelectedKeyMock).toBeCalledWith({ name: constants.KEY_NAME_1 })
+      expect(setSelectedKeyActionMock).toBeCalledWith(null)
       expect(deleteKeyFromTreeMock).not.toBeCalled()
       expect(addKeyIntoTreeMock).not.toBeCalled()
     })

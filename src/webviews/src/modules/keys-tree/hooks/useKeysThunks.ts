@@ -278,7 +278,7 @@ KeysThunks
 
     if (!filter || filter === keyType) {
       get().addKeyToTree(key, keyType)
-      useSelectedKeyStore.getState().setSelectedKeyAction(null)
+      useSelectedKeyStore.getState?.().setSelectedKeyAction(null)
     }
   },
 })
