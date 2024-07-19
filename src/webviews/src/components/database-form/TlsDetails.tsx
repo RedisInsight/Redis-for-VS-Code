@@ -62,8 +62,6 @@ const TlsDetails = (props: Props) => {
   return (
     <>
       <div>
-        {formik.values.tls && !formik.values.showCompressor && (<VSCodeDivider className="divider mt-6 mb-6" />)}
-
         <div>
           <Checkbox
             id={`${id} over ssl`}
@@ -94,7 +92,7 @@ const TlsDetails = (props: Props) => {
               />
             </div>
             {formik.values.sni && (
-              <div>
+              <div className="mb-3">
                 <InputText
                   name="servername"
                   id="servername"
@@ -258,7 +256,7 @@ const TlsDetails = (props: Props) => {
                   />
                 </div>
 
-                <div>
+                <div className="mb-3">
                   <TextArea
                     placeholder={l10n.t('Enter Private Key')}
                     name="newTlsClientKey"
@@ -274,7 +272,6 @@ const TlsDetails = (props: Props) => {
           )}
         </div>
       )}
-      {formik.values.tls && (<VSCodeDivider className="divider mt-6 mb-3" />)}
     </>
   )
 }

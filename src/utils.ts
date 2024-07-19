@@ -71,6 +71,11 @@ export const handleMessage = async (message: any = {}) => {
       vscode.commands.executeCommand('RedisInsight.editDatabaseClose', message)
       break
     case 'UpdateSettings':
+      await workspaceStateService.set('appInfo', {
+        ...workspaceStateService.get('appInfo'),
+        config: message.data,
+      })
+
       vscode.commands.executeCommand('RedisInsight.updateSettings', message)
       break
     case 'UpdateSettingsDelimiter':

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 
@@ -13,7 +13,7 @@ import {
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
 import { TelemetryEvent, isFormatEditable, isFullStringLoaded, sendEventTelemetry } from 'uiSrc/utils'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
-import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { StringDetailsValue } from './string-details-value'
 import { fetchString, useStringStore } from './hooks/useStringStore'
 import { EditItemAction } from '../key-details-actions'
@@ -32,19 +32,26 @@ const StringDetails = (props: Props) => {
     resetStringStore: state.resetStringStore,
   })))
 
-  const { viewFormat, loading, length, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
+  const { loading, length, setRefreshDisabled } = useSelectedKeyStore(useShallow((state) => ({
     loading: state.loading,
-    viewFormat: state.viewFormat,
     length: state.data?.length,
     setRefreshDisabled: state.setSelectedKeyRefreshDisabled,
   })))
 
+  const viewFormat = useContextInContext((state) => state.browser.viewFormat)
+
   const isEditable = !isStringCompressed && isFormatEditable(viewFormat)
   const isStringEditable = isFullStringLoaded(keyValue?.data?.length, length)
   const noEditableText = isStringCompressed ? TEXT_DISABLED_COMPRESSED_VALUE : TEXT_DISABLED_FORMATTER_EDITING
-  const editToolTip = !isEditable ? noEditableText : (!isStringEditable ? `\n${TEXT_DISABLED_STRING_EDITING}` : '')
+  const editToolTip = !isEditable
+    ? noEditableText
+    : (!isStringEditable ? TEXT_DISABLED_STRING_EDITING : l10n.t('Edit value'))
 
   const [editItem, setEditItem] = useState<boolean>(false)
+
+  useEffect(() => {
+    setEditItem(false)
+  }, [viewFormat])
 
   const handleRefreshKey = (key?: RedisString, args?: IFetchKeyArgs) => {
     fetchString(key, { end: args?.end || STRING_MAX_LENGTH })
@@ -87,7 +94,7 @@ const StringDetails = (props: Props) => {
 
   const Actions = () => (
     <EditItemAction
-      title={`${l10n.t('Edit Value')}${editToolTip}`}
+      title={editToolTip}
       isEditable={isStringEditable && isEditable}
       onEditItem={() => {
         setRefreshDisabled(!editItem)

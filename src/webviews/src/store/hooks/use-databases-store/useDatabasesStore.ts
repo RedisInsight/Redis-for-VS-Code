@@ -96,9 +96,10 @@ export const createDatabaseStandalone = (
       if (isStatusSuccessful(status)) {
         localStorageService.set(StorageItem.databasesCount, data?.length)
         fetchDatabases()
-        onSuccess?.(data.id)
 
         showInformationMessage(successMessages.ADDED_NEW_DATABASE(payload.name ?? '').title)
+
+        onSuccess?.(data.id)
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))

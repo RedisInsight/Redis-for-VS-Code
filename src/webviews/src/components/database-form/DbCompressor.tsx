@@ -61,7 +61,6 @@ const DbCompressor = (props: Props) => {
 
   return (
     <>
-      {formik.values.showCompressor && !formik.values.showDb && (<VSCodeDivider className="divider mt-3 mb-3" />)}
       <div>
         <Checkbox
           id={`${id} over db compressor`}
@@ -74,7 +73,7 @@ const DbCompressor = (props: Props) => {
       </div>
 
       {formik.values.showCompressor && (
-        <div className="flex items-center">
+        <div className="flex items-center mb-4">
           <div className="pr-1">{l10n.t('Decompression format')}</div>
           <div>
             <Select
@@ -93,7 +92,6 @@ const DbCompressor = (props: Props) => {
           </div>
         </div>
       )}
-      {formik.values.showCompressor && (<VSCodeDivider className="divider mt-6 mb-3" />)}
     </>
   )
 }
