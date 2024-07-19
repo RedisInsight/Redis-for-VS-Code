@@ -42,7 +42,7 @@ describe('Tree view verifications', () => {
       'incorrect count is displayed',
     )
     const count = await treeView.getScannedResults()
-    await ButtonActions.clickElement(treeView.scanMoreBtn)
+    await ButtonActions.clickAndWaitForElement(treeView.scanMoreBtn, treeView.loadingIndicator, true, 1000)
 
     expect(await treeView.getScannedResults()).gt(
       count,
@@ -57,14 +57,14 @@ describe('Tree view verifications', () => {
       true,
       'The key folder is not displayed',
     )
-    await ButtonActions.clickElement(mainFolder)
+    await ButtonActions.clickAndWaitForElement(mainFolder, treeView.getFolderNameSelectorByNameAndIndex('device', 2), true, 1000)
     const targetFolderName = await treeView.getElementText(
       treeView.getFolderNameSelectorByNameAndIndex('device', 2),
     )
     const targetFolderSelector = treeView.getFolderSelectorByName(
       `device:${targetFolderName}`,
     )
-    await ButtonActions.clickElement(targetFolderSelector)
+    await ButtonActions.clickAndWaitForElement(targetFolderSelector, treeView.keyInFolder, true, 1000)
     await treeView.deleteFirstKeyFromList()
     // Verify the results
     expect(await treeView.isElementDisplayed(targetFolderSelector)).eql(

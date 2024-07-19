@@ -59,14 +59,13 @@ describe('Key Details verifications', () => {
     )
   })
   afterEach(async () => {
-    await keyDetailsView.switchBack()
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await keyDetailsView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
-
   after(async () => {
     await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
