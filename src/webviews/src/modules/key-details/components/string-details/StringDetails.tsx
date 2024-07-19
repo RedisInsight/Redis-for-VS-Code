@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 
@@ -48,6 +48,10 @@ const StringDetails = (props: Props) => {
     : (!isStringEditable ? TEXT_DISABLED_STRING_EDITING : l10n.t('Edit value'))
 
   const [editItem, setEditItem] = useState<boolean>(false)
+
+  useEffect(() => {
+    setEditItem(false)
+  }, [viewFormat])
 
   const handleRefreshKey = (key?: RedisString, args?: IFetchKeyArgs) => {
     fetchString(key, { end: args?.end || STRING_MAX_LENGTH })

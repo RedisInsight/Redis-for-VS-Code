@@ -30,7 +30,6 @@ const SSHDetails = (props: Props) => {
 
   return (
     <div className={styles.sshContainer}>
-      {formik.values.ssh && !formik.values.tls && (<VSCodeDivider className="divider mt-3 mb-3" />)}
       <div>
         <Checkbox
           id={`${id} ssh`}
