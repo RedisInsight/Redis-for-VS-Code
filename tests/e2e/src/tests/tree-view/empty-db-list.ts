@@ -11,7 +11,8 @@ import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
 import { Eula } from '@e2eSrc/helpers/api/Eula'
 import { EmptyDatabaseView } from '@e2eSrc/page-objects/components/tree-view/EmptyDatabaseView'
 import { ButtonActions } from '@e2eSrc/helpers/common-actions'
-import { ServerActions } from '@e2eSrc/helpers/common-actions/ServerActions';
+import { ServerActions } from '@e2eSrc/helpers/common-actions/ServerActions'
+import { CommonElementActions } from '@e2eSrc/helpers/common-actions/actions/CommonElementActions'
 
 describe('Empty database', () => {
   let treeView: TreeView
@@ -28,7 +29,7 @@ describe('Empty database', () => {
     await DatabaseAPIRequests.deleteAllDatabasesApi()
     await Eula.accept()
 
-    await emptyView.switchToInnerViewFrame(InnerViews.EmptyDatabaseView)
+    await emptyView.switchToInnerViewFrame(InnerViews.EmptyDatabaseInnerView)
 
   })
 
@@ -41,7 +42,7 @@ describe('Empty database', () => {
 
     await ButtonActions.clickElement(emptyView.connectDatabaseButton)
 
-    expect(await emptyView.verifyConnectLinks(expectedWelcomeLinks)).eql(true,
+    expect(await CommonElementActions.verifyConnectLinks(expectedWelcomeLinks, emptyView.connectLinks)).eql(true,
       'Links are not expected on the empty db screen page ')
     await treeView.switchBack()
     await addDatabaseView.switchToInnerViewFrame(

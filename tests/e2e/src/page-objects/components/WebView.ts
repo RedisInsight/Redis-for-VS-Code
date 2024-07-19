@@ -121,8 +121,8 @@ export enum InnerViews {
   KeyDetailsInnerView,
   SettingsInnerView,
   TreeInnerView,
-  Welcome,
-  EmptyDatabaseView
+  WelcomeInnerView,
+  EmptyDatabaseInnerView
 }
 
 export const InnerViewLocators = {
@@ -134,8 +134,8 @@ export const InnerViewLocators = {
   [InnerViews.KeyDetailsInnerView]: `//iframe[contains(@title,':')]`,
   [InnerViews.SettingsInnerView]: `//iframe[@title='Redis Insight - Settings']`,
   [InnerViews.TreeInnerView]: `//iframe[@title='Redis Insight']`,
-  [InnerViews.Welcome]: `//iframe[@title='Redis Insight - Welcome']`,
-  [InnerViews.EmptyDatabaseView]: `//iframe[@title='Redis Insight']`,
+  [InnerViews.WelcomeInnerView]: `//iframe[@title='Redis Insight - Welcome']`,
+  [InnerViews.EmptyDatabaseInnerView]: `//iframe[@title='Redis Insight']`,
 }
 
 export const InnerViewElements = {
@@ -147,6 +147,6 @@ export const InnerViewElements = {
   [InnerViews.KeyDetailsInnerView]: `//div[contains(@data-testid, '-value')]`,
   [InnerViews.SettingsInnerView]: `//input[@data-testid='input-delimiter']`,
   [InnerViews.TreeInnerView]: `//div[@data-testid='tree-view-page']`,
-  [InnerViews.Welcome]: `//div[@data-testid='welcome-page']`,
-  [InnerViews.EmptyDatabaseView]: `//div[@data-testid='no-databases-page']`,
+  [InnerViews.WelcomeInnerView]: `//div[@data-testid='welcome-page']`,
+  [InnerViews.EmptyDatabaseInnerView]: `//div[@data-testid='no-databases-page']`,
 }

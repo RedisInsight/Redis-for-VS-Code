@@ -18,6 +18,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import { ButtonActions, CheckboxActions } from '@e2eSrc/helpers/common-actions'
 import { WelcomeView } from '@e2eSrc/page-objects/components/editor-view/WelcomeView'
+import { CommonElementActions } from '@e2eSrc/helpers/common-actions/actions/CommonElementActions'
 
 describe('Agreements Verification', () => {
   let browser: VSBrowser
@@ -145,8 +146,8 @@ describe('Agreements Verification', () => {
     await eulaView.switchBack()
 
    // Verify that user can see  Welcome page with connect links
-    await eulaView.switchToInnerViewFrame(InnerViews.Welcome)
-    expect(await welcomeView.verifyConnectLinks(expectedWelcomeLinks)).eql(true,
+    await eulaView.switchToInnerViewFrame(InnerViews.WelcomeInnerView)
+    expect(await CommonElementActions.verifyConnectLinks(expectedWelcomeLinks, welcomeView.connectLinks)).eql(true,
       'Links are not expected on the Welcome page ')
     await welcomeView.switchBack()
 

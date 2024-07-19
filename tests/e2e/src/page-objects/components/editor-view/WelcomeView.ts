@@ -8,15 +8,4 @@ export class WelcomeView extends WebView {
   connectLinks = By.xpath(
     `//a[@data-testid='connect-database-btn']/following-sibling::a`,
   )
-
-  //verify that view has all expected links
-  async verifyConnectLinks(expectedLinks: string[]): Promise<Boolean> {
-    const links = await this.getElements(this.connectLinks)
-
-    const results = await Promise.all(links.map(async (link) => {
-      const href = await link.getAttribute('href')
-      return expectedLinks.includes(href)
-    }))
-    return results.every(result => result)
-  }
 }

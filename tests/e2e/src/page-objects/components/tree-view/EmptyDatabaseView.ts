@@ -11,16 +11,4 @@ export class EmptyDatabaseView extends WebView {
   connectLinks = By.xpath(
     `//h2[text()='Links']/parent::*/a`,
   )
-
-  //verify that view has all expected links
-  async verifyConnectLinks(expectedLinks: string[]): Promise<Boolean> {
-    const links = await this.getElements(this.connectLinks)
-
-    const results = await Promise.all(links.map(async (link) => {
-      const href = await link.getAttribute('href')
-      return expectedLinks.includes(href)
-    }))
-    return results.every(result => result)
-  }
-
 }
