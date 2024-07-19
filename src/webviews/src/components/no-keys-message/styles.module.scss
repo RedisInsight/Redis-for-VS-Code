@@ -1,0 +1,7 @@
+.addKey {
+  @apply mr-4 min-w-[68px] max-h-[22px];
+
+  &::part(control) {
+    @apply px-2 py-0.5;
+  }
+}

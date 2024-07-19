@@ -11,6 +11,7 @@ patches
 !dist/extension.js
 **/*.map
 *.map
+*.md
 *.vsix
 *.config.js
 node_modules
@@ -19,6 +20,7 @@ node_modules
 !node_modules/ms/index.js
 !node_modules/address
 !node_modules/debug
+vite.config.mjs
 *.zip
 
 # test
@@ -29,6 +31,7 @@ test-workspace
 .vscode-test
 
 # configs
+.circleci
 .husky
 .idea
 .storybook

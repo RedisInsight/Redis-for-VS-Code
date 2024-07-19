@@ -24,7 +24,7 @@ export const SidebarPage: FC<any> = () => {
           <KeysStoreProvider>
             <DatabaseWrapper database={database}>
               <KeysTreeHeader database={database} />
-              <KeysTree />
+              <KeysTree database={database} />
             </DatabaseWrapper>
           </KeysStoreProvider>
         </ContextStoreProvider>

@@ -5,9 +5,40 @@ version: 2.1
 aliases:
   ui-deps-cache-key: &uiDepsCacheKey
     key: ui-deps-{{ checksum "yarn.lock" }}
+  dev-filter: &devFilter
+    filters:
+      branches:
+        only:
+          - main
+          - /^build\/.*/
+  build-filter: &buildFilter
+    filters:
+      branches:
+        only:
+          - /^build.*/
+  stage-filter: &stageFilter
+    filters:
+      branches:
+        only:
+          - /^release.*/
+  prod-filter: &prodFilter
+    filters:
+      branches:
+        only:
+          - latest
+  manual-build-conditions: &manual-build-conditions
+    or:
+      - << pipeline.parameters.linux >>
+      - << pipeline.parameters.mac >>
+      - << pipeline.parameters.windows >>
+  ignore-for-manual-build: &ignore-for-manual-build
+    when:
+      not: *manual-build-conditions
 
 orbs:
   node: circleci/node@5.2.0
+  win: circleci/windows@5.0.0
+  aws: circleci/aws-cli@4.1.3
 
 executors:
   linux-executor:
@@ -29,6 +60,17 @@ executors:
     macos:
       xcode: 14.2.0
 
+parameters:
+  linux:
+    type: string
+    default: &ignore ""
+  mac:
+    type: string
+    default: *ignore
+  windows:
+    type: string
+    default: *ignore
+
 jobs:
   unit-tests-ui:
     executor: docker-node
@@ -41,48 +83,9 @@ jobs:
           command: |
             yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
       - run:
-          name: Unit tests UI
+          name: Run Unit tests UI
           command: |
             yarn test:cov
-      - save_cache:
-          <<: *uiDepsCacheKey
-          paths:
-            - ~/.cache/yarn
-
-  linux:
-    executor: docker-node
-    resource_class: large
-    parameters:
-      env:
-        description: Build environment (stage || prod)
-        type: enum
-        default: stage
-        enum: ['stage', 'prod', 'dev']
-    steps:
-      - checkout
-      - restore_cache:
-          <<: *uiDepsCacheKey
-      - attach_workspace:
-          at: .
-      - run:
-          name: Install dependencies
-          command: |
-            yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
-      - run:
-          name: Build .vsix package
-          command: |
-            yarn download:backend
-
-            if [ << parameters.env >> == 'prod' ]; then
-              yarn package:prod
-              exit 0;
-            fi
-
-            yarn package:stage
-      - persist_to_workspace:
-          root: .
-          paths:
-            - redis-insight-vsc*.vsix
       - save_cache:
           <<: *uiDepsCacheKey
           paths:
@@ -137,12 +140,204 @@ jobs:
           path: /tmp/test-resources/screenshots
           destination: test-resources/screenshots
 
+  # Build jobs
+  manual-build-validate:
+    executor: docker-node
+    parameters:
+      os:
+        type: string
+        default: ""
+      target:
+        type: string
+        default: ""
+    steps:
+      - checkout
+      - run:
+          command: |
+            node .circleci/build/manual-build-validate.js << parameters.os >> << parameters.target >>
+
+  linux:
+    executor: docker-node
+    resource_class: large
+    parameters:
+      env:
+        description: Build environment (stage || prod)
+        type: enum
+        default: stage
+        enum: ['stage', 'prod', 'dev']
+      target:
+        description: Build target
+        type: string
+        default: ""
+    steps:
+      - checkout
+      - restore_cache:
+          <<: *uiDepsCacheKey
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install dependencies
+          command: |
+            yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+      - run:
+          name: Build .vsix package
+          command: |
+            packagePath=./release/redis-insight-vsc-extension-linux-x64.vsix
+            yarn download:backend
+
+            if [ << parameters.env >> == 'prod' ]; then
+              yarn package:prod --out ${packagePath}
+              exit 0;
+            fi
+
+            yarn package:stage --out ${packagePath}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - release/redis-insight-vsc-*.vsix
+      - save_cache:
+          <<: *uiDepsCacheKey
+          paths:
+            - ~/.cache/yarn
+
+  macosx:
+    executor: macos
+    resource_class: macos.m1.medium.gen1
+    parameters:
+      env:
+        description: Build environment (stage || prod)
+        type: enum
+        default: stage
+        enum: ['stage', 'prod', 'dev']
+      target:
+        description: Build target
+        type: string
+        default: ""
+    steps:
+      - checkout
+      - node/install:
+          node-version: '20.15'
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install dependencies
+          command: |
+            yarn install
+          no_output_timeout: 15m
+      - run:
+          name: Build .vsix package
+          command: |
+            packagePath=./release/redis-insight-vsc-extension-mac
+
+            if [ << parameters.target >> ]; then
+              yarn download:backend << parameters.target >>
+
+              yarn package:stage --target darwin-<< parameters.target >> --out ${packagePath}-<< parameters.target >>.vsix
+              exit 0;
+            fi
+
+            if [ << parameters.env >> == 'prod' ]; then
+              yarn download:backend arm64
+              yarn package:prod --target darwin-arm64 --out ${packagePath}-arm64.vsix
+
+              yarn download:backend x64
+              yarn package:prod --target darwin-x64 --out ${packagePath}-x64.vsix
+              exit 0;
+            fi
+
+            yarn download:backend arm64
+            yarn package:stage --target darwin-arm64 --out ${packagePath}-arm64.vsix
+
+            yarn download:backend x64
+            yarn package:stage --target darwin-x64 --out ${packagePath}-x64.vsix
+      - persist_to_workspace:
+          root: .
+          paths:
+            - release/redis-insight-vsc-*.vsix
+
+  windows:
+    executor:
+      name: win/default
+    parameters:
+      env:
+        description: Build environment (stage || prod)
+        type: enum
+        default: stage
+        enum: ['stage', 'prod', 'dev']
+      target:
+        description: Build target
+        type: string
+        default: ""
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install dependencies
+          command: |
+            nvm install 20.15
+            nvm use 20.15
+            npm install --global yarn
+
+            yarn install
+          shell: bash.exe
+          no_output_timeout: 15m
+      - run:
+          name: Build .vsix package
+          command: |
+            packagePath=./release/redis-insight-vsc-extension-win-x64.vsix
+            yarn download:backend
+
+            if [ << parameters.env >> == 'prod' ]; then
+              yarn package:prod --out ${packagePath}
+              exit 0;
+            fi
+
+            yarn package:stage --out ${packagePath}
+          shell: bash.exe
+          no_output_timeout: 20m
+      - persist_to_workspace:
+          root: .
+          paths:
+            - release/redis-insight-vsc-*.vsix
+
+  # Release jobs
+  store-build-artifacts:
+    executor: linux-executor
+    steps:
+      - attach_workspace:
+          at: .
+      - store_artifacts:
+          path: release
+          destination: release
+
+  release-aws-private:
+    executor: linux-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - store_artifacts:
+          path: release
+          destination: release
+      - run:
+          name: publish
+          command: |
+            chmod +x .circleci/build/sum_sha256.sh
+            .circleci/build/sum_sha256.sh
+            applicationVersion=$(jq -r '.version' package.json)
+
+            aws s3 cp release/ s3://${AWS_BUCKET_NAME}/private/vscode/${applicationVersion} --recursive
+
+
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   frontend-tests:
+    <<: *ignore-for-manual-build
     jobs:
       - unit-tests-ui:
+          name: Run Unit Tests
           filters:
             branches:
               only:
@@ -173,3 +368,172 @@ workflows:
           parallelism: 1
           requires:
             - Build extension - Linux (stage)
+
+  # Manual builds using web UI
+  manual-build-linux:
+    when: << pipeline.parameters.linux >>
+    jobs:
+      - manual-build-validate:
+          name: Validating build parameters
+          os: linux
+          target: << pipeline.parameters.linux >>
+      - linux:
+          name: Build extension - Linux (stage)
+          env: stage
+          target: << pipeline.parameters.linux >>
+          requires:
+            - Validating build parameters
+      - store-build-artifacts:
+          name: Store build artifacts (stage)
+          requires:
+            - Build extension - Linux (stage)
+
+  manual-build-mac:
+    when: << pipeline.parameters.mac >>
+    jobs:
+      - manual-build-validate:
+          name: Validating build parameters
+          os: mac
+          target: << pipeline.parameters.mac >>
+      - macosx:
+          name: Build extension - MacOS (stage)
+          env: stage
+          target: << pipeline.parameters.mac >>
+          requires:
+            - Validating build parameters
+      - store-build-artifacts:
+          name: Store build artifacts (stage)
+          requires:
+            - Build extension - MacOS (stage)
+
+  manual-build-windows:
+    when: << pipeline.parameters.windows >>
+    jobs:
+      - manual-build-validate:
+          name: Validating build parameters
+          os: windows
+          target: << pipeline.parameters.windows >>
+      - windows:
+          name: Build extension - Windows (stage)
+          env: stage
+          target: << pipeline.parameters.windows >>
+          requires:
+            - Validating build parameters
+      - store-build-artifacts:
+          name: Store build artifacts (stage)
+          requires:
+            - Build extension - Windows (stage)
+
+   # build vscode extension (dev) from "build" branches
+  build:
+    <<: *ignore-for-manual-build
+    jobs:
+      - linux:
+          name: Build extension - Linux (dev)
+          env: dev
+          <<: *buildFilter
+      - macosx:
+          name: Build extension - MacOS (dev)
+          env: dev
+          <<: *buildFilter
+      - windows:
+          name: Build extension - Windows (dev)
+          env: dev
+          <<: *buildFilter
+      - store-build-artifacts:
+          name: Store build artifacts (dev)
+          requires:
+            - Build extension - Linux (dev)
+            - Build extension - MacOS (dev)
+            - Build extension - Windows (dev)
+
+  # Main workflow for release/* and latest branches only
+  release:
+    <<: *ignore-for-manual-build
+    jobs:
+      # unit tests (on any commit)
+      - unit-tests-ui:
+          name: Run Unit Tests
+          filters: &releaseAndLatestFilter
+            branches:
+              only:
+                - /^release.*/
+                - latest
+
+      # ================== STAGE ==================
+      # build extensions (stage)
+      - linux:
+          name: Build extension - Linux (stage)
+          <<: *stageFilter
+      - macosx:
+          name: Build extension - MacOS (stage)
+          <<: *stageFilter
+      - windows:
+          name: Build extension - Windows (stage)
+          <<: *stageFilter
+      # e2e tests on linux build
+      - e2e-app-image:
+          name: E2ETest (linux)
+          parallelism: 2
+          requires:
+            - Build extension - Linux (stage)
+
+      - store-build-artifacts:
+          name: Store build artifacts (stage)
+          requires:
+            - Build extension - Linux (stage)
+            - Build extension - MacOS (stage)
+            - Build extension - Windows (stage)
+
+      # Needs approval from QA team that build was tested before merging to latest
+      - qa-approve:
+          name: Approved by QA team
+          type: approval
+          requires:
+            - Build extension - Linux (stage)
+            - Build extension - MacOS (stage)
+            - Build extension - Windows (stage)
+
+      # ================== PROD ==================
+      # build and release vscode extension (prod)
+      - linux:
+          name: Build extension - Linux (prod)
+          env: prod
+          <<: *prodFilter
+      - macosx:
+          name: Build extension - MacOS (prod)
+          env: prod
+          <<: *prodFilter
+      - windows:
+          name: Build extension - Windows (prod)
+          env: prod
+          <<: *prodFilter
+
+      # e2e desktop tests on linux build
+      - e2e-app-image:
+          name: E2ETest (Linux)
+          parallelism: 2
+          requires:
+            - Build extension - Linux (prod)
+
+      # upload release to prerelease AWS folder
+      - release-aws-private:
+          name: Release AWS S3 Private (prod)
+          requires:
+            - Build extension - Linux (prod)
+            - Build extension - MacOS (prod)
+            - Build extension - Windows (prod)
+
+      # Manual approve for publish release
+      - approve-publish:
+          name: Approve Publish Release (prod)
+          type: approval
+          requires:
+            - Release AWS S3 Private (prod)
+      # # Publish release
+      # - publish-prod-aws:
+      #     name: Publish AWS S3
+      #     requires:
+      #       - Approve Publish Release (prod)
+      #     <<: *prodFilter # double check for "latest"
+

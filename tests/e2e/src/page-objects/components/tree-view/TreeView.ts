@@ -5,7 +5,7 @@ import {
   DropdownActions,
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
-import { Config } from '@e2eSrc/helpers'
+import { CommonDriverExtension, Config } from '@e2eSrc/helpers'
 
 /**
  * Tree list view with databases and keys
@@ -52,6 +52,8 @@ export class TreeView extends WebView {
   keysSummary = By.xpath(`//*[@data-testid='keys-summary']`)
   treeViewVirtualTable = By.xpath(`//*[@data-testid='virtual-tree']/div`)
   databaseInstance = By.xpath(`//div[starts-with(@data-testid, 'database-')]`)
+  keyInFolder = By.xpath(`//*[contains(@data-testid, "keys:")]`)
+  addKeyFromTreeBtn = By.xpath(`//vscode-button[@data-testid='add-key-from-tree']`)
 
   // mask
   keyMask = '//*[@data-testid="key-$name"]'
@@ -124,6 +126,7 @@ export class TreeView extends WebView {
   async openTreeFolders(names: string[]): Promise<void> {
     let base = `node-item_${names[0]}:`
     await this.clickElementIfNotExpanded(base)
+    await this.verifyElementExpanded(this.getKey(base))
     if (names.length > 1) {
       for (let i = 1; i < names.length; i++) {
         base = `${base}${names[i]}:`

@@ -40,13 +40,12 @@ export class ButtonActions {
         timeout,
       )
     } else {
-      const elementToWait = await ButtonActions.driver.wait(
-        until.elementLocated(locatorToDisplayed),
-        timeout,
-      )
       await ButtonActions.clickElement(locatorToClick)
-
       try {
+        const elementToWait = await ButtonActions.driver.wait(
+          until.elementLocated(locatorToDisplayed),
+          timeout,
+        )
         await ButtonActions.driver.wait(
           until.elementIsNotVisible(elementToWait),
         )

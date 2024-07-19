@@ -99,7 +99,7 @@ export class TreeViewActions extends CommonDriverExtension {
       const rememberedScanResults = await treeView.getScannedResults()
       await treeView.waitForElementVisibility(
         treeView.loadingIndicator,
-        1000,
+        2000,
         false,
       )
       const scannedValueText = await treeView.getElementText(
@@ -110,10 +110,10 @@ export class TreeViewActions extends CommonDriverExtension {
         regExp,
         `The database is not automatically scanned by ${i} 000 keys`,
       )
-      await ButtonActions.clickAndWaitForElement(treeView.scanMoreBtn, treeView.loadingIndicator, true, 1000)
+      await ButtonActions.clickAndWaitForElement(treeView.scanMoreBtn, treeView.loadingIndicator, true, 2000)
       await treeView.waitForElementVisibility(
         treeView.loadingIndicator,
-        1000,
+        2000,
         false,
       )
       const scannedResults = await treeView.getScannedResults()

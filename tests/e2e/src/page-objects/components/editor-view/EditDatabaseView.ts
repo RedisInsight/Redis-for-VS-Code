@@ -5,7 +5,6 @@ import { DatabaseDetailsView } from './DatabaseDetailsView'
  * Edit Database view
  */
 export class EditDatabaseView extends DatabaseDetailsView {
-  editAliasButton = By.xpath(`//*[@data-testid='edit-alias-btn']`)
   moduleSearchIcon = By.xpath(`//*[contains(@data-testid, 'RediSearch')]`)
   moduleGraphIcon = By.xpath(`//*[contains(@data-testid, 'RedisGraph')]`)
   moduleJSONIcon = By.xpath(`//*[contains(@data-testid, 'RedisJSON')]`)

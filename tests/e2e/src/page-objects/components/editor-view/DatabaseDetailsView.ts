@@ -12,7 +12,7 @@ export class DatabaseDetailsView extends WebView {
   passwordInput = By.xpath(`//*[@data-testid='password']`)
   usernameInput = By.xpath(`//*[@data-testid='username']`)
   timeoutInput = By.xpath(`//*[@data-testid='timeout']`)
-  aliasInput = By.xpath(`//*[@data-testid='alias-input']`)
+  aliasInput = By.xpath(`//input[@data-testid='name']`)
   sshHostInput = By.xpath(`//*[@data-testid='sshHost']`)
   sshPortInput = By.xpath(`//*[@data-testid='sshPort']`)
   sshUsernameInput = By.xpath(`//*[@data-testid='sshUsername']`)
@@ -20,13 +20,13 @@ export class DatabaseDetailsView extends WebView {
   sshPrivateKeyInput = By.xpath(`//*[@data-testid='sshPrivateKey']`)
   sshPassphraseInput = By.xpath(`//*[@data-testid='sshPassphrase']`)
   // Buttons
-  saveDatabaseButton = By.xpath(`//*[@data-testid='btn-submit']`)
+  saveDatabaseButton = By.xpath(`//vscode-button[@data-testid='btn-submit']`)
   // Dropdowns
   caCertField = By.xpath(`//*[@data-testid='select-ca-cert']`)
   clientCertField = By.xpath(`//*[@data-testid='select-cert']`)
   // Checkboxes
-  useTlsCheckbox = By.xpath(`//input[@data-testid='tls']/../../div[contains(@class, 'checkmarkContainer')]`)
-  useSSHCheckbox = By.xpath(`//input[@data-testid='use-ssh']/../../div[contains(@class, 'checkmarkContainer')]`)
+  useTlsCheckbox = By.xpath(`//*[@data-testid='tls']/..`)
+  useSSHCheckbox = By.xpath(`//*[@data-testid='use-ssh']/..`)
   // Radiobuttons
   passwordRadioBtn = By.xpath(`//vscode-radio[@data-testid='radio-btn-password']`)
   sshPrivateKeyRadioBtn = By.xpath(`//vscode-radio[@data-testid='radio-btn-privateKey']`)

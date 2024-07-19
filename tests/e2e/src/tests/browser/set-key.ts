@@ -41,6 +41,7 @@ describe('Set Key fields verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await keyDetailsView.switchBack()
     await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
   after(async () => {
@@ -105,9 +106,9 @@ describe('Set Key fields verification', () => {
     keyName = Common.generateWord(10)
 
     await ButtonActions.clickElement(treeView.addKeyButton)
-    await this.switchBack()
-    await this.switchToInnerViewFrame(InnerViews.AddKeyInnerView)
-    await this.selectKeyTypeByValue(KeyTypesShort.Set)
+    await treeView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.AddKeyInnerView)
+    await addSetKeyView.selectKeyTypeByValue(KeyTypesShort.Set)
 
     expect(
       await addSetKeyView.isElementDisabled(addSetKeyView.addButton, 'class'),
