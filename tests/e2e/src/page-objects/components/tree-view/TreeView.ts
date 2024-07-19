@@ -53,6 +53,7 @@ export class TreeView extends WebView {
   treeViewVirtualTable = By.xpath(`//*[@data-testid='virtual-tree']/div`)
   databaseInstance = By.xpath(`//div[starts-with(@data-testid, 'database-')]`)
   keyInFolder = By.xpath(`//*[contains(@data-testid, "keys:")]`)
+  addKeyFromTreeBtn = By.xpath(`//vscode-button[@data-testid='add-key-from-tree']`)
 
   // mask
   keyMask = '//*[@data-testid="key-$name"]'

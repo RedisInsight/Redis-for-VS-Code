@@ -11,14 +11,17 @@ import {
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { AddKeyView } from '@e2eSrc/page-objects/components/editor-view/AddKeyView'
 import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 describe('Tree view verifications', () => {
   let treeView: TreeView
   let keyNames: string[] = []
+  let addKeyView: AddKeyView
 
   before(async () => {
     treeView = new TreeView()
+    addKeyView = new AddKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -122,6 +125,14 @@ describe('Tree view verifications', () => {
       message,
       'Tree view no keys message not shown',
     )
+    // Verify that user can see Add Key button when no keys are in database
+    await ButtonActions.clickElement(treeView.addKeyFromTreeBtn)
+    await treeView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.AddKeyInnerView)
+
+    expect(
+      await treeView.waitForElementVisibility(addKeyView.keyTypeDropdown),
+    ).eql(true, `Add key panel not opened`)
   })
   // TODO Add checks once Edit the key name in details and search functionality is ready
   it.skip('Verify that user can refresh Keys', async function () {})
