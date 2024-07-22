@@ -19,6 +19,8 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { ListKeyParameters } from '@e2eSrc/helpers/types/types'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
+import { ServerActions } from '@e2eSrc/helpers/common-actions/ServerActions'
+import { Eula } from '@e2eSrc/helpers/api/Eula'
 
 let keyName: string
 const elements = [
@@ -168,6 +170,8 @@ describe('List Key verification for db with version <6.2', () => {
     addListKeyView = new AddListKeyView()
 
     await treeView.switchBack()
+    await ServerActions.waitForServerInitialized()
+    await Eula.accept()
     await ButtonActions.clickElement(treeView.addDatabaseBtn)
     await addDatabaseView.switchToInnerViewFrame(
       InnerViews.AddDatabaseInnerView,
@@ -180,6 +184,7 @@ describe('List Key verification for db with version <6.2', () => {
     await treeView.clickDatabaseByName(
       Config.ossStandaloneV5Config.databaseName!,
     )
+    await NotificationActions.closeAllNotifications()
   })
   afterEach(async () => {
     await listKeyDetailsView.switchBack()
