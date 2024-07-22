@@ -169,24 +169,11 @@ describe('List Key verification for db with version <6.2', () => {
     listKeyDetailsView = new ListKeyDetailsView()
     addListKeyView = new AddListKeyView()
 
-    await treeView.switchBack()
-    await ServerActions.waitForServerInitialized()
-    await Eula.accept()
-    await ButtonActions.clickElement(treeView.addDatabaseBtn)
-    await addDatabaseView.switchToInnerViewFrame(
-      InnerViews.AddDatabaseInnerView,
-    )
-    await addDatabaseView.addRedisDataBase(Config.ossStandaloneV5Config)
-    // Click for saving
-    await ButtonActions.clickElement(addDatabaseView.saveDatabaseButton)
-    await treeView.switchBack()
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
-    await NotificationActions.closeAllNotifications()
-    await treeView.clickDatabaseByName(
-      Config.ossStandaloneV5Config.databaseName!,
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneV5Config,
     )
   })
-  afterEach(async () => {
+  after(async () => {
     await listKeyDetailsView.switchBack()
     await KeyAPIRequests.deleteKeyIfExistsApi(
       keyName,
