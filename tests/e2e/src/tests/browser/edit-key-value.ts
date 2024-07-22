@@ -35,7 +35,7 @@ let keyName: string
 const keyValueBefore = 'ValueBeforeEdit!'
 const keyValueAfter = 'ValueAfterEdit!'
 
-describe.only('Edit Key values verification', () => {
+describe('Edit Key values verification', () => {
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
