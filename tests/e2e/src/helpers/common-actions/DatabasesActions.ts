@@ -71,9 +71,9 @@ export class DatabasesActions extends CommonDriverExtension {
     await VSBrowser.instance.waitForWorkbench(20_000)
     await NotificationActions.closeAllNotifications()
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
-    await super.driverSleep(500)
+    await super.driverSleep(200)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.closeView()
-    await super.driverSleep(500)
+    await super.driverSleep(200)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
     await new EditorView().closeAllEditors()
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
@@ -83,7 +83,7 @@ export class DatabasesActions extends CommonDriverExtension {
       ))
     ) {
       await treeView.clickDatabaseByName(databaseParameters.databaseName!)
-      await super.driverSleep(500)
+      await super.driverSleep(200)
     }
   }
 

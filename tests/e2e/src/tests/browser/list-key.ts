@@ -181,10 +181,10 @@ describe('List Key verification for db with version <6.2', () => {
     await ButtonActions.clickElement(addDatabaseView.saveDatabaseButton)
     await treeView.switchBack()
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await NotificationActions.closeAllNotifications()
     await treeView.clickDatabaseByName(
       Config.ossStandaloneV5Config.databaseName!,
     )
-    await NotificationActions.closeAllNotifications()
   })
   afterEach(async () => {
     await listKeyDetailsView.switchBack()

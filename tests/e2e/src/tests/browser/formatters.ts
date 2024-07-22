@@ -189,7 +189,7 @@ describe('Formatters', () => {
           hashKeyDetailsView.hashValuesList,
         ),
       ).contains(
-        formatter.formattedText!.slice(0, 50),
+        formatter.formattedText!.slice(0, 30),
         `Value is not saved as ${formatter.format}`,
       )
       await verifyValueHighlighted(

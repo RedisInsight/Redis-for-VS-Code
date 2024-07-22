@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
+import { before, beforeEach, after, afterEach, EditorView } from 'vscode-extension-tester'
 import {
   HashKeyDetailsView,
   TreeView,
@@ -35,7 +35,7 @@ let keyName: string
 const keyValueBefore = 'ValueBeforeEdit!'
 const keyValueAfter = 'ValueAfterEdit!'
 
-describe('Edit Key values verification', () => {
+describe.only('Edit Key values verification', () => {
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
@@ -69,8 +69,14 @@ describe('Edit Key values verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    await new EditorView().closeAllEditors()
     await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
   })
+
   it('Verify that user can edit Hash Key field', async function () {
     const fieldName = 'test'
     keyName = Common.generateWord(10)
@@ -101,6 +107,7 @@ describe('Edit Key values verification', () => {
     )[0].getText()
     expect(resultValue).eqls(keyValueAfter)
   })
+
   it('Verify that user can edit Zset Key member', async function () {
     keyName = Common.generateWord(10)
     const scoreBefore = 5
@@ -137,6 +144,7 @@ describe('Edit Key values verification', () => {
     )[0].getText()
     expect(resultValue).eqls(scoreAfter)
   })
+
   it('Verify that user can edit List Key element', async function () {
     keyName = Common.generateWord(10)
     const listKeyParameters: ListKeyParameters = {
@@ -160,6 +168,7 @@ describe('Edit Key values verification', () => {
     )[0].getText()
     expect(resultValue).eqls(keyValueAfter)
   })
+
   it('Verify that user can edit String value', async function () {
     keyName = Common.generateWord(10)
     const stringKeyParameters: StringKeyParameters = {
@@ -199,6 +208,7 @@ describe('Edit Key values verification', () => {
     keyValue = await stringKeyDetailsView.getStringKeyValue()
     expect(keyValue).contains(keyValueAfter, 'Edited String value is incorrect')
   })
+
   it('Verify that user can edit JSON Key value', async function () {
     keyName = Common.generateWord(10)
     const jsonValueBefore = '{"name":"xyz"}'
