@@ -117,6 +117,9 @@ jobs:
           command: |
             eval "$(dbus-launch --sh-syntax)"
 
+            echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> $BASH_ENV
+            echo "DBUS_SESSION_BUS_PID=$DBUS_SESSION_BUS_PID" >> $BASH_ENV
+
             mkdir -p ~/.cache
             mkdir -p ~/.local/share/keyrings
 
@@ -124,8 +127,11 @@ jobs:
             sleep 1
             eval "$(echo "$GNOME_KEYRING_PASS" | gnome-keyring-daemon --start)"
             
-            sudo apt-get install -y xvfb
+            source $BASH_ENV
+            # sudo apt-get install -y xvfb
             Xvfb :99 -screen 0 1920x1080x24 &
+            cd tests/e2e && export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.ts" | circleci tests split --split-by=timings) && cd ../..
+            .circleci/e2e/test.app.sh
 
       # - run: sudo dbus-uuidgen > /var/lib/dbus/machine-id
       # - run:
@@ -133,11 +139,11 @@ jobs:
       #     command: |
       #       sudo apt-get install -y xvfb
       #       Xvfb :99 -screen 0 1920x1080x24 &
-      - run:
-          name: Run e2e tests
-          command: |
-            cd tests/e2e && export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.ts" | circleci tests split --split-by=timings) && cd ../..
-            .circleci/e2e/test.app.sh
+      # - run:
+      #     name: Run e2e tests
+      #     command: |
+      #       cd tests/e2e && export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.ts" | circleci tests split --split-by=timings) && cd ../..
+      #       .circleci/e2e/test.app.sh
       - when:
           condition:
             equal: [ true, << parameters.report >> ]
