@@ -86,6 +86,10 @@ describe('Add database', () => {
       Config.ossClusterConfig.ossClusterDatabaseName,
     ])
   })
+  after(async () => {
+    await addDatabaseView.switchBack()
+    await editorView.closeAllEditors()
+  })
 
   it('Verify that user can add Standalone Database', async function () {
     const connectionTimeout = '20'
@@ -135,7 +139,8 @@ describe('Add database', () => {
         ),
       ),
     ).eql(
-      true, `${Config.ossClusterConfig.ossClusterDatabaseName} not added to database list`,
+      true,
+      `${Config.ossClusterConfig.ossClusterDatabaseName} not added to database list`,
     )
     // TODO Verify new connection badge for OSS cluster
   })
@@ -260,6 +265,5 @@ describe('Add database', () => {
       'class',
     )
     expect(isDisabled).eql(true)
-    await editorView.closeEditor('Redis Insight - Add Database connection')
   })
 })

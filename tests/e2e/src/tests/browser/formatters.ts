@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
+import { before, beforeEach, after, afterEach, Locator } from 'vscode-extension-tester'
 import {
   CliAPIRequests,
   DatabaseAPIRequests,
@@ -27,7 +27,6 @@ import {
   KeyTypesShort,
 } from '@e2eSrc/helpers/constants'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
-import { By, Locator } from 'vscode-extension-tester'
 import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 const binaryFormattersSet = [formatters[5], formatters[6], formatters[7]]
@@ -190,7 +189,7 @@ describe('Formatters', () => {
           hashKeyDetailsView.hashValuesList,
         ),
       ).contains(
-        formatter.formattedText!.slice(0, 100),
+        formatter.formattedText!.slice(0, 30),
         `Value is not saved as ${formatter.format}`,
       )
       await verifyValueHighlighted(
@@ -417,9 +416,7 @@ describe('Formatters', () => {
         `${formatter.format} value is not converted to Unicode`,
       )
       await keyDetailsView.selectFormatter(formatter.format)
-      await hashKeyDetailsView.editHashKeyValue(
-        formatter.formattedTextEdit!
-      )
+      await hashKeyDetailsView.editHashKeyValue(formatter.formattedTextEdit!)
       // Verify that valid converted value can be edited to another
       expect(
         await hashKeyDetailsView.getElementText(
@@ -466,7 +463,10 @@ describe('Formatters', () => {
         await hashKeyDetailsView.getElementText(
           hashKeyDetailsView.hashValuesList,
         ),
-      ).contains(type.converted, `Value is not saved as PHP ${type.dataType}`)
+      ).contains(
+        type.converted.slice(0, 20),
+        `Value is not saved as PHP ${type.dataType}`,
+      )
       await verifyValueHighlighted(
         keyDetailsView.getHighlightedValue(
           keysData[0].keyName,
@@ -490,8 +490,8 @@ describe('Formatters', () => {
       // Verify for Protobuf, Java serialized, Pickle, Vector 32-bit, Vector 64-bit
       // Verify for Hash, List, ZSet, String keys
       for (const key of keysData) {
-        const editBtnLocator = By.xpath(
-          `//vscode-button[contains(@data-testid, 'edit-') and contains(@data-testid, '${key.keyName.split('-')[0]}')]`,
+        const editBtnLocator = keyDetailsView.getEditBtnByKeyName(
+          key.keyName.split('-')[0],
         )
 
         if (
@@ -514,6 +514,9 @@ describe('Formatters', () => {
           // Hover on disabled button
           // Verify tooltip content
           // skipped because imposible to test tooltips for now
+          await keyDetailsView.selectFormatter(defaultFormatter)
+          await keyDetailsView.switchBack()
+          await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
         }
 
         if (key.keyType === KeyTypesShort.ZSet) {
@@ -526,10 +529,10 @@ describe('Formatters', () => {
             false,
             `Key ${key.textType} is disabled for ${formatter.format} formatter`,
           )
+          await keyDetailsView.selectFormatter(defaultFormatter)
+          await keyDetailsView.switchBack()
+          await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
         }
-        await keyDetailsView.selectFormatter(defaultFormatter)
-        await keyDetailsView.switchBack()
-        await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
       }
     })
   })

@@ -17,10 +17,10 @@ export class KeyDetailsActions extends CommonDriverExtension {
    */
   static async openKeyDetailsByKeyNameInIframe(name: string): Promise<void> {
     let treeView = new TreeView()
-    await this.driverSleep(1000)
+    await this.driverSleep(500)
     await treeView.openKeyDetailsByKeyName(name)
     await treeView.switchBack()
-    await this.driverSleep(1000)
+    await this.driverSleep(500)
     await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
   }
 

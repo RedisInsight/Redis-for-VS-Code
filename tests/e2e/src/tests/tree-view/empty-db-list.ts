@@ -1,17 +1,13 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { before,  after} from 'vscode-extension-tester'
+import { before, after} from 'vscode-extension-tester'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import {
   TreeView,
   AddDatabaseView,
 } from '@e2eSrc/page-objects/components'
-
-import { DatabaseAPIRequests } from '@e2eSrc/helpers/api'
-import { Eula } from '@e2eSrc/helpers/api/Eula'
 import { EmptyDatabaseView } from '@e2eSrc/page-objects/components/tree-view/EmptyDatabaseView'
-import { ButtonActions } from '@e2eSrc/helpers/common-actions'
-import { ServerActions } from '@e2eSrc/helpers/common-actions/ServerActions'
+import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
 import { CommonElementActions } from '@e2eSrc/helpers/common-actions/actions/CommonElementActions'
 
 describe('Empty database', () => {
@@ -24,11 +20,8 @@ describe('Empty database', () => {
     emptyView = new EmptyDatabaseView()
     addDatabaseView = new AddDatabaseView()
 
-    await ServerActions.waitForServerInitialized()
     await emptyView.waitForElementVisibility(emptyView.completedProgressBar)
-    await DatabaseAPIRequests.deleteAllDatabasesApi()
-    await Eula.accept()
-
+    await DatabasesActions.refreshDatabasesView()
     await emptyView.switchToInnerViewFrame(InnerViews.EmptyDatabaseInnerView)
 
   })

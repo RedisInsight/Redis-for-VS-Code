@@ -18,13 +18,11 @@ describe('Edit Databases', () => {
   const database = Object.assign({}, Config.ossStandaloneTlsConfig)
   const newDatabaseName = Common.generateWord(20)
 
-  before(async () => {
+  beforeEach(async () => {
     treeView = new TreeView()
     editDatabaseView = new EditDatabaseView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(database)
-  })
-  beforeEach(async () => {
     await treeView.editDatabaseByName(database.databaseName)
     await treeView.switchBack()
     await editDatabaseView.switchToInnerViewFrame(

@@ -96,7 +96,7 @@ export class BaseComponent extends WebElement {
     locator: Locator,
     attribute: string,
   ): Promise<boolean> {
-    const element = await this.getDriver().findElement(locator)
+    const element = await this.getElement(locator)
     const isEnabled = await element.isEnabled()
     const value = await element.getAttribute(attribute)
     return value.includes('disabled') || !isEnabled
