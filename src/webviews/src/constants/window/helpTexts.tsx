@@ -18,7 +18,7 @@ export const helpTexts = {
       >
         {l10n.t('more information')}
       </a>
-      {l10n.t('about RedisJSON or create your ')}
+      {l10n.t(' about RedisJSON or create your ')}
       <a href={`${tryFreeHref}?utm_source=redis&utm_medium=app&utm_campaign=redisinsight_redisjson`} className="underline hover:no-underline" target="_blank" rel="noreferrer">
         {l10n.t('free Redis database')}
       </a>

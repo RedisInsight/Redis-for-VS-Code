@@ -1,0 +1,21 @@
+.fileDrop {
+  @apply hidden;
+}
+
+.uploadBtn {
+  @apply flex cursor-pointer py-1;
+}
+
+.emptyBtn {
+  @apply h-6 mt-2;
+  background: none;
+
+  &::part(control) {
+    @apply pr-0;
+    border-width: 0;
+  }
+}
+
+.emptyBtn .icon {
+  @apply w-3 h-3 mt-0.5 mr-1;
+}

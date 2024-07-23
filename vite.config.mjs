@@ -1,11 +1,15 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import * as dotenv from 'dotenv'
 import { reactClickToComponent } from 'vite-plugin-react-click-to-component'
 // import compression from 'vite-plugin-compression2'
+import { monaco } from '@bithero/monaco-editor-vite-plugin'
 import svgr from 'vite-plugin-svgr'
 import { fileURLToPath, URL } from 'node:url'
 import path from 'path'
+
+dotenv.config({ path: path.join(__dirname, '.env') })
 
 const isProduction = process.env.NODE_ENV === 'production'
 const nodeEnv = isProduction ? 'production' : 'development'
@@ -28,6 +32,10 @@ export default defineConfig({
         },
       ],
     }),
+    monaco({
+      features: 'all',
+      languages: ['json'],
+    }),
     // compression({
     //   algorithm: 'gzip', exclude: [/\.(br)$ /, /\.(gz)$/],
     // }),
@@ -45,6 +53,11 @@ export default defineConfig({
   },
   server: {
     port: 8080,
+    fs: {
+      allow: [
+        './',
+      ],
+    },
   },
   envPrefix: 'RI_',
   build: {
@@ -92,7 +105,7 @@ export default defineConfig({
     },
     server: {
       deps: {
-        inline: ['rawproto'],
+        inline: ['rawproto', 'react-monaco-editor'],
       },
     },
   },

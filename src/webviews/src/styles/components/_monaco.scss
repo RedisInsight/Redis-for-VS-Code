@@ -1,0 +1,32 @@
+.monaco-editor-background,
+.monaco-editor .margin,
+.monaco-editor {
+  background-color: transparent !important;
+}
+
+.monaco-editor {
+  .mtk1 {
+    color: var(--vscode-editor-foreground);
+  }
+  .mtk2 {
+    color: var(--vscode-editor-background);
+  }
+  .mtk4 {
+    color: var(--vscode-debugTokenExpression-string);
+  }
+  .mtk5 {
+    color: var(--vscode-debugTokenExpression-boolean);
+  }
+  .mtk6 {
+    color: var(--vscode-debugTokenExpression-number);
+  }
+
+  .mtk9 {
+    color: var(--vscode-debugTokenExpression-name);
+  }
+
+  .view-overlays .current-line-exact {
+    border-color: var(--vscode-activityBar-background) !important;
+    border-right: none !important;
+  }
+}

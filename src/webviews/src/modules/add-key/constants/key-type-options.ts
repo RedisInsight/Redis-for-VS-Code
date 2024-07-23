@@ -21,10 +21,10 @@ export const ADD_KEY_TYPE_OPTIONS = [
     text: 'String',
     value: KeyTypes.String,
   },
-  // {
-  //   text: 'JSON',
-  //   value: KeyTypes.ReJSON,
-  // },
+  {
+    text: 'JSON',
+    value: KeyTypes.ReJSON,
+  },
   // {
   //   text: 'Stream',
   //   value: KeyTypes.Stream,

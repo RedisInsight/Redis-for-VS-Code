@@ -1,8 +1,6 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import {
-  MemoryRouter as Router,
-} from 'react-router-dom'
+import { MemoryRouter as Router } from 'react-router-dom'
 
 import {
   useSelectedKeyStore,
@@ -20,6 +18,7 @@ import {
   refreshTreeAction,
   selectKeyAction,
 } from './actions'
+import { MonacoLanguages } from './components'
 
 import './styles/main.scss'
 import '../vscode.css'
@@ -78,8 +77,11 @@ const container = document.getElementById('root')
 const root = createRoot(container!)
 
 root.render(
-  <Router initialEntries={[container?.dataset.route || '']} initialIndex={0}>
-    <Config />
-    <AppRoutes />
-  </Router>,
+  <>
+    <MonacoLanguages />
+    <Router initialEntries={[container?.dataset.route || '']} initialIndex={0}>
+      <Config />
+      <AppRoutes />
+    </Router>
+  </>,
 )

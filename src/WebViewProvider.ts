@@ -60,10 +60,11 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
 
     const contentSecurity = [
       `img-src ${webview.cspSource} 'self' data:`,
-      `style-src ${webview.cspSource} 'unsafe-inline'`,
-      `script-src 'nonce-${nonce}'`,
+      `style-src ${webview.cspSource} 'self' 'unsafe-inline'`,
+      `script-src 'self' 'nonce-${nonce}'`,
       'default-src * self blob:',
-      'worker-src blob:',
+      'font-src self data:',
+      'worker-src self blob: vscode-webview:',
     ]
 
     return `<!DOCTYPE html>
@@ -84,7 +85,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
       </head>
       <body>
         <div id="root" data-route="${viewRoute}"></div>
-        <script nonce="${nonce}" src="${scriptUri}"></script>
+        <script nonce="${nonce}" src="${scriptUri}" type="module"></script>
       </body>
       </html>`
   }
