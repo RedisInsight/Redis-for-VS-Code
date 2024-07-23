@@ -110,12 +110,12 @@ jobs:
           node-version: '20.15'
       - attach_workspace:
           at: .
-      - run: sudo apt-get update && sudo apt-get upgrade && sudo apt-get install net-tools libsecret-1-dev dbus dbus-x11 gnome-keyring
+      - run: sudo apt-get update && sudo apt-get install net-tools libsecret-1-dev dbus dbus-x11
       
       - run:
           name: Start DBus Session
           command: |
-            export $(dbus-launch)
+            eval `dbus-launch --sh-syntax`
             echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> $BASH_ENV
             echo "DBUS_SESSION_BUS_PID=$DBUS_SESSION_BUS_PID" >> $BASH_ENV
             source $BASH_ENV
@@ -129,6 +129,8 @@ jobs:
       - run:
           name: Run e2e tests
           command: |
+            source $BASH_ENV
+            echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS"
             cd tests/e2e && export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.ts" | circleci tests split --split-by=timings) && cd ../..
             .circleci/e2e/test.app.sh
       - when:
