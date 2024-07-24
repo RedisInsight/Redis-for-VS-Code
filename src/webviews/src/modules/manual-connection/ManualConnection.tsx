@@ -19,7 +19,7 @@ import { ConnectionType, DbType,
   SubmitBtnText,
   VscodeMessageAction,
 } from 'uiSrc/constants'
-import { Database, fetchCerts, createDatabaseStandalone, updateDatabase, useDatabasesStore } from 'uiSrc/store'
+import { Database, createDatabaseStandalone, updateDatabase, useDatabasesStore } from 'uiSrc/store'
 import { vscodeApi } from 'uiSrc/services'
 import { ManualConnectionForm } from './manual-connection-form'
 
@@ -46,10 +46,6 @@ const ManualConnection = (props: Props) => {
   const loadingStandalone = useDatabasesStore((state) => state.loading)
 
   const connectionType = editedDatabase?.connectionType ?? DbType.STANDALONE
-
-  useEffect(() => {
-    fetchCerts()
-  }, [])
 
   useEffect(() => {
     setFormFields(getFormValues(editedDatabase || initialValuesProp))

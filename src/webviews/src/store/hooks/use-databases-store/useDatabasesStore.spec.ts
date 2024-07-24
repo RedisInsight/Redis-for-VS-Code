@@ -191,7 +191,7 @@ describe('useDatabasesStore', () => {
     })
 
     describe('createDatabaseStandalone', () => {
-      it('call both createDatabaseStandalone and fetchDatabases when fetch is successed', async () => {
+      it('call both createDatabaseStandalone when fetch is successed', async () => {
         // Arrange
         const data = { ...databases[0], password: true }
         const responsePayload = { data, status: 200 }
@@ -205,7 +205,6 @@ describe('useDatabasesStore', () => {
         await waitForStack()
 
         expect(utils.showInformationMessage).toBeCalledWith('Database has been added')
-        expect(useDatabasesStore.getState().data).toEqual(checkRediStack([databases[2]]))
         expect(useDatabasesStore.getState().loading).toEqual(false)
       })
 

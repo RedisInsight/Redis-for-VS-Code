@@ -43,7 +43,6 @@ export const KeysSummary = (props: Props) => {
     const newSorting = isSortingASC ? SortOrder.DESC : SortOrder.ASC
 
     contextApi.setKeysTreeSort(database.id, newSorting)
-    contextApi.resetKeysTree()
 
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEYS_SORTED,

@@ -95,7 +95,6 @@ export const createDatabaseStandalone = (
 
       if (isStatusSuccessful(status)) {
         localStorageService.set(StorageItem.databasesCount, data?.length)
-        fetchDatabases()
 
         showInformationMessage(successMessages.ADDED_NEW_DATABASE(payload.name ?? '').title)
 

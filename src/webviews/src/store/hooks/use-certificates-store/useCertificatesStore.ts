@@ -27,7 +27,7 @@ export const useCertificatesStore = create<CertificatesStore & CertificatesActio
 )
 
 // Asynchronous thunk action
-export const fetchCerts = () => {
+export const fetchCerts = (onSuccess?: () => void) => {
   useCertificatesStore.setState(async (state) => {
     state.processCerts()
     try {
@@ -36,6 +36,7 @@ export const fetchCerts = () => {
 
       if (isStatusSuccessful(statusCaCerts) && isStatusSuccessful(statusClientCerts)) {
         state.processCertsSuccess(caCerts, clientCerts)
+        onSuccess?.()
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))
