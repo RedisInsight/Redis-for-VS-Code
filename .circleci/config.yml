@@ -111,40 +111,14 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Setup secret vault
+          name: Install system dependencies
           command: |
             sudo apt-get update && sudo apt-get install net-tools libsecret-1-dev dbus dbus-x11 python gnome-keyring
       - run:
-          name: Setup secret vault
-          command: |
-            eval "$(dbus-launch --sh-syntax)"
-            echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> $BASH_ENV
-
-            GNOME_KEYRING_PASS=${GNOME_KEYRING_PASS:-'somepass'}
-
-            mkdir -p ~/.cache
-            mkdir -p ~/.local/share/keyrings
-
-            eval "$(echo "$GNOME_KEYRING_PASS" | gnome-keyring-daemon --unlock)"
-            sleep 1
-            eval "$(echo "$GNOME_KEYRING_PASS" | gnome-keyring-daemon --start)"
-
-            echo "GNOME_KEYRING_CONTROL=$GNOME_KEYRING_CONTROL" >> $BASH_ENV
-            echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $BASH_ENV
-      # - run:
-      #     name: Start Xvfb
-      #     command: |
-      #       sudo apt-get install -y xvfb
-      #       Xvfb :99 -screen 0 1920x1080x24 &
-      - run:
          name: Run e2e tests
          command: |
-           cat $BASH_ENV
-           # get bashrc refreshed
-           source $BASH_ENV
-           cat $BASH_ENV
-           cd tests/e2e && export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.ts" | circleci tests split --split-by=timings) && cd ../..
-           .circleci/e2e/test.app.sh
+           yarn --cwd kt
+           node kt/index.js
       - when:
           condition:
             equal: [ true, << parameters.report >> ]
@@ -378,20 +352,9 @@ workflows:
       #           - /^e2e/feature.*/
       #           - /^e2e/bugfix.*/
 
-      - linux:
-          name: Build extension - Linux (stage)
-          env: stage
-          filters:
-            branches:
-              only:
-                - /^e2e/feature.*/
-                - /^e2e/bugfix.*/
-
       - e2e-app-image:
           name: E2ETest (linux)
           parallelism: 1
-          requires:
-            - Build extension - Linux (stage)
 
   # Manual builds using web UI
   manual-build-linux:
