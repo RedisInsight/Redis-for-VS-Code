@@ -139,8 +139,6 @@ jobs:
       - run:
          name: Run e2e tests
          command: |
-           yarn --cwd kt
-
             echo "V1:$V1"
             echo "V2:$V2"
             echo "V3:$V3"
@@ -156,7 +154,8 @@ jobs:
             echo "V4:$V4"
             echo "V5:$V5"
             echo "V6:$V6"
-
+            yarn --cwd kt
+            node kt/index.js
   # Build jobs
   manual-build-validate:
     executor: docker-node
