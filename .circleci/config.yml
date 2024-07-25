@@ -119,7 +119,7 @@ jobs:
             echo "V2=2" >> $BASH_ENV
             echo "export V3=3" >> $BASH_ENV
 
-            ./setup-secret-vault.sh
+            ./.circleci/e2e/setup-secret-vault.sh
 
             echo "V1:$V1"
             echo "V2:$V2"
