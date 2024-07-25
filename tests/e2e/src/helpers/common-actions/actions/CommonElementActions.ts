@@ -15,6 +15,7 @@ export class CommonElementActions{
    * @param linksLocator locator of the links
    */
   static async  verifyConnectLinks(expectedLinks: string[], linksLocator: Locator): Promise<Boolean> {
+    CommonElementActions.initializeDriver()
     const links = await CommonElementActions.driver.findElements(linksLocator)
 
     const results = await Promise.all(links.map(async (link) => {
