@@ -1,5 +1,11 @@
 import * as fs from 'fs'
-import { ActivityBar, Locator, VSBrowser, until } from 'vscode-extension-tester'
+import {
+  ActivityBar,
+  EditorView,
+  Locator,
+  VSBrowser,
+  until,
+} from 'vscode-extension-tester'
 import { CommonDriverExtension } from '../CommonDriverExtension'
 import { TreeView } from '@e2eSrc/page-objects/components'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
@@ -65,10 +71,11 @@ export class DatabasesActions extends CommonDriverExtension {
     await VSBrowser.instance.waitForWorkbench(20_000)
     await NotificationActions.closeAllNotifications()
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
-    await super.driverSleep(500)
+    await super.driverSleep(200)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.closeView()
-    await super.driverSleep(500)
+    await super.driverSleep(200)
     await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
+    await new EditorView().closeAllEditors()
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     if (
       !(await treeView.isElementDisplayed(
@@ -76,7 +83,7 @@ export class DatabasesActions extends CommonDriverExtension {
       ))
     ) {
       await treeView.clickDatabaseByName(databaseParameters.databaseName!)
-      await super.driverSleep(500)
+      await super.driverSleep(200)
     }
   }
 
@@ -119,5 +126,22 @@ export class DatabasesActions extends CommonDriverExtension {
       return matchedFiles.length
     }
     return 0
+  }
+
+  /**
+   * Refresh databases view
+   */
+  static async refreshDatabasesView(): Promise<void> {
+    await ServerActions.waitForServerInitialized()
+    await Eula.accept()
+    await VSBrowser.instance.waitForWorkbench(20_000)
+    await NotificationActions.closeAllNotifications()
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
+    await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
+    await super.driverSleep(500)
+    await (await new ActivityBar().getViewControl('Redis Insight'))?.closeView()
+    await super.driverSleep(500)
+    await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
+    await new EditorView().closeAllEditors()
   }
 }

@@ -61,7 +61,6 @@ describe('Connecting to the databases verifications', () => {
 
     await addDatabaseView.switchBack()
     // Check the notification message
-    await CommonDriverExtension.driverSleep(2000)
     await NotificationActions.checkNotificationMessage(errorMessage)
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     // Verify that the database is not in the list

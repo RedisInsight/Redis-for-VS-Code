@@ -11,16 +11,30 @@ export class NotificationActions {
    * @param text Text inside of notification
    */
   static async checkNotificationMessage(text: string): Promise<void> {
-    await CommonDriverExtension.driverSleep(1000)
-    let notifications = await new Workbench().getNotifications()
+    const retryInterval = 300
+    const timeout = 5000
+    const startTime = Date.now()
+
     let notificationFound = false
-    for (const notification of notifications) {
-      let message = await notification.getMessage()
-      if (message === text) {
-        notificationFound = true
+
+    while (Date.now() - startTime < timeout) {
+      let notifications = await new Workbench().getNotifications()
+
+      for (const notification of notifications) {
+        let message = await notification.getMessage()
+        if (message === text) {
+          notificationFound = true
+          break
+        }
+      }
+
+      if (notificationFound) {
         break
       }
+
+      await CommonDriverExtension.driverSleep(retryInterval)
     }
+
     expect(notificationFound).eql(
       true,
       `No notification found with the text: ${text}`,
@@ -42,7 +56,6 @@ export class NotificationActions {
    * Close first Notification
    */
   static async closeNotification(): Promise<void> {
-    await CommonDriverExtension.driverSleep(1000)
     let notifications = await new Workbench().getNotifications()
     const notification = notifications[0]
     // dismiss the notification

@@ -19,6 +19,8 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { ListKeyParameters } from '@e2eSrc/helpers/types/types'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
+import { ServerActions } from '@e2eSrc/helpers/common-actions/ServerActions'
+import { Eula } from '@e2eSrc/helpers/api/Eula'
 
 let keyName: string
 const elements = [
@@ -167,21 +169,11 @@ describe('List Key verification for db with version <6.2', () => {
     listKeyDetailsView = new ListKeyDetailsView()
     addListKeyView = new AddListKeyView()
 
-    await treeView.switchBack()
-    await ButtonActions.clickElement(treeView.addDatabaseBtn)
-    await addDatabaseView.switchToInnerViewFrame(
-      InnerViews.AddDatabaseInnerView,
-    )
-    await addDatabaseView.addRedisDataBase(Config.ossStandaloneV5Config)
-    // Click for saving
-    await ButtonActions.clickElement(addDatabaseView.saveDatabaseButton)
-    await treeView.switchBack()
-    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
-    await treeView.clickDatabaseByName(
-      Config.ossStandaloneV5Config.databaseName!,
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneV5Config,
     )
   })
-  afterEach(async () => {
+  after(async () => {
     await listKeyDetailsView.switchBack()
     await KeyAPIRequests.deleteKeyIfExistsApi(
       keyName,
