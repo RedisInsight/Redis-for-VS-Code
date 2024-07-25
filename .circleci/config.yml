@@ -119,9 +119,11 @@ jobs:
             echo "V2=2" >> $BASH_ENV
             echo "export V3=3" >> $BASH_ENV
 
+            ./setup-secret-vault.sh
+
             echo "V1:$V1"
             echo "V2:$V2"
-            echo "V2:$V2"
+            echo "V3:$V3"
             echo "V4:$V4"
             echo "V5:$V5"
             echo "V6:$V6"
@@ -130,7 +132,7 @@ jobs:
 
             echo "V1:$V1"
             echo "V2:$V2"
-            echo "V2:$V2"
+            echo "V3:$V3"
             echo "V4:$V4"
             echo "V5:$V5"
             echo "V6:$V6"
