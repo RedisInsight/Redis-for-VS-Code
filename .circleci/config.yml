@@ -122,20 +122,38 @@ jobs:
             echo "V1:$V1"
             echo "V2:$V2"
             echo "V2:$V2"
+            echo "V4:$V4"
+            echo "V5:$V5"
+            echo "V6:$V6"
+
+            source $BASH_ENV
+
+            echo "V1:$V1"
+            echo "V2:$V2"
+            echo "V2:$V2"
+            echo "V4:$V4"
+            echo "V5:$V5"
+            echo "V6:$V6"
       - run:
          name: Run e2e tests
          command: |
            yarn --cwd kt
 
-           echo "V1:$V1"
-           echo "V2:$V2"
-           echo "V2:$V2"
+            echo "V1:$V1"
+            echo "V2:$V2"
+            echo "V2:$V2"
+            echo "V4:$V4"
+            echo "V5:$V5"
+            echo "V6:$V6"
 
-           source $BASH_ENV
+            source $BASH_ENV
 
-           echo "V1:$V1"
-           echo "V2:$V2"
-           echo "V2:$V2"
+            echo "V1:$V1"
+            echo "V2:$V2"
+            echo "V2:$V2"
+            echo "V4:$V4"
+            echo "V5:$V5"
+            echo "V6:$V6"
 
   # Build jobs
   manual-build-validate:
