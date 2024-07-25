@@ -114,10 +114,29 @@ jobs:
           name: Install system dependencies
           command: |
             sudo apt-get update && sudo apt-get install net-tools libsecret-1-dev dbus dbus-x11 python gnome-keyring
+
+            export V1=1
+            echo "V2=2" >> $BASH_ENV
+            echo "export V3=3" >> $BASH_ENV
+
+            echo "V1:$V1"
+            echo "V2:$V2"
+            echo "V2:$V2"
       - run:
          name: Run e2e tests
          command: |
            yarn --cwd kt
+
+           echo "V1:$V1"
+           echo "V2:$V2"
+           echo "V2:$V2"
+
+           source $BASH_ENV
+
+           echo "V1:$V1"
+           echo "V2:$V2"
+           echo "V2:$V2"
+
   # Build jobs
   manual-build-validate:
     executor: docker-node
