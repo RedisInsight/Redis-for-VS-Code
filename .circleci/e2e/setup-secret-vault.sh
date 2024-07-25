@@ -1,4 +1,5 @@
-#!/bin/bash -eo
+#!/bin/bash
+set -e
 
 export V4=4
 echo "V5=5" >> $BASH_ENV
