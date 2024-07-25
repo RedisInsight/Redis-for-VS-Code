@@ -109,16 +109,6 @@ export const successMessages = {
       ),
     }
   },
-  INSTALLED_NEW_UPDATE: (updateDownloadedVersion: string, onClickLink?: () => void) => ({
-    title: l10n.t('Application updated'),
-    message: (
-      <>
-        <span>{l10n.t('Your application has been updated to {0}. Find more information in ', updateDownloadedVersion)}</span>
-        <a href={EXTERNAL_LINKS.releaseNotes} onClick={() => onClickLink?.()} className="link-underline" target="_blank" rel="noreferrer">{l10n.t('Release Notes.')}</a>
-      </>
-    ),
-    group: 'upgrade',
-  }),
   // only one message is being processed at the moment
   MESSAGE_ACTION: (message: string, actionName: string) => ({
     title: (
