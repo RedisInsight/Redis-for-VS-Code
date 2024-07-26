@@ -126,8 +126,6 @@ jobs:
       - run:
          name: Run e2e tests
          command: |
-            source $BASH_ENV
-
             echo "3rd test keytar"
             node kt/index.js
   # Build jobs
