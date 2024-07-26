@@ -124,6 +124,25 @@ jobs:
             yarn --cwd kt
             node kt/index.js
 
+            yarn --cwd tests/e2e install
+
+            # create folder before tests run to prevent permissions issue
+            mkdir -p tests/e2e/remote
+
+            # run rte
+            # docker-compose -f tests/e2e/rte.docker-compose.yml build
+            # docker-compose -f tests/e2e/rte.docker-compose.yml up --force-recreate -d -V
+            # ./tests/e2e/wait-for-redis.sh localhost 12000 && \
+
+            # run tests
+            RI_SOCKETS_CORS=true \
+            yarn --cwd tests/e2e dotenv -e .ci.env yarn --cwd tests/e2e test:ci
+      - run:
+          name: Run e2e tests
+          command: |
+            yarn --cwd kt
+            node kt/index.js
+
             cd tests/e2e && export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.ts" | circleci tests split --split-by=timings) && cd ../..
             .circleci/e2e/test.app.sh
 
