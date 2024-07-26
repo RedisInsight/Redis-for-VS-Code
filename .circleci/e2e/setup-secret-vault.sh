@@ -24,5 +24,5 @@ sleep 1
 echo "GNOME keyring start"
 eval "$(echo "$GNOME_KEYRING_PASS" | gnome-keyring-daemon --start)"
 
-yarn --cwd ky
+yarn --cwd kt
 node kt/index.js
