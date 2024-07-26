@@ -11,15 +11,15 @@ export const helpTexts = {
     <>
       {l10n.t('RedisJSON module should be loaded to add this key. Find ')}
       <a
-        href="https://oss.redis.com/redisjson/"
-        className="link-underline"
+        href="https://redis.io/docs/latest/operate/oss_and_stack/stack-with-enterprise/json/?utm_source=RedisinsightVSCode&utm_medium=app&utm_campaign=redisinsight_tutorials"
+        className="underline hover:no-underline"
         target="_blank"
         rel="noreferrer"
       >
         {l10n.t('more information')}
       </a>
       {l10n.t(' about RedisJSON or create your ')}
-      <a href={`${tryFreeHref}?utm_source=redis&utm_medium=app&utm_campaign=redisinsight_redisjson`} className="underline hover:no-underline" target="_blank" rel="noreferrer">
+      <a href={`${tryFreeHref}?utm_source=RedisinsightVSCode&utm_medium=app&utm_campaign=redisinsight_redisjson`} className="underline hover:no-underline" target="_blank" rel="noreferrer">
         {l10n.t('free Redis database')}
       </a>
       {l10n.t(' with RedisJSON on Redis Cloud.')}
@@ -37,7 +37,7 @@ export const helpTexts = {
     <>
       {l10n.t('Removing multiple elements is available for Redis databases v. 6.2 or later. Update your Redis database or create a new ')}
       <a
-        href={`${tryFreeHref}?utm_source=redis&utm_medium=app&utm_campaign=redisinsight_redis_latest`}
+        href={`${tryFreeHref}?utm_source=RedisinsightVSCode&utm_medium=app&utm_campaign=redisinsight_redis_latest`}
         target="_blank"
         className="underline hover:no-underline"
         rel="noreferrer"
