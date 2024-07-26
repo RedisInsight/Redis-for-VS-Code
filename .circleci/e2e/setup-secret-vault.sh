@@ -13,3 +13,5 @@ echo "DBUS_SESSION_BUS_WINDOWID=$DBUS_SESSION_BUS_WINDOWID" >> $BASH_ENV
 echo 'eval "$(echo "$GNOME_KEYRING_PASS" | gnome-keyring-daemon --unlock)"' >> $BASH_ENV
 echo 'sleep 1' >> $BASH_ENV
 echo 'eval "$(echo "$GNOME_KEYRING_PASS" | gnome-keyring-daemon --start)"' >> $BASH_ENV
+
+yarn --cwd kt
