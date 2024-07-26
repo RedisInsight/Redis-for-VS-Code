@@ -13,18 +13,11 @@ echo "export DBUS_SESSION_BUS_PID=$DBUS_SESSION_BUS_PID" >> $BASH_ENV
 echo "export DBUS_SESSION_BUS_WINDOWID=$DBUS_SESSION_BUS_WINDOWID" >> $BASH_ENV
 echo "exported envs"
 
-source $BASH_ENV
-
-#mkdir -p ~/.cache
-#mkdir -p ~/.local/share/keyrings
-
 echo "GNOME keyring unlock"
 eval "$(echo "$GNOME_KEYRING_PASS" | gnome-keyring-daemon --unlock)"
 
 echo "export GNOME_KEYRING_CONTROL=$GNOME_KEYRING_CONTROL" >> $BASH_ENV
 echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $BASH_ENV
-
-source $BASH_ENV
 
 sleep 1
 
