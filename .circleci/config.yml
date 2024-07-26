@@ -127,6 +127,10 @@ jobs:
             echo "V4:$V4"
             echo "V5:$V5"
             echo "V6:$V6"
+            echo "DBUS_SESSION_BUS_ADDRESS:$DBUS_SESSION_BUS_ADDRESS"
+            echo "GNOME_KEYRING_CONTROL:$GNOME_KEYRING_CONTROL"
+            echo "SSH_AUTH_SOCK:$SSH_AUTH_SOCK"
+
 
             source $BASH_ENV
 
@@ -136,6 +140,9 @@ jobs:
             echo "V4:$V4"
             echo "V5:$V5"
             echo "V6:$V6"
+            echo "DBUS_SESSION_BUS_ADDRESS:$DBUS_SESSION_BUS_ADDRESS"
+            echo "GNOME_KEYRING_CONTROL:$GNOME_KEYRING_CONTROL"
+            echo "SSH_AUTH_SOCK:$SSH_AUTH_SOCK"
       - run:
          name: Run e2e tests
          command: |
@@ -145,6 +152,9 @@ jobs:
             echo "V4:$V4"
             echo "V5:$V5"
             echo "V6:$V6"
+            echo "DBUS_SESSION_BUS_ADDRESS:$DBUS_SESSION_BUS_ADDRESS"
+            echo "GNOME_KEYRING_CONTROL:$GNOME_KEYRING_CONTROL"
+            echo "SSH_AUTH_SOCK:$SSH_AUTH_SOCK"
 
             source $BASH_ENV
 
@@ -155,7 +165,10 @@ jobs:
             echo "V5:$V5"
             echo "V6:$V6"
             yarn --cwd kt
-            node kt/index.js
+            echo "DBUS_SESSION_BUS_ADDRESS:$DBUS_SESSION_BUS_ADDRESS"
+            echo "GNOME_KEYRING_CONTROL:$GNOME_KEYRING_CONTROL"
+            echo "SSH_AUTH_SOCK:$SSH_AUTH_SOCK"
+
   # Build jobs
   manual-build-validate:
     executor: docker-node
