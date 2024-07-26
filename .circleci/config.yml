@@ -114,61 +114,18 @@ jobs:
           name: Install system dependencies
           command: |
             sudo apt-get update && sudo apt-get install net-tools libsecret-1-dev dbus dbus-x11 python gnome-keyring
-
-            export V1=1
-            echo "V2=2" >> $BASH_ENV
-            echo "export V3=3" >> $BASH_ENV
-
+      - run:
+          name: Setup secret vault
+          command: |
             ./.circleci/e2e/setup-secret-vault.sh
 
-            echo "V1:$V1"
-            echo "V2:$V2"
-            echo "V3:$V3"
-            echo "V4:$V4"
-            echo "V5:$V5"
-            echo "V6:$V6"
-            echo "DBUS_SESSION_BUS_ADDRESS:$DBUS_SESSION_BUS_ADDRESS"
-            echo "GNOME_KEYRING_CONTROL:$GNOME_KEYRING_CONTROL"
-            echo "SSH_AUTH_SOCK:$SSH_AUTH_SOCK"
-
-
-            source $BASH_ENV
-
-            echo "V1:$V1"
-            echo "V2:$V2"
-            echo "V3:$V3"
-            echo "V4:$V4"
-            echo "V5:$V5"
-            echo "V6:$V6"
-            echo "DBUS_SESSION_BUS_ADDRESS:$DBUS_SESSION_BUS_ADDRESS"
-            echo "GNOME_KEYRING_CONTROL:$GNOME_KEYRING_CONTROL"
-            echo "SSH_AUTH_SOCK:$SSH_AUTH_SOCK"
+            echo "2nd test keytar"
+            node kt/index.js
       - run:
          name: Run e2e tests
          command: |
-            echo "V1:$V1"
-            echo "V2:$V2"
-            echo "V3:$V3"
-            echo "V4:$V4"
-            echo "V5:$V5"
-            echo "V6:$V6"
-            echo "DBUS_SESSION_BUS_ADDRESS:$DBUS_SESSION_BUS_ADDRESS"
-            echo "GNOME_KEYRING_CONTROL:$GNOME_KEYRING_CONTROL"
-            echo "SSH_AUTH_SOCK:$SSH_AUTH_SOCK"
-
-            source $BASH_ENV
-
-            echo "V1:$V1"
-            echo "V2:$V2"
-            echo "V3:$V3"
-            echo "V4:$V4"
-            echo "V5:$V5"
-            echo "V6:$V6"
-            yarn --cwd kt
-            echo "DBUS_SESSION_BUS_ADDRESS:$DBUS_SESSION_BUS_ADDRESS"
-            echo "GNOME_KEYRING_CONTROL:$GNOME_KEYRING_CONTROL"
-            echo "SSH_AUTH_SOCK:$SSH_AUTH_SOCK"
-
+            echo "3rd test keytar"
+            node kt/index.js
   # Build jobs
   manual-build-validate:
     executor: docker-node
