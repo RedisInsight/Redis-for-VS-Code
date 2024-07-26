@@ -1,0 +1,9 @@
+{
+  "name": "kt",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "keytar": "^7.9.0"
+  }
+}

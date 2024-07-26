@@ -121,6 +121,9 @@ jobs:
       - run:
           name: Run e2e tests
           command: |
+            yarn --cwd kt
+            node kt/index.js
+
             cd tests/e2e && export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.ts" | circleci tests split --split-by=timings) && cd ../..
             .circleci/e2e/test.app.sh
 
