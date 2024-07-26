@@ -120,12 +120,16 @@ jobs:
             ./.circleci/e2e/setup-secret-vault.sh
 
             source $BASH_ENV
+
+            declare -p > vars
             echo "2nd test keytar"
             node kt/index.js
       - run:
          name: Run e2e tests
          command: |
             source $BASH_ENV
+
+            declare -p > vars2
 
             echo "3rd test keytar"
             node kt/index.js
