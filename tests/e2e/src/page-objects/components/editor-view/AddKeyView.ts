@@ -6,6 +6,7 @@ import { TreeView } from '../tree-view/TreeView'
 import { CommonDriverExtension } from '@e2eSrc/helpers'
 import {
   AddHashKeyView,
+  AddJsonKeyView,
   AddListKeyView,
   AddSetKeyView,
   AddSortedSetKeyView,
@@ -35,8 +36,10 @@ export class AddKeyView extends WebView {
   async selectKeyTypeByValue(value: KeyTypesShort): Promise<void> {
     await ButtonActions.clickElement(this.keyTypeDropdown)
 
-    // should be fixed after adding more types
-    const optionLocator = By.xpath(`//*[@value='${value}']`)
+    // TODO should be fixed after adding more types
+    const optionLocator = KeyTypesShort.ReJSON
+      ? By.xpath(`//*[@value='ReJSON-RL']`)
+      : By.xpath(`//*[@value='${value}']`)
     await ButtonActions.clickElement(optionLocator)
   }
 
@@ -96,6 +99,9 @@ export class AddKeyView extends WebView {
         break
       case KeyTypesShort.String:
         await new AddStringKeyView().addStringKey(keyParameters)
+        break
+      case KeyTypesShort.ReJSON:
+        await new AddJsonKeyView().addJsonKey(keyParameters)
         break
       default:
         throw new Error(`Unsupported key type: ${keyType}`)

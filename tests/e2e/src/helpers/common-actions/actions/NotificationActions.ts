@@ -11,7 +11,7 @@ export class NotificationActions {
    * @param text Text inside of notification
    */
   static async checkNotificationMessage(text: string): Promise<void> {
-    const retryInterval = 300
+    const retryInterval = 100
     const timeout = 5000
     const startTime = Date.now()
 

@@ -23,9 +23,16 @@ export class JsonKeyDetailsView extends KeyDetailsView {
   removeJsonFieldConfirmBtn = By.xpath(`//*[@data-testid='remove-json-field']`)
   removeTrigger = By.xpath(`//*[@data-testid='remove-trigger']`)
   removeJsonKeyConfirmBtn = By.xpath(`//*[@data-testid='remove']`)
-  applyJsonInput = By.xpath(`//*[@data-testid='json-data']//*[@data-testid='apply-btn']`)
+  applyJsonInput = By.xpath(
+    `//*[@data-testid='json-data']//*[@data-testid='apply-btn']`,
+  )
 
-  getJsonScalarValueByText = (text: string): By => By.xpath(`//*[@data-testid='json-scalar-value' and contains(text(), '${text}')]`);
+  getJsonScalarValueByText = (text: string): By =>
+    By.xpath(
+      `//*[@data-testid='json-scalar-value' and contains(text(), '${text}')]`,
+    )
+  getJsonScalarValueByIndex = (index: number): By =>
+    By.xpath(`(//*[@data-testid='json-scalar-value'])[${index}]`)
 
   /**
    * Add json key with value on the same level of the structure

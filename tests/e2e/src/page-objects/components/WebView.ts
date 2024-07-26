@@ -37,8 +37,8 @@ export class WebView extends BaseComponent {
    * @returns Promise resolving when switched to Inner WebView iframe
    */
   async switchToInnerViewFrame(switchInnerView: InnerViews): Promise<void> {
-    const maxRetries = 3
-    const retryDelay = 1000 // 1 second delay between retries
+    const maxRetries = 8
+    const retryDelay = 100
 
     const innerFrameLocator = By.xpath(InnerViewLocators[switchInnerView])
     const innerFrameElement = By.xpath(InnerViewElements[switchInnerView])
