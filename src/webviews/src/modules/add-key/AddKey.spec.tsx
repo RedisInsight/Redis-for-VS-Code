@@ -21,11 +21,11 @@ vi.mock('uiSrc/slices/instances/instances', async () => ({
 
 describe('AddKey', () => {
   it('should render', () => {
-    expect(render(<AddKey />)).toBeTruthy()
+    expect(render(<AddKey />, { withRouter: true })).toBeTruthy()
   })
 
   it('should have key type select with predefined first value from options', () => {
-    render(<AddKey />)
+    render(<AddKey />, { withRouter: true })
 
     expect((screen.getByTestId('select-key-type') as HTMLInputElement).value).toBe(ADD_KEY_TYPE_OPTIONS[0].value)
   })

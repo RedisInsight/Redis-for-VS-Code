@@ -1,6 +1,6 @@
 import React from 'react'
 import { RenderResult, render as rtlRender, waitFor } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, MemoryRouter } from 'react-router-dom'
 
 import { ContextStoreProvider } from 'uiSrc/store'
 import { BASE_RESOURCES_URL, BASE_URL } from 'uiSrc/constants'
@@ -34,8 +34,15 @@ export const render = (
       </ContextStoreProvider>
     </KeysStoreProvider>
   )
+  const MemoryWrapper = ({ children }: { children: JSX.Element }) => (
+    <MemoryRouter>
+      <Wrapper>
+        {children}
+      </Wrapper>
+    </MemoryRouter>
+  )
 
-  const wrapper = !withRouter ? Wrapper : BrowserRouter
+  const wrapper = !withRouter ? Wrapper : MemoryWrapper
 
   return rtlRender(ui, { wrapper, ...renderOptions })
 }

@@ -5,6 +5,6 @@ import { AddKeyPage } from './AddKeyPage'
 
 describe('AddKeyPage', () => {
   it('should render', () => {
-    expect(render(<AddKeyPage />)).toBeTruthy()
+    expect(render(<AddKeyPage />, { withRouter: true })).toBeTruthy()
   })
 })

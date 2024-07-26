@@ -16,6 +16,6 @@ describe('AddKeyReJSON', () => {
   })
 
   it('should render', () => {
-    expect(render(<AddKeyReJSON {...instance(mockedProps)} />)).toBeTruthy()
+    expect(render(<AddKeyReJSON {...instance(mockedProps)} />, { withRouter: true })).toBeTruthy()
   })
 })
