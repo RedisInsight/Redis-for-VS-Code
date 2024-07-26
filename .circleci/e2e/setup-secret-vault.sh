@@ -5,11 +5,13 @@ GNOME_KEYRING_PASS=${GNOME_KEYRING_PASS:-'somepass'}
 
 echo "dbus-launch"
 eval "$(dbus-launch --sh-syntax)"
+echo "dbus launched"
 
 echo "export GNOME_KEYRING_PASS=$GNOME_KEYRING_PASS" >> $BASH_ENV
 echo "export DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> $BASH_ENV
 echo "export DBUS_SESSION_BUS_PID=$DBUS_SESSION_BUS_PID" >> $BASH_ENV
-echo "export DBUS_SESSION_BUS_WINDOWID=DBUS_SESSION_BUS_WINDOWID" >> $BASH_ENV
+echo "export DBUS_SESSION_BUS_WINDOWID=$DBUS_SESSION_BUS_WINDOWID" >> $BASH_ENV
+echo "exported envs"
 
 source $BASH_ENV
 
