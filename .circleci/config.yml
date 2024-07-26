@@ -119,8 +119,6 @@ jobs:
           command: |
             ./.circleci/e2e/setup-secret-vault.sh
 
-            source $BASH_ENV
-
             declare -p > vars
             echo "2nd test keytar"
             node kt/index.js
