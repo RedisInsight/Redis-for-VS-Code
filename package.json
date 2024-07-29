@@ -159,6 +159,7 @@
   ],
   "homepage": "https://github.com/RedisInsight/RedisInsight-VSCode-extension#readme",
   "devDependencies": {
+    "@bithero/monaco-editor-vite-plugin": "^1.0.2",
     "@githubocto/tailwind-vscode": "^1.0.5",
     "@storybook/addon-docs": "^7.6.4",
     "@storybook/addon-interactions": "^7.6.4",
@@ -278,6 +279,7 @@
     "json-bigint": "^1.0.0",
     "jsonpath": "^1.1.1",
     "lodash": "^4.17.21",
+    "monaco-editor": "^0.48.0",
     "msgpackr": "^1.10.1",
     "php-serialize": "^4.1.1",
     "pickleparser": "^0.2.1",
@@ -290,6 +292,7 @@
     "react-hotkeys-hook": "^4.4.1",
     "react-icons": "^4.11.0",
     "react-inlinesvg": "^4.1.1",
+    "react-monaco-editor": "^0.55.0",
     "react-router-dom": "^6.17.0",
     "react-select": "^5.8.0",
     "react-spinners": "^0.13.8",

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import * as l10n from '@vscode/l10n'
 import { getDbIndex, getUtmExternalLink } from 'uiSrc/utils'
-import { EXTERNAL_LINKS, UTM_CAMPAINGS } from '../external/links'
+import { EXTERNAL_LINKS, UTM_CAMPAIGNS } from '../external/links'
 
 export const InitOutputText = (
   host: string = '',
@@ -51,7 +51,7 @@ export const cliTexts = {
           'Context: Use Pub/Sub available in the Redis Insight application to see the messages published to all channels in your database.',
       })}
       <Link
-        to={getUtmExternalLink(EXTERNAL_LINKS.riAppDownload, { campaign: UTM_CAMPAINGS.CLI })}
+        to={getUtmExternalLink(EXTERNAL_LINKS.riAppDownload, { campaign: UTM_CAMPAIGNS.CLI })}
         color="text"
         target="_blank"
         data-test-subj="hello3-btn"
@@ -86,7 +86,7 @@ export const cliTexts = {
           'Context: Use Profiler tool available in the Redis Insight application to see all the requests processed by the server.',
       })}
       <Link
-        to={getUtmExternalLink(EXTERNAL_LINKS.riAppDownload, { campaign: UTM_CAMPAINGS.CLI })}
+        to={getUtmExternalLink(EXTERNAL_LINKS.riAppDownload, { campaign: UTM_CAMPAIGNS.CLI })}
         color="text"
         target="_blank"
         data-test-subj="monitor-btn"

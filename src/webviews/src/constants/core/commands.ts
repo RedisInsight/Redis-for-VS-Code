@@ -115,17 +115,3 @@ export enum CommandRSSearchArgument {
   WithPayloads = 'WITHPAYLOADS',
   WithSortKeys = 'WITHSORTKEYS',
 }
-
-export enum DSL {
-  cypher = 'cypher',
-  lua = 'lua',
-}
-
-export interface IDSLNaming {
-  [key: string]: string
-}
-
-export const DSLNaming: IDSLNaming = {
-  [DSL.cypher]: 'Cypher',
-  [DSL.lua]: 'Lua',
-}

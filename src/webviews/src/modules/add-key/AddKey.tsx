@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 import { KeyTypes, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
-// import HelpTexts from 'uiSrc/constants/help-texts'
 
-// import { connectedInstanceSelector } from 'uiSrc/slices/instances/instances'
-import {
-  // isContainJSONModule,
-  Maybe,
-} from 'uiSrc/interfaces'
+import { Maybe } from 'uiSrc/interfaces'
 import { vscodeApi } from 'uiSrc/services'
 import { useDatabasesStore } from 'uiSrc/store'
 import { getGroupTypeDisplay, stringToBuffer } from 'uiSrc/utils'
-import AddKeyCommonFields from './components/AddKeyCommonFields/AddKeyCommonFields'
 
+import AddKeyCommonFields from './components/AddKeyCommonFields/AddKeyCommonFields'
 import { ADD_KEY_TYPE_OPTIONS } from './constants/key-type-options'
 import { AddKeyString } from './components/AddKeyString/AddKeyString'
 import { AddKeyList } from './components/AddKeyList/AddKeyList'
-// import AddKeyReJSON from './AddKeyReJSON/AddKeyReJSON'
+import { AddKeyReJSON } from './components/AddKeyReJSON/AddKeyReJSON'
 // import AddKeyStream from './AddKeyStream/AddKeyStream'
 import { AddKeySet } from './components/AddKeySet/AddKeySet'
 import { AddKeyHash } from './components/AddKeyHash/AddKeyHash'
@@ -29,8 +24,6 @@ export const AddKey = () => {
   const loading = useKeysInContext((state) => state.addKeyLoading)
   const keysApi = useKeysApi()
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
-
-  // const { id: instanceId } = useSelector(connectedInstanceSelector)
 
   useEffect(
     () =>
@@ -107,16 +100,9 @@ export const AddKey = () => {
       {typeSelected === KeyTypes.List && (
         <AddKeyList onClose={closeAddKeyPanel} {...defaultFields} />
       )}
-      {/* {typeSelected === KeyTypes.ReJSON && (
-            <>
-              {!isContainJSONModule(modules) && (
-                <span className={styles.helpText} data-testid="json-not-loaded-text">
-                  HelpTexts.REJSON_SHOULD_BE_LOADED}
-                </span>
-              )}
-              <AddKeyReJSON onCancel={closeAddKeyPanel} {...defaultFields} />
-            </>
-          )} */}
+      {typeSelected === KeyTypes.ReJSON && (
+        <AddKeyReJSON onClose={closeAddKeyPanel} {...defaultFields} />
+      )}
       {/* {typeSelected === KeyTypes.Stream && (
             <AddKeyStream onCancel={closeAddKeyPanel} {...defaultFields} />
           )} */}

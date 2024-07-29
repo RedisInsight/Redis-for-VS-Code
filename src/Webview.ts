@@ -59,10 +59,12 @@ abstract class Webview {
 
     const contentSecurity = [
       `img-src ${webview.cspSource} 'self' data:`,
-      `style-src ${webview.cspSource}`,
-      `script-src 'nonce-${this._opts.nonce}'`,
+      `style-src 'self' 'unsafe-inline' ${webview.cspSource}`,
+      `script-src 'nonce-${this._opts.nonce}' 'self'
+       https://file+.vscode-resource.vscode-cdn.net/ vscode-webview: 'unsafe-inline' 'unsafe-eval'`,
       'default-src * self blob:',
-      'worker-src blob:',
+      'font-src self data:',
+      'worker-src self vscode-webview: blob:',
     ]
 
     // Return the HTML with all the relevant content embedded
@@ -82,10 +84,6 @@ abstract class Webview {
         -->
         <meta http-equiv="Content-Security-Policy" content="${contentSecurity.join(';')}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta
-          http-equiv="Content-Security-Policy"
-          content="style-src 'self' https://*.vscode-cdn.net 'unsafe-inline';"
-        />
 
         <link href="${styleUri}" rel="stylesheet" />
         <script nonce="${this._opts.nonce}">
@@ -98,7 +96,7 @@ abstract class Webview {
       </head>
       <body>
         <div id="root" data-route="${this._opts.route}"></div>
-        <script nonce="${this._opts.nonce}" src="${scriptUri}"></script>
+        <script nonce="${this._opts.nonce}" src="${scriptUri}" type="module"></script>
       </body>
       </html>`
   }

@@ -56,6 +56,7 @@ export interface KeysThunks {
   addStringKey: (data: SetStringWithExpire, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addSetKey: (data: CreateSetWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addListKey: (data: CreateListWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
+  addReJSONKey: (data: CreateRejsonRlWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addHashKey: (data: CreateHashWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addZSetKey: (data: CreateZSetWithExpireDto, onSuccessAction?: () => void, onFailAction?: () => void) => void
   addKeyIntoTree: (key: RedisString, keyType: KeyTypes) => void
@@ -119,4 +120,8 @@ export interface CreateHashWithExpireDto extends KeyWithExpireDto {
 
 export interface CreateZSetWithExpireDto extends KeyWithExpireDto {
   members: ZSetMember[]
+}
+
+export interface CreateRejsonRlWithExpireDto extends KeyWithExpireDto {
+  data: string
 }
