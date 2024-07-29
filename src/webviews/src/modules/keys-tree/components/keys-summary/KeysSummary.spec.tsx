@@ -65,7 +65,7 @@ describe('KeysSummary', () => {
     await waitForStack()
 
     expect(useContext.useContextApi().setKeysTreeSort).toBeCalledWith(mockDatabase.id, SortOrder.DESC)
-    expect(useContext.useContextApi().resetKeysTree).toBeCalled()
+    expect(useContext.useContextApi().resetKeysTree).not.toBeCalled()
     expect(utils.sendEventTelemetry).toBeCalledWith({
       event: 'TREE_VIEW_KEYS_SORTED',
       eventData: {
