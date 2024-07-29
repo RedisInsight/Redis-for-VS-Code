@@ -1,22 +1,58 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
+import path = require('path')
 import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
-import { JsonKeyDetailsView, TreeView } from '@e2eSrc/page-objects/components'
+import {
+  AddJsonKeyView,
+  JsonKeyDetailsView,
+  TreeView,
+} from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import {
   ButtonActions,
   DatabasesActions,
+  InputActions,
   KeyDetailsActions,
   NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
-import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
+import {
+  CliAPIRequests,
+  DatabaseAPIRequests,
+  KeyAPIRequests,
+} from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { JsonKeyParameters } from '@e2eSrc/helpers/types/types'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { KeyTypesShort } from '@e2eSrc/helpers/constants'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
+import { indexOf } from 'lodash'
 
 let keyName: string
+const jsonKeys = [
+  ['JSON-string', '"test"'],
+  ['JSON-number', '782364'],
+  ['JSON-boolean', 'true'],
+  ['JSON-null', 'null'],
+  ['JSON-array', '[1, 2, 3]'],
+]
 const value = '{"name":"xyz"}'
 const jsonObjectValue = '{name:"xyz"}'
+const filePath = path.join(
+  '..',
+  '..',
+  '..',
+  '..',
+  'src',
+  'test-data',
+  'upload-json',
+  'sample.json',
+)
+const jsonValues = [
+  '"Live JSON generator"',
+  '3.1',
+  '"2014-06-25T00:00:00.000Z"',
+  'true',
+]
 
 describe('JSON Key verification', () => {
   let keyDetailsView: JsonKeyDetailsView
@@ -64,13 +100,18 @@ describe('JSON Key verification', () => {
   })
   it('Verify that user can add key with value to any level of JSON structure', async function () {
     // Verify that user can create JSON object
-    let jsonValue = await keyDetailsView.getElementText(keyDetailsView.jsonKeyValue)
+    let jsonValue = await keyDetailsView.getElementText(
+      keyDetailsView.jsonKeyValue,
+    )
     expect(
       await keyDetailsView.isElementDisplayed(
         keyDetailsView.addJsonObjectButton,
       ),
     ).eql(true, 'The add Json object button not found')
-    expect(Common.formatJsonString(jsonValue)).eql(jsonObjectValue, 'The json object value not found')
+    expect(Common.formatJsonString(jsonValue)).eql(
+      jsonObjectValue,
+      'The json object value not found',
+    )
 
     // Add key with value on the same level
     await keyDetailsView.addJsonKeyOnTheSameLevel('"key1"', '"value1"')
@@ -81,7 +122,10 @@ describe('JSON Key verification', () => {
       ),
     ).eql(true, 'The add Json object button not found')
     jsonValue = await keyDetailsView.getElementText(keyDetailsView.jsonKeyValue)
-    expect(Common.formatJsonString(jsonValue)).eql('{name:"xyz"key1:"value1"}', 'The json object value not found')
+    expect(Common.formatJsonString(jsonValue)).eql(
+      '{name:"xyz"key1:"value1"}',
+      'The json object value not found',
+    )
 
     // Add key with value inside the json
     await keyDetailsView.addJsonKeyOnTheSameLevel('"key2"', '{}')
@@ -94,6 +138,7 @@ describe('JSON Key verification', () => {
       'The json object value not found',
     )
   })
+
   it('Verify that user can not add invalid JSON structure inside of created JSON', async function () {
     const jsonValues = [
       '{"name": "Joe", "age": null, }',
@@ -119,6 +164,7 @@ describe('JSON Key verification', () => {
       'The json key error not displayed',
     )
   })
+
   it('Verify user can delete JSON key', async function () {
     // Add key with value on the same level
     await keyDetailsView.addJsonKeyOnTheSameLevel('"key1"', '{}')
@@ -151,5 +197,101 @@ describe('JSON Key verification', () => {
 
     // Verify that details panel is closed for zset key after deletion
     await KeyDetailsActions.verifyDetailsPanelClosed()
+  })
+})
+
+describe('Add JSON Key verification', () => {
+  let keyDetailsView: JsonKeyDetailsView
+  let treeView: TreeView
+  let addJsonKeyView: AddJsonKeyView
+
+  before(async () => {
+    keyDetailsView = new JsonKeyDetailsView()
+    treeView = new TreeView()
+    addJsonKeyView = new AddJsonKeyView()
+
+    await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
+      Config.ossStandaloneConfig,
+    )
+  })
+  after(async () => {
+    await CliAPIRequests.sendRedisCliCommandApi(
+      `FLUSHDB`,
+      Config.ossStandaloneConfig,
+    )
+    await keyDetailsView.switchBack()
+    await DatabaseAPIRequests.deleteAllDatabasesApi()
+  })
+  it('Verify that user can create different types(string, number, null, array, boolean) of JSON', async function () {
+    for (let i = 0; i < jsonKeys.length; i++) {
+      const jsonKeyParameters: JsonKeyParameters = {
+        keyName: jsonKeys[i][0],
+        data: jsonKeys[i][1],
+      }
+      await addJsonKeyView.addKey(jsonKeyParameters, KeyTypesShort.ReJSON)
+      await addJsonKeyView.switchBack()
+      await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
+      await addJsonKeyView.waitForElementVisibility(keyDetailsView.jsonKeyValue)
+      // Add additional check for array elements
+      if (jsonKeys[i][0].includes('array')) {
+        for (const j of JSON.parse(jsonKeys[i][1])) {
+          expect(
+            Common.formatJsonString(
+              await keyDetailsView.getElementText(
+                keyDetailsView.getJsonScalarValueByIndex(j),
+              ),
+            ),
+          ).contains(j.toString(), 'JSON value not correct')
+        }
+      } else {
+        expect(
+          Common.formatJsonString(
+            await keyDetailsView.getElementText(keyDetailsView.jsonKeyValue),
+          ),
+        ).eql(jsonKeys[i][1], 'JSON value not correct')
+      }
+      await addJsonKeyView.switchBack()
+      // Check the notification message that key added
+      await NotificationActions.checkNotificationMessage(`Key has been added`)
+      await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+      // Refresh database
+      await treeView.refreshDatabaseByName(
+        Config.ossStandaloneConfig.databaseName,
+      )
+      // Verify that key created
+      expect(await treeView.isKeyIsDisplayedInTheList(jsonKeys[i][0])).eql(
+        true,
+        `${jsonKeys[i][0]} key not displayed`,
+      )
+    }
+  })
+
+  it('Verify that user can insert a JSON from .json file on the form to add a JSON key', async function () {
+    keyName = Common.generateWord(10)
+    await ButtonActions.clickElement(treeView.addKeyButton)
+
+    await addJsonKeyView.switchBack()
+    await addJsonKeyView.switchToInnerViewFrame(InnerViews.AddKeyInnerView)
+    await addJsonKeyView.selectKeyTypeByValue(KeyTypesShort.ReJSON)
+    await InputActions.typeText(addJsonKeyView.keyNameInput, keyName)
+    await InputActions.setFilesToUpload(addJsonKeyView.uploadInput, [filePath])
+    await ButtonActions.clickElement(addJsonKeyView.addButton)
+    await CommonDriverExtension.driverSleep(5000)
+    await addJsonKeyView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
+    // Verify that json saved as uploaded
+    for (const value of jsonValues) {
+      expect(
+        await keyDetailsView.getElementText(
+          keyDetailsView.getJsonScalarValueByIndex(
+            indexOf(jsonValues, value) + 1,
+          ),
+        ),
+      ).contains(value, 'JSON value not correct')
+    }
+
+    await addJsonKeyView.switchBack()
+    // Check the notification message that key added
+    await NotificationActions.checkNotificationMessage(`Key has been added`)
   })
 })

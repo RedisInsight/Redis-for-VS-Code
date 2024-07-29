@@ -4,6 +4,7 @@ import { WebView } from './WebView'
 import { KeyDetailsView } from './editor-view/KeyDetailsView'
 import { AddDatabaseView } from './editor-view/AddDatabaseView'
 import { AddHashKeyView } from './editor-view/AddHashKeyView'
+import { AddJsonKeyView } from './editor-view/AddJsonKeyView'
 import { AddListKeyView } from './editor-view/AddListKeyView'
 import { AddSetKeyView } from './editor-view/AddSetKeyView'
 import { AddSortedSetKeyView } from './editor-view/AddSortedSetKeyView'
@@ -27,6 +28,7 @@ export {
   KeyDetailsView,
   AddDatabaseView,
   AddHashKeyView,
+  AddJsonKeyView,
   AddListKeyView,
   AddSetKeyView,
   AddSortedSetKeyView,

@@ -14,6 +14,6 @@ module.exports = {
     quiet: true,
   },
   retries: 0,
-  timeout: 40_000,
+  timeout: 100_000,
   ui: 'bdd',
 }

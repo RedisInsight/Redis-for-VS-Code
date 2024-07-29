@@ -1,6 +1,12 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { before, beforeEach, after, afterEach, EditorView } from 'vscode-extension-tester'
+import {
+  before,
+  beforeEach,
+  after,
+  afterEach,
+  EditorView,
+} from 'vscode-extension-tester'
 import {
   HashKeyDetailsView,
   TreeView,
@@ -10,6 +16,7 @@ import {
   KeyDetailsView,
   AddStringKeyView,
   JsonKeyDetailsView,
+  AddJsonKeyView,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
@@ -44,6 +51,7 @@ describe('Edit Key values verification', () => {
   let jsonKeyDetailsView: JsonKeyDetailsView
   let keyDetailsView: KeyDetailsView
   let addStringKeyView: AddStringKeyView
+  let addJsonKeyView: AddJsonKeyView
 
   before(async () => {
     hashKeyDetailsView = new HashKeyDetailsView()
@@ -54,6 +62,7 @@ describe('Edit Key values verification', () => {
     jsonKeyDetailsView = new JsonKeyDetailsView()
     keyDetailsView = new KeyDetailsView()
     addStringKeyView = new AddStringKeyView()
+    addJsonKeyView = new AddJsonKeyView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -211,23 +220,32 @@ describe('Edit Key values verification', () => {
 
   it('Verify that user can edit JSON Key value', async function () {
     keyName = Common.generateWord(10)
-    const jsonValueBefore = '{"name":"xyz"}'
+    const jsonValue = '{"name":"xyz"}'
+    const jsonValueBefore = '{name:"xyz"}'
     const jsonEditedValue = '"xyztest"'
     const jsonValueAfter = '{name:"xyztest"}'
+    const keyTTL = '2147476121'
     const jsonKeyParameters: JsonKeyParameters = {
       keyName: keyName,
-      data: jsonValueBefore,
+      data: jsonValue,
+      expire: +keyTTL,
     }
-    await KeyAPIRequests.addJsonKeyApi(
-      jsonKeyParameters,
-      Config.ossStandaloneConfig.databaseName,
-    )
-    // Refresh database
-    await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
-    )
-    // Open key details iframe
-    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+
+    // Verify that user can add JSON Key
+    await addJsonKeyView.addKey(jsonKeyParameters, KeyTypesShort.ReJSON)
+    await addJsonKeyView.switchBack()
+    // Check the notification message that key added
+    await NotificationActions.checkNotificationMessage(`Key has been added`)
+
+    await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
+
+    // Check the key value before edit
+    expect(
+      Common.formatJsonString(
+        await keyDetailsView.getElementText(jsonKeyDetailsView.jsonKeyValue),
+      ),
+    ).eql(jsonValueBefore, 'The JSON value is incorrect')
+
     // Edit JSON key value
     await ButtonActions.clickElement(jsonKeyDetailsView.jsonScalarValue)
     await InputActions.slowType(
