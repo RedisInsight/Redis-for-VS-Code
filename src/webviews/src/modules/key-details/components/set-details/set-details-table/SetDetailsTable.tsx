@@ -28,6 +28,7 @@ import {
 import { PopoverDelete, VirtualTable } from 'uiSrc/components'
 import { IColumnSearchState, ITableColumn } from 'uiSrc/components/virtual-table/interfaces'
 import { useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { Tooltip } from 'uiSrc/ui'
 import {
   deleteSetMembers,
   fetchSetMembers,
@@ -195,12 +196,12 @@ export const SetDetailsTable = (props: Props) => {
           <div className="max-w-full whitespace-break-spaces">
             <div className="flex" data-testid={`set-member-value-${member}`}>
               {!expanded && (
-                <div
-                  title={tooltipContent}
-                  className={cx('truncate', styles.tooltip)}
-                >
-                  {cellContent}
-                </div>
+                <Tooltip content={tooltipContent} mouseEnterDelay={500}>
+                  <div className={cx('truncate', styles.tooltip)}>
+
+                    {cellContent}
+                  </div>
+                </Tooltip>
               )}
               {expanded && value}
             </div>

@@ -21,6 +21,7 @@ import {
 } from 'uiSrc/utils'
 import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { InlineEditor } from 'uiSrc/components'
+import { Tooltip } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -89,11 +90,13 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
   return (
     <div className={styles.container}>
       <div className="flex relative">
-        <div className="w-full flex-row">
-          <div
-            title={`${l10n.t('Key Name')}\n${tooltipContent}`}
-            className={styles.toolTipAnchorKey}
-          >
+        <Tooltip
+          title={l10n.t('Key Name')}
+          content={tooltipContent}
+          position="bottom center"
+          mouseEnterDelay={300}
+        >
+          <div className="w-full flex-row h-[30px] pl-2">
             <InlineEditor
               initialValue={key}
               onChange={setKey}
@@ -108,7 +111,7 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
             />
             <p className={styles.keyHiddenText}>{key}</p>
           </div>
-        </div>
+        </Tooltip>
       </div>
 
       <VSCodeButton

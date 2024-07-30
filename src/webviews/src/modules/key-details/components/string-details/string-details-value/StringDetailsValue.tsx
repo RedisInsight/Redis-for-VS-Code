@@ -35,7 +35,7 @@ import { downloadFile } from 'uiSrc/utils/dom/downloadFile'
 
 import { useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
-import { TextArea } from 'uiSrc/ui'
+import { TextArea, Tooltip } from 'uiSrc/ui'
 import { InlineEditor } from 'uiSrc/components'
 import { fetchDownloadStringValue, updateStringValueAction, useStringStore } from '../hooks/useStringStore'
 import { useStringSelector } from '../utils/useStringSelector'
@@ -169,13 +169,14 @@ const StringDetailsValue = (props: Props) => {
               ? (isValid
                 ? value
                 : (
-                  <div
-                    title={noEditableText}
+                  <Tooltip
+                    content={noEditableText}
+                    mouseEnterDelay={500}
                     className={styles.tooltip}
                     data-testid="string-value-tooltip"
                   >
                     {value}
-                  </div>
+                  </Tooltip>
                 )
               )
               : (!isLoading && (<span className="italic">{l10n.t('Empty')}</span>))}

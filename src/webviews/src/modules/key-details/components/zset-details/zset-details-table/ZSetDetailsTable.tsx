@@ -41,6 +41,7 @@ import {
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 
+import { Tooltip } from 'uiSrc/ui'
 import {
   deleteZSetMembers,
   fetchZSetMembers,
@@ -281,7 +282,8 @@ const ZSetDetailsTable = (props: Props) => {
         // const tooltipContent = formatLongName(name)
         const { value, isValid } = formattingBuffer(decompressedNameItem, viewFormat, { expanded })
         const cellContent = (value as string)?.substring?.(0, 200) ?? value
-        const tooltipContent = `${isValid ? l10n.t('Member') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}\n${formatLongName(name)}`
+        const tooltipTitle = `${isValid ? l10n.t('Member') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}`
+        const tooltipContent = formatLongName(name)
 
         return (
           <div className="max-w-full whitespace-break-spaces">
@@ -290,12 +292,14 @@ const ZSetDetailsTable = (props: Props) => {
               data-testid={`zset-member-value-${name}`}
             >
               {!expanded && (
-                <div
-                  title={tooltipContent}
+                <Tooltip
+                  title={tooltipTitle}
+                  content={tooltipContent}
+                  mouseEnterDelay={500}
                   className={cx(styles.tooltip, 'truncate')}
                 >
                   {cellContent}
-                </div>
+                </Tooltip>
               )}
               {expanded && value}
             </div>
@@ -345,12 +349,15 @@ const ZSetDetailsTable = (props: Props) => {
               data-testid={`zset-score-value-${score}`}
             >
               {!expanded && (
-                <div
-                  title={`Score\n${tooltipContent}`}
-                  className={cx(styles.tooltip, 'truncate')}
+                <Tooltip
+                  title={l10n.t('Score')}
+                  content={tooltipContent}
+                  mouseEnterDelay={500}
                 >
-                  {cellContent}
-                </div>
+                  <div className={cx(styles.tooltip, 'truncate')}>
+                    {cellContent}
+                  </div>
+                </Tooltip>
               )}
               {expanded && score}
             </div>
@@ -374,17 +381,19 @@ const ZSetDetailsTable = (props: Props) => {
         return (
           <StopPropagation>
             <div className="value-table-actions">
-              <VSCodeButton
-                appearance="icon"
-                disabled={updateLoading || !isNumber(score)}
-                className="editFieldBtn"
-                onClick={() => handleEditMember(rowIndex, nameItem, true)}
-                data-testid={`zset-edit-button-${name}`}
-                aria-label="Edit field"
-                title={!isNumber(score) ? l10n.t('Use CLI to edit the score') : ''}
-              >
-                <VscEdit />
-              </VSCodeButton>
+              <Tooltip content={!isNumber(score) ? l10n.t('Use CLI to edit the score') : ''}>
+                <VSCodeButton
+                  appearance="icon"
+                  disabled={updateLoading || !isNumber(score)}
+                  className="editFieldBtn"
+                  onClick={() => handleEditMember(rowIndex, nameItem, true)}
+                  data-testid={`zset-edit-button-${name}`}
+                  aria-label="Edit field"
+                >
+                  <VscEdit />
+                </VSCodeButton>
+              </Tooltip>
+
               <PopoverDelete
                 header={createDeleteFieldHeader(nameItem)}
                 text={createDeleteFieldMessage(key ?? '')}

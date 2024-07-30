@@ -6,6 +6,7 @@ import { LENGTH_NAMING_BY_TYPE, MIDDLE_SCREEN_RESOLUTION } from 'uiSrc/constants
 import { formatBytes } from 'uiSrc/utils'
 
 import { useSelectedKeyStore } from 'uiSrc/store'
+import { Tooltip } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -29,10 +30,15 @@ const KeyDetailsHeaderSizeLength = ({
             className={styles.subtitleText}
             data-testid="key-size-text"
           >
-            <div title={`${l10n.t('Key Size')}\n${formatBytes(size, 3)}`}>
-              {width > MIDDLE_SCREEN_RESOLUTION && l10n.t('Key Size: ')}
-              {formatBytes(size, 0)}
-            </div>
+            <Tooltip
+              title={l10n.t('Key Size')}
+              content={formatBytes(size, 3) as string}
+            >
+              <div>
+                {width > MIDDLE_SCREEN_RESOLUTION && l10n.t('Key Size: ')}
+                {formatBytes(size, 0)}
+              </div>
+            </Tooltip>
           </div>
         </div>
       )}

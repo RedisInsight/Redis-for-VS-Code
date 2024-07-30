@@ -38,7 +38,7 @@ import {
   getColumnWidth,
 } from 'uiSrc/utils'
 import { VirtualTable, InlineEditor } from 'uiSrc/components'
-import { TextArea } from 'uiSrc/ui'
+import { TextArea, Tooltip } from 'uiSrc/ui'
 import { StopPropagation } from 'uiSrc/components/virtual-table'
 // import { getColumnWidth } from 'uiSrc/components/virtual-grid'
 // import { decompressingBuffer } from 'uiSrc/utils/decompressors'
@@ -266,12 +266,13 @@ const ListDetailsTable = (props: Props) => {
               className="flex"
               data-testid={`list-index-value-${index}`}
             >
-              <div
-                title={tooltipContent}
+              <Tooltip
+                content={tooltipContent}
+                mouseEnterDelay={500}
                 className={cx(styles.tooltip, 'truncate')}
               >
                 {cellContent}
-              </div>
+              </Tooltip>
             </div>
           </div>
         )
@@ -360,12 +361,11 @@ const ListDetailsTable = (props: Props) => {
               data-testid={`list-element-value-${index}`}
             >
               {!expanded && (
-                <div
-                  title={tooltipContent}
-                  className={cx('truncate', styles.tooltip)}
-                >
-                  {isString(formattedValue) ? formattedValue?.substring?.(0, 200) ?? formattedValue : formattedValue}
-                </div>
+                <Tooltip content={tooltipContent} mouseEnterDelay={500}>
+                  <div className={cx('truncate', styles.tooltip)}>
+                    {isString(formattedValue) ? formattedValue?.substring?.(0, 200) ?? formattedValue : formattedValue}
+                  </div>
+                </Tooltip>
               )}
               {expanded && formattedValue}
             </div>
@@ -389,8 +389,8 @@ const ListDetailsTable = (props: Props) => {
         const tooltipContent = isCompressed ? TEXT_DISABLED_COMPRESSED_VALUE : TEXT_DISABLED_FORMATTER_EDITING
         return (
           <StopPropagation>
-            <div className="value-table-actions" title={!isEditable ? tooltipContent : ''}>
-              {index !== editingIndex && (
+            <Tooltip className="value-table-actions" content={!isEditable ? tooltipContent : ''}>
+              {index !== editingIndex ? (
                 <VSCodeButton
                   appearance="icon"
                   disabled={updateLoading || !isEditable}
@@ -401,8 +401,8 @@ const ListDetailsTable = (props: Props) => {
                 >
                   <VscEdit />
                 </VSCodeButton>
-              )}
-            </div>
+              ) : ''}
+            </Tooltip>
           </StopPropagation>
         )
       },

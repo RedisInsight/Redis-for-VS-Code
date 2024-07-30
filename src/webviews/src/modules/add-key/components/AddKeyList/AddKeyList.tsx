@@ -3,10 +3,10 @@ import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 
 import { KeyTypes, AddListFormConfig as config } from 'uiSrc/constants'
-import { stringToBuffer } from 'uiSrc/utils'
+import { getRequiredFieldsText, stringToBuffer } from 'uiSrc/utils'
 import { Maybe } from 'uiSrc/interfaces'
 import { useKeysApi, useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
-import { InputText } from 'uiSrc/ui'
+import { InputText, Tooltip } from 'uiSrc/ui'
 import { CreateListWithExpireDto } from 'uiSrc/modules/keys-tree/hooks/interface'
 
 export interface Props {
@@ -45,6 +45,8 @@ export const AddKeyList = (props: Props) => {
     keysApi.addListKey(data, () => onClose(false, KeyTypes.List))
   }
 
+  const noKeyNameText = !keyName ? getRequiredFieldsText({ keyName: l10n.t('Key Name') }) || '' : ''
+
   return (
     <>
       <form onSubmit={onFormSubmit} className="key-footer-items-container pl-0 h-full">
@@ -65,13 +67,15 @@ export const AddKeyList = (props: Props) => {
       </form>
 
       <div className="flex justify-end">
-        <VSCodeButton
-          onClick={submitData}
-          disabled={!isFormValid || loading}
-          data-testid="btn-add"
-        >
-          {l10n.t('Add Key')}
-        </VSCodeButton>
+        <Tooltip content={loading ? l10n.t('loading...') : noKeyNameText}>
+          <VSCodeButton
+            onClick={submitData}
+            disabled={!isFormValid || loading}
+            data-testid="btn-add"
+          >
+            {l10n.t('Add Key')}
+          </VSCodeButton>
+        </Tooltip>
       </div>
     </>
   )
