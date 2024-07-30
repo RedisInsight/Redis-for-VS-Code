@@ -49,7 +49,8 @@ executors:
       image: ubuntu-2004:2024.05.1
       docker_layer_caching: true
     environment:
-      DISPLAY: ":99"
+      DISPLAY: ":99.0"
+      NO_AT_BRIDGE: "1"
   docker-node:
     docker:
       - image: cimg/node:20.15
@@ -113,14 +114,21 @@ jobs:
       - run:
           name: Install system dependencies
           command: |
-            sudo apt-get update && sudo apt-get install net-tools libsecret-1-dev dbus dbus-x11 python gnome-keyring
-      - run:
-          name: Setup secret vault
-          command: |
-            ./.circleci/e2e/setup-secret-vault.sh
+            sudo apt-get update && sudo apt-get install net-tools libsecret-1-dev dbus dbus-x11 python gnome-keyring xvfb
+      #      - run:
+      #          name: Setup secret vault
+      #          command: |
+      #            ./.circleci/e2e/setup-secret-vault.sh
       - run:
           name: Run e2e tests
           command: |
+            Xvfb :99.0 -screen 0 1920x1080x24 &
+
+            eval $(dbus-launch --sh-syntax);
+            eval $(echo -n "" | /usr/bin/gnome-keyring-daemon --login);
+            eval $(/usr/bin/gnome-keyring-daemon --components=secrets --start);
+            # /usr/bin/python -c "import gnomekeyring;gnomekeyring.create_sync('login', '');";
+
             yarn --cwd kt
             node kt/index.js
 
