@@ -23,7 +23,7 @@ export const PromoLink = (props: Props) => {
       data-testid={testId}
       style={{ ...linkStyles }}
     >
-      {!!Icon && <div className="mr-0.5"><Icon className="w-3.5 h-3.5 mt-0.5 mr-2" /></div>}
+      {!!Icon && <div className="mr-0.5"><Icon className="w-[18px] h-[18px] mr-1" /></div>}
       <div className="flex flex-col">
         {title && (
           <div className={styles.title}>
