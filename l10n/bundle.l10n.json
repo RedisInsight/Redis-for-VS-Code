@@ -118,9 +118,6 @@
   "{0} has been removed from {1}": "{0} has been removed from {1}",
   "{0} Element(s) removed from {1}": "{0} Element(s) removed from {1}",
   "{0} Element(s) removed from {1}:": "{0} Element(s) removed from {1}:",
-  "Application updated": "Application updated",
-  "Your application has been updated to {0}. Find more information in ": "Your application has been updated to {0}. Find more information in ",
-  "Release Notes.": "Release Notes.",
   "Message has been {0}": "Message has been {0}",
   "No messages claimed": "No messages claimed",
   "No messages exceed the minimum idle time.": "No messages exceed the minimum idle time.",
@@ -307,5 +304,7 @@
   "Privacy": "Privacy",
   "To optimize your experience, Redis Insight uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.": "To optimize your experience, Redis Insight uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.",
   "Analytics": "Analytics",
-  "Add": "Add"
+  "Add": "Add",
+  "Release Notes": "Release Notes",
+  "Redis for VS Code extension updated to {0}.": "Redis for VS Code extension updated to {0}."
 }

@@ -4,7 +4,7 @@ import * as path from 'path'
 import { WebviewPanel } from './Webview'
 import { startBackend, getBackendGracefulShutdown } from './server/bootstrapBackend'
 import { startBackendE2E } from './server/bootstrapBackendE2E'
-import { initWorkspaceState } from './lib'
+import { checkVersionUpdate, initWorkspaceState } from './lib'
 import { WebViewProvider } from './WebViewProvider'
 import { handleMessage, truncateText } from './utils'
 import { MAX_TITLE_KEY_LENGTH, ViewId } from './constants'
@@ -16,6 +16,7 @@ let myStatusBarItem: vscode.StatusBarItem
 export async function activate(context: vscode.ExtensionContext) {
   logger.log('Extension activated')
   await initWorkspaceState(context)
+  checkVersionUpdate()
 
   try {
     if (process.env.RI_WITHOUT_BACKEND !== 'true') {
