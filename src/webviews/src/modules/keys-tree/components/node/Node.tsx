@@ -6,6 +6,7 @@ import { VscFolder, VscFolderOpened, VscChevronDown, VscChevronRight } from 'rea
 
 import { formatLongName } from 'uiSrc/utils'
 import { RedisString } from 'uiSrc/interfaces'
+import { Tooltip } from 'uiSrc/ui'
 import { KeyRowName } from '../key-row-name'
 import { KeyRowDelete } from '../key-row-delete'
 import { KeyRowType } from '../key-row-type'
@@ -82,8 +83,7 @@ export const Node = ({
     onDeleteClicked?.(type)
   }
 
-  const folderTooltipContent = `${keyString}\n`
-    + `${keyCount} ${l10n.t('key(s)')} (${Math.round(keyApproximate * 100) / 100}%)`
+  const folderTooltipContent = `${keyCount} ${l10n.t('key(s)')} (${Math.round(keyApproximate * 100) / 100}%)`
 
   const Folder = () => (
     <div className={styles.nodeName}>
@@ -102,9 +102,11 @@ export const Node = ({
           <VscFolderOpened className={cx(styles.nodeIcon)} />
         </>
       )}
-      <span className="truncate text-vscode-foreground text" data-testid={`folder-${nameString}`}>
-        {nameString}
-      </span>
+      <Tooltip title={keyString} content={folderTooltipContent} mouseEnterDelay={300}>
+        <span className="truncate text-vscode-foreground text" data-testid={`folder-${nameString}`}>
+          {nameString}
+        </span>
+      </Tooltip>
     </div>
   )
 
@@ -164,12 +166,7 @@ export const Node = ({
       )}
     >
       <NestingLevels />
-      {isLeaf && Node}
-      {!isLeaf && (
-        <span title={folderTooltipContent}>
-          {Node}
-        </span>
-      )}
+      {Node}
     </div>
   )
 }

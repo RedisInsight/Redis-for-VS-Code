@@ -18,7 +18,6 @@ export interface Props {
   containerClassName?: string
   itemClassName?: string
   position?: 'above' | 'below'
-  title?: string
   testid?: string
 }
 
@@ -32,7 +31,6 @@ export const Select: FC<Props> = (props) => {
     testid,
     position = 'below',
     disabled,
-    title = '',
   } = props
 
   return (
@@ -40,7 +38,6 @@ export const Select: FC<Props> = (props) => {
     <vscode-dropdown
       position={position}
       class={cx(styles.container, containerClassName)}
-      title={title}
       data-testid={testid}
       // @ts-ignore note: if disabled:false select will be disabled
       disabled={disabled || undefined}

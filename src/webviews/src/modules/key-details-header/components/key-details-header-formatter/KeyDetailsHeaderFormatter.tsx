@@ -10,7 +10,7 @@ import {
 import { sendEventTelemetry, TelemetryEvent, isFullStringLoaded } from 'uiSrc/utils'
 import { useStringStore } from 'uiSrc/modules/key-details/components/string-details'
 import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
-import { Select, SelectOption } from 'uiSrc/ui'
+import { Select, SelectOption, Tooltip } from 'uiSrc/ui'
 import { getKeyValueFormatterOptions } from './constants'
 import styles from './styles.module.scss'
 
@@ -74,16 +74,17 @@ export const KeyDetailsHeaderFormatter = (props: Props) => {
 
   return (
     <div className={cx(styles.container)}>
-      <Select
-        disabled={!isStringFormattingEnabled}
-        options={options}
-        idSelected={typeSelected}
-        containerClassName={styles.select}
-        itemClassName={styles.option}
-        onChange={(value: string) => onChangeType(value as KeyValueFormat)}
-        title={!isStringFormattingEnabled ? TEXT_DISABLED_STRING_FORMATTING : typeSelected}
-        testid="select-format-key-value"
-      />
+      <Tooltip content={!isStringFormattingEnabled ? TEXT_DISABLED_STRING_FORMATTING : typeSelected}>
+        <Select
+          disabled={!isStringFormattingEnabled}
+          options={options}
+          idSelected={typeSelected}
+          containerClassName={styles.select}
+          itemClassName={styles.option}
+          onChange={(value: string) => onChangeType(value as KeyValueFormat)}
+          testid="select-format-key-value"
+        />
+      </Tooltip>
     </div>
   )
 }

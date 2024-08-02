@@ -2,6 +2,8 @@ import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import React from 'react'
 import * as l10n from '@vscode/l10n'
 import { VscDiffAdded, VscTrash } from 'react-icons/vsc'
+import cx from 'classnames'
+import { Tooltip } from 'uiSrc/ui'
 
 export interface Props {
   id: number
@@ -43,38 +45,32 @@ const AddItemsActions = (props: Props) => {
   return (
     <div className="flex items-center flex-row action-buttons h-11 w-20 pl-1">
       {!clearIsDisabled && (
-        <div
-          className="ml-3"
-          title={length === 1 ? l10n.t('Clear') : l10n.t('Remove')}
-        >
+        <Tooltip content={length === 1 ? l10n.t('Clear') : l10n.t('Remove')}>
           <VSCodeButton
             appearance="icon"
             disabled={disabled}
             data-testid="remove-item"
             onClick={handleClick}
             aria-label={length === 1 ? 'Clear Item' : 'Remove Item'}
-            className={anchorClassName}
+            className={cx('ml-3', anchorClassName)}
           >
             <VscTrash />
           </VSCodeButton>
-        </div>
+        </Tooltip>
       )}
       {(index === length - 1) && (
-        <div
-          className="ml-3"
-          title={l10n.t('Add')}
-        >
+        <Tooltip content={l10n.t('Add')}>
           <VSCodeButton
             appearance="icon"
             disabled={disabled || addItemIsDisabled}
             data-testid={dataTestId || 'add-new-item'}
             onClick={addItem}
             aria-label="Add new item"
-            className={anchorClassName}
+            className={cx('ml-3', anchorClassName)}
           >
             <VscDiffAdded />
           </VSCodeButton>
-        </div>
+        </Tooltip>
       )}
     </div>
   )

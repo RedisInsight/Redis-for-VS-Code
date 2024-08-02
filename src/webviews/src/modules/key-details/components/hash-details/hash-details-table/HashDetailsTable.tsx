@@ -48,7 +48,7 @@ import {
 } from 'uiSrc/constants'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
-import { TextArea } from 'uiSrc/ui'
+import { TextArea, Tooltip } from 'uiSrc/ui'
 import { AddFieldsToHashDto, GetHashFieldsResponse, HashField } from '../hooks/interface'
 
 import {
@@ -314,18 +314,22 @@ const HashDetailsTable = (props: Props) => {
         const field = bufferToString(fieldItem) || ''
         // Better to cut the long string, because it could affect virtual scroll performance
         const { value, isValid } = formattingBuffer(decompressedItem, viewFormatProp, { expanded })
-        const tooltipContent = `${isValid ? l10n.t('Field') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}\n${formatLongName(field)}`
+        const tooltipTitle = `${isValid ? l10n.t('Field') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}`
+        const tooltipContent = formatLongName(field)
 
         return (
           <div className="max-w-full whitespace-break-spaces">
             <div className="flex" data-testid={`hash-field-${field}`}>
               {!expanded && (
-                <div
-                  title={tooltipContent}
-                  className={cx('truncate', styles.tooltip)}
+                <Tooltip
+                  title={tooltipTitle}
+                  content={tooltipContent}
+                  mouseEnterDelay={500}
                 >
-                  {isString(value) ? value?.substring?.(0, 200) ?? value : value}
-                </div>
+                  <div className={cx('truncate', styles.tooltip)}>
+                    {isString(value) ? value?.substring?.(0, 200) ?? value : value}
+                  </div>
+                </Tooltip>
               )}
               {expanded && value}
             </div>
@@ -353,7 +357,9 @@ const HashDetailsTable = (props: Props) => {
         const field = bufferToString(decompressedFieldItem)
         // Better to cut the long string, because it could affect virtual scroll performance
         const { value: formattedValue, isValid } = formattingBuffer(decompressedValueItem, viewFormatProp, { expanded })
-        const tooltipContent = `${isValid ? 'Value' : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}\n${formatLongName(value)}`
+
+        const tooltipTitle = `${isValid ? l10n.t('Value') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}`
+        const tooltipContent = formatLongName(value)
 
         if (rowIndex === editingIndex) {
           const disabled = !isNonUnicodeFormatter(viewFormat, isValid)
@@ -421,12 +427,15 @@ const HashDetailsTable = (props: Props) => {
               data-testid={`hash-field-value-${field}`}
             >
               {!expanded && (
-                <div
-                  title={tooltipContent}
-                  className={cx('truncate', styles.tooltip)}
+                <Tooltip
+                  title={tooltipTitle}
+                  content={tooltipContent}
+                  mouseEnterDelay={500}
                 >
-                  {isString(formattedValue) ? formattedValue?.substring?.(0, 200) ?? formattedValue : formattedValue}
-                </div>
+                  <div className={cx('truncate', styles.tooltip)}>
+                    {isString(formattedValue) ? formattedValue?.substring?.(0, 200) ?? formattedValue : formattedValue}
+                  </div>
+                </Tooltip>
               )}
               {expanded && formattedValue}
             </div>
@@ -456,22 +465,21 @@ const HashDetailsTable = (props: Props) => {
         return (
           <StopPropagation>
             <div className="value-table-actions">
-              <div
-                className="flex items-center"
-                title={!isEditable ? tooltipContent : ''}
+              <Tooltip
+                content={!isEditable ? tooltipContent : ''}
                 data-testid="hash-edit-tooltip"
               >
                 <VSCodeButton
                   appearance="icon"
                   disabled={updateLoading || !isEditable}
-                  className="editFieldBtn"
+                  className="flex items-center editFieldBtn"
                   onClick={() => handleEditField(rowIndex, true, valueItem)}
                   data-testid={`edit-hash-button-${field}`}
                   aria-label="Edit field"
                 >
                   <VscEdit />
                 </VSCodeButton>
-              </div>
+              </Tooltip>
               <PopoverDelete
                 header={createDeleteFieldHeader(fieldItem as RedisString)}
                 text={createDeleteFieldMessage(key ?? '')}

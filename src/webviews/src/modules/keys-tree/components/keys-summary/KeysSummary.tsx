@@ -11,6 +11,7 @@ import { vscodeApi } from 'uiSrc/services'
 import { SortOrder, VscodeMessageAction } from 'uiSrc/constants'
 import { Database, useContextApi, useContextInContext } from 'uiSrc/store'
 import { Nullable } from 'uiSrc/interfaces'
+import { Tooltip } from 'uiSrc/ui'
 
 import { KeyTreeFilter } from '../keys-tree-filter'
 import styles from './styles.module.scss'
@@ -74,14 +75,15 @@ export const KeysSummary = (props: Props) => {
       )} */}
 
       <div className="flex pr-3.5">
-        <VSCodeButton
-          appearance="icon"
-          title={l10n.t('Sort by key names displayed')}
-          onClick={changeSortHandle}
-          data-testid="sort-keys"
-        >
-          {isSortingASC ? <BiSortDown /> : <BiSortUp />}
-        </VSCodeButton>
+        <Tooltip content={l10n.t('Sort by key names displayed')}>
+          <VSCodeButton
+            appearance="icon"
+            onClick={changeSortHandle}
+            data-testid="sort-keys"
+          >
+            {isSortingASC ? <BiSortDown /> : <BiSortUp />}
+          </VSCodeButton>
+        </Tooltip>
         <KeyTreeFilter />
         <VSCodeButton appearance="icon" onClick={addKeyClickHandle} data-testid="add-key-button">
           <VscAdd />

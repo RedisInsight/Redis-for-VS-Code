@@ -18,7 +18,7 @@ import { PopupActions } from 'reactjs-popup/dist/types'
 import useOnclickOutside from 'react-cool-onclickoutside'
 
 import { VSCodeToolkitEvent } from 'uiSrc/interfaces'
-import { InputText } from 'uiSrc/ui'
+import { InputText, Tooltip } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -178,17 +178,21 @@ const InlineEditor = memo((props: Props) => {
     !!(isLoading || isError || isDisabled || (disableEmpty && !value.length))
 
   const ApplyBtn = (
-    <VSCodeButton
-      appearance="icon"
-      disabled={isDisabledApply()}
-      data-testid="apply-btn"
-      onClick={handleApplyClick}
-      aria-label="apply"
-      className={styles.applyBtn}
-      title={isDisabled ? `${disabledTooltipText?.title}\n${disabledTooltipText?.text}` : ''}
+    <Tooltip
+      title={isDisabled ? disabledTooltipText?.title : ''}
+      content={isDisabled ? disabledTooltipText?.text : ''}
     >
-      <VscCheck />
-    </VSCodeButton>
+      <VSCodeButton
+        appearance="icon"
+        disabled={isDisabledApply()}
+        data-testid="apply-btn"
+        onClick={handleApplyClick}
+        aria-label="apply"
+        className={styles.applyBtn}
+      >
+        <VscCheck />
+      </VSCodeButton>
+    </Tooltip>
   )
 
   return (

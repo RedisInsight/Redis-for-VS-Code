@@ -10,6 +10,7 @@ export { JSONViewer } from './json-viewer/JSONViewer'
 export { Spinner } from './spinner/Spinner'
 export { Spacer } from './spacer/Spacer'
 export { PromoLink } from './promo-link/PromoLink'
+export { Tooltip } from './tooltip/Tooltip'
 
 export type { RadioGroupOption } from './radio-group/RadioGroup'
 export type { SelectOption } from './select/Select'
