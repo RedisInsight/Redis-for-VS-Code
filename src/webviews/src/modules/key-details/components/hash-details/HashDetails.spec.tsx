@@ -26,7 +26,7 @@ describe('HashDetails', () => {
     vi.spyOn(utils, 'sendEventTelemetry');
 
     (vi.spyOn(useDatabases, 'useDatabasesStore') as Mock).mockImplementation(() => ({
-      databaseVersion: '7.4',
+      databaseVersion: '7.3',
     }))
 
     render(<HashDetails {...instance(mockedProps)} />)

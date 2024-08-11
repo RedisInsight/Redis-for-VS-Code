@@ -71,8 +71,8 @@ describe('AddHashFields', () => {
     expect(fieldValue).toHaveValue('')
   })
 
-  it('should render ttl input if redis version > 7.4', () => {
-    (vi.spyOn(useDatabases, 'useDatabasesStore') as Mock).mockImplementation(() => '7.4')
+  it('should render ttl input if redis version > 7.3', () => {
+    (vi.spyOn(useDatabases, 'useDatabasesStore') as Mock).mockImplementation(() => '7.3')
 
     render(<AddHashFields {...instance(mockedProps)} />)
     fireEvent.click(screen.getByTestId('add-new-item'))
