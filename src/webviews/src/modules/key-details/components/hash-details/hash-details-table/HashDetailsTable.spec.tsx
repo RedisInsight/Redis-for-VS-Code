@@ -1,11 +1,6 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
-import { Mock } from 'vitest'
-import { KeyValueCompressor, TEXT_DISABLED_COMPRESSED_VALUE } from 'uiSrc/constants'
-import { connectedInstanceSelector } from 'uiSrc/slices/instances/instances'
-import { RedisResponseBufferType } from 'uiSrc/slices/interfaces'
-import { anyToBuffer, bufferToString } from 'uiSrc/utils'
-// import { GZIP_COMPRESSED_VALUE_1, GZIP_COMPRESSED_VALUE_2, DECOMPRESSED_VALUE_STR_1, DECOMPRESSED_VALUE_STR_2 } from 'uiSrc/utils/tests/decompressors'
+import { bufferToString } from 'uiSrc/utils'
 import * as useSelectedKeyStore from 'uiSrc/store/hooks/use-selected-key-store/useSelectedKeyStore'
 import { constants, fireEvent, render, screen } from 'testSrc/helpers'
 import { HashDetailsTable, Props } from './HashDetailsTable'
@@ -56,8 +51,10 @@ describe('HashDetailsTable', () => {
 
   it('should render editor after click edit button', () => {
     render(<HashDetailsTable {...instance(mockedProps)} />)
-    fireEvent.click(screen.getAllByTestId(/edit-hash-button/)[0])
-    expect(screen.getByTestId('hash-value-editor')).toBeInTheDocument()
+    fireEvent.mouseOver(screen.getAllByTestId(/hash_content-value-field/)[0])
+
+    fireEvent.click(screen.getAllByTestId(/hash_edit-btn-field/)[0])
+    expect(screen.getByTestId('hash_value-editor-field')).toBeInTheDocument()
   })
 
   it('should call setSelectedKeyRefreshDisabled after click edit button', () => {
@@ -67,7 +64,8 @@ describe('HashDetailsTable', () => {
     }))
 
     render(<HashDetailsTable {...instance(mockedProps)} />)
-    fireEvent.click(screen.getAllByTestId(/edit-hash-button/)[0])
+    fireEvent.mouseOver(screen.getAllByTestId(/hash_content-value-field/)[0])
+    fireEvent.click(screen.getAllByTestId(/hash_edit-btn-field/)[0])
     expect(setSelectedKeyRefreshDisabledMock).toBeCalledWith(true)
     spy.mockRestore()
   })
@@ -115,7 +113,7 @@ describe('HashDetailsTable', () => {
   //     }))
 
   //     const { queryByTestId } = render(<HashDetailsTable {...instance(mockedProps)} />)
-  //     const editBtn = queryByTestId(/edit-hash-button/)
+  //     const editBtn = queryByTestId(/hash_edit-btn-field/)
 
   //     fireEvent.click(editBtn)
 

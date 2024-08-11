@@ -10,16 +10,20 @@ import {
   addNewItem,
   handleItemChange,
   removeItem,
+  validateTTLNumberForAddKey,
+  isVersionHigherOrEquals,
 } from 'uiSrc/utils'
 import { AddItemsActions } from 'uiSrc/components'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { IHashFieldState, INITIAL_HASH_FIELD_STATE } from 'uiSrc/modules/add-key'
 import { InputText } from 'uiSrc/ui'
+import { CommandsVersions } from 'uiSrc/constants'
 
 import { AddFieldsToHashDto } from '../hooks/interface'
 import { useHashStore } from '../hooks/useHashStore'
 
 export interface Props {
+  isExpireFieldsAvailable?: boolean
   hideCancel?: boolean
   autoFocus?: boolean
   disabled?: boolean
@@ -47,8 +51,14 @@ const AddHashFields = (props: Props) => {
     resetUpdateValue: state.resetUpdateValue,
   }))
   const selectedKey = useSelectedKeyStore((state) => state.data?.name ?? '')
+  const databaseVersion = useDatabasesStore((state) => state.connectedDatabase?.version || '')
+
   const [fields, setFields] = useState<IHashFieldState[]>([{ ...INITIAL_HASH_FIELD_STATE }])
   const lastAddedFieldName = useRef<HTMLInputElement>(null)
+
+  const isTTLAvailable = isVersionHigherOrEquals(databaseVersion, CommandsVersions.HASH_FIELD_TTL.since)
+
+  const inputWidth = isTTLAvailable ? 'w-1/3' : 'w-1/2'
 
   useEffect(() =>
     // componentWillUnmount
@@ -69,6 +79,7 @@ const AddHashFields = (props: Props) => {
       fields: fields.map((item) => ({
         field: stringToBuffer(item.fieldName),
         value: stringToBuffer(item.fieldValue),
+        expire: item.fieldTTL,
       })),
     }
 
@@ -76,7 +87,7 @@ const AddHashFields = (props: Props) => {
   }
 
   const isClearDisabled = (item: IHashFieldState): boolean =>
-    fields.length === 1 && !(item.fieldName.length || item.fieldValue.length)
+    fields.length === 1 && !(item.fieldName.length || item.fieldValue.length || item.fieldTTL)
 
   const SubmitBtn = () => (
     <VSCodeButton
@@ -96,7 +107,7 @@ const AddHashFields = (props: Props) => {
           <div key={item.id}>
             <div className="flex items-center mb-3">
               <div className="flex grow">
-                <div className="w-1/2 mr-2">
+                <div className={cx(inputWidth, 'mr-2')}>
                   <InputText
                     name={`fieldName-${item.id}`}
                     id={`fieldName-${item.id}`}
@@ -109,7 +120,7 @@ const AddHashFields = (props: Props) => {
                     data-testid={`hash-field-${index}`}
                   />
                 </div>
-                <div className="w-1/2">
+                <div className={cx(inputWidth, { 'mr-2': isTTLAvailable })}>
                   <InputText
                     name={`fieldValue-${item.id}`}
                     id={`fieldValue-${item.id}`}
@@ -121,6 +132,20 @@ const AddHashFields = (props: Props) => {
                     data-testid={`hash-value-${index}`}
                   />
                 </div>
+                {isTTLAvailable && (
+                  <div className={cx(inputWidth)}>
+                    <InputText
+                      name={`fieldTTL-${item.id}`}
+                      id={`fieldTTL-${item.id}`}
+                      placeholder={l10n.t('Enter TTL')}
+                      value={item.fieldTTL}
+                      disabled={loading || disabled}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setFields(handleItemChange(fields, 'fieldTTL', item.id, +validateTTLNumberForAddKey(e.target.value)))}
+                      data-testid={`hash-ttl-${index}`}
+                    />
+                  </div>
+                )}
               </div>
               <AddItemsActions
                 id={item.id}
@@ -133,6 +158,7 @@ const AddHashFields = (props: Props) => {
                     ...item,
                     fieldName: '',
                     fieldValue: '',
+                    fieldTTL: undefined,
                   }))}
                 clearIsDisabled={isClearDisabled(item)}
                 disabled={loading || disabled}

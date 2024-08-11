@@ -111,7 +111,8 @@ export interface CreateListWithExpireDto extends KeyWithExpireDto {
 
 export interface HashFieldDto {
   field: RedisString
-  value: RedisString
+  value?: RedisString
+  expire?: number
 }
 
 export interface CreateHashWithExpireDto extends KeyWithExpireDto {

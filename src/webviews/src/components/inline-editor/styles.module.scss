@@ -10,7 +10,7 @@ $controls-padding-y: 10px;
 }
 
 .field {
-  @apply bg-vscode-input-background pr-5 min-w-[72px] max-w-full h-full;
+  @apply bg-vscode-input-background pr-5 min-w-[90px] max-w-full h-full;
 
   &:focus {
     @apply outline-none;

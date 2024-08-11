@@ -3,7 +3,7 @@ import { AxiosError } from 'axios'
 import { devtools, persist } from 'zustand/middleware'
 import * as l10n from '@vscode/l10n'
 import { immer } from 'zustand/middleware/immer'
-import { cloneDeep, find, map, remove } from 'lodash'
+import { cloneDeep, findIndex, map, remove } from 'lodash'
 
 import { fetchKeyInfo, refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
 import { RedisString } from 'uiSrc/interfaces'
@@ -58,8 +58,16 @@ export const useHashStore = create<HashState & HashActions>()(
     }),
     updateFields: ({ fields }) => set((state) => {
       const newFields = map(state.data.fields, (listItem) => {
-        const foundField = find(fields, (item) => isEqualBuffers(item.field, listItem.field))
-        return foundField || listItem
+        const index = findIndex(fields, (item) => isEqualBuffers(item.field, listItem.field))
+
+        if (index > -1) {
+          return ({
+            ...listItem,
+            ...fields[index],
+          })
+        }
+
+        return listItem
       })
 
       state.data.fields = newFields
@@ -198,6 +206,50 @@ export const updateHashFieldsAction = (
     if (isStatusSuccessful(status)) {
       state.updateFields(data)
       onSuccess?.()
+      refreshKeyInfo(data.keyName, fetchKeyValue)
+    }
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
+    onFail?.()
+  } finally {
+    state.processHashFinal()
+  }
+})
+
+export const updateHashTTLAction = (
+  data: AddFieldsToHashDto,
+  fetchKeyValue: boolean = false,
+  onSuccess?: (keyRemoved: boolean) => void,
+  onFail?: () => void,
+) => useHashStore.setState(async (state) => {
+  state.processHash()
+
+  try {
+    const { status } = await apiService.patch(
+      getUrl(ApiEndpoints.HASH_TTL),
+      data,
+      { params: { encoding: getEncoding() } },
+    )
+
+    if (isStatusSuccessful(status)) {
+      const key = data.keyName
+      const isLastFieldAffected = state.data.total - data.fields.length === 0
+      const isSetToZero = data.fields.reduce((prev, current) => prev + current.expire!, 0) === 0
+      const isKeyRemoved = isLastFieldAffected && isSetToZero
+
+      if (isKeyRemoved) {
+        showInformationMessage(successMessages.DELETED_KEY(key).title)
+        onSuccess?.(isKeyRemoved)
+        return
+      }
+
+      if (isSetToZero) {
+        state.removeFields(data.fields.map(({ field }) => field))
+        return
+      }
+
+      state.updateFields(data)
+      onSuccess?.(isKeyRemoved)
       refreshKeyInfo(data.keyName, fetchKeyValue)
     }
   } catch (error) {

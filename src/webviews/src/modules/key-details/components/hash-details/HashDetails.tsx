@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 
-import { KeyTypes } from 'uiSrc/constants'
+import { CommandsVersions, KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
 import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
-import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
+import { TelemetryEvent, isVersionHigherOrEquals, sendEventTelemetry } from 'uiSrc/utils'
+import { Checkbox } from 'uiSrc/ui'
 import { HashDetailsTable } from './hash-details-table'
 import { AddHashFields } from './add-hash-fields'
 import { AddFieldsToHashDto, HashField } from './hooks/interface'
@@ -22,9 +23,16 @@ const HashDetails = (props: Props) => {
   const { onRemoveKey, onOpenAddItemPanel, onCloseAddItemPanel } = props
 
   const [isAddItemPanelOpen, setIsAddItemPanelOpen] = useState<boolean>(false)
+  const [showTtl, setShowTtl] = useState<boolean>(true)
 
-  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
   const loading = useSelectedKeyStore((state) => state.loading)
+
+  const { databaseId, databaseVersion } = useDatabasesStore((state) => ({
+    databaseId: state.connectedDatabase?.id,
+    databaseVersion: state.databaseOverview?.version,
+  }))
+
+  const isExpireFieldsAvailable = isVersionHigherOrEquals(databaseVersion, CommandsVersions.HASH_FIELD_TTL.since)
 
   const openAddItemPanel = () => {
     setIsAddItemPanelOpen(true)
@@ -52,8 +60,32 @@ const HashDetails = (props: Props) => {
     updateHashFieldsAction(data, true, () => onSuccessAdded(data.fields))
   }
 
+  const handleSelectShow = (show: boolean) => {
+    setShowTtl(show)
+
+    sendEventTelemetry({
+      event: TelemetryEvent.SHOW_HASH_TTL_CLICKED,
+      eventData: {
+        databaseId,
+        action: show ? 'show' : 'hide',
+      },
+    })
+  }
+
   const Actions = () => (
     <AddItemsAction title={l10n.t('Add Fields')} openAddItemPanel={openAddItemPanel} />
+  )
+
+  const ActionsBeforeRefresh = () => (
+    isExpireFieldsAvailable ? (
+      <Checkbox
+        checked={showTtl}
+        containerClassName="mr-2"
+        data-testid="show-ttl-column-checkbox"
+        onChange={(e) => handleSelectShow(e.target.checked)}
+        labelText={l10n.t('Show TTL per row')}
+      />
+    ) : undefined
   )
 
   return (
@@ -63,16 +95,25 @@ const HashDetails = (props: Props) => {
         key="key-details-header"
         keyType={keyType}
         Actions={Actions}
+        ActionsBeforeRefresh={ActionsBeforeRefresh}
       />
       <div className="key-details-body" key="key-details-body">
         {!loading && (
           <div className="flex flex-1 h-full">
-            <HashDetailsTable isFooterOpen={isAddItemPanelOpen} onRemoveKey={onRemoveKey} />
+            <HashDetailsTable
+              isExpireFieldsAvailable={isExpireFieldsAvailable && showTtl}
+              isFooterOpen={isAddItemPanelOpen}
+              onRemoveKey={onRemoveKey}
+            />
           </div>
         )}
         {isAddItemPanelOpen && (
           <div className={cx('formFooterBar', 'contentActive')}>
-            <AddHashFields closePanel={closeAddItemPanel} onSubmitData={addHashFields} />
+            <AddHashFields
+              isExpireFieldsAvailable={isExpireFieldsAvailable && showTtl}
+              closePanel={closeAddItemPanel}
+              onSubmitData={addHashFields}
+            />
           </div>
         )}
       </div>

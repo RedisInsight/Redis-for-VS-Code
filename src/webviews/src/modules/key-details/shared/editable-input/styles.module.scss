@@ -1,0 +1,16 @@
+.contentWrapper {
+  @apply flex items-center relative flex-grow w-full h-full pr-8;
+
+}
+.editBtnAnchor {
+  @apply absolute right-1;
+}
+
+.inputWrapper {
+  @apply min-h-7 max-w-[calc(100%-48px)];
+}
+
+.controls {
+  @apply p-0.5 w-12 flex items-center justify-between shadow-none;
+  background-color: transparent !important;
+}

@@ -1,13 +1,11 @@
 import cx from 'classnames'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { CellMeasurerCache } from 'react-virtualized'
-import { VscEdit } from 'react-icons/vsc'
-import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import { CellMeasurerCache, Table } from 'react-virtualized'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 import { get, isNumber, toNumber } from 'lodash'
 
-import { InlineEditor, PopoverDelete, VirtualTable } from 'uiSrc/components'
+import { PopoverDelete, VirtualTable } from 'uiSrc/components'
 import {
   getColumnWidth,
   getMatchType,
@@ -42,6 +40,7 @@ import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 
 import { Tooltip } from 'uiSrc/ui'
+import { EditableInput } from 'uiSrc/modules/key-details/shared'
 import {
   deleteZSetMembers,
   fetchZSetMembers,
@@ -103,11 +102,11 @@ const ZSetDetailsTable = (props: Props) => {
   const [expandedRows, setExpandedRows] = useState<number[]>([])
   const [viewFormat, setViewFormat] = useState(viewFormatProp)
   const [sortedColumnOrder, setSortedColumnOrder] = useState(SortOrder.ASC)
-  const [editingIndex, setEditingIndex] = useState<Nullable<number>>(null)
 
   const contextApi = useContextApi()
 
   const formattedLastIndexRef = useRef(OVER_RENDER_BUFFER_COUNT)
+  const tableRef: React.MutableRefObject<Nullable<Table>> = useRef(null)
 
   useEffect(() => {
     const newMembers = loadedMembers.map((item) => ({
@@ -124,13 +123,9 @@ const ZSetDetailsTable = (props: Props) => {
     if (viewFormat !== viewFormatProp) {
       setExpandedRows([])
       setViewFormat(viewFormatProp)
-      setEditingIndex(null)
       setRefreshDisabled(false)
 
-      cellCache.clearAll()
-      setTimeout(() => {
-        cellCache.clearAll()
-      }, 0)
+      clearCache()
     }
   }, [loadedMembers, viewFormatProp])
 
@@ -141,6 +136,16 @@ const ZSetDetailsTable = (props: Props) => {
   const showPopover = useCallback((member = '') => {
     setDeleting(`${member + suffix}`)
   }, [])
+
+  const clearCache = (rowIndex?: number) => {
+    if (isNumber(rowIndex)) {
+      cellCache.clear(rowIndex, 1)
+      tableRef.current?.recomputeRowHeights(rowIndex)
+      return
+    }
+
+    cellCache.clearAll()
+  }
 
   const onSuccessRemoved = (newTotal: number) => {
     newTotal === 0 && onRemoveKey?.()
@@ -159,8 +164,7 @@ const ZSetDetailsTable = (props: Props) => {
     closePopover()
   }
 
-  const handleEditMember = (rowIndex: Nullable<number> = null, name: RedisString, editing: boolean) => {
-    setEditingIndex(editing ? rowIndex : null)
+  const handleEditMember = (name: RedisString, editing: boolean, rowIndex?: number) => {
     setRefreshDisabled(editing)
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_EDITED,
@@ -176,10 +180,10 @@ const ZSetDetailsTable = (props: Props) => {
       return item
     })
     setMembers(newMemberState)
-    cellCache.clearAll()
+    clearCache(rowIndex)
   }
 
-  const handleApplyEditScore = (rowIndex: number, name: RedisString, score: string = '') => {
+  const handleApplyEditScore = (name: RedisString, score: string = '') => {
     const data: AddMembersToZSetDto = {
       keyName: key!,
       members: [{
@@ -190,7 +194,7 @@ const ZSetDetailsTable = (props: Props) => {
     updateZSetMembersAction(
       data,
       false,
-      () => handleEditMember(rowIndex, name, false),
+      () => handleEditMember(name, false),
     )
   }
 
@@ -264,22 +268,21 @@ const ZSetDetailsTable = (props: Props) => {
   const columns:ITableColumn[] = [
     {
       id: 'name',
-      label: 'Member',
+      label: l10n.t('Member'),
       isSearchable: true,
-      prependSearchName: 'Member:',
+      prependSearchName: l10n.t('Member:'),
       initialSearchValue: '',
       truncateText: true,
       isResizable: true,
       minWidth: 140,
       relativeWidth: ZSetSizes?.name || 60,
       alignment: TableCellAlignment.Left,
-      className: 'value-table-separate-border',
+      className: 'p-0',
       headerClassName: 'value-table-separate-border',
       render: function Name(_name: string, { name: nameItem }: IZsetMember, expanded?: boolean) {
         // const { value: decompressedNameItem } = decompressingBuffer(nameItem, compressor)
         const decompressedNameItem = nameItem
         const name = bufferToString(nameItem)
-        // const tooltipContent = formatLongName(name)
         const { value, isValid } = formattingBuffer(decompressedNameItem, viewFormat, { expanded })
         const cellContent = (value as string)?.substring?.(0, 200) ?? value
         const tooltipTitle = `${isValid ? l10n.t('Member') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}`
@@ -309,59 +312,54 @@ const ZSetDetailsTable = (props: Props) => {
     },
     {
       id: 'score',
-      label: 'Score',
-      minWidth: 100,
+      label: l10n.t('Score'),
+      minWidth: 140,
       isSortable: true,
       truncateText: true,
       render: function Score(
         _name: string,
-        { name: nameItem, score }: IZsetMember,
+        { name: nameItem, score, editing }: IZsetMember,
         expanded?: boolean,
         rowIndex = 0,
       ) {
         const cellContent = score.toString().substring(0, 200)
         const tooltipContent = formatLongName(score.toString())
+        const editToolTipContent = !isNumber(score) ? l10n.t('Use CLI to edit the score') : null
 
-        if (rowIndex === editingIndex) {
-          return (
-            <div className="key-details-edit">
-              <StopPropagation>
-                <InlineEditor
-                  expandable
-                  autoSelect
-                  autoFocus
-                  declineOnUnmount={false}
-                  initialValue={score.toString()}
-                  placeholder={l10n.t('Enter Score')}
-                  fieldName="score"
-                  onDecline={() => handleEditMember(rowIndex, nameItem, false)}
-                  onApply={(value) => handleApplyEditScore(rowIndex, nameItem, value)}
-                  validation={validateScoreNumber}
-                />
-              </StopPropagation>
-            </div>
-          )
-        }
         return (
-          <div className="max-w-full whitespace-break-spaces">
-            <div
-              className="flex"
-              data-testid={`zset-score-value-${score}`}
-            >
-              {!expanded && (
-                <Tooltip
-                  title={l10n.t('Score')}
-                  content={tooltipContent}
-                  mouseEnterDelay={500}
-                >
-                  <div className={cx(styles.tooltip, 'truncate')}>
-                    {cellContent}
-                  </div>
-                </Tooltip>
-              )}
-              {expanded && score}
+          <EditableInput
+            initialValue={score.toString()}
+            placeholder={l10n.t('Enter Score')}
+            field={rowIndex?.toString()}
+            editToolTipContent={editToolTipContent}
+            editing={editing}
+            editBtnDisabled={updateLoading || !isNumber(score)}
+            onEdit={(value: boolean) => handleEditMember(nameItem, value, rowIndex)}
+            onDecline={() => handleEditMember(nameItem, false, rowIndex)}
+            onApply={(value) => handleApplyEditScore(nameItem, value)}
+            validation={validateScoreNumber}
+            testIdPrefix="zset"
+          >
+            <div className="max-w-full whitespace-break-spaces">
+              <div
+                className="flex"
+                data-testid={`zset-score-value-${score}`}
+              >
+                {!expanded && (
+                  <Tooltip
+                    title={l10n.t('Score')}
+                    content={tooltipContent}
+                    mouseEnterDelay={500}
+                  >
+                    <div className={cx(styles.tooltip, 'truncate')}>
+                      {cellContent}
+                    </div>
+                  </Tooltip>
+                )}
+                {expanded && score}
+              </div>
             </div>
-          </div>
+          </EditableInput>
         )
       },
     },
@@ -370,30 +368,14 @@ const ZSetDetailsTable = (props: Props) => {
       label: '',
       headerClassName: 'value-table-header-actions',
       className: 'actions',
-      minWidth: 85,
-      maxWidth: 85,
-      absoluteWidth: 85,
-      render: function Actions(_act: any, { name: nameItem, score }: IZsetMember, _, rowIndex = 0) {
+      minWidth: 50,
+      maxWidth: 50,
+      absoluteWidth: 50,
+      render: function Actions(_act: any, { name: nameItem }: IZsetMember) {
         const name = bufferToString(nameItem, viewFormat)
-        if (rowIndex === editingIndex) {
-          return null
-        }
         return (
           <StopPropagation>
             <div className="value-table-actions">
-              <Tooltip content={!isNumber(score) ? l10n.t('Use CLI to edit the score') : ''}>
-                <VSCodeButton
-                  appearance="icon"
-                  disabled={updateLoading || !isNumber(score)}
-                  className="editFieldBtn"
-                  onClick={() => handleEditMember(rowIndex, nameItem, true)}
-                  data-testid={`zset-edit-button-${name}`}
-                  aria-label="Edit field"
-                >
-                  <VscEdit />
-                </VSCodeButton>
-              </Tooltip>
-
               <PopoverDelete
                 header={createDeleteFieldHeader(nameItem)}
                 text={createDeleteFieldMessage(key ?? '')}
@@ -465,10 +447,12 @@ const ZSetDetailsTable = (props: Props) => {
         <VirtualTable
           hideProgress
           expandable
+          autoHeight
           keyName={key}
           headerHeight={headerHeight}
           rowHeight={rowHeight}
           onChangeWidth={setWidth}
+          tableRef={tableRef}
           columns={columns.map((column, i, arr) => ({
             ...column,
             width: getColumnWidth(i, width, arr),

@@ -1,0 +1,29 @@
+.contentWrapper {
+  @apply flex items-center relative flex-grow w-full h-full pr-8;
+}
+.editBtnAnchor {
+  @apply absolute right-1;
+}
+
+
+.textAreaControls {
+  @apply w-7;
+}
+
+.textareaContainer {
+  margin: -8px -6px -7px -14px !important;
+}
+
+.textArea {
+  @apply overflow-hidden break-words bg-vscode-input-background outline-0 resize-none focus:outline-0 min-w-full pl-4 z-[3] pt-3.5 pb-9 min-h-[43px];
+
+  &:focus {
+    @apply bg-none;
+  }
+
+  &.areaWarning {
+    @apply border-error;
+  }
+}
+
+

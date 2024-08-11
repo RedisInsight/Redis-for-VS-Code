@@ -8,7 +8,7 @@ import {
   AllKeyTypes,
   KeyTypes,
 } from 'uiSrc/constants'
-import { RedisString } from 'uiSrc/interfaces'
+import { Maybe, RedisString } from 'uiSrc/interfaces'
 import { editKeyTTL, refreshKeyInfo, useDatabasesStore, useSelectedKeyStore, editKey } from 'uiSrc/store'
 import { TelemetryEvent, formatLongName, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
 import { PopoverDelete } from 'uiSrc/components'
@@ -27,7 +27,8 @@ export interface KeyDetailsHeaderProps {
   onCloseKey?: (key?: RedisString) => void
   onRemoveKey?: () => void
   onEditKey?: (key: RedisString, newKey: RedisString, onFailure?: () => void) => void
-  Actions?: (props: { width: number }) => ReactElement
+  Actions?: (props: { width: number }) => Maybe<ReactElement>
+  ActionsBeforeRefresh?: (props: { width: number }) => Maybe<ReactElement>
 }
 
 const KeyDetailsHeader = ({
@@ -36,6 +37,7 @@ const KeyDetailsHeader = ({
   onEditKey,
   keyType,
   Actions,
+  ActionsBeforeRefresh,
 }: KeyDetailsHeaderProps) => {
   const { data, refreshDisabled, lastRefreshTime } = useSelectedKeyStore(useShallow((state) => ({
     data: state.data,
@@ -107,6 +109,7 @@ const KeyDetailsHeader = ({
               <KeyDetailsHeaderTTL onEditTTL={handleEditTTL} />
               <div className="flex ml-auto">
                 <div className={styles.subtitleActionBtns}>
+                  {!isUndefined(ActionsBeforeRefresh) && <ActionsBeforeRefresh width={width} />}
                   <RefreshBtn
                     lastRefreshTime={lastRefreshTime}
                     disabled={refreshDisabled}

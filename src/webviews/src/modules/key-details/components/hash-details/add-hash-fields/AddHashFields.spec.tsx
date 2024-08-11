@@ -1,5 +1,7 @@
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
+import { Mock } from 'vitest'
+import * as useDatabases from 'uiSrc/store/hooks/use-databases-store/useDatabasesStore'
 import { fireEvent, render, screen } from 'testSrc/helpers'
 import { Props, AddHashFields } from './AddHashFields'
 
@@ -7,6 +9,7 @@ const HASH_FIELD = 'hash-field'
 const HASH_VALUE = 'hash-value'
 const HASH_FIELD_ZERO = 'hash-field-0'
 const HASH_VALUE_ZERO = 'hash-value-0'
+const HASH_FIELD_TTL_ZERO = 'hash-ttl-0'
 
 const mockedProps = mock<Props>()
 
@@ -66,5 +69,16 @@ describe('AddHashFields', () => {
 
     expect(fieldName).toHaveValue('')
     expect(fieldValue).toHaveValue('')
+  })
+
+  it('should render ttl input if redis version > 7.4', () => {
+    (vi.spyOn(useDatabases, 'useDatabasesStore') as Mock).mockImplementation(() => '7.4')
+
+    render(<AddHashFields {...instance(mockedProps)} />)
+    fireEvent.click(screen.getByTestId('add-new-item'))
+
+    expect(screen.getByTestId(HASH_FIELD_ZERO)).toBeInTheDocument()
+    expect(screen.getByTestId(HASH_VALUE_ZERO)).toBeInTheDocument()
+    expect(screen.getByTestId(HASH_FIELD_TTL_ZERO)).toBeInTheDocument()
   })
 })

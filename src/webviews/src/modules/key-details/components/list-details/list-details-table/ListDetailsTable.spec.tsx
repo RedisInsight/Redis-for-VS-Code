@@ -39,13 +39,14 @@ describe('ListDetailsTable', () => {
   })
 
   it('should render editor after click edit button', async () => {
-    const { debug } = render(<ListDetailsTable {...mockedProps} />)
+    render(<ListDetailsTable {...mockedProps} />)
+    fireEvent.mouseOver(screen.getAllByTestId(/list_content-value/)[0])
+
     await waitFor(() => {
-      fireEvent.click(screen.getAllByTestId(/edit-list-button/)[0])
+      fireEvent.click(screen.getAllByTestId(/list_edit-btn/)[0])
     })
 
-    debug()
-    expect(screen.getByTestId('element-value-editor')).toBeInTheDocument()
+    expect(screen.getByTestId('list_value-editor-0')).toBeInTheDocument()
   })
 
   it('should call setSelectedKeyRefreshDisabled after click edit button', () => {
@@ -55,7 +56,8 @@ describe('ListDetailsTable', () => {
     }))
 
     render(<ListDetailsTable {...mockedProps} />)
-    fireEvent.click(screen.getAllByTestId(/edit-list-button/)[0])
+    fireEvent.mouseOver(screen.getAllByTestId(/list_content-value/)[0])
+    fireEvent.click(screen.getAllByTestId(/list_edit-btn/)[0])
     expect(setSelectedKeyRefreshDisabledMock).toBeCalledWith(true)
     spy.mockRestore()
   })
@@ -99,7 +101,7 @@ describe('ListDetailsTable', () => {
   //     }))
 
   //     const { queryByTestId } = render(<ListDetailsTable {...(mockedProps)} />)
-  //     const editBtn = queryByTestId(/edit-list-button-/)
+  //     const editBtn = queryByTestId(/list_edit-btn-/)
 
   //     fireEvent.click(editBtn)
 
