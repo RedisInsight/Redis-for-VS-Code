@@ -1,4 +1,4 @@
-# Redis-Insight-VS-Code-extension-Work-in-Progress
+# Redis for VS Code
 
 Temporary repository to work on the VS Code extension  
 
