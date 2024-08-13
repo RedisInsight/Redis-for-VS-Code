@@ -79,7 +79,7 @@ describe('Set TTL for Key', () => {
     expect(Number(keyTTL)).gt(newTtlValue)
   })
 
-  it.only('Verify that user can set ttl for Hash fields', async function () {
+  it('Verify that user can set ttl for Hash fields', async function () {
     keyName = Common.generateWord(20)
     const field1 = 'Field1WithTtl'
     const field2 = 'Field2WithTtl'
