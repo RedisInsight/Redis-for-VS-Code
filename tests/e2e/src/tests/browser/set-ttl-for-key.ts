@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
+import { before, after, afterEach } from 'vscode-extension-tester'
 import {
   AddHashKeyView,
   HashKeyDetailsView,
@@ -81,7 +81,6 @@ describe('Set TTL for Key', () => {
 
   it.only('Verify that user can set ttl for Hash fields', async function () {
     keyName = Common.generateWord(20)
-    const keyName2 = Common.generateWord(10)
     const field1 = 'Field1WithTtl'
     const field2 = 'Field2WithTtl'
 
@@ -107,7 +106,6 @@ describe('Set TTL for Key', () => {
     await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
 
     //verify that user can create key with ttl for the has field
-
     const result = await hashKeyDetailsView.getElementText(
       hashKeyDetailsView.getFieldTtlInputByField(field1),
     )
