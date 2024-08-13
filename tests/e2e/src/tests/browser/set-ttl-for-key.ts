@@ -37,7 +37,7 @@ describe('Set TTL for Key', () => {
     hashKeyDetailsView = new HashKeyDetailsView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
-      Config.ossStandaloneConfig,
+      Config.ossStandaloneV7Config,
     )
   })
   after(async () => {
@@ -47,7 +47,7 @@ describe('Set TTL for Key', () => {
   afterEach(async () => {
     await KeyAPIRequests.deleteKeyByNameApi(
       keyName,
-      Config.ossStandaloneConfig.databaseName,
+      Config.ossStandaloneV7Config.databaseName,
     )
   })
 
