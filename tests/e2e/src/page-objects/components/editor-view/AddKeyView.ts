@@ -22,12 +22,15 @@ export class AddKeyView extends WebView {
   ttlInput = By.xpath('//*[@data-testid="ttl-input"]')
   keyNameInput = By.xpath('//*[@data-testid="key-input"]')
   addButton = By.xpath(
-    `//*[@data-testid="btn-add"] 
-    | //*[@data-testid="save-fields-btn"] 
+    `//*[@data-testid="btn-add"]
+    | //*[@data-testid="save-fields-btn"]
     | //*[@data-testid="save-members-btn"]`,
   )
   addNewItemBtn = By.xpath(`//*[@data-testid='add-new-item']`)
   saveMembersButton = By.xpath('//*[@data-testid="save-members-btn"]')
+
+  getKeyTypeOption = (option: string): By =>
+    By.xpath(`//vscode-option[@value="${option}"]`)
 
   /**
    * Select key type
@@ -36,10 +39,7 @@ export class AddKeyView extends WebView {
   async selectKeyTypeByValue(value: KeyTypesShort): Promise<void> {
     await ButtonActions.clickElement(this.keyTypeDropdown)
 
-    // TODO should be fixed after adding more types
-    const optionLocator = KeyTypesShort.ReJSON
-      ? By.xpath(`//*[@value='ReJSON-RL']`)
-      : By.xpath(`//*[@value='${value}']`)
+    const optionLocator = this.getKeyTypeOption(value)
     await ButtonActions.clickElement(optionLocator)
   }
 
@@ -62,13 +62,12 @@ export class AddKeyView extends WebView {
     await this.switchToInnerViewFrame(InnerViews.AddKeyInnerView)
     await this.selectKeyTypeByValue(keyType)
 
+    await InputActions.typeText(this.keyNameInput, keyParameters.keyName)
+
     if (TTL) {
       await InputActions.typeText(this.ttlInput, TTL)
     }
-
     await this.addKeyByType(keyType, keyParameters)
-
-    await InputActions.typeText(this.keyNameInput, keyParameters.keyName)
     await ButtonActions.clickElement(this.addButton)
     await this.switchBack()
     await CommonDriverExtension.driverSleep(1000)

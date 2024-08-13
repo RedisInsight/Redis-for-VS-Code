@@ -13,6 +13,8 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     By.xpath(
       `//*[contains(@data-testid, "edit-${keyType}-button-${name}")] | //*[contains(@data-testid, "${keyType}-edit-button-${name}")]`,
     )
+  getValueInput = (keyType: string, name: string): By =>
+    By.xpath(`//*[contains(@data-testid, "${keyType}_content-value-${name}")]`)
 
   /**
    * Edit key value from details
@@ -27,6 +29,8 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     editorLocator: By,
     keyType: string,
   ): Promise<void> {
+    const valueInput = this.getValueInput(keyType, name)
+    await InputActions.hoverElement(valueInput)
     const editLocator = this.getEditButton(keyType, name)
     await ButtonActions.clickElement(editLocator)
     await InputActions.typeText(editorLocator, value)
@@ -46,6 +50,8 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     editorLocator: By,
     keyType: string,
   ): Promise<void> {
+    const valueInput = this.getValueInput(keyType, name)
+    await InputActions.hoverElement(valueInput)
     const editLocator = this.getEditButton(keyType, name)
     await ButtonActions.clickElement(editLocator)
     await InputActions.slowType(editorLocator, value)

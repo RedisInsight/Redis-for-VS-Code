@@ -13,10 +13,12 @@ export class AddHashKeyView extends AddKeyView {
   getFieldValueInputByIndex = (index: number): By =>
     By.xpath(`//input[@data-testid="hash-value-${index}"]`)
 
+  getFieldTtlInputByIndex = (index: number): By =>
+    By.xpath(`//input[@data-testid="hash-ttl-${index}"]`)
+
   /**
    * Adding a new Hash key
    * @param keyParameters The hash key parameters
-   * @param TTL The Time to live value of the key
    */
   async addHashKey(keyParameters: HashKeyParameters): Promise<void> {
     if (keyParameters.fields.length > 0) {
@@ -28,6 +30,13 @@ export class AddHashKeyView extends AddKeyView {
         this.getFieldValueInputByIndex(0),
         keyParameters.fields[0].value,
       )
+      // set if ttl for the fields is specified
+      if(keyParameters.fields[0].ttl !== undefined){
+        await InputActions.typeText(
+          this.getFieldTtlInputByIndex(0),
+          keyParameters.fields[0].ttl,
+        )
+      }
       if (keyParameters.fields.length > 1) {
         keyParameters.fields.shift()
         let i = 1
@@ -38,6 +47,12 @@ export class AddHashKeyView extends AddKeyView {
             this.getFieldValueInputByIndex(i),
             field.value,
           )
+          if(field.ttl !== undefined){
+            await InputActions.typeText(
+              this.getFieldTtlInputByIndex(i),
+              field.ttl,
+            )
+          }
           i++
         }
       }

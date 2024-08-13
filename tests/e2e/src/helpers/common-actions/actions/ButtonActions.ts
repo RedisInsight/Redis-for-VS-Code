@@ -1,16 +1,11 @@
 import { VSBrowser, WebDriver } from 'vscode-extension-tester'
 import { Locator, until } from 'selenium-webdriver'
+import { BaseActions } from '@e2eSrc/helpers/common-actions/actions/BaseActions'
 
 /**
  * Buttons
  */
-export class ButtonActions {
-  static driver: WebDriver
-  static initializeDriver(): void {
-    if (!ButtonActions.driver) {
-      ButtonActions.driver = VSBrowser.instance.driver
-    }
-  }
+export class ButtonActions extends BaseActions{
 
   /**
    * Click on button with wait
@@ -68,25 +63,5 @@ export class ButtonActions {
       timeout,
     )
     await elementToClick.click()
-  }
-
-  /**
-   * Hover mouse to element
-   * @param locator locator to hover over
-   * @param timeout timeout to wait for element
-   */
-  static async hoverElement(
-    locator: Locator,
-    timeout: number = 3000,
-  ): Promise<void> {
-    ButtonActions.initializeDriver()
-    const elementToHover = await ButtonActions.driver.wait(
-      until.elementLocated(locator),
-      timeout,
-    )
-    await ButtonActions.driver
-      .actions( { async: true, bridge: true })
-      .move({ duration: 5000, origin: elementToHover, x: 0, y: 0 })
-      .perform()
   }
 }

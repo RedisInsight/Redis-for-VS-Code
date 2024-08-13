@@ -1,22 +1,18 @@
 import { Key, VSBrowser, WebDriver } from 'vscode-extension-tester'
 import { Locator, until } from 'selenium-webdriver'
+import { BaseActions } from '@e2eSrc/helpers/common-actions/actions/BaseActions'
 
 /**
  * Input fields
  */
-export class InputActions {
-  static driver: WebDriver
-  static initializeDriver(): void {
-    if (!InputActions.driver) {
-      InputActions.driver = VSBrowser.instance.driver
-    }
-  }
+export class InputActions extends BaseActions{
 
   static keyMap: { [key: string]: string } = {
     enter: Key.ENTER,
     tab: Key.TAB,
     up: Key.UP,
     down: Key.DOWN,
+    backSpace: Key.BACK_SPACE
   }
 
   /**
