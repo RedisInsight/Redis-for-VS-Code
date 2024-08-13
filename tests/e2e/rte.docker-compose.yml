@@ -102,17 +102,12 @@ services:
     ports:
       - 8104:6379
 
-    # oss standalone v7
-    oss-standalone-v7:
-      logging: *logging
-      image: redis:7.4-rc2
-      ports:
-        - 8108:6379
-      networks:
-        default:
-          ipv4_address: 172.31.100.112
-        ssh:
-          ipv4_address: 172.33.100.112
+  # oss standalone v7
+  oss-standalone-v7:
+    logging: *logging
+    image: redis:7.4-rc2
+    ports:
+      - 8108:6379
 
   # oss sentinel
   oss-sentinel:
