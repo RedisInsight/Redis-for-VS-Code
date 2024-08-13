@@ -1,5 +1,5 @@
 .contentWrapper {
-  @apply flex items-center relative flex-grow w-full h-full pr-8;
+  @apply flex items-center relative flex-grow w-full h-full pr-8 min-h-[26px];
 }
 .editBtnAnchor {
   @apply absolute right-1;
