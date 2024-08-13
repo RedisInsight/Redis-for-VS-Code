@@ -43,7 +43,8 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   const keysApi = useKeysApi()
 
   useEffect(() => {
-    const { type, key, keyType, databaseId, newKey } = selectedKeyAction || {}
+    const { type, key, keyType, database: databaseAction, newKey } = selectedKeyAction || {}
+    const { id: databaseId } = databaseAction || {}
 
     if (!type || databaseId !== database.id) {
       return

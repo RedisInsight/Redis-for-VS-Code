@@ -1,5 +1,6 @@
 import { KeyTypes, KeyValueCompressor, SelectedKeyActionType } from 'uiSrc/constants'
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
+import { Database } from '../use-databases-store/interface'
 
 export interface SelectedKeyStore {
   loading: boolean
@@ -13,7 +14,7 @@ export interface SelectedKeyStore {
 }
 
 interface SelectedKeyAction {
-  databaseId: string
+  database: Database
   key?: RedisString
   newKey?: RedisString
   type: SelectedKeyActionType

@@ -5,11 +5,11 @@ import { useShallow } from 'zustand/react/shallow'
 import { KeyTypes, SelectedKeyActionType, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { RedisString } from 'uiSrc/interfaces'
-import { useSelectedKeyStore } from 'uiSrc/store'
+import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { sessionStorageService, vscodeApi } from 'uiSrc/services'
 import { DynamicTypeDetails } from './components/dynamic-type-details'
 
-import { useKeysApi, useKeysInContext } from '../keys-tree/hooks/useKeys'
+import { useKeysApi } from '../keys-tree/hooks/useKeys'
 import styles from './styles.module.scss'
 
 export interface Props {}
@@ -21,7 +21,8 @@ const KeyDetails = () => {
     loading: state.loading,
   })))
 
-  const databaseId = useKeysInContext((state) => state.databaseId)
+  const database = useDatabasesStore((state) => state.connectedDatabase)
+  const databaseId = database?.id
 
   const keysApi = useKeysApi()
 
@@ -54,14 +55,14 @@ const KeyDetails = () => {
   const onRemoveKey = () => {
     vscodeApi.postMessage({
       action: VscodeMessageAction.CloseKeyAndRefresh,
-      data: { key: keyName, type: SelectedKeyActionType.Removed, databaseId: databaseId! },
+      data: { key: keyName, type: SelectedKeyActionType.Removed, database: database! },
     })
   }
 
   const onEditKey = (key: RedisString, newKey: RedisString) => {
     vscodeApi.postMessage({
       action: VscodeMessageAction.EditKeyName,
-      data: { key, newKey, type: SelectedKeyActionType.Renamed, databaseId: databaseId! },
+      data: { key, newKey, type: SelectedKeyActionType.Renamed, database: database! },
     })
   }
 
