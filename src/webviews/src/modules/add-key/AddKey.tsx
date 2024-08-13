@@ -23,7 +23,7 @@ import styles from './styles.module.scss'
 export const AddKey = () => {
   const loading = useKeysInContext((state) => state.addKeyLoading)
   const keysApi = useKeysApi()
-  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
+  const database = useDatabasesStore((state) => state.connectedDatabase)
 
   useEffect(
     () =>
@@ -59,7 +59,7 @@ export const AddKey = () => {
         keyString: keyName,
         keyType,
         displayedKeyType: getGroupTypeDisplay(keyType),
-        databaseId: databaseId!,
+        database: database!,
         type: SelectedKeyActionType.Added,
       },
     })

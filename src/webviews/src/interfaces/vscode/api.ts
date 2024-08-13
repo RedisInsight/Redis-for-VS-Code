@@ -48,7 +48,7 @@ export interface SelectedKeyAction {
   data: {
     key?: RedisString,
     type: SelectedKeyActionType,
-    databaseId: string,
+    database: Database,
     keyType?: KeyTypes,
     newKey?: RedisString,
     keyString?: string
