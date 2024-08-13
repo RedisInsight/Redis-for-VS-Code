@@ -1,17 +1,17 @@
 {
-  "Redis for VSCode - Add new key": "Redis for VSCode - Add new key",
-  "Redis for VSCode - Add Database connection": "Redis for VSCode - Add Database connection",
-  "Redis for VSCode - Settings": "Redis for VSCode - Settings",
-  "Redis for VSCode - EULA": "Redis for VSCode - EULA",
-  "Redis for VSCode - Welcome": "Redis for VSCode - Welcome",
-  "Redis for VSCode - Edit Database connection": "Redis for VSCode - Edit Database connection",
+  "Redis for VS Code - Add new key": "Redis for VS Code - Add new key",
+  "Redis for VS Code - Add Database connection": "Redis for VS Code - Add Database connection",
+  "Redis for VS Code - Settings": "Redis for VS Code - Settings",
+  "Redis for VS Code - EULA": "Redis for VS Code - EULA",
+  "Redis for VS Code - Welcome": "Redis for VS Code - Welcome",
+  "Redis for VS Code - Edit Database connection": "Redis for VS Code - Edit Database connection",
   "now": "now",
   "< 1 min": "< 1 min",
   "Last Refresh": "Last Refresh",
   "- Welcome": "- Welcome",
-  "About Redis for VSCode": "About Redis for VSCode",
-  "Take your productivity to the next level when developing with Redis or Redis Stack! Use Redis for VSCode to visualize and optimize Redis data.": "Take your productivity to the next level when developing with Redis or Redis Stack! Use Redis for VSCode to visualize and optimize Redis data.",
-  "A powerful desktop manager, Redis for VSCode provides an intuitive and efficient UI for Redis and Redis Stack and supports CLI interaction in a fully-featured desktop UI client.": "A powerful desktop manager, Redis for VSCode provides an intuitive and efficient UI for Redis and Redis Stack and supports CLI interaction in a fully-featured desktop UI client.",
+  "About Redis for VS Code": "About Redis for VS Code",
+  "Take your productivity to the next level when developing with Redis or Redis Stack! Use Redis for VS Code to visualize and optimize Redis data.": "Take your productivity to the next level when developing with Redis or Redis Stack! Use Redis for VS Code to visualize and optimize Redis data.",
+  "A powerful desktop manager, Redis for VS Code provides an intuitive and efficient UI for Redis and Redis Stack and supports CLI interaction in a fully-featured desktop UI client.": "A powerful desktop manager, Redis for VS Code provides an intuitive and efficient UI for Redis and Redis Stack and supports CLI interaction in a fully-featured desktop UI client.",
   "Start": "Start",
   "Connect your database": "Connect your database",
   "Create new database": "Create new database",
@@ -42,7 +42,7 @@
   "Key Name": "Key Name",
   " will be deleted.": " will be deleted.",
   "Delete": "Delete",
-  "will be deleted from Redis for VSCode.": "will be deleted from Redis for VSCode.",
+  "will be deleted from Redis for VS Code.": "will be deleted from Redis for VS Code.",
   "Key Size": "Key Size",
   "Key Size: ": "Key Size: ",
   "Length": "Length",
@@ -75,8 +75,8 @@
   "Element": "Element",
   "Push to tail": "Push to tail",
   "Push to head": "Push to head",
-  "Add Fields": "Add Fields",
   "Show TTL per row": "Show TTL per row",
+  "Add Fields": "Add Fields",
   "Field": "Field",
   "Value": "Value",
   "TTL": "TTL",
@@ -88,8 +88,8 @@
   "- EULA and Privacy settings": "- EULA and Privacy settings",
   "Use recommended settings": "Use recommended settings",
   "Privacy Settings": "Privacy Settings",
-  "To optimize your experience, Redis for VSCode uses third-party tools.\n                All data collected is anonymized and will not be used for any purpose without your consent.": "To optimize your experience, Redis for VSCode uses third-party tools.\n                All data collected is anonymized and will not be used for any purpose without your consent.",
-  "To use Redis for VSCode, please accept the terms and conditions: ": "To use Redis for VSCode, please accept the terms and conditions: ",
+  "To optimize your experience, Redis for VS Code uses third-party tools.\n                All data collected is anonymized and will not be used for any purpose without your consent.": "To optimize your experience, Redis for VS Code uses third-party tools.\n                All data collected is anonymized and will not be used for any purpose without your consent.",
+  "To use Redis for VS Code, please accept the terms and conditions: ": "To use Redis for VS Code, please accept the terms and conditions: ",
   "Server Side Public License": "Server Side Public License",
   "Notice: To avoid automatic execution of malicious code, when adding new Workbench plugins, use files from trusted authors only.": "Notice: To avoid automatic execution of malicious code, when adding new Workbench plugins, use files from trusted authors only.",
   "Add Redis database": "Add Redis database",
@@ -111,13 +111,13 @@
   "free up-to-date": "free up-to-date",
   " Redis database.": " Redis database.",
   "Database has been added": "Database has been added",
-  " has been added to Redis for VSCode.": " has been added to Redis for VSCode.",
+  " has been added to Redis for VS Code.": " has been added to Redis for VS Code.",
   "Database has been edited": "Database has been edited",
-  " has been edited to Redis for VSCode.": " has been edited to Redis for VSCode.",
+  " has been edited to Redis for VS Code.": " has been edited to Redis for VS Code.",
   "Database has been deleted": "Database has been deleted",
-  " has been deleted to Redis for VSCode.": " has been deleted to Redis for VSCode.",
+  " has been deleted to Redis for VS Code.": " has been deleted to Redis for VS Code.",
   "Databases have been deleted": "Databases have been deleted",
-  " databases have been deleted from Redis for VSCode:": " databases have been deleted from Redis for VSCode:",
+  " databases have been deleted from Redis for VS Code:": " databases have been deleted from Redis for VS Code:",
   "Key has been added": "Key has been added",
   " has been added.": " has been added.",
   "{0} has been deleted.": "{0} has been deleted.",
@@ -135,9 +135,9 @@
   "Library has been deleted": "Library has been deleted",
   "Library has been added": "Library has been added",
   "API keys have been removed": "API keys have been removed",
-  "All API keys have been removed from Redis for VSCode.": "All API keys have been removed from Redis for VSCode.",
+  "All API keys have been removed from Redis for VS Code.": "All API keys have been removed from Redis for VS Code.",
   "API Key has been removed": "API Key has been removed",
-  "{0} has been removed from Redis for VSCode.": "{0} has been removed from Redis for VSCode.",
+  "{0} has been removed from Redis for VS Code.": "{0} has been removed from Redis for VS Code.",
   "Database already exists": "Database already exists",
   "No new database connections have been added.": "No new database connections have been added.",
   "Non-printable characters have been detected": "Non-printable characters have been detected",
@@ -237,16 +237,16 @@
       "Context: Use Profiler tool available in the Redis Insight application to see all the requests processed by the server."
     ]
   },
-  "Redis for VSCode does not support /Context: Redis for VSCode does not support \"RESP3\" at the moment, but we are working on it.": {
-    "message": "Redis for VSCode does not support ",
+  "Redis for VS Code does not support /Context: Redis for VS Code does not support \"RESP3\" at the moment, but we are working on it.": {
+    "message": "Redis for VS Code does not support ",
     "comment": [
-      "Context: Redis for VSCode does not support \"RESP3\" at the moment, but we are working on it."
+      "Context: Redis for VS Code does not support \"RESP3\" at the moment, but we are working on it."
     ]
   },
-  " at the moment, but we are working on it./Context: Redis for VSCode does not support \"RESP3\" at the moment, but we are working on it.": {
+  " at the moment, but we are working on it./Context: Redis for VS Code does not support \"RESP3\" at the moment, but we are working on it.": {
     "message": " at the moment, but we are working on it.",
     "comment": [
-      "Context: Redis for VSCode does not support \"RESP3\" at the moment, but we are working on it."
+      "Context: Redis for VS Code does not support \"RESP3\" at the moment, but we are working on it."
     ]
   },
   "Upload": "Upload",
@@ -309,7 +309,7 @@
   "Enter Username": "Enter Username",
   "Enter Password": "Enter Password",
   "Privacy": "Privacy",
-  "To optimize your experience, Redis for VSCode uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.": "To optimize your experience, Redis for VSCode uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.",
+  "To optimize your experience, Redis for VS Code uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.": "To optimize your experience, Redis for VS Code uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.",
   "Analytics": "Analytics",
   "Add": "Add",
   "Release Notes": "Release Notes",

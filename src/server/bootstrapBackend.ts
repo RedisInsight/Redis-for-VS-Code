@@ -23,7 +23,7 @@ export async function startBackend(logger: CustomLogger): Promise<any> {
     vscode.window.showErrorMessage(errorMessage)
     console.debug(errorMessage)
   } else {
-    const message = vscode.window.setStatusBarMessage('Starting Redis for VSCode...')
+    const message = vscode.window.setStatusBarMessage('Starting Redis for VS Code...')
 
     try {
       // @ts-ignore

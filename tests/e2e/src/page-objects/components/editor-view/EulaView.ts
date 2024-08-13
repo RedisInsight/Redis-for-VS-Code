@@ -18,7 +18,7 @@ export class EulaView extends WebView {
   submitButton = By.xpath(`//vscode-button[@data-testid='btn-submit']`)
 
   /**
-   * Accept Redis for VSCode License Terms
+   * Accept Redis for VS Code License Terms
    */
   //
   async acceptLicenseTerms(): Promise<void> {

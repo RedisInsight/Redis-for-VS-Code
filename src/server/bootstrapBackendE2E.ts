@@ -36,7 +36,7 @@ export async function startBackendE2E(logger: CustomLogger): Promise<any> {
       console.debug(errorMessage)
       resolve('')
     } else {
-      const message = vscode.window.setStatusBarMessage('Starting Redis for VSCode...')
+      const message = vscode.window.setStatusBarMessage('Starting Redis for VS Code...')
       if (process.platform === 'win32') {
         PSinst = cp.spawn('powershell.exe', [
           '-NoProfile',

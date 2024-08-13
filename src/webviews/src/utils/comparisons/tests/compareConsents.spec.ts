@@ -7,7 +7,7 @@ const spec = {
       required: true,
       editable: false,
       since: '1.0.2',
-      title: 'EULA: Redis for VSCode License Terms',
+      title: 'EULA: Redis for VS Code License Terms',
       label: 'Label',
     },
   },

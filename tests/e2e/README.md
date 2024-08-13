@@ -1,4 +1,4 @@
-# Redis-Insight-VS-Code-extension-Work-in-Progress e2e tests
+# Redis-for-VS-Code e2e tests
 
 ### Before run tests run next commands
 

@@ -92,7 +92,7 @@ abstract class Webview {
           window.appInfo=${JSON.stringify(appInfo)};
         </script>
 
-        <title>Redis for VSCode Webview</title>
+        <title>Redis for VS Code Webview</title>
       </head>
       <body>
         <div id="root" data-route="${this._opts.route}"></div>

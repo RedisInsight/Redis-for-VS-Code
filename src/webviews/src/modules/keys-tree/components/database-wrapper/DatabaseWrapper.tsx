@@ -164,7 +164,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
           </VSCodeButton>
           <PopoverDelete
             header={formatLongName(name, 50, 10, '...')}
-            text={l10n.t('will be deleted from Redis for VSCode.')}
+            text={l10n.t('will be deleted from Redis for VS Code.')}
             item={id}
             maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}
             disabled={false}

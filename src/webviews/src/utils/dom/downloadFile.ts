@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver'
 import { AxiosResponseHeaders } from 'axios'
 
-export const DEFAULT_FILE_NAME = 'Redis-Insight'
+export const DEFAULT_FILE_NAME = 'Redis-for-vscode'
 
 export const downloadFile = (data: string = '', headers: AxiosResponseHeaders) => {
   const contentDisposition = headers?.['content-disposition'] || ''

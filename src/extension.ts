@@ -37,7 +37,7 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.StatusBarAlignment.Left,
     100,
   )
-  myStatusBarItem.text = 'Redis for VSCode' // Use the desired icon from the list
+  myStatusBarItem.text = 'Redis for VS Code' // Use the desired icon from the list
   myStatusBarItem.tooltip = 'Click me for more info'
   // myStatusBarItem.command = 'RedisForVSCode.openPage' // Command to execute on click
   // Show the status bar item
@@ -73,7 +73,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/add_key',
-        title: vscode.l10n.t('Redis for VSCode - Add new key'),
+        title: vscode.l10n.t('Redis for VS Code - Add new key'),
         viewId: ViewId.AddKey,
         handleMessage: (message) => handleMessage(message),
         message: args,
@@ -84,7 +84,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/add_database',
-        title: vscode.l10n.t('Redis for VSCode - Add Database connection'),
+        title: vscode.l10n.t('Redis for VS Code - Add Database connection'),
         viewId: ViewId.AddDatabase,
         handleMessage: (message) => handleMessage(message),
         message: args,
@@ -95,7 +95,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/settings',
-        title: vscode.l10n.t('Redis for VSCode - Settings'),
+        title: vscode.l10n.t('Redis for VS Code - Settings'),
         viewId: ViewId.Settings,
         handleMessage: (message) => handleMessage(message),
         message: args,
@@ -111,7 +111,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/eula',
-        title: vscode.l10n.t('Redis for VSCode - EULA'),
+        title: vscode.l10n.t('Redis for VS Code - EULA'),
         viewId: ViewId.Eula,
         handleMessage: (message) => handleMessage(message),
         message: args,
@@ -128,7 +128,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/welcome',
-        title: vscode.l10n.t('Redis for VSCode - Welcome'),
+        title: vscode.l10n.t('Redis for VS Code - Welcome'),
         viewId: ViewId.Welcome,
         handleMessage: (message) => handleMessage(message),
         message: args,
@@ -139,7 +139,7 @@ export async function activate(context: vscode.ExtensionContext) {
       WebviewPanel.getInstance({
         context,
         route: 'main/edit_database',
-        title: vscode.l10n.t('Redis for VSCode - Edit Database connection'),
+        title: vscode.l10n.t('Redis for VS Code - Edit Database connection'),
         viewId: ViewId.EditDatabase,
         handleMessage: (message) => handleMessage(message),
         message: args,

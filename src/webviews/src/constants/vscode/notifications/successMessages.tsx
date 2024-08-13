@@ -12,7 +12,7 @@ export const successMessages = {
     message: (
       <>
         <b>{formatNameShort(databaseName)}</b>
-        {l10n.t(' has been added to Redis for VSCode.')}
+        {l10n.t(' has been added to Redis for VS Code.')}
       </>
     ),
   }),
@@ -21,7 +21,7 @@ export const successMessages = {
     message: (
       <>
         <b>{formatNameShort(databaseName)}</b>
-        {l10n.t(' has been edited to Redis for VSCode.')}
+        {l10n.t(' has been edited to Redis for VS Code.')}
       </>
     ),
   }),
@@ -30,7 +30,7 @@ export const successMessages = {
     message: (
       <>
         <b>{formatNameShort(databaseName)}</b>
-        {l10n.t(' has been deleted to Redis for VSCode.')}
+        {l10n.t(' has been deleted to Redis for VS Code.')}
       </>
     ),
   }),
@@ -42,7 +42,7 @@ export const successMessages = {
         <>
           <span>
             <b>{databaseNames.length}</b>
-            {l10n.t(' databases have been deleted from Redis for VSCode:')}
+            {l10n.t(' databases have been deleted from Redis for VS Code:')}
           </span>
           <ul style={{ marginBottom: 0 }}>
             {databaseNames.slice(0, limitShowRemovedDatabases).map((el, i) => (
@@ -157,11 +157,11 @@ export const successMessages = {
   }),
   REMOVED_ALL_CAPI_KEYS: () => ({
     title: l10n.t('API keys have been removed'),
-    message: l10n.t('All API keys have been removed from Redis for VSCode.'),
+    message: l10n.t('All API keys have been removed from Redis for VS Code.'),
   }),
   REMOVED_CAPI_KEY: (name: string) => ({
     title: l10n.t('API Key has been removed'),
-    message: l10n.t('{0} has been removed from Redis for VSCode.', formatNameShort(name)),
+    message: l10n.t('{0} has been removed from Redis for VS Code.', formatNameShort(name)),
   }),
   DATABASE_ALREADY_EXISTS: () => ({
     title: l10n.t('Database already exists'),

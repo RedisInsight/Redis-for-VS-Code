@@ -74,7 +74,7 @@ export const ConsentsPrivacy = () => {
     <div>
       <h3 className="font-extrabold text-[13px]">{l10n.t('Privacy')}</h3>
       <div className="py-9">
-        {l10n.t('To optimize your experience, Redis for VSCode uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.')}
+        {l10n.t('To optimize your experience, Redis for VS Code uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.')}
       </div>
       <h4 className="font-bold text-[11px] uppercase">{l10n.t('Analytics')}</h4>
       {privacyConsents.map((consent: IConsent) => (
