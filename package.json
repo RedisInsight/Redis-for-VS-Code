@@ -117,7 +117,7 @@
     "watch": "tsc -watch -p ./",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
-    "test:watch": "vitest watch --dir ./src/webviews/src/modules/key-details/components/hash-details HashDetails",
+    "test:watch": "vitest watch --dir ./src/webviews/src",
     "test:watch:ui": "vitest watch --ui --coverage --dir ./src/webviews/src",
     "test:cov": "vitest run --silent --coverage --dir ./src/webviews/src",
     "package:prod": "npx mkdirp release && npx @vscode/vsce package",

@@ -245,6 +245,7 @@ export const updateHashTTLAction = (
 
       if (isSetToZero) {
         state.removeFields(data.fields.map(({ field }) => field))
+        onSuccess?.(isKeyRemoved)
         return
       }
 

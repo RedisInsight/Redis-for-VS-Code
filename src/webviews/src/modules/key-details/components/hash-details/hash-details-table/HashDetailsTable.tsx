@@ -199,6 +199,12 @@ const HashDetailsTable = (props: Props) => {
 
     updateHashTTLAction(data, false, (keyRemoved: boolean) => {
       keyRemoved && onRemoveKey?.()
+      sendEventTelemetry({
+        event: TelemetryEvent.TREE_VIEW_FIELD_TTL_EDITED,
+        eventData: {
+          databaseId,
+        },
+      })
       handleEditField(rowIndex, false, 'ttl')
     })
   }
@@ -471,10 +477,10 @@ const HashDetailsTable = (props: Props) => {
               {expire === -1 ? l10n.t('No Limit') : (
                 <Tooltip
                   title={l10n.t('Time to Live')}
-                  className="truncate"
+                  position="left center"
                   content={truncateNumberToDuration(expire || 0)}
                 >
-                  <>{expire}</>
+                  <div>{expire}</div>
                 </Tooltip>
               )}
             </div>

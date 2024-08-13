@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 
@@ -72,12 +72,8 @@ const HashDetails = (props: Props) => {
     })
   }
 
-  const Actions = () => (
-    <AddItemsAction title={l10n.t('Add Fields')} openAddItemPanel={openAddItemPanel} />
-  )
-
-  const ActionsBeforeRefresh = () => (
-    isExpireFieldsAvailable ? (
+  const Actions = ({ children }: PropsWithChildren) => ([
+    isExpireFieldsAvailable && (
       <Checkbox
         checked={showTtl}
         containerClassName="mr-2"
@@ -85,8 +81,10 @@ const HashDetails = (props: Props) => {
         onChange={(e) => handleSelectShow(e.target.checked)}
         labelText={l10n.t('Show TTL per row')}
       />
-    ) : undefined
-  )
+    ),
+    children,
+    <AddItemsAction title={l10n.t('Add Fields')} openAddItemPanel={openAddItemPanel} />,
+  ])
 
   return (
     <div className="fluid flex-column relative">
@@ -95,7 +93,6 @@ const HashDetails = (props: Props) => {
         key="key-details-header"
         keyType={keyType}
         Actions={Actions}
-        ActionsBeforeRefresh={ActionsBeforeRefresh}
       />
       <div className="key-details-body" key="key-details-body">
         {!loading && (
