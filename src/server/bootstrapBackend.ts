@@ -10,7 +10,7 @@ const appPort = process.env.RI_APP_PORT
 let gracefulShutdown: Function
 let beApp: any
 
-const backendPath = path.join(__dirname, '..', 'redis-backend/dist')
+const backendPath = path.join(__dirname, '..', 'redis-backend/dist-minified')
 
 export async function startBackend(logger: CustomLogger): Promise<any> {
   const port = await (await getPort.default(+appPort!)).toString()
@@ -23,11 +23,11 @@ export async function startBackend(logger: CustomLogger): Promise<any> {
     vscode.window.showErrorMessage(errorMessage)
     console.debug(errorMessage)
   } else {
-    const message = vscode.window.setStatusBarMessage('Starting Redis Insight...')
+    const message = vscode.window.setStatusBarMessage('Starting Redis for VSCode...')
 
     try {
       // @ts-ignore
-      const server = await import('../../dist/redis-backend/dist/src/main')
+      const server = await import('../../dist/redis-backend/dist-minified/main')
       const { gracefulShutdown: gracefulShutdownFn, app: apiApp } = await server.default(port, logger)
       gracefulShutdown = gracefulShutdownFn
       beApp = apiApp

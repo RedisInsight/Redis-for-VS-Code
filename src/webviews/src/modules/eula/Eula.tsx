@@ -209,7 +209,7 @@ export const Eula = ({ onSubmitted }: Props) => {
               <h2 className={styles.title}>{l10n.t('Privacy Settings')}</h2>
               <Spacer size="s" />
               <span className={styles.smallText}>
-                {l10n.t(`To optimize your experience, Redis Insight uses third-party tools.
+                {l10n.t(`To optimize your experience, Redis for VSCode uses third-party tools.
                 All data collected is anonymized and will not be used for any purpose without your consent.`)}
               </span>
               <Spacer />
@@ -251,7 +251,7 @@ export const Eula = ({ onSubmitted }: Props) => {
             <>
               <Spacer />
               <span className={styles.smallText}>
-                {l10n.t('To use Redis Insight, please accept the terms and conditions: ')}
+                {l10n.t('To use Redis for VSCode, please accept the terms and conditions: ')}
                 <Link
                   target="_blank"
                   href="https://github.com/RedisInsight/RedisInsight/blob/main/LICENSE"

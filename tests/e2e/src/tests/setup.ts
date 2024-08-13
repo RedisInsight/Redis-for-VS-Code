@@ -37,7 +37,7 @@ describe('Agreements Verification', () => {
     await ServerActions.waitForServerInitialized()
     await browser.waitForWorkbench(20_000)
     await  new TitleBar().getWindowControls().maximize()
-    await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
+    await (await new ActivityBar().getViewControl('Redis for VSCode'))?.openView()
   })
   beforeEach(async () => {
     await eulaView.switchToInnerViewFrame(InnerViews.EulaInnerView)

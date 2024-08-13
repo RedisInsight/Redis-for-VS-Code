@@ -68,7 +68,7 @@ describe('Add database', () => {
     editorView = new EditorView()
 
     await browser.waitForWorkbench(20_000)
-    await (await new ActivityBar().getViewControl('Redis Insight'))?.openView()
+    await (await new ActivityBar().getViewControl('Redis for VSCode'))?.openView()
   })
   beforeEach(async () => {
     await ButtonActions.clickElement(treeView.settingsButton)

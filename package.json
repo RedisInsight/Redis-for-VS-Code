@@ -1,9 +1,9 @@
 {
-  "name": "redis-insight-vsc-plugin",
-  "productName": "Redis Insight VSCode plugin",
+  "name": "redis-for-vscode",
+  "productName": "Redis for VS Code",
   "version": "0.0.1",
   "private": true,
-  "description": "Redis Insight Visual Studio Code plugin",
+  "description": "Redis for VS Code",
   "main": "dist/extension.js",
   "l10n": "./l10n",
   "publisher": "redis",
@@ -18,7 +18,7 @@
       "activitybar": [
         {
           "id": "ri-sidebar-view",
-          "title": "Redis Insight",
+          "title": "Redis for VS Code",
           "icon": "dist/webviews/resources/redisinsight.svg"
         }
       ],
@@ -35,60 +35,60 @@
         {
           "type": "webview",
           "id": "ri-sidebar",
-          "name": "Redis Insight",
+          "name": "Redis for VS Code",
           "icon": "dist/webviews/resources/redisinsight.svg",
-          "contextualTitle": "Redis Insight"
+          "contextualTitle": "Redis for VS Code"
         }
       ],
       "ri-panel-view": [
         {
           "type": "webview",
           "id": "ri-panel",
-          "when": "RedisInsight.showCliPanel",
+          "when": "RedisForVSCode.showCliPanel",
           "name": "Redis CLI"
         }
       ]
     },
     "commands": [
       {
-        "command": "RedisInsight.addCli",
+        "command": "RedisForVSCode.addCli",
         "title": "Add CLI",
-        "category": "Redis Insight",
+        "category": "Redis for VS Code",
         "icon": "$(add)"
       },
       {
-        "command": "RedisInsight.openSettings",
-        "title": "Open Redis Insight settings",
-        "category": "Redis Insight",
+        "command": "RedisForVSCode.openSettings",
+        "title": "Open Redis for VS Code settings",
+        "category": "Redis for VS Code",
         "icon": "$(settings-gear)"
       },
       {
-        "command": "RedisInsight.openEula",
-        "title": "Open Redis Insight eula",
-        "category": "Redis Insight",
+        "command": "RedisForVSCode.openEula",
+        "title": "Open Redis for VS Code eula",
+        "category": "Redis for VS Code",
         "icon": "$(settings-gear)"
       },
       {
-        "command": "RedisInsight.addDatabase",
+        "command": "RedisForVSCode.addDatabase",
         "title": "Add Redis database",
-        "category": "Redis Insight",
+        "category": "Redis for VS Code",
         "icon": "$(add)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "RedisInsight.addDatabase",
+          "command": "RedisForVSCode.addDatabase",
           "group": "navigation",
           "when": "view == ri-sidebar && !ri.openEula"
         },
         {
-          "command": "RedisInsight.openSettings",
+          "command": "RedisForVSCode.openSettings",
           "group": "navigation",
           "when": "view == ri-sidebar && !ri.openEula"
         },
         {
-          "command": "RedisInsight.openEula",
+          "command": "RedisForVSCode.openEula",
           "group": "navigation",
           "when": "view == ri-sidebar && ri.openEula"
         }
@@ -126,7 +126,7 @@
   },
   "vsce": {
     "yarn": true,
-    "packagePath": "./release/redis-insight-vsc-extension.vsix"
+    "packagePath": "./release/redis-for-vscode-extension.vsix"
   },
   "msw": {
     "workerDirectory": "./src/webviews/test/public"
@@ -141,14 +141,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RedisInsight/RedisInsight-VSCode-extension.git"
+    "url": "git+https://github.com/RedisInsight/Redis-for-VS-Code.git"
   },
   "bugs": {
-    "url": "https://github.com/RedisInsight/RedisInsight-VSCode-extension/issues"
+    "url": "https://github.com/RedisInsight/Redis-for-VS-Code/issues"
   },
   "keywords": [
-    "redis insight",
+    "Redis for VS Code",
     "redis",
+    "redis insight",
     "vsc",
     "visual studio code",
     "plugin",
@@ -157,7 +158,7 @@
     "typescript",
     "vite"
   ],
-  "homepage": "https://github.com/RedisInsight/RedisInsight-VSCode-extension#readme",
+  "homepage": "https://github.com/RedisInsight/Redis-for-VS-Code#readme",
   "devDependencies": {
     "@bithero/monaco-editor-vite-plugin": "^1.0.2",
     "@githubocto/tailwind-vscode": "^1.0.5",
