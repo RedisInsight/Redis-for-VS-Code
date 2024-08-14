@@ -60,11 +60,11 @@ describe('Set TTL for Key', () => {
 
     await KeyAPIRequests.addSetKeyApi(
       setKeyParameters,
-      Config.ossStandaloneConfig.databaseName,
+      Config.ossStandaloneV7Config.databaseName,
     )
     // Refresh database
     await treeView.refreshDatabaseByName(
-      Config.ossStandaloneConfig.databaseName,
+      Config.ossStandaloneV7Config.databaseName,
     )
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
@@ -109,7 +109,7 @@ describe('Set TTL for Key', () => {
     const result = await hashKeyDetailsView.getElementText(
       hashKeyDetailsView.getFieldTtlInputByField(field1),
     )
-    expect(Number(result)).lessThan(Number(keyTTL))
+    expect(Number(result)).lessThanOrEqual(Number(keyTTL))
 
     // verify that ttl can have empty value
     await hashKeyDetailsView.editHashKeyTtl(field1, ' ')

@@ -11,10 +11,12 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
   )
   getEditButton = (keyType: string, name: string): By =>
     By.xpath(
-      `//*[contains(@data-testid, "edit-${keyType}-button-${name}")] | //*[contains(@data-testid, "${keyType}-edit-button-${name}")]`,
+      `//*[contains(@data-testid, "edit-${keyType}-button-${name}")] | //*[contains(@data-testid, "${keyType}_edit-btn-${name}")]`,
     )
   getValueInput = (keyType: string, name: string): By =>
     By.xpath(`//*[contains(@data-testid, "${keyType}_content-value-${name}")]`)
+  getWrapperOfValueInput  = (keyType: string, name: string): By =>
+    By.xpath(`//*[contains(@data-testid, "${keyType}_content-value-${name}")]/parent::*`)
 
   /**
    * Edit key value from details
@@ -29,8 +31,7 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     editorLocator: By,
     keyType: string,
   ): Promise<void> {
-    const valueInput = this.getValueInput(keyType, name)
-    await InputActions.hoverElement(valueInput)
+    await InputActions.hoverElement(this.getWrapperOfValueInput(keyType, name),1000)
     const editLocator = this.getEditButton(keyType, name)
     await ButtonActions.clickElement(editLocator)
     await InputActions.typeText(editorLocator, value)
@@ -50,8 +51,7 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     editorLocator: By,
     keyType: string,
   ): Promise<void> {
-    const valueInput = this.getValueInput(keyType, name)
-    await InputActions.hoverElement(valueInput)
+    await InputActions.hoverElement(this.getWrapperOfValueInput(keyType, name),1000)
     const editLocator = this.getEditButton(keyType, name)
     await ButtonActions.clickElement(editLocator)
     await InputActions.slowType(editorLocator, value)

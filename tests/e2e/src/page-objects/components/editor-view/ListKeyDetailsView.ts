@@ -9,11 +9,11 @@ import { CommonDriverExtension } from '@e2eSrc/helpers'
  * List Key details view
  */
 export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
-  listValueEditor = By.xpath(`//*[@data-testid='element-value-editor']`)
+  listValueEditor = By.xpath(`//*[contains(@data-testid,'list_value-editor')]`)
   indexesList = By.xpath(
     `//*[contains(@data-testid, 'list-index-') and not(contains(@data-testid,'element'))]/div`,
   )
-  elementsList = By.xpath(`//*[contains(@data-testid, 'list-element-')]`)
+  elementsList = By.xpath(`//*[contains(@data-testid, 'list_content-')]`)
   truncatedValue = By.xpath(
     `//*[contains(@data-testid, 'list-element-')]//*[@class='truncate']`,
   )

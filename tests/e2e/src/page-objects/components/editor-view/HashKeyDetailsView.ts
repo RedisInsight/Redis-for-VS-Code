@@ -9,12 +9,12 @@ import { Key } from 'vscode-extension-tester'
  * Hash Key details view
  */
 export class HashKeyDetailsView extends DoubleColumnKeyDetailsView {
-  hashFieldValueEditor = By.xpath(`//*[@data-testid = 'hash-value-editor']`)
+  hashFieldValueEditor = By.xpath(`//*[contains(@data-testid, 'hash_value-editor')]`)
   hashFieldTtlEditor = By.xpath(`//*[@data-testid = 'inline-item-editor']`)
   hashFieldsList = By.xpath(
     `//*[contains(@data-testid, 'hash-field-') and not(contains(@data-testid,'value'))]/div`,
   )
-  hashValuesList = By.xpath(`//*[contains(@data-testid, 'hash-field-value-')]`)
+  hashValuesList = By.xpath(`//*[contains(@data-testid, 'hash_content-value-')]`)
   truncatedValue = By.xpath(
     `//*[contains(@data-testid, 'hash-field-value-')]//*[@class = 'truncate']`,
   )

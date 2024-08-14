@@ -15,7 +15,7 @@ export class SortedSetKeyDetailsView extends DoubleColumnKeyDetailsView {
     `//*[contains(@data-testid, 'zset-member-value-')]//*[@class = 'truncate']`,
   )
   scoreSortedSetFieldsList = By.xpath(
-    `//*[contains(@data-testid, 'zset-score-value-')]`,
+    `//*[contains(@data-testid, 'zset_content-value-')]`,
   )
   sortedSetScoreEditor = By.xpath(
     `//*[@id = 'score' and @data-testId = 'inline-item-editor']`,
