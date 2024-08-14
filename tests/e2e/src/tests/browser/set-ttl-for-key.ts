@@ -41,7 +41,6 @@ describe('Set TTL for Key', () => {
     )
   })
   after(async () => {
-    await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
   afterEach(async () => {
@@ -49,6 +48,7 @@ describe('Set TTL for Key', () => {
       keyName,
       Config.ossStandaloneV7Config.databaseName,
     )
+    await keyDetailsView.switchBack()
   })
 
   it('Verify that user can specify TTL for Key', async function () {
