@@ -5,9 +5,9 @@ import cx from 'classnames'
 import { isString } from 'lodash'
 
 export interface Props extends PopupProps {
-  title?: JSX.Element | string
-  content?: JSX.Element | string
-  children: JSX.Element | string
+  title?: JSX.Element | React.ReactNode | string
+  content?: JSX.Element | React.ReactNode | string
+  children: JSX.Element | React.ReactNode | string
   className?: string
 }
 

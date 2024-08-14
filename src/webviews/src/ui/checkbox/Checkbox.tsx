@@ -6,6 +6,7 @@ import CheckboxRC, { CheckboxChangeEvent, CheckboxProps } from 'rc-checkbox'
 import styles from './styles.module.scss'
 
 export interface Props extends CheckboxProps {
+  containerClassName?: string
   inputRef?: React.Ref<HTMLInputElement>
   labelText?: string | JSX.Element | JSX.Element[]
 }
@@ -13,10 +14,10 @@ export interface Props extends CheckboxProps {
 export interface CheckboxEvent extends CheckboxChangeEvent {}
 
 export const Checkbox: FC<Props> = (props) => {
-  const { className, labelText, disabled, ...restProps } = props
+  const { className, labelText, disabled, containerClassName = '', ...restProps } = props
 
   return (
-    <label className={cx(styles.container, { [styles.disabled]: disabled })}>
+    <label className={cx(styles.container, containerClassName, { [styles.disabled]: disabled })}>
       <CheckboxRC
         {...restProps}
         disabled={disabled}

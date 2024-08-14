@@ -21,7 +21,8 @@ export interface HashActions {
 
 export interface HashField {
   field: RedisString
-  value: RedisString
+  value?: RedisString
+  expire?: number
 }
 
 export interface HashScanResponse extends KeyResponse {

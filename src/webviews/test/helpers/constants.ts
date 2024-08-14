@@ -74,7 +74,10 @@ export const constants = {
   KEY_2_FIELD: UTF8ToArray('field'),
   KEY_2_VALUE: UTF8ToArray('value'),
   KEY_2_VALUE_2: UTF8ToArray('value2'),
+  KEY_2_FIELD_TTL: undefined,
+  KEY_2_FIELD_TTL_2: 100,
 
+  KEY_FIELD_TTL_ZERO: 0,
   get HASH_DATA() {
     return HASH_DATA
   },

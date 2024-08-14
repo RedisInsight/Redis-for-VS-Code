@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { CellMeasurerCache, IndexRange, OverscanIndexRange } from 'react-virtualized'
+import { CellMeasurerCache, IndexRange, OverscanIndexRange, Table } from 'react-virtualized'
 import {
   SortOrder,
   TableCellAlignment,
@@ -42,6 +42,8 @@ export interface ITableColumn {
 }
 
 export interface IProps {
+  autoHeight?: boolean
+  tableRef?: React.MutableRefObject<Nullable<Table>>
   loading: boolean
   scanned?: number
   columns: ITableColumn[]

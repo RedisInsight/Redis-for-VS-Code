@@ -51,8 +51,8 @@ export class KeyDetailsView extends WebView {
 
   getTrashIcon = (keyType: string, name: string): By =>
     By.xpath(
-      `//*[@data-testid="remove-${keyType}-button-${name}-icon"] 
-      | //*[@data-testid="${keyType}-remove-button-${name}-icon"] 
+      `//*[@data-testid="remove-${keyType}-button-${name}-icon"]
+      | //*[@data-testid="${keyType}-remove-button-${name}-icon"]
       | //*[@data-testid="${keyType}-remove-btn-${name}-icon"]
       | //*[@data-testid="remove-${keyType}-button-${name}-trigger"]
       | //*[@data-testid="${keyType}-remove-button-${name}-trigger"]`,
@@ -72,13 +72,13 @@ export class KeyDetailsView extends WebView {
   getFormatterOption = (formatter: string): By =>
     By.xpath(`//vscode-option[@data-testid="format-option-${formatter}"]`)
   getKeyValue = (keyName: string, columnName: string): By =>
-    By.xpath(`//*[@data-testid[starts-with(., '${keyName.split('-')[0]}-') and contains(., '${columnName}')]]
+    By.xpath(`//*[@data-testid[starts-with(., '${keyName.split('-')[0]}') and contains(., '${columnName}')]]
     | //*[@data-testid[starts-with(., '${keyName.split('-')[0]}-field-') and contains(., '${columnName}')]]`)
   getHighlightedValue = (keyName: string, columnName: string): By =>
-    By.xpath(`//*[@data-testid[starts-with(., '${keyName.split('-')[0]}-') and contains(., '${columnName}')]]//*[@data-testid='value-as-json']
+    By.xpath(`//*[@data-testid[starts-with(., '${keyName.split('-')[0]}') and contains(., '${columnName}')]]//*[@data-testid='value-as-json']
     | //*[@data-testid[starts-with(., '${keyName.split('-')[0]}-field-') and contains(., '${columnName}')]]//*[@data-testid='value-as-json']`)
   getEditBtnByKeyName = (keyName: string): By =>
-    By.xpath(`//vscode-button[contains(@data-testid, 'edit-') and contains(@data-testid, '${keyName}')]`)
+    By.xpath(`//vscode-button[contains(@data-testid, 'edit_') and contains(@data-testid, '${keyName}')]`)
   /**
    * get key size
    */

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 
@@ -92,7 +92,8 @@ const StringDetails = (props: Props) => {
     })
   }
 
-  const Actions = () => (
+  const Actions = ({ children }: PropsWithChildren) => ([
+    children,
     <EditItemAction
       title={editToolTip}
       isEditable={isStringEditable && isEditable}
@@ -100,8 +101,8 @@ const StringDetails = (props: Props) => {
         setRefreshDisabled(!editItem)
         setEditItem(!editItem)
       }}
-    />
-  )
+    />,
+  ])
 
   return (
     <div className="fluid flex-column relative">

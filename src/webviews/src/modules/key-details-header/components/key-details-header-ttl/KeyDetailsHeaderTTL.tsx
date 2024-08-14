@@ -57,7 +57,7 @@ const KeyDetailsHeaderTTL = ({ onEditTTL }: Props) => {
           <InlineEditor
             onApply={() => applyEditTTL()}
             onDecline={(event) => cancelEditTTl(event)}
-            isLoading={loading}
+            loading={loading}
             initialValue={ttl === '-1' ? '' : ttl}
             maxLength={MAX_TTL_NUMBER}
             placeholder={AddCommonFieldsFormConfig?.keyTTL?.placeholder}

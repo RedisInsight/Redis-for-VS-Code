@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { isUndefined } from 'lodash'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { useShallow } from 'zustand/react/shallow'
@@ -8,7 +8,7 @@ import {
   AllKeyTypes,
   KeyTypes,
 } from 'uiSrc/constants'
-import { RedisString } from 'uiSrc/interfaces'
+import { Maybe, RedisString } from 'uiSrc/interfaces'
 import { editKeyTTL, refreshKeyInfo, useDatabasesStore, useSelectedKeyStore, editKey } from 'uiSrc/store'
 import { TelemetryEvent, formatLongName, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
 import { PopoverDelete } from 'uiSrc/components'
@@ -27,7 +27,7 @@ export interface KeyDetailsHeaderProps {
   onCloseKey?: (key?: RedisString) => void
   onRemoveKey?: () => void
   onEditKey?: (key: RedisString, newKey: RedisString, onFailure?: () => void) => void
-  Actions?: (props: { width: number }) => ReactElement
+  Actions?: (props: { width: number, children: ReactNode }) => Maybe<ReactNode>
 }
 
 const KeyDetailsHeader = ({
@@ -85,6 +85,16 @@ const KeyDetailsHeader = ({
     })
   }
 
+  const RefreshButton = () => (
+    <RefreshBtn
+      lastRefreshTime={lastRefreshTime}
+      disabled={refreshDisabled}
+      triggerClassName={styles.actionBtn}
+      onClick={handleRefreshKey}
+      triggerTestid="refresh-key-btn"
+    />
+  )
+
   return (
     <div className={`key-details-header ${styles.container}`} data-testid="key-details-header">
       {/* {loading && (
@@ -107,14 +117,12 @@ const KeyDetailsHeader = ({
               <KeyDetailsHeaderTTL onEditTTL={handleEditTTL} />
               <div className="flex ml-auto">
                 <div className={styles.subtitleActionBtns}>
-                  <RefreshBtn
-                    lastRefreshTime={lastRefreshTime}
-                    disabled={refreshDisabled}
-                    triggerClassName={styles.actionBtn}
-                    onClick={handleRefreshKey}
-                    triggerTestid="refresh-key-btn"
-                  />
-                  {!isUndefined(Actions) && <Actions width={width} />}
+                  {isUndefined(Actions) && <RefreshButton />}
+                  {!isUndefined(Actions) && (
+                    <Actions width={width}>
+                      <RefreshButton />
+                    </Actions>
+                  )}
                   {Object.values(KeyTypes).includes(keyType as KeyTypes) && (
                     <KeyDetailsHeaderFormatter width={width} />
                   )}

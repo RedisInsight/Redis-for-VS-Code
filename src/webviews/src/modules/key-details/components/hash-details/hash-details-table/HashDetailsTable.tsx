@@ -1,20 +1,16 @@
 import cx from 'classnames'
-import React, { ChangeEvent, Ref, useCallback, useEffect, useRef, useState } from 'react'
-import { CellMeasurerCache } from 'react-virtualized'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import { VscEdit } from 'react-icons/vsc'
-import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { CellMeasurerCache, Table } from 'react-virtualized'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
-import { isString } from 'lodash'
+import { isNumber, isString, toNumber } from 'lodash'
 
-import { InlineEditor, PopoverDelete, VirtualTable } from 'uiSrc/components'
+import { PopoverDelete, VirtualTable } from 'uiSrc/components'
 import {
   getColumnWidth,
   getMatchType,
   sendEventTelemetry,
   TelemetryEvent,
-  bufferToSerializedFormat,
   bufferToString,
   createDeleteFieldHeader,
   createDeleteFieldMessage,
@@ -25,6 +21,8 @@ import {
   isNonUnicodeFormatter,
   stringToSerializedBufferFormat,
   stringToBuffer,
+  validateTTLNumber,
+  truncateNumberToDuration,
 } from 'uiSrc/utils'
 import { StopPropagation } from 'uiSrc/components/virtual-table'
 import {
@@ -36,7 +34,6 @@ import {
   KeyTypes,
   OVER_RENDER_BUFFER_COUNT,
   TableCellAlignment,
-  TEXT_DISABLED_COMPRESSED_VALUE,
   TEXT_DISABLED_FORMATTER_EDITING,
   TEXT_FAILED_CONVENT_FORMATTER,
   TEXT_UNPRINTABLE_CHARACTERS,
@@ -48,7 +45,8 @@ import {
 } from 'uiSrc/constants'
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
-import { TextArea, Tooltip } from 'uiSrc/ui'
+import { Tooltip } from 'uiSrc/ui'
+import { EditableInput, EditableTextArea } from 'uiSrc/modules/key-details/shared'
 import { AddFieldsToHashDto, GetHashFieldsResponse, HashField } from '../hooks/interface'
 
 import {
@@ -56,9 +54,9 @@ import {
   fetchHashFields,
   fetchHashMoreFields,
   updateHashFieldsAction,
+  updateHashTTLAction,
   useHashStore,
 } from '../hooks/useHashStore'
-import styles from './styles.module.scss'
 
 const suffix = '_hash'
 const headerHeight = 60
@@ -72,12 +70,13 @@ const cellCache = new CellMeasurerCache({
 interface IHashField extends HashField {}
 
 export interface Props {
-  isFooterOpen: boolean
+  isExpireFieldsAvailable?: boolean
+  isFooterOpen?: boolean
   onRemoveKey?: () => void
 }
 
 const HashDetailsTable = (props: Props) => {
-  const { isFooterOpen, onRemoveKey } = props
+  const { isExpireFieldsAvailable, onRemoveKey } = props
 
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
@@ -103,15 +102,13 @@ const HashDetailsTable = (props: Props) => {
   const [match, setMatch] = useState<Nullable<string>>(DEFAULT_SEARCH_MATCH)
   const [deleting, setDeleting] = useState('')
   const [fields, setFields] = useState<IHashField[]>([])
-  const [editingIndex, setEditingIndex] = useState<Nullable<number>>(null)
+  const [editingIndex, setEditingIndex] = useState<Nullable<{ index: number, field: string }>>(null)
   const [width, setWidth] = useState(100)
   const [expandedRows, setExpandedRows] = useState<number[]>([])
   const [viewFormat, setViewFormat] = useState(viewFormatProp)
-  const [areaValue, setAreaValue] = useState<string>('')
-  const [, forceUpdate] = useState({})
 
   const formattedLastIndexRef = useRef(OVER_RENDER_BUFFER_COUNT)
-  const textAreaRef: Ref<HTMLTextAreaElement> = useRef(null)
+  const tableRef: React.MutableRefObject<Nullable<Table>> = useRef(null)
 
   const contextApi = useContextApi()
 
@@ -140,10 +137,15 @@ const HashDetailsTable = (props: Props) => {
     clearCache()
   }
 
-  const clearCache = () => setTimeout(() => {
+  const clearCache = (rowIndex?: number) => {
+    if (isNumber(rowIndex)) {
+      cellCache.clear(rowIndex, 1)
+      tableRef.current?.recomputeRowHeights(rowIndex)
+      return
+    }
+
     cellCache.clearAll()
-    forceUpdate({})
-  }, 0)
+  }
 
   const closePopover = useCallback(() => {
     setDeleting('')
@@ -171,38 +173,43 @@ const HashDetailsTable = (props: Props) => {
   }
 
   const handleEditField = useCallback((
-    rowIndex: Nullable<number> = null,
+    index: number,
     editing: boolean,
-    valueItem?: RedisString,
+    field: string,
   ) => {
+    setEditingIndex(editing ? { index, field } : null)
     setRefreshDisabled(editing)
-    setEditingIndex(editing ? rowIndex : null)
 
-    if (editing) {
-      const value = bufferToSerializedFormat(viewFormat, valueItem, 4)
-      setAreaValue(value)
-
-      setTimeout(() => {
-        textAreaRef?.current?.focus()
-      }, 0)
-    }
-
-    // hack to update scrollbar padding
-    clearCache()
-    setTimeout(() => {
-      clearCache()
-    }, 0)
+    clearCache(index)
   }, [viewFormat])
 
-  const handleApplyEditField = (field: RedisString = '') => {
+  const handleApplyEditField = (field: RedisString = '', value: string, rowIndex: number) => {
     const data: AddFieldsToHashDto = {
       keyName: key!,
-      fields: [{ field, value: stringToSerializedBufferFormat(viewFormat, areaValue) }],
+      fields: [{ field, value: stringToSerializedBufferFormat(viewFormat, value) }],
     }
-    updateHashFieldsAction(data, false, () => onHashEditedSuccess(field))
+    updateHashFieldsAction(data, false, () => onHashEditedSuccess(rowIndex))
   }
 
-  const onHashEditedSuccess = (fieldName: RedisString = '') => {
+  const handleApplyEditExpire = (field: RedisString = '', expire: string, rowIndex: number) => {
+    const data: AddFieldsToHashDto = {
+      keyName: key!,
+      fields: [{ field, expire: expire ? toNumber(expire) : -1 }],
+    }
+
+    updateHashTTLAction(data, false, (keyRemoved: boolean) => {
+      keyRemoved && onRemoveKey?.()
+      sendEventTelemetry({
+        event: TelemetryEvent.TREE_VIEW_FIELD_TTL_EDITED,
+        eventData: {
+          databaseId,
+        },
+      })
+      handleEditField(rowIndex, false, 'ttl')
+    })
+  }
+
+  const onHashEditedSuccess = (rowIndex: number) => {
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_EDITED,
       eventData: {
@@ -210,7 +217,7 @@ const HashDetailsTable = (props: Props) => {
         keyType: KeyTypes.Hash,
       },
     })
-    handleEditField(fieldName, false)
+    handleEditField(rowIndex, false, 'value')
   }
 
   const handleRemoveIconClick = () => {
@@ -248,7 +255,7 @@ const HashDetailsTable = (props: Props) => {
   const resetExpandedCache = () => {
     setTimeout(() => {
       setExpandedRows([])
-      cellCache.clearAll()
+      clearCache()
     }, 0)
   }
 
@@ -280,13 +287,6 @@ const HashDetailsTable = (props: Props) => {
     }
   }
 
-  const updateTextAreaHeight = () => {
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = '0px'
-      textAreaRef.current.style.height = `${textAreaRef.current?.scrollHeight || 0}px`
-    }
-  }
-
   const onColResizeEnd = (sizes: RelativeWidthSizes) => {
     contextApi.updateKeyDetailsSizes({
       type: KeyTypes.Hash,
@@ -297,12 +297,11 @@ const HashDetailsTable = (props: Props) => {
   const columns: ITableColumn[] = [
     {
       id: 'field',
-      label: 'Field',
+      label: l10n.t('Field'),
       isSearchable: true,
       isResizable: true,
       minWidth: 120,
       relativeWidth: hashSizes?.field || 40,
-      prependSearchName: 'Field:',
       initialSearchValue: '',
       truncateText: true,
       alignment: TableCellAlignment.Left,
@@ -326,7 +325,7 @@ const HashDetailsTable = (props: Props) => {
                   content={tooltipContent}
                   mouseEnterDelay={500}
                 >
-                  <div className={cx('truncate', styles.tooltip)}>
+                  <div className={cx('truncate')}>
                     {isString(value) ? value?.substring?.(0, 200) ?? value : value}
                   </div>
                 </Tooltip>
@@ -339,10 +338,11 @@ const HashDetailsTable = (props: Props) => {
     },
     {
       id: 'value',
-      label: 'Value',
+      label: l10n.t('Value'),
       minWidth: 120,
       truncateText: true,
       alignment: TableCellAlignment.Left,
+      className: 'p-0',
       render: function Value(
         _name: string,
         { field: fieldItem, value: valueItem }: IHashField,
@@ -356,90 +356,55 @@ const HashDetailsTable = (props: Props) => {
         const value = bufferToString(valueItem)
         const field = bufferToString(decompressedFieldItem)
         // Better to cut the long string, because it could affect virtual scroll performance
-        const { value: formattedValue, isValid } = formattingBuffer(decompressedValueItem, viewFormatProp, { expanded })
+        const { value: formattedValue, isValid } = formattingBuffer(decompressedValueItem!, viewFormatProp, { expanded })
 
         const tooltipTitle = `${isValid ? l10n.t('Value') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}`
         const tooltipContent = formatLongName(value)
 
-        if (rowIndex === editingIndex) {
-          const disabled = !isNonUnicodeFormatter(viewFormat, isValid)
-            && !isEqualBuffers(valueItem, stringToBuffer(value))
+        const disabled = !isNonUnicodeFormatter(viewFormat, isValid)
+        && !isEqualBuffers(valueItem, stringToBuffer(value))
+        const isEditable = isFormatEditable(viewFormat)
+        const editTooltipContent = TEXT_DISABLED_FORMATTER_EDITING
 
-          setTimeout(() => cellCache.clear(rowIndex, 1), 0)
-          updateTextAreaHeight()
+        const isEditing = editingIndex?.field === 'value' && editingIndex?.index === rowIndex
 
-          return (
-            <AutoSizer disableHeight onResize={() => setTimeout(updateTextAreaHeight, 0)}>
-              {({ width }) => (
-                <div style={{ width: width + 113 }} className={styles.textareaContainer}>
-                  <StopPropagation>
-                    <InlineEditor
-                      expandable
-                      preventOutsideClick
-                      disableFocusTrap
-                      isActive
-                      declineOnUnmount={false}
-                      initialValue={value}
-                      placeholder="Enter Value"
-                      fieldName="fieldValue"
-                      controlsPosition="bottom"
-                      isLoading={updateLoading}
-                      isDisabled={disabled}
-                      disabledTooltipText={TEXT_UNPRINTABLE_CHARACTERS}
-                      controlsClassName={styles.textAreaControls}
-                      onDecline={() => handleEditField(rowIndex, false)}
-                      onApply={() => handleApplyEditField(fieldItem)}
-                      approveText={TEXT_INVALID_VALUE}
-                      approveByValidation={() =>
-                        formattingBuffer(
-                          stringToSerializedBufferFormat(viewFormat, areaValue),
-                          viewFormat,
-                        )?.isValid}
-                    >
-                      <TextArea
-                        name="value"
-                        id="value"
-                        placeholder="Enter Value"
-                        value={areaValue}
-                        onInput={(e: ChangeEvent<HTMLTextAreaElement>) => {
-                          cellCache.clearAll()
-                          setAreaValue(e.target.value)
-                          updateTextAreaHeight()
-                        }}
-                        disabled={updateLoading}
-                        className={cx(styles.textArea, { [styles.areaWarning]: disabled })}
-                        spellCheck={false}
-                        data-testid="hash-value-editor"
-                        style={{ height: textAreaRef.current?.scrollHeight || 0 }}
-                        inputRef={textAreaRef}
-                      />
-                    </InlineEditor>
-                  </StopPropagation>
-                </div>
-              )}
-            </AutoSizer>
-          )
-        }
         return (
-          <div className="max-w-full whitespace-break-spaces">
-            <div
-              className="flex"
-              data-testid={`hash-field-value-${field}`}
-            >
+          <EditableTextArea
+            initialValue={value}
+            loading={updateLoading}
+            disabled={disabled}
+            editing={isEditing}
+            editBtnDisabled={!isEditable || updateLoading}
+            disabledTooltipText={TEXT_UNPRINTABLE_CHARACTERS}
+            onDecline={() => handleEditField(rowIndex, false, 'value')}
+            onApply={(value) => handleApplyEditField(fieldItem, value, rowIndex)}
+            approveText={TEXT_INVALID_VALUE}
+            approveByValidation={(value) =>
+              formattingBuffer(
+                stringToSerializedBufferFormat(viewFormat, value),
+                viewFormat,
+              )?.isValid}
+            onEdit={(isEditing) => handleEditField(rowIndex, isEditing, 'value')}
+            editToolTipContent={!isEditable ? editTooltipContent : null}
+            onUpdateTextAreaHeight={() => clearCache(rowIndex)}
+            field={field}
+            testIdPrefix="hash"
+          >
+            <div>
               {!expanded && (
                 <Tooltip
                   title={tooltipTitle}
+                  position="bottom center"
                   content={tooltipContent}
-                  mouseEnterDelay={500}
                 >
-                  <div className={cx('truncate', styles.tooltip)}>
-                    {isString(formattedValue) ? formattedValue?.substring?.(0, 200) ?? formattedValue : formattedValue}
+                  <div className="truncate">
+                    <span>{(formattedValue as any)?.substring?.(0, 200) ?? formattedValue}</span>
                   </div>
                 </Tooltip>
               )}
               {expanded && formattedValue}
             </div>
-          </div>
+          </EditableTextArea>
         )
       },
     },
@@ -448,38 +413,15 @@ const HashDetailsTable = (props: Props) => {
       label: '',
       headerClassName: 'value-table-header-actions',
       className: 'actions',
-      absoluteWidth: 84,
-      minWidth: 84,
-      maxWidth: 84,
-      render: function Actions(_act: any, { field: fieldItem, value: valueItem }: HashField, _, rowIndex?: number) {
+      absoluteWidth: 48,
+      minWidth: 48,
+      maxWidth: 48,
+      render: function Actions(_act: any, { field: fieldItem }: HashField) {
         const field = bufferToString(fieldItem, viewFormat)
-        const isCompressed = false
-        // const { isCompressed } = decompressingBuffer(valueItem, compressor)
-        const isEditable = !isCompressed && isFormatEditable(viewFormat)
-        const tooltipContent = isCompressed ? TEXT_DISABLED_COMPRESSED_VALUE : TEXT_DISABLED_FORMATTER_EDITING
-
-        if (rowIndex === editingIndex) {
-          return null
-        }
 
         return (
           <StopPropagation>
             <div className="value-table-actions">
-              <Tooltip
-                content={!isEditable ? tooltipContent : ''}
-                data-testid="hash-edit-tooltip"
-              >
-                <VSCodeButton
-                  appearance="icon"
-                  disabled={updateLoading || !isEditable}
-                  className="flex items-center editFieldBtn"
-                  onClick={() => handleEditField(rowIndex, true, valueItem)}
-                  data-testid={`edit-hash-button-${field}`}
-                  aria-label="Edit field"
-                >
-                  <VscEdit />
-                </VSCodeButton>
-              </Tooltip>
               <PopoverDelete
                 header={createDeleteFieldHeader(fieldItem as RedisString)}
                 text={createDeleteFieldMessage(key ?? '')}
@@ -493,7 +435,7 @@ const HashDetailsTable = (props: Props) => {
                 testid={`remove-hash-button-${field}`}
                 handleDeleteItem={handleDeleteField}
                 handleButtonClick={handleRemoveIconClick}
-                appendInfo={length === 1 ? helpTexts.REMOVE_LAST_ELEMENT('Field') : null}
+                appendInfo={length === 1 ? helpTexts.REMOVE_LAST_ELEMENT(l10n.t('Field')) : null}
               />
             </div>
           </StopPropagation>
@@ -502,6 +444,52 @@ const HashDetailsTable = (props: Props) => {
     },
   ]
 
+  if (isExpireFieldsAvailable) {
+    columns.splice(2, 0, {
+      id: 'ttl',
+      label: l10n.t('TTL'),
+      absoluteWidth: 140,
+      minWidth: 140,
+      truncateText: true,
+      className: 'p-0',
+      render: function TTL(
+        _name: string,
+        { field: fieldItem, expire }: IHashField,
+        _expanded?: boolean,
+        rowIndex = 0,
+      ) {
+        const field = bufferToString(fieldItem, viewFormat)
+        const isEditing = editingIndex?.field === 'ttl' && editingIndex?.index === rowIndex
+
+        return (
+          <EditableInput
+            initialValue={expire === -1 ? '' : expire?.toString()}
+            placeholder={l10n.t('Enter TTL')}
+            field={field}
+            editing={isEditing}
+            onEdit={(value: boolean) => handleEditField(rowIndex, value, 'ttl')}
+            onDecline={() => handleEditField(rowIndex, false, 'ttl')}
+            onApply={(value) => handleApplyEditExpire(fieldItem, value, rowIndex)}
+            testIdPrefix="hash-ttl"
+            validation={validateTTLNumber}
+          >
+            <div className="truncate">
+              {expire === -1 ? l10n.t('No Limit') : (
+                <Tooltip
+                  title={l10n.t('Time to Live')}
+                  position="left center"
+                  content={truncateNumberToDuration(expire || 0)}
+                >
+                  <div>{expire}</div>
+                </Tooltip>
+              )}
+            </div>
+          </EditableInput>
+        )
+      },
+    })
+  }
+
   return (
     <>
       <div
@@ -509,13 +497,14 @@ const HashDetailsTable = (props: Props) => {
         className={cx(
           'key-details-table',
           'hash-fields-container',
-          styles.container,
-          { footerOpened: isFooterOpen },
+          'flex flex-1 flex-grow p-4',
         )}
       >
         <VirtualTable
           hideProgress
           expandable
+          autoHeight
+          tableRef={tableRef}
           keyName={key}
           headerHeight={headerHeight}
           rowHeight={rowHeight}
