@@ -22,7 +22,6 @@ import { SCAN_COUNT_DEFAULT,
 } from 'uiSrc/constants'
 import {
   bufferToString,
-  formatLongName,
   formattingBuffer,
   isFormatEditable,
   isNonUnicodeFormatter,
@@ -35,7 +34,6 @@ import {
   getColumnWidth,
 } from 'uiSrc/utils'
 import { VirtualTable } from 'uiSrc/components'
-import { Tooltip } from 'uiSrc/ui'
 // import { getColumnWidth } from 'uiSrc/components/virtual-grid'
 // import { decompressingBuffer } from 'uiSrc/utils/decompressors'
 import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
@@ -234,20 +232,13 @@ const ListDetailsTable = (props: Props) => {
       render: function Index(_name: string, { index }: ListElement) {
         // Better to cut the long string, because it could affect virtual scroll performance
         const cellContent = index?.toString().substring(0, 200)
-        const tooltipContent = formatLongName(index?.toString())
         return (
           <div className="max-w-full whitespace-break-spaces">
             <div
               className="flex"
               data-testid={`list-index-value-${index}`}
             >
-              <Tooltip
-                content={tooltipContent}
-                mouseEnterDelay={500}
-                className={cx(styles.tooltip, 'truncate')}
-              >
-                {cellContent}
-              </Tooltip>
+              {cellContent}
             </div>
           </div>
         )
@@ -269,7 +260,6 @@ const ListDetailsTable = (props: Props) => {
         // const { value: decompressedElementItem } = decompressingBuffer(elementItem, compressor)
         const decompressedElementItem = elementItem
         const element = bufferToString(elementItem)
-        const tooltipContent = formatLongName(element)
         const { value: formattedValue, isValid } = formattingBuffer(decompressedElementItem, viewFormatProp, { expanded })
 
         const disabled = !isNonUnicodeFormatter(viewFormat, isValid)
@@ -306,11 +296,9 @@ const ListDetailsTable = (props: Props) => {
                 data-testid={`list-element-value-${index}`}
               >
                 {!expanded && (
-                  <Tooltip content={tooltipContent} mouseEnterDelay={500}>
-                    <div className={cx('truncate', styles.tooltip)}>
-                      {isString(formattedValue) ? formattedValue?.substring?.(0, 200) ?? formattedValue : formattedValue}
-                    </div>
-                  </Tooltip>
+                  <div className={cx('truncate', styles.tooltip)}>
+                    {isString(formattedValue) ? formattedValue?.substring?.(0, 200) ?? formattedValue : formattedValue}
+                  </div>
                 )}
                 {expanded && formattedValue}
               </div>
