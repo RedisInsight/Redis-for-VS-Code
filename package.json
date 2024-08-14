@@ -1,7 +1,7 @@
 {
   "name": "redis-for-vscode",
   "productName": "Redis for VS Code",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "Redis for VS Code",
   "main": "dist/extension.js",
