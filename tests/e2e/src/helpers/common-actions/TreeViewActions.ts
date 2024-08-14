@@ -68,8 +68,7 @@ export class TreeViewActions extends CommonDriverExtension {
           delimiter,
         )
         const node = treeView.getFolderSelectorByName(nodeName)
-        const nodeElement = await treeView.getElement(node)
-        const fullTestIdSelector = await nodeElement.getAttribute('data-testid')
+        const fullTestIdSelector = await treeView.getElementAttribute(node, 'data-testid')
         if (!fullTestIdSelector?.includes('expanded')) {
           await ButtonActions.clickElement(node)
         }
