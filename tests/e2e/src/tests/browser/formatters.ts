@@ -482,9 +482,12 @@ describe('Formatters', () => {
 
   notEditableFormattersSet.forEach(formatter => {
     it(`Verify that user see edit icon disabled for all keys when ${formatter.format} selected`, async function () {
+      const value = 'value'
       await KeyAPIRequests.addKeysApi(
         keysData,
         Config.ossStandaloneConfig.databaseName,
+        value,
+        value
       )
       // Refresh database
       await treeView.refreshDatabaseByName(
@@ -510,7 +513,7 @@ describe('Formatters', () => {
           await keyDetailsView.selectFormatter(formatter.format)
           await CommonDriverExtension.driverSleep(300)
           // Verify that edit button disabled for Hash, List, String keys
-          await InputActions.hoverElement(doubleColumnKeyDetailsView.getWrapperOfValueInput(key.keyType, key.data),1000)
+          await InputActions.hoverElement(doubleColumnKeyDetailsView.getWrapperOfValueInput(value, key.data),1000)
           expect(await keyDetailsView.isElementDisabled(editBtn, 'class')).eql(
             true,
             `Key ${key.keyType} is enabled for ${formatter.format} formatter`,

@@ -98,7 +98,7 @@ describe('Set TTL for Key', () => {
         },
       ],
     }
-
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await addHashKeyView.addKey(hashKeyParameters, KeyTypesShort.Hash)
     await CommonDriverExtension.driverSleep(1000)
     await keyDetailsView.switchBack()
