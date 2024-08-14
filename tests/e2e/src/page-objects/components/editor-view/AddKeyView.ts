@@ -38,9 +38,9 @@ export class AddKeyView extends WebView {
    */
   async selectKeyTypeByValue(value: KeyTypesShort): Promise<void> {
     await ButtonActions.clickElement(this.keyTypeDropdown)
-
-    const optionLocator = this.getKeyTypeOption(value)
-    await ButtonActions.clickElement(optionLocator)
+    const optionValue = value === KeyTypesShort.ReJSON
+      ? "ReJSON-RL" : value
+    await ButtonActions.clickElement(this.getKeyTypeOption(optionValue))
   }
 
   /**

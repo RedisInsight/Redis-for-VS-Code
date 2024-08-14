@@ -16,7 +16,7 @@ import {
 } from '@e2eSrc/page-objects/components'
 import {
   ButtonActions,
-  DatabasesActions,
+  DatabasesActions, InputActions,
   KeyDetailsActions,
 } from '@e2eSrc/helpers/common-actions'
 import { formatters, phpData } from '../../test-data/formatters-data'
@@ -28,6 +28,7 @@ import {
 } from '@e2eSrc/helpers/constants'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { CommonDriverExtension } from '@e2eSrc/helpers'
+import { DoubleColumnKeyDetailsView } from '@e2eSrc/page-objects/components/editor-view/DoubleColumnKeyDetailsView'
 
 const binaryFormattersSet = [formatters[5], formatters[6], formatters[7]]
 const formattersHighlightedSet = [formatters[0], formatters[3]]
@@ -64,6 +65,7 @@ describe('Formatters', () => {
   let treeView: TreeView
   let hashKeyDetailsView: HashKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
+  let doubleColumnKeyDetailsView: DoubleColumnKeyDetailsView
 
   let keysData = keyTypesShort
     .map((object: any) => ({ ...object }))
@@ -88,6 +90,7 @@ describe('Formatters', () => {
     treeView = new TreeView()
     hashKeyDetailsView = new HashKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
+    doubleColumnKeyDetailsView = new DoubleColumnKeyDetailsView()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -507,6 +510,7 @@ describe('Formatters', () => {
           await keyDetailsView.selectFormatter(formatter.format)
           await CommonDriverExtension.driverSleep(300)
           // Verify that edit button disabled for Hash, List, String keys
+          await InputActions.hoverElement(doubleColumnKeyDetailsView.getWrapperOfValueInput(key.keyType, key.data),1000)
           expect(await keyDetailsView.isElementDisabled(editBtn, 'class')).eql(
             true,
             `Key ${key.keyType} is enabled for ${formatter.format} formatter`,
