@@ -9,11 +9,11 @@ export class Config {
   static apiUrl = process.env.API_URL || 'http://127.0.0.1:5541/api'
   static vscodeVersion = process.env.VSCODE_VERSION || '1.87.2'
   static extensionName =
-    process.env.EXTENSION_NAME || 'redis-insight-vsc-extension.vsix'
+    process.env.EXTENSION_NAME || 'redis-for-vscode-extension.vsix'
 
   static workingDirectory =
     process.env.APP_FOLDER_ABSOLUTE_PATH ||
-    joinPath(os.homedir(), process.env.APP_FOLDER_NAME || '.redis-insight-vsc')
+    joinPath(os.homedir(), process.env.APP_FOLDER_NAME || '.redis-for-vscode')
   static fileDownloadPath = joinPath(os.homedir(), 'Downloads')
   static uniqueId = chance.string({ length: 10 })
 
