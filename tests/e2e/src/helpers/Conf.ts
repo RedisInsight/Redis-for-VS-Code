@@ -9,7 +9,7 @@ export class Config {
   static apiUrl = process.env.API_URL || 'http://127.0.0.1:5541/api'
   static vscodeVersion = process.env.VSCODE_VERSION || '1.87.2'
   static extensionName =
-    process.env.EXTENSION_NAME || 'redis-insight-vsc-plugin.vsix'
+    process.env.EXTENSION_NAME || 'redis-insight-vsc-extension.vsix'
 
   static workingDirectory =
     process.env.APP_FOLDER_ABSOLUTE_PATH ||
@@ -57,6 +57,14 @@ export class Config {
     }-${this.uniqueId}`,
     databaseUsername: process.env.OSS_STANDALONE_REDISEARCH_USERNAME,
     databasePassword: process.env.OSS_STANDALONE_REDISEARCH_PASSWORD,
+  }
+
+  static ossStandaloneV7Config = {
+    host: process.env.OSS_STANDALONE_V7_HOST || 'localhost',
+    port: process.env.OSS_STANDALONE_V7_PORT || '8108',
+    databaseName: `${process.env.OSS_STANDALONE_V7_DATABASE_NAME || 'test_standalone-v7'}-${this.uniqueId}`,
+    databaseUsername: process.env.OSS_STANDALONE_V7_USERNAME,
+    databasePassword: process.env.OSS_STANDALONE_V7_PASSWORD
   }
 
   static ossClusterConfig = {

@@ -379,8 +379,8 @@ export class KeyAPIRequests {
   static async addKeysApi(
     keyData: KeyData[],
     databaseName: string,
-    keyField: string = 'test_field',
-    keyValue: string = 'test_value',
+    keyField = 'test_field',
+    keyValue = 'test_value',
   ): Promise<void> {
     for (let key of keyData) {
       await this.addKeyApi(key, databaseName, keyField, keyValue)

@@ -7,7 +7,7 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { ButtonActions, DatabasesActions } from '@e2eSrc/helpers/common-actions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
-describe('Tree view verifications', () => {
+describe('Tree view verifications for big database', () => {
   let treeView: TreeView
 
   before(async () => {

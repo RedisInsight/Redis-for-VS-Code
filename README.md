@@ -1,4 +1,4 @@
-# Redis-for-VS-Code
+# Redis for Visual Studio Code
 
 Temporary repository to work on the VS Code extension  
 

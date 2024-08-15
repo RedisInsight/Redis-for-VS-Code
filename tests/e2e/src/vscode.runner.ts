@@ -7,7 +7,7 @@ import { logging } from 'selenium-webdriver'
 import * as fs from 'fs'
 import path = require('path')
 import { Config } from './helpers/Conf'
-
+import { VScodeScripts } from './helpers/scripts/vscodeScripts'
 ;(async (): Promise<void> => {
   try {
     // Delete mochawesome-report directory
@@ -27,13 +27,31 @@ import { Config } from './helpers/Conf'
       'test-extensions',
       `redis ltd..${Config.extensionName.replace('.vsix', '')}`,
     )
+    const extensionProcessPath = path.join(
+      __dirname,
+      '..',
+      'test-extensions',
+      'redis.redis-insight-vsc-plugin-0.0.1',
+      'dist',
+      'redis-backend',
+      'dist',
+      'src',
+      'main.js',
+    )
     // Install VSCode and Chromedriver
     await exTester.downloadCode()
     await exTester.downloadChromeDriver()
     // Install vsix if not installed yet
     if (!fs.existsSync(extensionDir)) {
       await exTester.installVsix({
-        vsixFile: path.join(__dirname, '..', '..', '..', 'release', Config.extensionName),
+        vsixFile: path.join(
+          __dirname,
+          '..',
+          '..',
+          '..',
+          'release',
+          Config.extensionName,
+        ),
         useYarn: true,
         installDependencies: true,
       })
@@ -52,6 +70,8 @@ import { Config } from './helpers/Conf'
         resources: [],
       },
     )
+    // Terminate extension node process
+    VScodeScripts.terminateSpecificNodeProcesses(extensionProcessPath)
   } catch (error) {
     console.error(error)
     process.exit(1)

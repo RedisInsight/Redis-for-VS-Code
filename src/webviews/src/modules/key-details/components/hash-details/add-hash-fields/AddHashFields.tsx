@@ -3,6 +3,7 @@ import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import Popup from 'reactjs-popup'
 import cx from 'classnames'
+import { toNumber } from 'lodash'
 
 import {
   stringToBuffer,
@@ -79,7 +80,7 @@ const AddHashFields = (props: Props) => {
       fields: fields.map((item) => ({
         field: stringToBuffer(item.fieldName),
         value: stringToBuffer(item.fieldValue),
-        expire: item.fieldTTL,
+        expire: toNumber(item.fieldTTL) || undefined,
       })),
     }
 
@@ -141,7 +142,7 @@ const AddHashFields = (props: Props) => {
                       value={item.fieldTTL}
                       disabled={loading || disabled}
                       onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                        setFields(handleItemChange(fields, 'fieldTTL', item.id, +validateTTLNumberForAddKey(e.target.value)))}
+                        setFields(handleItemChange(fields, 'fieldTTL', item.id, validateTTLNumberForAddKey(e.target.value)))}
                       data-testid={`hash-ttl-${index}`}
                     />
                   </div>

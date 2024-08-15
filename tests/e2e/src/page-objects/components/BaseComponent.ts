@@ -112,6 +112,16 @@ export class BaseComponent extends WebElement {
   }
 
   /**
+   * Get attribute from element
+   * @param locator locator to check
+   * @param attribute attribute to get
+   * @returns Promise resolving to element text
+   */
+    async getElementAttribute(locator: Locator, attribute: string): Promise<string> {
+      return await (await this.getElement(locator)).getAttribute(attribute)
+    }
+
+  /**
    * Wait for the element to be visible or not visible
    * @param locator Webdriver locator to search by
    * @param timeout Optional maximum time to wait for completion in milliseconds, 0 for unlimited
