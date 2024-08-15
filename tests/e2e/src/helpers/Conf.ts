@@ -59,6 +59,14 @@ export class Config {
     databasePassword: process.env.OSS_STANDALONE_REDISEARCH_PASSWORD,
   }
 
+  static ossStandaloneV7Config = {
+    host: process.env.OSS_STANDALONE_V7_HOST || 'localhost',
+    port: process.env.OSS_STANDALONE_V7_PORT || '8108',
+    databaseName: `${process.env.OSS_STANDALONE_V7_DATABASE_NAME || 'test_standalone-v7'}-${this.uniqueId}`,
+    databaseUsername: process.env.OSS_STANDALONE_V7_USERNAME,
+    databasePassword: process.env.OSS_STANDALONE_V7_PASSWORD
+  }
+
   static ossClusterConfig = {
     ossClusterHost: process.env.OSS_CLUSTER_HOST || 'localhost',
     ossClusterPort: process.env.OSS_CLUSTER_PORT || '8200',

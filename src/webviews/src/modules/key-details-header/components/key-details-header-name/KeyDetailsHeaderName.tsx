@@ -101,10 +101,10 @@ const KeyDetailsHeaderName = ({ onEditKey }: Props) => {
               initialValue={key}
               onChange={setKey}
               onApply={() => applyEditKey()}
-              isDisabled={!keyIsEditable}
+              disabled={!keyIsEditable}
               disabledTooltipText={TEXT_UNPRINTABLE_CHARACTERS}
               onDecline={(event) => cancelEditKey(event)}
-              isLoading={loading}
+              loading={loading}
               inputClassName="pr-6"
               placeholder={AddCommonFieldsFormConfig?.keyName?.placeholder}
               inlineTestId="edit-key-input"

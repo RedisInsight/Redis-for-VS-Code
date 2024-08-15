@@ -36,23 +36,29 @@ describe('ZSetDetailsTable', () => {
   it('should render editor after click edit button', () => {
     const { queryByTestId } = render(<ZSetDetailsTable {...instance(mockedProps)} />)
     expect(queryByTestId(/inline-item-editor/)!).not.toBeInTheDocument()
-    fireEvent.click(screen.getAllByTestId(/zset-edit-button/)[0])
+
+    fireEvent.mouseOver(screen.getAllByTestId(/zset_content-value/)[0])
+
+    fireEvent.click(screen.getAllByTestId(/zset_edit-btn/)[0])
     expect(screen.getByTestId(/inline-item-editor/)).toBeInTheDocument()
   })
 
   it.todo('should render disabled edit button', () => {
     render(<ZSetDetailsTable {...instance(mockedProps)} />)
-    expect(screen.getByTestId(/zset-edit-button-4/)).toBeDisabled()
+    fireEvent.mouseOver(screen.getAllByTestId(/zset_content-value/)[0])
+    expect(screen.getByTestId(/zset_edit-btn-4/)).toBeDisabled()
   })
 
   it('should render enabled edit button', () => {
     render(<ZSetDetailsTable {...instance(mockedProps)} />)
-    expect(screen.getByTestId(/zset-edit-button-member/)).not.toBeDisabled()
+    fireEvent.mouseOver(screen.getAllByTestId(/zset_content-value/)[0])
+    expect(screen.getByTestId(/zset_edit-btn/)).not.toBeDisabled()
   })
 
   it('should render editor after click edit button and able to change value', () => {
     render(<ZSetDetailsTable {...instance(mockedProps)} />)
-    fireEvent.click(screen.getAllByTestId(/zset-edit-button/)[0])
+    fireEvent.mouseOver(screen.getAllByTestId(/zset_content-value/)[0])
+    fireEvent.click(screen.getAllByTestId(/zset_edit-btn/)[0])
     expect(screen.getByTestId('inline-item-editor')).toBeInTheDocument()
     fireEvent.change(screen.getByTestId('inline-item-editor'), { target: { value: '123' } })
     expect(screen.getByTestId('inline-item-editor')).toHaveValue('123')
@@ -65,7 +71,8 @@ describe('ZSetDetailsTable', () => {
     }))
 
     render(<ZSetDetailsTable {...instance(mockedProps)} />)
-    fireEvent.click(screen.getAllByTestId(/zset-edit-button-member/)[0])
+    fireEvent.mouseOver(screen.getAllByTestId(/zset_content-value/)[0])
+    fireEvent.click(screen.getAllByTestId(/zset_edit-btn/)[0])
     expect(setSelectedKeyRefreshDisabledMock).toBeCalledWith(true)
     spy.mockRestore()
   })

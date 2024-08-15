@@ -3,15 +3,15 @@ $footerHeight: 18px;
 $borderColor: var(--vscode-tree-tableColumnsBorder);
 
 .grid {
-  overflow: auto !important;
+  @apply overflow-auto #{!important};
 }
 
 .disableScroll {
-  overflow-y: hidden !important;
+  @apply overflow-y-hidden #{!important};
 }
 
 .progress {
-  z-index: 2;
+  @apply z-[2];
 }
 
 .container {
@@ -23,7 +23,7 @@ $borderColor: var(--vscode-tree-tableColumnsBorder);
 }
 
 :global(.keys-tree__count) {
-  padding-left: 10px;
+  @apply pl-2.5;
 }
 
 .table {
@@ -31,8 +31,27 @@ $borderColor: var(--vscode-tree-tableColumnsBorder);
 
   :global {
     .ReactVirtualized__Table__headerRow {
-      cursor: initial !important;
+      @apply cursor-default;
       border: 1px solid $borderColor;
+    }
+  }
+
+  &.autoHeight {
+    max-height: 100% !important;
+    height: auto !important;
+
+    display: flex;
+    flex-direction: column;
+
+    :global {
+      .ReactVirtualized__Table__headerRow {
+        @apply shrink-0;
+      }
+
+      .ReactVirtualized__Table__Grid {
+        @apply flex-grow;
+        height: auto !important;
+      }
     }
   }
 
@@ -41,9 +60,7 @@ $borderColor: var(--vscode-tree-tableColumnsBorder);
   }
 
   .tableRowCell {
-    @apply flex items-center box-border;
-    padding: 8px 14px;
-    min-height: 43px;
+    @apply flex items-center box-border py-2 px-3.5 min-h-[43px];
   }
 
   .tableRow {
@@ -67,10 +84,11 @@ $borderColor: var(--vscode-tree-tableColumnsBorder);
 }
 
 .headerColumn {
-  @apply m-0 #{!important};
+  @apply m-0 box-content #{!important};
+  border-right: 1px solid $borderColor;
 
-  &:first-of-type {
-    border-right: 1px solid $borderColor;
+  &:last-of-type {
+    @apply border-r-0;
   }
 }
 
@@ -84,13 +102,10 @@ $borderColor: var(--vscode-tree-tableColumnsBorder);
 }
 
 .tableFooter {
-  @apply w-full absolute p-2 flex items-center;
+  @apply w-full absolute p-2 flex items-center z-[1] -bottom-[38px];
   height: $footerHeight;
-  bottom: -38px;
-  z-index: 1;
   & > div {
-    min-width: 100px;
-    margin-right: 8px;
+    @apply min-w-[100px] mr-2;
   }
 }
 
@@ -103,47 +118,48 @@ $borderColor: var(--vscode-tree-tableColumnsBorder);
 }
 
 :global(.key-details-table) {
-  /* height: calc(100% - 94px); */
   @apply relative;
-  &:global(.footerOpened) {
-    :global(.ReactVirtualized__Table__Grid) {
-      padding-bottom: 254px;
-      overflow-y: auto !important;
-    }
-    &:global(.footerOpened--short) {
-      :global(.ReactVirtualized__Table__Grid) {
-        padding-bottom: 134px;
-        overflow-y: auto !important;
-      }
-    }
-  }
   :global(.ReactVirtualized__Table__row) {
     font-size: 13px;
-    align-items: normal;
+
+    &:global(.actions.singleAction) {
+      .tableRowCell {
+        @apply py-1 px-2 #{!important};
+      }
+    }
+
+    &:last-of-type :global(.ReactVirtualized__Table__rowColumn) {
+      border-bottom-color: transparent;
+    }
   }
   :global(.ReactVirtualized__Table__headerRow) {
     border: 1px solid $borderColor !important;
   }
   :global(.ReactVirtualized__Table__rowColumn) {
-    overflow: visible !important;
+    @apply box-content overflow-visible #{!important};
+    border-right: 1px solid $borderColor;
     border-bottom: 1px solid $borderColor;
 
-    &:first-of-type {
-      border-right: 1px solid $borderColor;
+    &:last-of-type {
+      border-right-color: transparent;
     }
   }
 
   :global(.ReactVirtualized__Table__Grid) {
     border: 1px solid $borderColor;
-    border-top-width: 0;
+    @apply border-t-0;
   }
 
   .headerCell {
     padding: 18px 4px 18px 16px;
   }
 
+  .tableRowColumn {
+    @apply min-h-full;
+  }
+
   .tableRowCell {
-    min-height: 42px;
+    @apply min-h-[42px];
   }
 
   .tableFooter {
@@ -155,7 +171,7 @@ $borderColor: var(--vscode-tree-tableColumnsBorder);
       @apply flex items-center;
 
       .editFieldBtn {
-        margin-right: 10px;
+        @apply mr-2.5;
       }
     }
 
@@ -167,11 +183,11 @@ $borderColor: var(--vscode-tree-tableColumnsBorder);
 }
 
 .loading {
-  opacity: 0;
+  @apply opacity-0;
 }
 
 .loadingShow {
-  opacity: 1;
+  @apply opacity-100;
 }
 
 .loading:after {
@@ -180,10 +196,7 @@ $borderColor: var(--vscode-tree-tableColumnsBorder);
 }
 
 .resizeTrigger {
-  @apply absolute h-full top-0 -right-1 cursor-col-resize;
-  width: 7px;
-
-  z-index: 2;
+  @apply absolute h-full top-0 -right-1 cursor-col-resize w-[7px] z-[2];
 
   &:before {
     @apply block h-2 absolute top-[50%];

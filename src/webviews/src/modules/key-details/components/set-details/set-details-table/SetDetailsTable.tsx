@@ -3,8 +3,8 @@ import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 import { CellMeasurerCache } from 'react-virtualized'
 import { useShallow } from 'zustand/react/shallow'
-import { RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
 
+import { RedisResponseBuffer, RedisString } from 'uiSrc/interfaces'
 import {
   bufferToString,
   createDeleteFieldHeader,
@@ -177,7 +177,7 @@ export const SetDetailsTable = (props: Props) => {
   const columns: ITableColumn[] = [
     {
       id: 'name',
-      label: 'Member',
+      label: l10n.t('Member'),
       isSearchable: true,
       initialSearchValue: '',
       truncateText: true,
@@ -268,6 +268,7 @@ export const SetDetailsTable = (props: Props) => {
       <VirtualTable
         hideProgress
         expandable
+        autoHeight
         selectable={false}
         keyName={key}
         headerHeight={headerHeight}

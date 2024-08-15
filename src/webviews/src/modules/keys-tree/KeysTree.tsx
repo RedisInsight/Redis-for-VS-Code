@@ -114,7 +114,7 @@ export const KeysTree = ({ database }: Props) => {
     fetchKeyInfo({ key: name, databaseId: database.id }, false, () => {
       vscodeApi.postMessage({
         action: VscodeMessageAction.SelectKey,
-        data: { key: name, keyString, keyType: type, databaseId: database.id, displayedKeyType: getGroupTypeDisplay(type) },
+        data: { key: name, keyString, keyType: type, database, displayedKeyType: getGroupTypeDisplay(type) },
       })
     })
   }

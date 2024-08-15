@@ -1,6 +1,6 @@
 import cx from 'classnames'
 import { findIndex, isNumber, sumBy, xor } from 'lodash'
-import AutoSizer, { Size } from 'react-virtualized-auto-sizer'
+import ResizeObserver, { SizeInfo } from 'rc-resize-observer'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   CellMeasurer,
@@ -34,6 +34,8 @@ const TABLE_OUTSIDE_WIDTH = 24
 
 const VirtualTable = (props: IProps) => {
   const {
+    autoHeight,
+    tableRef,
     selectable = false,
     expandable = false,
     headerHeight = 44,
@@ -133,7 +135,7 @@ const VirtualTable = (props: IProps) => {
     cellCache?.clearAll()
   }, [totalItemsCount])
 
-  const onResize = ({ width = 0, height = 0 }: Size): void => {
+  const onResize = ({ width = 0, height = 0 }: SizeInfo): void => {
     setHeight(height)
     setWidth(Math.floor(width))
     onChangeWidth?.(width)
@@ -492,90 +494,93 @@ const VirtualTable = (props: IProps) => {
   }
 
   return (
-    <AutoSizer onResize={onResize}>
-      {({ width, height }) => (
-        <div
-          className={cx(styles.container, { [styles.isResizing]: isColResizing })}
-          style={{ width, height }}
-          onWheel={onWheel}
-          onMouseMove={onDragColumn}
-          onMouseUp={onDragColumnEnd}
-          onMouseLeave={onDragColumnEnd}
-          role="presentation"
-          data-testid="virtual-table-container"
+    <ResizeObserver onResize={onResize}>
+      <div
+        className={cx(styles.container, { [styles.isResizing]: isColResizing })}
+        onWheel={onWheel}
+        onMouseMove={onDragColumn}
+        onMouseUp={onDragColumnEnd}
+        onMouseLeave={onDragColumnEnd}
+        role="presentation"
+        data-testid="virtual-table-container"
+      >
+        {loading && !hideProgress && (
+          <span />
+        )}
+        <InfiniteLoader
+          isRowLoaded={isRowLoaded}
+          minimumBatchSize={SCAN_COUNT_DEFAULT}
+          threshold={threshold}
+          loadMoreRows={loadMoreRows}
+          rowCount={totalItemsCount || undefined}
         >
-          {loading && !hideProgress && (
-            <span />
+          {({ onRowsRendered, registerChild }) => (
+            <Table
+              onRowClick={onRowSelect}
+              onRowDoubleClick={() => clearSelectTimeout()}
+              estimatedRowSize={rowHeight}
+              headerHeight={headerHeight}
+              rowHeight={cellCache.rowHeight}
+              width={tableWidth > width ? tableWidth : width}
+              noRowsRenderer={noRowsRenderer}
+              height={height}
+              className={cx(styles.table, { [styles.autoHeight]: autoHeight })}
+              gridClassName={cx(styles.customScroll, styles.grid, {
+                [styles.disableScroll]: disableScroll,
+              })}
+              rowClassName={({ index }) =>
+                cx([
+                  styles.tableRow,
+                  {
+                    'table-row-selected': selectedRowIndex === index,
+                    [styles.tableRowEven]: index % 2 === 0,
+                  },
+                ])}
+              headerClassName={styles.headerColumn}
+              rowCount={items.length}
+              rowGetter={({ index }) => items[index]}
+              onScroll={onScroll}
+              scrollTop={forceScrollTop}
+              deferredMeasurementCache={cellCache}
+              onRowsRendered={(props) => {
+                onRowsRendered(props)
+                onRowsRenderedProps?.(props)
+              }}
+              ref={(ref) => {
+                if (tableRef) {
+                  tableRef.current = ref
+                }
+
+                return registerChild(ref)
+              }}
+            >
+              {columns.map((column: ITableColumn, index: number) => (
+                <Column
+                  minWidth={column.minWidth}
+                  maxWidth={column.maxWidth}
+                  label={column.label}
+                  dataKey={column.id}
+                  width={columnWidthSizes?.[column.id]?.abs || (
+                    column.absoluteWidth || column.relativeWidth ? column.relativeWidth ?? 0 : 20
+                  )}
+                  flexGrow={!column.absoluteWidth && !column.relativeWidth ? 1 : 0}
+                  headerRenderer={(headerProps) =>
+                    headerRenderer({
+                      ...headerProps,
+                      columnIndex: index,
+                      cellClass: column.headerCellClassName,
+                    })}
+                  cellRenderer={cellRenderer}
+                  headerClassName={column.headerClassName ?? ''}
+                  className={cx(styles.tableRowColumn, column.className ?? '')}
+                  key={column.id}
+                />
+              ))}
+            </Table>
           )}
-          <InfiniteLoader
-            isRowLoaded={isRowLoaded}
-            minimumBatchSize={SCAN_COUNT_DEFAULT}
-            threshold={threshold}
-            loadMoreRows={loadMoreRows}
-            rowCount={totalItemsCount || undefined}
-          >
-            {({ onRowsRendered, registerChild }) => (
-              <Table
-                onRowClick={onRowSelect}
-                onRowDoubleClick={() => clearSelectTimeout()}
-                estimatedRowSize={rowHeight}
-                ref={registerChild}
-                headerHeight={headerHeight}
-                rowHeight={cellCache.rowHeight}
-                width={tableWidth > width ? tableWidth : width}
-                noRowsRenderer={noRowsRenderer}
-                height={height}
-                className={styles.table}
-                gridClassName={cx(styles.customScroll, styles.grid, {
-                  [styles.disableScroll]: disableScroll,
-                })}
-                rowClassName={({ index }) =>
-                  cx([
-                    styles.tableRow,
-                    {
-                      'table-row-selected': selectedRowIndex === index,
-                      [styles.tableRowEven]: index % 2 === 0,
-                    },
-                  ])}
-                headerClassName={styles.headerColumn}
-                rowCount={items.length}
-                rowGetter={({ index }) => items[index]}
-                onScroll={onScroll}
-                scrollTop={forceScrollTop}
-                deferredMeasurementCache={cellCache}
-                onRowsRendered={(props) => {
-                  onRowsRendered(props)
-                  onRowsRenderedProps?.(props)
-                }}
-              >
-                {columns.map((column: ITableColumn, index: number) => (
-                  <Column
-                    minWidth={column.minWidth}
-                    maxWidth={column.maxWidth}
-                    label={column.label}
-                    dataKey={column.id}
-                    width={columnWidthSizes?.[column.id]?.abs || (
-                      column.absoluteWidth || column.relativeWidth ? column.relativeWidth ?? 0 : 20
-                    )}
-                    flexGrow={!column.absoluteWidth && !column.relativeWidth ? 1 : 0}
-                    headerRenderer={(headerProps) =>
-                      headerRenderer({
-                        ...headerProps,
-                        columnIndex: index,
-                        cellClass: column.headerCellClassName,
-                      })}
-                    cellRenderer={cellRenderer}
-                    headerClassName={column.headerClassName ?? ''}
-                    className={cx(styles.tableRowColumn, column.className ?? '')}
-                    key={column.id}
-                  />
-                ))}
-              </Table>
-            )}
-          </InfiniteLoader>
-        </div>
-      )}
-    </AutoSizer>
+        </InfiniteLoader>
+      </div>
+    </ResizeObserver>
   )
 }
 

@@ -2,7 +2,6 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import {
   before,
-  beforeEach,
   after,
   afterEach,
   EditorView,
@@ -144,7 +143,7 @@ describe('Edit Key values verification', () => {
 
     await sortedSetKeyDetailsView.editSortedSetKeyValue(
       scoreAfter,
-      keyValueBefore,
+      '0',
     )
     let resultValue = await (
       await sortedSetKeyDetailsView.getElements(

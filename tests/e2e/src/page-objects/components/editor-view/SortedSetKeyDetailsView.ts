@@ -15,10 +15,10 @@ export class SortedSetKeyDetailsView extends DoubleColumnKeyDetailsView {
     `//*[contains(@data-testid, 'zset-member-value-')]//*[contains(@aria-describedby, 'popup')]`,
   )
   scoreSortedSetFieldsList = By.xpath(
-    `//*[contains(@data-testid, 'zset-score-value-')]`,
+    `//*[contains(@data-testid, 'zset_content-value-')]`,
   )
-  sortedSetScoreEditor = By.xpath(
-    `//*[@id = 'score' and @data-testId = 'inline-item-editor']`,
+  sortedSetScoreEditor   = (score: string): By => By.xpath(
+    `//*[@id = '${score}' and @data-testId = 'inline-item-editor']`,
   )
   zsetMemberScoreInput = By.xpath(`//*[starts-with(@data-testid, 'member-score')]`)
 
@@ -31,7 +31,7 @@ export class SortedSetKeyDetailsView extends DoubleColumnKeyDetailsView {
     await super.editKeyValueSlow(
       value,
       name,
-      this.sortedSetScoreEditor,
+      this.sortedSetScoreEditor(name),
       KeyTypesShort.ZSet,
     )
   }

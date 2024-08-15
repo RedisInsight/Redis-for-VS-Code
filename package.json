@@ -285,6 +285,7 @@
     "pickleparser": "^0.2.1",
     "rawproto": "^0.7.15",
     "rc-checkbox": "^3.2.0",
+    "rc-resize-observer": "^1.4.0",
     "react": "^18.3.1",
     "react-contenteditable": "^3.3.7",
     "react-cool-onclickoutside": "^1.7.0",

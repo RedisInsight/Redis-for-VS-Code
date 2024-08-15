@@ -1,7 +1,6 @@
 import React, {
   MouseEvent,
   KeyboardEvent,
-  Ref,
   useEffect,
   useRef,
   useState,
@@ -30,9 +29,9 @@ export interface Props {
   placeholder?: string
   maxLength?: number
   expandable?: boolean
-  isActive?: boolean
-  isLoading?: boolean
-  isDisabled?: boolean
+  active?: boolean
+  loading?: boolean
+  disabled?: boolean
   invalid?: boolean
   disableEmpty?: boolean
   disableByValidation?: (value: string) => boolean
@@ -65,7 +64,7 @@ const InlineEditor = memo((props: Props) => {
     maxLength,
     children,
     expandable,
-    isLoading,
+    loading,
     invalid,
     autoSelect,
     autoFocus,
@@ -74,7 +73,7 @@ const InlineEditor = memo((props: Props) => {
     validation,
     declineOnUnmount = true,
     viewChildrenMode,
-    isDisabled,
+    disabled,
     controlsPosition = 'center',
     autoComplete = 'off',
     controlsClassName,
@@ -83,7 +82,7 @@ const InlineEditor = memo((props: Props) => {
     disableFocusTrap = false,
     approveByValidation,
     approveText,
-    isActive: isActiveProp,
+    active: activeProp,
     inputClassName,
     inlineTestId = 'inline-item-editor',
   } = props
@@ -92,11 +91,11 @@ const InlineEditor = memo((props: Props) => {
   const popupRef = useRef<PopupActions>(null)
   const [value, setValue] = useState<string>(initialValue)
   const [isError, setIsError] = useState<boolean>(false)
-  const [isActive, setIsActive] = useState(isActiveProp)
+  const [isActive, setIsActive] = useState(activeProp)
 
   const handleClickOutside = (event: any) => {
     if (preventOutsideClick) return
-    if (!isLoading) {
+    if (!loading) {
       onDecline?.(event)
     } else {
       event.stopPropagation()
@@ -175,12 +174,12 @@ const InlineEditor = memo((props: Props) => {
   }
 
   const isDisabledApply = (): boolean =>
-    !!(isLoading || isError || isDisabled || (disableEmpty && !value.length))
+    !!(loading || isError || disabled || (disableEmpty && !value.length))
 
   const ApplyBtn = (
     <Tooltip
-      title={isDisabled ? disabledTooltipText?.title : ''}
-      content={isDisabled ? disabledTooltipText?.text : ''}
+      title={disabled ? disabledTooltipText?.title : ''}
+      content={disabled ? disabledTooltipText?.text : ''}
     >
       <VSCodeButton
         appearance="icon"
@@ -237,7 +236,7 @@ const InlineEditor = memo((props: Props) => {
                   setIsActive(false)
                   onDecline?.(event)
                 }}
-                disabled={isLoading}
+                disabled={loading}
                 data-testid="cancel-btn"
               >
                 { controlsPosition === 'bottom' ? <RxCross1 /> : <VscError />}

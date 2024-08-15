@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 
@@ -54,9 +54,10 @@ export const SetDetails = (props: Props) => {
     addSetMembersAction(data, () => onSuccessAdded(data.members))
   }
 
-  const Actions = () => (
-    <AddItemsAction title={l10n.t('Add Members')} openAddItemPanel={openAddItemPanel} />
-  )
+  const Actions = ({ children }: PropsWithChildren) => ([
+    children,
+    <AddItemsAction title={l10n.t('Add Members')} openAddItemPanel={openAddItemPanel} />,
+  ])
 
   return (
     <div className="fluid flex-column relative">

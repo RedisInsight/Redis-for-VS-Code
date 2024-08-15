@@ -138,6 +138,7 @@ export type HashKeyParameters = {
   fields: {
     field: string
     value: string
+    ttl?: string
   }[]
 }
 

@@ -16,11 +16,11 @@ export interface ResetSelectedKeyAction {
 export interface SelectKeyAction {
   action: VscodeMessageAction.SelectKey
   data: {
-    key: RedisString,
-    keyString: string,
-    keyType: AllKeyTypes,
-    databaseId: string,
-    displayedKeyType?: string,
+    key: RedisString
+    keyString: string
+    keyType: AllKeyTypes
+    database: Database
+    displayedKeyType?: string
   }
 }
 
@@ -48,7 +48,7 @@ export interface SelectedKeyAction {
   data: {
     key?: RedisString,
     type: SelectedKeyActionType,
-    databaseId: string,
+    database: Database,
     keyType?: KeyTypes,
     newKey?: RedisString,
     keyString?: string

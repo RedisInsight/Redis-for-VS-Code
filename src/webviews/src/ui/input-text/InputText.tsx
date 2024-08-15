@@ -15,13 +15,14 @@ export interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const InputText: FC<Props> = (props) => {
-  const { className, inputRef, type = 'text', label, name, id, append, invalid } = props
+  const { className, inputRef, type = 'text', label, name, id, append, invalid, value } = props
   const { text: labelText, className: labelClassName = '' } = label ?? {}
   const inputEl = (
     <input
       {...omit(props, 'inputRef', 'labelText', 'append', 'invalid')}
       type={type}
       ref={inputRef}
+      value={value || ''}
       className={cx(
         styles.input,
         {

@@ -185,13 +185,13 @@ const StringDetailsValue = (props: Props) => {
         {isEditItem && (
           <InlineEditor
             expandable
-            isActive
+            active
             controlsPosition="bottom"
             placeholder={l10n.t('Enter Value')}
             fieldName="value"
             preventOutsideClick
-            isLoading={false}
-            isDisabled={isDisabled}
+            loading={false}
+            disabled={isDisabled}
             disabledTooltipText={TEXT_UNPRINTABLE_CHARACTERS}
             onDecline={onDeclineChanges}
             onApply={onApplyChanges}
