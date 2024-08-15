@@ -20,7 +20,7 @@ import { ButtonActions, CheckboxActions } from '@e2eSrc/helpers/common-actions'
 import { WelcomeView } from '@e2eSrc/page-objects/components/editor-view/WelcomeView'
 import { CommonElementActions } from '@e2eSrc/helpers/common-actions/actions/CommonElementActions'
 
-describe('Agreements Verification', () => {
+describe.only('Agreements Verification', () => {
   let browser: VSBrowser
   let treeView: TreeView
   let eulaView: EulaView

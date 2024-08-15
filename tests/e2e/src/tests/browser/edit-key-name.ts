@@ -34,7 +34,7 @@ import { KeyTypesShort } from '@e2eSrc/helpers/constants'
 let keyNameBefore = Common.generateWord(10)
 let keyNameAfter = Common.generateWord(10)
 
-describe('Edit Key names verification', () => {
+describe.only('Edit Key names verification', () => {
   let hashKeyDetailsView: HashKeyDetailsView
   let treeView: TreeView
   let sortedSetKeyDetailsView: SortedSetKeyDetailsView
