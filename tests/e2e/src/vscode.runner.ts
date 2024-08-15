@@ -25,13 +25,13 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
       __dirname,
       '..',
       'test-extensions',
-      `redis ltd..${Config.extensionName.replace('.vsix', '')}`,
+      `${Config.extensionName.replace('.vsix', '')}`,
     )
     const extensionProcessPath = path.join(
       __dirname,
       '..',
       'test-extensions',
-      'redis.redis-insight-vsc-plugin-0.0.1',
+      'redis.redis-for-vscode-0.0.2',
       'dist',
       'redis-backend',
       'dist',
