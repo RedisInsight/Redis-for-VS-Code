@@ -12,7 +12,7 @@ export class SortedSetKeyDetailsView extends DoubleColumnKeyDetailsView {
     `//*[contains(@data-testid, 'zset-member-value-')]`,
   )
   truncatedValue = By.xpath(
-    `//*[contains(@data-testid, 'zset-score-value-')]//*[@class = 'truncate']`,
+    `//*[contains(@data-testid, 'zset-member-value-')]//*[contains(@aria-describedby, 'popup')]`,
   )
   scoreSortedSetFieldsList = By.xpath(
     `//*[contains(@data-testid, 'zset_content-value-')]`,

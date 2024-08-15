@@ -31,7 +31,7 @@ describe('Empty database', () => {
   })
 
   it('Verify that form to add database can be opened from empty db page', async function () {
-    const expectedWelcomeLinks = ['https://redis.io/docs/install/install-stack/docker/?utm_source=redisinsight&utm_medium=main&utm_campaign=docker']
+    const expectedWelcomeLinks = ['https://redis.io/docs/latest/develop/connect/insight/?utm_source=redisinsight&utm_medium=vscode&utm_campaign=empty_database', 'https://hub.docker.com/r/redis/redis-stack-server']
 
     await ButtonActions.clickElement(emptyView.connectDatabaseButton)
 

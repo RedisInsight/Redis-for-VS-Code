@@ -112,12 +112,12 @@ describe('Set Key fields verification', () => {
 
     expect(
       await addSetKeyView.isElementDisabled(addSetKeyView.addButton, 'class'),
-    ).eql(true, 'add button is not disabled if name in not entered')
+    ).eql(true, 'add button is not disabled if name is not entered')
 
     await InputActions.typeText(addSetKeyView.keyNameInput, keyName)
 
     expect(
       await addSetKeyView.isElementDisabled(addSetKeyView.addButton, 'class'),
-    ).eql(false, 'add button is disabled if name in entered')
+    ).eql(false, 'add button is disabled if name is entered')
   })
 })
