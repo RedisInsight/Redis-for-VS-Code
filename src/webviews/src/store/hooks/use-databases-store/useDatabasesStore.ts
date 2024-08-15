@@ -159,6 +159,7 @@ export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?
       const { status } = await apiService.patch(`${ApiEndpoints.DATABASES}/${id}`, payload)
 
       if (isStatusSuccessful(status)) {
+        showInformationMessage(successMessages.EDITED_NEW_DATABASE(payload.name ?? '').title)
         fetchDatabases()
         onSuccess?.()
       }

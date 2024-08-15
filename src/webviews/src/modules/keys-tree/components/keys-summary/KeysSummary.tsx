@@ -75,7 +75,11 @@ export const KeysSummary = (props: Props) => {
       )} */}
 
       <div className="flex pr-3.5">
-        <Tooltip content={l10n.t('Sort by key names displayed')}>
+        <Tooltip
+          keepTooltipInside={false}
+          content={l10n.t('Sort by key names displayed')}
+          position="bottom right"
+        >
           <VSCodeButton
             appearance="icon"
             onClick={changeSortHandle}

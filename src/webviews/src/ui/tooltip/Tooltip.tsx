@@ -13,6 +13,7 @@ export interface Props extends PopupProps {
 
 export const Tooltip = (props: Props) => {
   const {
+    keepTooltipInside = true,
     position = 'top center',
     title,
     children: childrenInit,
@@ -30,7 +31,7 @@ export const Tooltip = (props: Props) => {
 
   return (
     <Popup
-      keepTooltipInside
+      keepTooltipInside={keepTooltipInside}
       position={position}
       on="hover"
       trigger={children as JSX.Element}
