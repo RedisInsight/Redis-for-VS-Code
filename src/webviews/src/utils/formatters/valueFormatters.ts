@@ -22,6 +22,8 @@ import {
   binaryToBuffer,
   bufferToFloat64Array,
   bufferToFloat32Array,
+  isEqualBuffers,
+  UTF8ToBuffer,
 } from 'uiSrc/utils'
 import { reSerializeJSON } from 'uiSrc/utils/formatters/json'
 
@@ -107,13 +109,18 @@ const formattingBuffer = (
       }
     }
     case KeyValueFormat.Vector32Bit: {
+      const valueUTF = bufferToUTF8(reply)
       try {
+        if (isEqualBuffers(reply, UTF8ToBuffer(valueUTF))) {
+          return { value: valueUTF, isValid: false }
+        }
+
         const vector = Array.from(bufferToFloat32Array(reply.data as Uint8Array))
         const value = JSONBigInt.stringify(vector)
 
         return JSONViewer({ value, useNativeBigInt: false, ...props })
       } catch (e) {
-        return { value: bufferToUTF8(reply), isValid: false }
+        return { value: valueUTF, isValid: false }
       }
     }
     case KeyValueFormat.Vector64Bit: {
@@ -170,8 +177,8 @@ const bufferToSerializedFormat = (
     case KeyValueFormat.HEX: return bufferToHex(value)
     case KeyValueFormat.Binary: return bufferToBinary(value)
     case KeyValueFormat.JSON: return reSerializeJSON(bufferToUTF8(value), space)
-    case KeyValueFormat.Vector32Bit: return bufferToFloat32Array(value.data as Uint8Array)
-    case KeyValueFormat.Vector64Bit: return bufferToFloat64Array(value.data as Uint8Array)
+    case KeyValueFormat.Vector32Bit: return bufferToFloat32Array(value.data as Uint8Array) as any
+    case KeyValueFormat.Vector64Bit: return bufferToFloat64Array(value.data as Uint8Array) as any
     case KeyValueFormat.Msgpack: {
       try {
         const decoded = decode(Uint8Array.from(value.data))
