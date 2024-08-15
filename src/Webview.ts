@@ -92,7 +92,7 @@ abstract class Webview {
           window.appInfo=${JSON.stringify(appInfo)};
         </script>
 
-        <title>Redis Insight Webview</title>
+        <title>Redis for VS Code Webview</title>
       </head>
       <body>
         <div id="root" data-route="${this._opts.route}"></div>
@@ -153,7 +153,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
     // Listen for when the panel is disposed
     // This happens when the user closes the panel or when the panel is closed programmatically
     this.panel.onDidDispose(() => {
-      vscode.commands.executeCommand('RedisInsight.resetSelectedKey')
+      vscode.commands.executeCommand('RedisForVSCode.resetSelectedKey')
       this.dispose()
     }, null, this._disposables)
 

@@ -9,7 +9,6 @@ import {
   bufferToString,
   createDeleteFieldHeader,
   createDeleteFieldMessage,
-  formatLongName,
   formattingBuffer,
   sendEventTelemetry,
   TelemetryEvent,
@@ -21,14 +20,12 @@ import {
   helpTexts,
   NoResultsFoundText,
   OVER_RENDER_BUFFER_COUNT,
-  TEXT_FAILED_CONVENT_FORMATTER,
   SCAN_COUNT_DEFAULT,
   DEFAULT_SEARCH_MATCH,
 } from 'uiSrc/constants'
 import { PopoverDelete, VirtualTable } from 'uiSrc/components'
 import { IColumnSearchState, ITableColumn } from 'uiSrc/components/virtual-table/interfaces'
 import { useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
-import { Tooltip } from 'uiSrc/ui'
 import {
   deleteSetMembers,
   fetchSetMembers,
@@ -188,20 +185,16 @@ export const SetDetailsTable = (props: Props) => {
         const decompressedMemberItem = memberItem
         const member = bufferToString(memberItem || '')
         // Better to cut the long string, because it could affect virtual scroll performance
-        const { value, isValid } = formattingBuffer(decompressedMemberItem, viewFormatProp, { expanded })
+        const { value } = formattingBuffer(decompressedMemberItem, viewFormatProp, { expanded })
         const cellContent = (value as string)?.substring?.(0, 200) ?? value
-        const tooltipContent = `${isValid ? l10n.t('Member') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}\n${formatLongName(member)}`
 
         return (
           <div className="max-w-full whitespace-break-spaces">
             <div className="flex" data-testid={`set-member-value-${member}`}>
               {!expanded && (
-                <Tooltip content={tooltipContent} mouseEnterDelay={500}>
-                  <div className={cx('truncate', styles.tooltip)}>
-
-                    {cellContent}
-                  </div>
-                </Tooltip>
+                <div className={cx('truncate', styles.tooltip)}>
+                  {cellContent}
+                </div>
               )}
               {expanded && value}
             </div>

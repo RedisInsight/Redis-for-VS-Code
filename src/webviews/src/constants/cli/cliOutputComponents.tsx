@@ -107,9 +107,9 @@ export const cliTexts = {
   HELLO3_COMMAND: () => (
     <span className="text-vscode-errorForeground" key={Date.now()}>
       {l10n.t({
-        message: 'Redis Insight does not support ',
+        message: 'Redis for VS Code does not support ',
         comment:
-          'Context: Redis Insight does not support "RESP3" at the moment, but we are working on it.',
+          'Context: Redis for VS Code does not support "RESP3" at the moment, but we are working on it.',
       })}
       <Link
         to="https://github.com/redis/redis-specifications/blob/master/protocol/RESP3.md"
@@ -123,7 +123,7 @@ export const cliTexts = {
       {l10n.t({
         message: ' at the moment, but we are working on it.',
         comment:
-          'Context: Redis Insight does not support "RESP3" at the moment, but we are working on it.',
+          'Context: Redis for VS Code does not support "RESP3" at the moment, but we are working on it.',
       })}
     </span>
   ),

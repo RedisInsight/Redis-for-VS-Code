@@ -10,7 +10,7 @@ Temporary repository to work on the VS Code extension
 1. Chose one of the options in the select control and click on the green play icon. Options:  
   a. `Run Dev Extension` - start 2 background dev tasks and the debug vscode instance with extension  
   b. `Run only Extension` - start only the debug vscode instance with extension  
-1. In the opened Visual studio code instance, click the Redis Insight icon in the sidebar  
+1. In the opened Visual studio code instance, click the Redis for VS Code icon in the sidebar  
 
 
 

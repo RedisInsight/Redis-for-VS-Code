@@ -17,7 +17,7 @@ const appPrefix = process.env.RI_APP_PREFIX
 const appFolder = process.env.RI_APP_FOLDER
 const appHost = process.env.RI_APP_HOST
 
-const backendPath = path.join(__dirname, '..', 'redis-backend/dist')
+const backendPath = path.join(__dirname, '..', 'redis-backend/dist-minified')
 let PSinst: ChildProcessWithoutNullStreams
 
 export async function startBackendE2E(logger: CustomLogger): Promise<any> {
@@ -28,7 +28,7 @@ export async function startBackendE2E(logger: CustomLogger): Promise<any> {
   workspaceStateService.set('appPort', port)
 
   return new Promise((resolve) => {
-    const backendSrcPath = path.join(backendPath, 'src/main.js')
+    const backendSrcPath = path.join(backendPath, 'main.js')
 
     if (!fs.existsSync(backendPath)) {
       const errorMessage = 'Can\'t find api folder. Please run "yarn download:backend" command'
@@ -36,7 +36,7 @@ export async function startBackendE2E(logger: CustomLogger): Promise<any> {
       console.debug(errorMessage)
       resolve('')
     } else {
-      const message = vscode.window.setStatusBarMessage('Starting Redis Insight...')
+      const message = vscode.window.setStatusBarMessage('Starting Redis for VS Code...')
       if (process.platform === 'win32') {
         PSinst = cp.spawn('powershell.exe', [
           '-NoProfile',

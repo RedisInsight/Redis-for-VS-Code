@@ -29,10 +29,10 @@ export const waitFor = async (timeout: number, condition: () => boolean): Promis
 export const handleMessage = async (message: any = {}) => {
   switch (message.action) {
     case 'SelectKey':
-      vscode.commands.executeCommand('RedisInsight.openKey', message)
+      vscode.commands.executeCommand('RedisForVSCode.openKey', message)
       break
     case 'EditDatabase':
-      vscode.commands.executeCommand('RedisInsight.editDatabase', message)
+      vscode.commands.executeCommand('RedisForVSCode.editDatabase', message)
       break
     case 'ErrorMessage':
       vscode.window.showErrorMessage(message.data)
@@ -41,34 +41,34 @@ export const handleMessage = async (message: any = {}) => {
       vscode.window.showInformationMessage(message.data)
       break
     case 'AddCli':
-      vscode.commands.executeCommand('RedisInsight.addCli', message)
+      vscode.commands.executeCommand('RedisForVSCode.addCli', message)
       break
     case 'AddKey':
-      vscode.commands.executeCommand('RedisInsight.addKeyOpen', message)
+      vscode.commands.executeCommand('RedisForVSCode.addKeyOpen', message)
       break
     case 'CloseAddKey':
-      vscode.commands.executeCommand('RedisInsight.addKeyClose')
+      vscode.commands.executeCommand('RedisForVSCode.addKeyClose')
       break
     case 'CloseAddKeyAndRefresh':
-      vscode.commands.executeCommand('RedisInsight.closeAddKeyAndRefresh', message.data)
+      vscode.commands.executeCommand('RedisForVSCode.closeAddKeyAndRefresh', message.data)
       break
     case 'CloseKeyAndRefresh':
-      vscode.commands.executeCommand('RedisInsight.closeKeyAndRefresh', message.data)
+      vscode.commands.executeCommand('RedisForVSCode.closeKeyAndRefresh', message.data)
       break
     case 'CloseKey':
-      vscode.commands.executeCommand('RedisInsight.closeKey')
+      vscode.commands.executeCommand('RedisForVSCode.closeKey')
       break
     case 'EditKeyName':
-      vscode.commands.executeCommand('RedisInsight.editKeyName', message.data)
+      vscode.commands.executeCommand('RedisForVSCode.editKeyName', message.data)
       break
     case 'OpenAddDatabase':
-      vscode.commands.executeCommand('RedisInsight.addDatabase')
+      vscode.commands.executeCommand('RedisForVSCode.addDatabase')
       break
     case 'CloseAddDatabase':
-      vscode.commands.executeCommand('RedisInsight.addDatabaseClose')
+      vscode.commands.executeCommand('RedisForVSCode.addDatabaseClose')
       break
     case 'CloseEditDatabase':
-      vscode.commands.executeCommand('RedisInsight.editDatabaseClose', message)
+      vscode.commands.executeCommand('RedisForVSCode.editDatabaseClose', message)
       break
     case 'UpdateSettings':
       await workspaceStateService.set('appInfo', {
@@ -76,16 +76,16 @@ export const handleMessage = async (message: any = {}) => {
         config: message.data,
       })
 
-      vscode.commands.executeCommand('RedisInsight.updateSettings', message)
+      vscode.commands.executeCommand('RedisForVSCode.updateSettings', message)
       break
     case 'UpdateSettingsDelimiter':
-      vscode.commands.executeCommand('RedisInsight.updateSettingsDelimiter', message)
+      vscode.commands.executeCommand('RedisForVSCode.updateSettingsDelimiter', message)
       break
     case 'ShowEula':
-      vscode.commands.executeCommand('RedisInsight.openEula', message)
+      vscode.commands.executeCommand('RedisForVSCode.openEula', message)
       break
     case 'CloseEula':
-      vscode.commands.executeCommand('RedisInsight.closeEula', message)
+      vscode.commands.executeCommand('RedisForVSCode.closeEula', message)
       break
     case 'SaveAppInfo':
       await workspaceStateService.set('appInfo', message.data)

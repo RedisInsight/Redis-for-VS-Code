@@ -62,7 +62,7 @@ describe('Config', () => {
               required: true,
               editable: false,
               since: '1.0.0',
-              title: 'EULA: Redis Insight License Terms',
+              title: 'EULA: RRedis for VS Code License Terms',
               label: 'Label',
             },
           },

@@ -182,7 +182,7 @@ jobs:
       - run:
           name: Build .vsix package
           command: |
-            packagePath=./release/redis-insight-vsc-extension-linux-x64.vsix
+            packagePath=./release/redis-for-vscode-extension-linux-x64.vsix
             yarn download:backend
 
             if [ << parameters.env >> == 'prod' ]; then
@@ -194,7 +194,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - release/redis-insight-vsc-*.vsix
+            - release/redis-for-*.vsix
       - save_cache:
           <<: *uiDepsCacheKey
           paths:
@@ -227,7 +227,7 @@ jobs:
       - run:
           name: Build .vsix package
           command: |
-            packagePath=./release/redis-insight-vsc-extension-mac
+            packagePath=./release/redis-for-vscode-extension-mac
 
             if [ << parameters.target >> ]; then
               yarn download:backend << parameters.target >>
@@ -253,7 +253,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - release/redis-insight-vsc-*.vsix
+            - release/redis-for-*.vsix
 
   windows:
     executor:
@@ -285,7 +285,7 @@ jobs:
       - run:
           name: Build .vsix package
           command: |
-            packagePath=./release/redis-insight-vsc-extension-win-x64.vsix
+            packagePath=./release/redis-for-vscode-extension-win-x64.vsix
             yarn download:backend
 
             if [ << parameters.env >> == 'prod' ]; then
@@ -299,7 +299,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - release/redis-insight-vsc-*.vsix
+            - release/redis-for-*.vsix
 
   # Release jobs
   store-build-artifacts:

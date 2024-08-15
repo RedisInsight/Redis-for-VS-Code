@@ -43,7 +43,8 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   const keysApi = useKeysApi()
 
   useEffect(() => {
-    const { type, key, keyType, databaseId, newKey } = selectedKeyAction || {}
+    const { type, key, keyType, database: databaseAction, newKey } = selectedKeyAction || {}
+    const { id: databaseId } = databaseAction || {}
 
     if (!type || databaseId !== database.id) {
       return
@@ -164,7 +165,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
           </VSCodeButton>
           <PopoverDelete
             header={formatLongName(name, 50, 10, '...')}
-            text={l10n.t('will be deleted from Redis Insight.')}
+            text={l10n.t('will be deleted from Redis for VS Code.')}
             item={id}
             maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}
             disabled={false}

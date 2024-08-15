@@ -14,7 +14,6 @@ import {
   bufferToString,
   createDeleteFieldHeader,
   createDeleteFieldMessage,
-  formatLongName,
   formattingBuffer,
   isEqualBuffers,
   validateScoreNumber,
@@ -29,7 +28,6 @@ import {
   KeyTypes,
   OVER_RENDER_BUFFER_COUNT,
   TableCellAlignment,
-  TEXT_FAILED_CONVENT_FORMATTER,
   SCAN_COUNT_DEFAULT,
   helpTexts,
   NoResultsFoundText,
@@ -283,10 +281,8 @@ const ZSetDetailsTable = (props: Props) => {
         // const { value: decompressedNameItem } = decompressingBuffer(nameItem, compressor)
         const decompressedNameItem = nameItem
         const name = bufferToString(nameItem)
-        const { value, isValid } = formattingBuffer(decompressedNameItem, viewFormat, { expanded })
+        const { value } = formattingBuffer(decompressedNameItem, viewFormat, { expanded })
         const cellContent = (value as string)?.substring?.(0, 200) ?? value
-        const tooltipTitle = `${isValid ? l10n.t('Member') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}`
-        const tooltipContent = formatLongName(name)
 
         return (
           <div className="max-w-full whitespace-break-spaces">
@@ -294,16 +290,7 @@ const ZSetDetailsTable = (props: Props) => {
               className="flex"
               data-testid={`zset-member-value-${name}`}
             >
-              {!expanded && (
-                <Tooltip
-                  title={tooltipTitle}
-                  content={tooltipContent}
-                  mouseEnterDelay={500}
-                  className={cx(styles.tooltip, 'truncate')}
-                >
-                  {cellContent}
-                </Tooltip>
-              )}
+              {!expanded && cellContent}
               {expanded && value}
             </div>
           </div>
@@ -323,7 +310,6 @@ const ZSetDetailsTable = (props: Props) => {
         rowIndex = 0,
       ) {
         const cellContent = score.toString().substring(0, 200)
-        const tooltipContent = formatLongName(score.toString())
         const editToolTipContent = !isNumber(score) ? l10n.t('Use CLI to edit the score') : null
 
         return (
@@ -346,15 +332,9 @@ const ZSetDetailsTable = (props: Props) => {
                 data-testid={`zset-score-value-${score}`}
               >
                 {!expanded && (
-                  <Tooltip
-                    title={l10n.t('Score')}
-                    content={tooltipContent}
-                    mouseEnterDelay={500}
-                  >
-                    <div className={cx(styles.tooltip, 'truncate')}>
-                      {cellContent}
-                    </div>
-                  </Tooltip>
+                  <div className={cx(styles.tooltip, 'truncate')}>
+                    {cellContent}
+                  </div>
                 )}
                 {expanded && score}
               </div>

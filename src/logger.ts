@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 
-const channelName = 'Redis Insight'
+const channelName = 'Redis for VS Code'
 export class CustomLogger {
   private outputChannel: vscode.OutputChannel
 

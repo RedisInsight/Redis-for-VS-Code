@@ -312,23 +312,15 @@ const HashDetailsTable = (props: Props) => {
         const decompressedItem = fieldItem
         const field = bufferToString(fieldItem) || ''
         // Better to cut the long string, because it could affect virtual scroll performance
-        const { value, isValid } = formattingBuffer(decompressedItem, viewFormatProp, { expanded })
-        const tooltipTitle = `${isValid ? l10n.t('Field') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}`
-        const tooltipContent = formatLongName(field)
+        const { value } = formattingBuffer(decompressedItem, viewFormatProp, { expanded })
 
         return (
           <div className="max-w-full whitespace-break-spaces">
             <div className="flex" data-testid={`hash-field-${field}`}>
               {!expanded && (
-                <Tooltip
-                  title={tooltipTitle}
-                  content={tooltipContent}
-                  mouseEnterDelay={500}
-                >
-                  <div className={cx('truncate')}>
-                    {isString(value) ? value?.substring?.(0, 200) ?? value : value}
-                  </div>
-                </Tooltip>
+                <div className={cx('truncate')}>
+                  {isString(value) ? value?.substring?.(0, 200) ?? value : value}
+                </div>
               )}
               {expanded && value}
             </div>
@@ -357,9 +349,6 @@ const HashDetailsTable = (props: Props) => {
         const field = bufferToString(decompressedFieldItem)
         // Better to cut the long string, because it could affect virtual scroll performance
         const { value: formattedValue, isValid } = formattingBuffer(decompressedValueItem!, viewFormatProp, { expanded })
-
-        const tooltipTitle = `${isValid ? l10n.t('Value') : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp)}`
-        const tooltipContent = formatLongName(value)
 
         const disabled = !isNonUnicodeFormatter(viewFormat, isValid)
         && !isEqualBuffers(valueItem, stringToBuffer(value))
@@ -392,15 +381,9 @@ const HashDetailsTable = (props: Props) => {
           >
             <div>
               {!expanded && (
-                <Tooltip
-                  title={tooltipTitle}
-                  position="bottom center"
-                  content={tooltipContent}
-                >
-                  <div className="truncate">
-                    <span>{(formattedValue as any)?.substring?.(0, 200) ?? formattedValue}</span>
-                  </div>
-                </Tooltip>
+                <div className="truncate">
+                  <span>{(formattedValue as any)?.substring?.(0, 200) ?? formattedValue}</span>
+                </div>
               )}
               {expanded && formattedValue}
             </div>
