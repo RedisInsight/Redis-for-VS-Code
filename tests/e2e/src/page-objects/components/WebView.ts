@@ -126,16 +126,16 @@ export enum InnerViews {
 }
 
 export const InnerViewLocators = {
-  [InnerViews.AddDatabaseInnerView]: `//iframe[@title='Redis Insight - Add Database connection']`,
-  [InnerViews.AddKeyInnerView]: `//iframe[@title='Redis Insight - Add new key']`,
+  [InnerViews.AddDatabaseInnerView]: `//iframe[@title='Redis for VS Code - Add Database connection']`,
+  [InnerViews.AddKeyInnerView]: `//iframe[@title='Redis for VS Code - Add new key']`,
   [InnerViews.CliInnerView]: `//iframe[@title='Redis CLI']`,
-  [InnerViews.EditDatabaseInnerView]: `//iframe[@title='Redis Insight - Edit Database connection']`,
-  [InnerViews.EulaInnerView]: `//iframe[@title='Redis Insight - EULA']`,
+  [InnerViews.EditDatabaseInnerView]: `//iframe[@title='Redis for VS Code - Edit Database connection']`,
+  [InnerViews.EulaInnerView]: `//iframe[@title='Redis for VS Code - EULA']`,
   [InnerViews.KeyDetailsInnerView]: `//iframe[contains(@title,':')]`,
-  [InnerViews.SettingsInnerView]: `//iframe[@title='Redis Insight - Settings']`,
-  [InnerViews.TreeInnerView]: `//iframe[@title='Redis Insight']`,
-  [InnerViews.WelcomeInnerView]: `//iframe[@title='Redis Insight - Welcome']`,
-  [InnerViews.EmptyDatabaseInnerView]: `//iframe[@title='Redis Insight']`,
+  [InnerViews.SettingsInnerView]: `//iframe[@title='Redis for VS Codet - Settings']`,
+  [InnerViews.TreeInnerView]: `//iframe[@title='Redis for VS Code']`,
+  [InnerViews.WelcomeInnerView]: `//iframe[@title='Redis for VS Code - Welcome']`,
+  [InnerViews.EmptyDatabaseInnerView]: `//iframe[@title='Redis for VS Code']`,
 }
 
 export const InnerViewElements = {
