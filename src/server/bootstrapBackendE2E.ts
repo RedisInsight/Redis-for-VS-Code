@@ -51,11 +51,13 @@ export async function startBackendE2E(logger: CustomLogger): Promise<any> {
           + `$env:RI_STDOUT_LOGGER=${process.env.RI_STDOUT_LOGGER};`
           + `$env:RI_BUILD_TYPE=${process.env.RI_BUILD_TYPE};`
           + `$env:RI_SEGMENT_WRITE_KEY=${process.env.RI_SEGMENT_WRITE_KEY};`
+          + `$env:RI_MIGRATE_OLD_FOLDERS=${process.env.RI_MIGRATE_OLD_FOLDERS};`
+          + '$env:RI_AUTO_BOOTSTRAP=true;'
           + `node ${backendSrcPath}`,
         ])
       } else {
         PSinst = cp.spawn(
-          'node', [path.resolve(backendPath, 'src/main.js')],
+          'node', [path.resolve(backendPath, 'main.js')],
           {
             env:
             {
@@ -66,6 +68,8 @@ export async function startBackendE2E(logger: CustomLogger): Promise<any> {
               RI_STDOUT_LOGGER: process.env.RI_STDOUT_LOGGER,
               RI_BUILD_TYPE: process.env.RI_BUILD_TYPE,
               RI_SEGMENT_WRITE_KEY: process.env.RI_SEGMENT_WRITE_KEY,
+              RI_MIGRATE_OLD_FOLDERS: process.env.RI_MIGRATE_OLD_FOLDERS,
+              RI_AUTO_BOOTSTRAP: 'true',
               PATH: process.env.PATH,
             },
           },
