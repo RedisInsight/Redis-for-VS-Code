@@ -275,6 +275,7 @@ describe('useDatabasesStore', () => {
 
         expect(useDatabasesStore.getState().data).toEqual(checkRediStack([databases[1]]))
         expect(useDatabasesStore.getState().loading).toEqual(false)
+        expect(utils.showInformationMessage).toBeCalledWith('Database has been edited')
       })
 
       it('call showErrorMessage when fetch is fail', async () => {

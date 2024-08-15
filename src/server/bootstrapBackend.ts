@@ -5,14 +5,14 @@ import * as fs from 'fs'
 import { workspaceStateService } from '../lib'
 import { CustomLogger } from '../logger'
 
-const appPort = process.env.RI_APP_PORT
-
 let gracefulShutdown: Function
 let beApp: any
 
 const backendPath = path.join(__dirname, '..', 'redis-backend/dist-minified')
 
 export async function startBackend(logger: CustomLogger): Promise<any> {
+  const appPort = process.env.RI_APP_PORT
+
   const port = await (await getPort.default(+appPort!)).toString()
   logger.log(`Starting at port: ${port}`)
 

@@ -9,7 +9,7 @@ export enum ViewId {
 }
 
 export const MAX_TITLE_KEY_LENGTH = 30
-export const EXTENSION_ID = 'redis.redis-insight-vsc-plugin'
+export const EXTENSION_ID = 'redis.redis-for-vscode'
 
 export const EXTERNAL_LINKS = {
   releaseNotes: 'https://github.com/RedisInsight/RedisInsight/releases',
