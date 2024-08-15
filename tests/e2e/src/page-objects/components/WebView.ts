@@ -132,7 +132,7 @@ export const InnerViewLocators = {
   [InnerViews.EditDatabaseInnerView]: `//iframe[@title='Redis for VS Code - Edit Database connection']`,
   [InnerViews.EulaInnerView]: `//iframe[@title='Redis for VS Code - EULA']`,
   [InnerViews.KeyDetailsInnerView]: `//iframe[contains(@title,':')]`,
-  [InnerViews.SettingsInnerView]: `//iframe[@title='Redis for VS Codet - Settings']`,
+  [InnerViews.SettingsInnerView]: `//iframe[@title='Redis for VS Code - Settings']`,
   [InnerViews.TreeInnerView]: `//iframe[@title='Redis for VS Code']`,
   [InnerViews.WelcomeInnerView]: `//iframe[@title='Redis for VS Code - Welcome']`,
   [InnerViews.EmptyDatabaseInnerView]: `//iframe[@title='Redis for VS Code']`,
