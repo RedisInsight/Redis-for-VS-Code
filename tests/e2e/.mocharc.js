@@ -16,8 +16,8 @@ module.exports = {
       quiet: true,
     },
     mochaJunitReporterReporterOptions: {
-      mochaFile: '.mochawesome-report/junit-report.xml',
-      toConsole: true,
+      mochaFile: './mochawesome-report/junit-report.xml',
+      toConsole: false,
     },
   },
   retries: 0,
