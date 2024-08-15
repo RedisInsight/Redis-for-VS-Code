@@ -34,7 +34,7 @@ const testRunResult = {
     },
   ],
 };
-const failed = result.stats.tests - result.stats.passes;
+const failed = result.stats.failures;
 if (failed) {
   results.passed = false;
   testRunResult.color = '#cc0000';
