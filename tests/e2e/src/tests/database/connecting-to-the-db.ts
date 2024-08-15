@@ -18,7 +18,6 @@ import {
   ButtonActions,
   NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
-import { CommonDriverExtension } from '@e2eSrc/helpers'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 describe('Connecting to the databases verifications', () => {

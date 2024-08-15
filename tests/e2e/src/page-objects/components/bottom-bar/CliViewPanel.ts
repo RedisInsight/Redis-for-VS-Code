@@ -98,11 +98,10 @@ export class CliViewPanel extends WebView {
   }
 
   /**
-   * Get text from the last cli output, no formatting.
-   * @param timeout optional maximum time to wait for completion in milliseconds, 0 for unlimited
+   * Get text from the last cli output, no formatting
    * @returns Promise resolving to cli result text
    */
-  async getCliLastCommandResponse(timeout: number = 5000): Promise<string> {
+  async getCliLastCommandResponse(): Promise<string> {
     await super.getElement(this.cliOutput)
     const commandsCount = await this.getNumberOfCommands()
     await super.getElement(this.cliOutput)
