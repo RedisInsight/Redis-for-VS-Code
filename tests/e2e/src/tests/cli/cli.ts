@@ -32,17 +32,16 @@ describe('CLI critical', () => {
     )
   })
   beforeEach(async () => {
-    await cliViewPanel.switchBack()
+    await treeView.switchBack()
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await treeView.openCliByDatabaseName(
       Config.ossStandaloneConfig.databaseName,
     )
     await treeView.switchBack()
+    await CommonDriverExtension.driverSleep(1000)
     await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
   })
   afterEach(async () => {
-    await cliViewPanel.switchBack()
-    await bottomBar.openTerminalView()
     await KeyAPIRequests.deleteKeyIfExistsApi(
       keyName,
       Config.ossStandaloneConfig.databaseName,

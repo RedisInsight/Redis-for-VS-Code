@@ -31,11 +31,10 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
       __dirname,
       '..',
       'test-extensions',
-      'redis.redis-for-vscode-0.0.2',
+      'redis.redis-for-vscode-0.0.3',
       'dist',
       'redis-backend',
-      'dist',
-      'src',
+      'dist-minified',
       'main.js',
     )
     // Install VSCode and Chromedriver

@@ -294,7 +294,5 @@ export class TreeView extends WebView {
    */
   async openCliByDatabaseName(databaseName: string): Promise<void> {
     await ButtonActions.clickElement(this.getCLIDatabaseBtnByName(databaseName))
-    // TODO delete after fixing CLI issue with invalid db id
-    await ButtonActions.clickElement(this.getCLIDatabaseBtnByName(databaseName))
   }
 }

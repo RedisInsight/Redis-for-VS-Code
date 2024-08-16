@@ -8,10 +8,17 @@ module.exports = {
   package: './package.json',
   parallel: false,
   recursive: false,
-  reporter: 'mochawesome',
+  reporter: 'mocha-multi-reporters',
   reporterOptions: {
-    reportFilename: '[status]_[datetime]-[name]-report',
-    quiet: true,
+    reporterEnabled: 'mochawesome, mocha-junit-reporter',
+    mochawesomeReporterOptions: {
+      reportFilename: '[status]_[datetime]-[name]-report',
+      quiet: true,
+    },
+    mochaJunitReporterReporterOptions: {
+      mochaFile: './mochawesome-report/junit-report.xml',
+      toConsole: false,
+    },
   },
   retries: 0,
   timeout: 100_000,

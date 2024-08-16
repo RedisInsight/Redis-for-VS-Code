@@ -13,7 +13,7 @@ export class Config {
 
   static workingDirectory =
     process.env.APP_FOLDER_ABSOLUTE_PATH ||
-    joinPath(os.homedir(), process.env.APP_FOLDER_NAME || '.redis-for-vscode')
+    joinPath(os.homedir(), process.env.RI_APP_FOLDER_NAME || '.redis-for-vscode')
   static fileDownloadPath = joinPath(os.homedir(), 'Downloads')
   static uniqueId = chance.string({ length: 10 })
 
