@@ -147,6 +147,11 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
       opts.column || vscode.ViewColumn.One,
       this.getWebviewOptions(),
     )
+
+    // todo: connection between webviews
+    if (opts.message) {
+      await this.panel.webview.postMessage(opts.message)
+    }
     // Update the content
     this.update()
 
@@ -156,11 +161,6 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
       vscode.commands.executeCommand('RedisForVSCode.resetSelectedKey')
       this.dispose()
     }, null, this._disposables)
-
-    // todo: connection between webviews
-    if (opts.message) {
-      this.panel.webview.postMessage(opts.message)
-    }
 
     // Update the content based on view changes
     // this.panel.onDidChangeViewState(
