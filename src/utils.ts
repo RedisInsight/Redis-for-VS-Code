@@ -1,8 +1,6 @@
 import * as vscode from 'vscode'
 import { workspaceStateService } from './lib'
 
-export const NOTIFICATION_TIMEOUT = 5_000
-
 export const getNonce = () => {
   let text = ''
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -14,17 +12,6 @@ export const getNonce = () => {
 
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
-
-export const waitFor = async (timeout: number, condition: () => boolean): Promise<boolean> => {
-  while (!condition() && timeout > 0) {
-    // eslint-disable-next-line no-param-reassign
-    timeout -= 100
-    // eslint-disable-next-line no-await-in-loop
-    await sleep(100)
-  }
-
-  return timeout > 0
-}
 
 export const handleMessage = async (message: any = {}) => {
   switch (message.action) {
