@@ -150,7 +150,7 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
 
     // todo: connection between webviews
     if (opts.message) {
-      await this.panel.webview.postMessage(opts.message)
+      this.panel.webview.postMessage(opts.message)
     }
     // Update the content
     this.update()
