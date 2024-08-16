@@ -521,14 +521,20 @@ describe('Formatters', () => {
           await keyDetailsView.selectFormatter(formatter.format)
           await CommonDriverExtension.driverSleep(300)
           // Hover over value to see edit button for hash and list
-          if (
-            key.keyType === KeyTypesShort.Hash ||
-            key.keyType === KeyTypesShort.List
-          ) {
+          if (key.keyType === KeyTypesShort.Hash) {
             await InputActions.hoverElement(
               doubleColumnKeyDetailsView.getWrapperOfValueInput(
                 key.keyType,
                 value,
+              ),
+              1000,
+            )
+          }
+          if (key.keyType === KeyTypesShort.List) {
+            await InputActions.hoverElement(
+              doubleColumnKeyDetailsView.getWrapperOfValueInput(
+                key.keyType,
+                '0',
               ),
               1000,
             )
@@ -553,7 +559,7 @@ describe('Formatters', () => {
           await InputActions.hoverElement(
             doubleColumnKeyDetailsView.getWrapperOfValueInput(
               key.keyType,
-              value,
+              '0',
             ),
             1000,
           )

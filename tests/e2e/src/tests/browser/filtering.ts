@@ -429,7 +429,7 @@ describe('Filtering per key name in DB with 10 millions of keys', () => {
       // Verify that all results have the same type as in filter
       expect(
         await treeView.getElementText(treeView.getTreeViewItemByIndex(i + 1)),
-      ).contains(keyTypes[i].keyName, 'Keys filtered incorrectly by key type')
+      ).contains(keyTypes[i].keyName, 'Keys filtered incorrectly by key type after scanning more')
     }
   })
 })

@@ -261,7 +261,7 @@ export class TreeView extends WebView {
     )
     await ButtonActions.clickElement(this.keyTreeFilterApplyBtn)
     await this.waitForElementVisibility(this.loadingIndicator, 2000, true)
-    await this.waitForElementVisibility(this.loadingIndicator, 3000, false)
+    await this.waitForElementVisibility(this.loadingIndicator, 5000, false)
   }
 
   /**
