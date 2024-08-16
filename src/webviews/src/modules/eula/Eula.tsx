@@ -281,7 +281,6 @@ export const Eula = ({ onSubmitted }: Props) => {
 
       </form>
       <div className={styles.footer}>
-        <div className="flex flex-grow">{l10n.t('Notice: To avoid automatic execution of malicious code, when adding new Workbench plugins, use files from trusted authors only.')}</div>
         <div className="flex">
           {!submitIsDisabled() && SubmitBtn}
           {submitIsDisabled() && (
