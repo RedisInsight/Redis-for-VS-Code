@@ -6,8 +6,8 @@ import { startBackend, getBackendGracefulShutdown } from './server/bootstrapBack
 import { startBackendE2E } from './server/bootstrapBackendE2E'
 import { checkVersionUpdate, initWorkspaceState, setUIStorageField } from './lib'
 import { WebViewProvider } from './WebViewProvider'
-import { handleMessage, truncateText } from './utils'
-import { MAX_TITLE_KEY_LENGTH, ViewId } from './constants'
+import { getTitleForKey, handleMessage } from './utils'
+import { ViewId } from './constants'
 import { logger } from './logger'
 
 dotenv.config({ path: path.join(__dirname, '..', '.env') })
@@ -59,7 +59,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisForVSCode.openKey', async (args) => {
       const keyInfo = args.data?.keyInfo
-      const title = `${keyInfo?.displayedKeyType?.toLowerCase()}:${truncateText(keyInfo?.keyString, MAX_TITLE_KEY_LENGTH)}`
+      const title = getTitleForKey(keyInfo?.displayedKeyType, keyInfo?.keyString)
 
       await setUIStorageField('keyInfo', keyInfo)
       await setUIStorageField('database', args.data?.database)
@@ -184,6 +184,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisForVSCode.editKeyName', (args) => {
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
+      const title = getTitleForKey(args.keyInfo?.displayedKeyType, args.keyInfo?.newKeyString)
+      WebviewPanel.getInstance({ viewId: ViewId.Key }).setTitle(title)
     }),
 
     vscode.commands.registerCommand('RedisForVSCode.resetSelectedKey', () => {

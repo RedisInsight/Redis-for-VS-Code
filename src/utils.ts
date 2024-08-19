@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { getUIStorageField, setUIStorageField } from './lib'
+import { MAX_TITLE_KEY_LENGTH } from './constants'
 
 export const getNonce = () => {
   let text = ''
@@ -84,3 +85,6 @@ export const handleMessage = async (message: any = {}) => {
 
 export const truncateText = (text = '', maxLength = 0, separator = '...') =>
   (text.length >= maxLength ? text.slice(0, maxLength) + separator : text)
+
+export const getTitleForKey = (keyType: string, keyString: string): string =>
+  `${keyType?.toLowerCase()}:${truncateText(keyString, MAX_TITLE_KEY_LENGTH)}`

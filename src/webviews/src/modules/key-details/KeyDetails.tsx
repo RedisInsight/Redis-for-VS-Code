@@ -3,7 +3,7 @@ import cx from 'classnames'
 import { useShallow } from 'zustand/react/shallow'
 
 import { KeyTypes, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
-import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
+import { bufferToString, getGroupTypeDisplay, sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { RedisString } from 'uiSrc/interfaces'
 import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { vscodeApi } from 'uiSrc/services'
@@ -65,7 +65,12 @@ const KeyDetails = () => {
       data: {
         type: SelectedKeyActionType.Renamed,
         database: database!,
-        keyInfo: { key, newKey },
+        keyInfo: {
+          key,
+          newKey,
+          displayedKeyType: getGroupTypeDisplay(keyType),
+          newKeyString: bufferToString(newKey),
+        },
       },
     })
   }

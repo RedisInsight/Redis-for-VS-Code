@@ -56,6 +56,7 @@ export interface SelectedKeyAction {
       key?: RedisString,
       keyType?: KeyTypes,
       newKey?: RedisString,
+      newKeyString?: string,
       keyString?: string
       displayedKeyType?: string
     }

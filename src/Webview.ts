@@ -112,6 +112,7 @@ abstract class Webview {
   }
 
   public abstract update(opts?: WebviewOptions): void
+  public abstract setTitle(title: string): void
 }
 
 export class WebviewPanel extends Webview implements vscode.Disposable {
@@ -204,6 +205,10 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
     if (message) {
       this.panel.webview.postMessage(message)
     }
+  }
+
+  public setTitle(title: string) {
+    this.panel.title = title
   }
 
   public dispose() {
