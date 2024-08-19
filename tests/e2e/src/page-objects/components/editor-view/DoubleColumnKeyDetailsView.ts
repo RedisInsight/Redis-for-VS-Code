@@ -13,8 +13,6 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     By.xpath(
       `//*[contains(@data-testid, "edit-${keyType}-button-${name}")] | //*[contains(@data-testid, "${keyType}_edit-btn-${name}")]`,
     )
-  getValueInput = (keyType: string, name: string): By =>
-    By.xpath(`//*[contains(@data-testid, "${keyType}_content-value-${name}")]`)
   getWrapperOfValueInput  = (keyType: string, name: string): By =>
     By.xpath(`//*[contains(@data-testid, "${keyType}_content-value-${name}")]/parent::*`)
 
