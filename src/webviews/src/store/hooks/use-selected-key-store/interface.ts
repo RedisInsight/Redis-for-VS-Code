@@ -35,6 +35,7 @@ export interface SelectedKeyActions {
   // deleteSelectedKey: () => void
 
   // update selected key
+  updateSelectedKeyName: (name: RedisString) => void
   updateSelectedKeyRefreshTime: (data: number) => void
   setSelectedKeyAction: (data: Nullable<SelectedKeyAction>) => void
   setSelectedKeyRefreshDisabled: (data: boolean) => void

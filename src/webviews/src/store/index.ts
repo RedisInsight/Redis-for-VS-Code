@@ -1,7 +1,6 @@
 import createSelectors from './selectors'
 
 export * from './vscodeState'
-export * from './zustand'
 export * from './hooks/use-selected-key-store/useSelectedKeyStore'
 export * from './hooks/use-certificates-store/useCertificatesStore'
 export * from './hooks/use-databases-store/useDatabasesStore'

@@ -1,5 +1,5 @@
 import { Environment } from 'monaco-editor/esm/vs/editor/editor.api'
-import { IVSCodeApi, Nullable } from 'uiSrc/interfaces'
+import { IVSCodeApi, Nullable, RedisString } from 'uiSrc/interfaces'
 import { Database } from 'uiSrc/store'
 import { AppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/interface'
 
@@ -14,6 +14,9 @@ declare global {
 interface IRI {
   cliDatabase?: Database
   database?: Database
+  keyInfo?: {
+    key?: RedisString
+  }
   appPort?: string
   appInfo: Nullable<Partial<AppInfoStore>>
 }

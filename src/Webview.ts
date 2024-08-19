@@ -10,7 +10,9 @@ type WebviewOptions = {
   scriptUri?: vscode.Uri
   styleUri?: vscode.Uri
   nonce?: string
-  message?: object
+  message?: {
+    data: object
+  }
   column?: vscode.ViewColumn
   handleMessage?: (message: any) => any
 }
@@ -57,6 +59,14 @@ abstract class Webview {
     const styleUri = webview.asWebviewUri(this._opts.styleUri as vscode.Uri)
 
     const uiStorage = getUIStorage()
+    const database = (this._opts?.message?.data as any)?.database || (uiStorage as any)?.database
+    const keyInfo = (this._opts?.message?.data as any)?.keyInfo || (uiStorage as any)?.keyInfo
+
+    const uiStorageStringify = JSON.stringify({
+      ...uiStorage,
+      database,
+      keyInfo,
+    })
 
     const contentSecurity = [
       `img-src ${webview.cspSource} 'self' data:`,
@@ -89,7 +99,7 @@ abstract class Webview {
         <link href="${styleUri}" rel="stylesheet" />
         <script nonce="${this._opts.nonce}">
           window.acquireVsCodeApi = acquireVsCodeApi;
-          window.ri=${JSON.stringify(uiStorage)};
+          window.ri=${uiStorageStringify};
         </script>
 
         <title>Redis for VS Code Webview</title>

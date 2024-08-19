@@ -1,6 +1,6 @@
 import { VscodeMessageAction } from 'uiSrc/constants'
 import { PostMessage } from 'uiSrc/interfaces'
-import { fetchKeyInfo, resetZustand, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { fetchDatabaseOverview, fetchKeyInfo, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { TelemetryEvent, isEqualBuffers, sendEventTelemetry } from 'uiSrc/utils'
 
 export const selectKeyAction = (message: PostMessage) => {
@@ -11,15 +11,18 @@ export const selectKeyAction = (message: PostMessage) => {
   const { keyInfo, database } = message?.data
   const { key } = keyInfo || {}
   const prevKey = useSelectedKeyStore.getState().data?.name
+  const prevDatabaseId = useDatabasesStore.getState().connectedDatabase?.id
 
-  if (isEqualBuffers(key, prevKey)) {
+  const isTheSameKey = prevDatabaseId === database?.id && isEqualBuffers(prevKey, key)
+
+  if (isTheSameKey || !prevKey) {
     return
   }
 
   window.ri.database = database
-  resetZustand()
 
   fetchKeyInfo({ key }, true, ({ type: keyType, length }) => {
+    fetchDatabaseOverview()
     useDatabasesStore.getState().setConnectedDatabase(database)
     sendEventTelemetry({
       event: TelemetryEvent.TREE_VIEW_KEY_VALUE_VIEWED,

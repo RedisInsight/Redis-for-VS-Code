@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError, AxiosResponseHeaders } from 'axios'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
@@ -28,19 +28,16 @@ export const initialState: StringState = {
 export const useStringStore = create<StringState & StringActions>()(
   immer(
     devtools(
-      persist(
-        (set) => ({
-          ...initialState,
-          // actions
-          resetStringStore: () => set(initialState),
-          processString: () => set({ loading: true }),
-          processStringFinal: () => set({ loading: false }),
-          processStringSuccess: ({ keyName, value }: any) =>
-            set({ data: { key: keyName, value } }),
-          setIsStringCompressed: (isCompressed) => set({ isCompressed }),
-        }),
-        { name: 'keyString' },
-      ),
+      (set) => ({
+        ...initialState,
+        // actions
+        resetStringStore: () => set(initialState),
+        processString: () => set({ loading: true }),
+        processStringFinal: () => set({ loading: false }),
+        processStringSuccess: ({ keyName, value }: any) =>
+          set({ data: { key: keyName, value } }),
+        setIsStringCompressed: (isCompressed) => set({ isCompressed }),
+      }),
     ),
   ),
 )

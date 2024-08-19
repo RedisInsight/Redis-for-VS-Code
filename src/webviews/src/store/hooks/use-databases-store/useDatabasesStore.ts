@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { createJSONStorage, devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { cloneDeep, filter, first, map, orderBy } from 'lodash'
 import { apiService, localStorageService } from 'uiSrc/services'
@@ -31,7 +31,7 @@ export const initialDatabasesState: DatabasesStore = {
 }
 
 export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
-  immer(devtools(persist((set, get) => ({
+  immer(devtools((set, get) => ({
     ...initialDatabasesState,
     // actions
     processDatabase: () => set({ loading: true }),
@@ -56,9 +56,6 @@ export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
         version: data?.version || get().databaseOverview.version || '',
       },
     }),
-  }), {
-    name: 'databases',
-    storage: createJSONStorage(() => sessionStorage),
   }))),
 )
 

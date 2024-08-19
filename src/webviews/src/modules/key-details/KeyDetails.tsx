@@ -62,7 +62,11 @@ const KeyDetails = () => {
   const onEditKey = (key: RedisString, newKey: RedisString) => {
     vscodeApi.postMessage({
       action: VscodeMessageAction.EditKeyName,
-      data: { type: SelectedKeyActionType.Renamed, database: database!, keyInfo: { key, newKey } },
+      data: {
+        type: SelectedKeyActionType.Renamed,
+        database: database!,
+        keyInfo: { key, newKey },
+      },
     })
   }
 

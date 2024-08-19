@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import * as l10n from '@vscode/l10n'
 import { immer } from 'zustand/middleware/immer'
 import { cloneDeep, findIndex, map, remove } from 'lodash'
@@ -36,7 +36,7 @@ export const initialState: HashState = {
 }
 
 export const useHashStore = create<HashState & HashActions>()(
-  immer(devtools(persist((set) => ({
+  immer(devtools((set) => ({
     ...initialState,
     // actions
     resetHashStore: () => set(initialState),
@@ -76,8 +76,7 @@ export const useHashStore = create<HashState & HashActions>()(
       state.updateValue = cloneDeep(initialState.updateValue)
     }),
 
-  }),
-  { name: 'keyHash' }))),
+  }))),
 )
 
 // async actions
