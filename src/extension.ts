@@ -4,7 +4,7 @@ import * as path from 'path'
 import { WebviewPanel } from './Webview'
 import { startBackend, getBackendGracefulShutdown } from './server/bootstrapBackend'
 import { startBackendE2E } from './server/bootstrapBackendE2E'
-import { checkVersionUpdate, initWorkspaceState } from './lib'
+import { checkVersionUpdate, initWorkspaceState, setUIStorageField } from './lib'
 import { WebViewProvider } from './WebViewProvider'
 import { handleMessage, truncateText } from './utils'
 import { MAX_TITLE_KEY_LENGTH, ViewId } from './constants'
@@ -48,16 +48,21 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.window.registerWebviewViewProvider('ri-sidebar', sidebarProvider),
     vscode.window.registerWebviewViewProvider('ri-panel', panelProvider, { webviewOptions: { retainContextWhenHidden: true } }),
 
-    vscode.commands.registerCommand('RedisForVSCode.addCli', (args) => {
+    vscode.commands.registerCommand('RedisForVSCode.addCli', async (args) => {
+      await setUIStorageField('database', args.data?.database)
+
       vscode.commands.executeCommand('setContext', 'RedisForVSCode.showCliPanel', true)
       vscode.commands.executeCommand('ri-panel.focus')
-      setTimeout(() => {
-        panelProvider.view?.webview.postMessage({ action: 'AddCli', data: args.data })
-      }, 100)
+
+      panelProvider.view?.webview.postMessage({ action: 'AddCli', data: args.data })
     }),
 
-    vscode.commands.registerCommand('RedisForVSCode.openKey', (args) => {
-      const title = `${args?.data?.displayedKeyType?.toLowerCase()}:${truncateText(args?.data?.keyString, MAX_TITLE_KEY_LENGTH)}`
+    vscode.commands.registerCommand('RedisForVSCode.openKey', async (args) => {
+      const keyInfo = args.data?.keyInfo
+      const title = `${keyInfo?.displayedKeyType?.toLowerCase()}:${truncateText(keyInfo?.keyString, MAX_TITLE_KEY_LENGTH)}`
+
+      await setUIStorageField('keyInfo', keyInfo)
+      await setUIStorageField('database', args.data?.database)
 
       WebviewPanel.getInstance({
         context,
@@ -66,10 +71,12 @@ export async function activate(context: vscode.ExtensionContext) {
         viewId: ViewId.Key,
         // todo: connection between webviews
         message: args,
-      })?.update({ title })
+      })
     }),
 
-    vscode.commands.registerCommand('RedisForVSCode.addKeyOpen', (args) => {
+    vscode.commands.registerCommand('RedisForVSCode.addKeyOpen', async (args) => {
+      await setUIStorageField('database', args.data?.database)
+
       WebviewPanel.getInstance({
         context,
         route: 'main/add_key',

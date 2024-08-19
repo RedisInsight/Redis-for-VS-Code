@@ -36,7 +36,7 @@ export const KeysSummary = (props: Props) => {
       event: TelemetryEvent.TREE_VIEW_KEY_ADD_BUTTON_CLICKED,
       eventData: { databaseId: database.id },
     })
-    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey, data: database })
+    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey, data: { database } })
   }
 
   const changeSortHandle = () => {

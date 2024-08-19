@@ -2,7 +2,7 @@
   "name": "redis-for-vscode",
   "version": "0.0.3",
   "displayName": "Redis for VS Code",
-  "description": "Visually interact with data and build queries in Redi",
+  "description": "Visually interact with data and build queries in Redis",
   "license": "SEE LICENSE IN LICENSE",
   "main": "dist/extension.js",
   "l10n": "./l10n",

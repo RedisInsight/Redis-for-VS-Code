@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as getPort from 'detect-port'
 import * as path from 'path'
 import * as fs from 'fs'
-import { workspaceStateService } from '../lib'
+import { setUIStorageField } from '../lib'
 import { CustomLogger } from '../logger'
 import { sleep } from '../utils'
 
@@ -17,7 +17,7 @@ export async function startBackend(logger: CustomLogger): Promise<any> {
   const port = await (await getPort.default(+appPort!)).toString()
   logger.log(`Starting at port: ${port}`)
 
-  workspaceStateService.set('appPort', port)
+  await setUIStorageField('appPort', port)
 
   if (!fs.existsSync(backendPath)) {
     const errorMessage = 'Can\'t find api folder. Please run "yarn download:backend" command'

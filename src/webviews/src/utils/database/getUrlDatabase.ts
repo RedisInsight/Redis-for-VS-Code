@@ -1,9 +1,8 @@
-import { ApiEndpoints, StorageItem } from 'uiSrc/constants'
+import { ApiEndpoints } from 'uiSrc/constants'
 import { Nullable } from 'uiSrc/interfaces'
-import { sessionStorageService } from 'uiSrc/services'
 
 export const getUrl = (...path: string[]) => {
-  const databaseId = sessionStorageService.get(StorageItem.databaseId)
+  const databaseId = window.ri?.database?.id || ''
 
   return (`/${ApiEndpoints.DATABASES}/${databaseId}/${path.join('/')}`)
 }

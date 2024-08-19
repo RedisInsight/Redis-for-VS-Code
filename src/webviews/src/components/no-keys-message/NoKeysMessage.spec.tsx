@@ -28,7 +28,7 @@ describe('NoKeysMessage', () => {
       await waitForStack()
 
       expect(btnEl).toBeInTheDocument()
-      expect(vscodeApi.postMessage).toBeCalledWith({ action: VscodeMessageAction.AddKey, data: constants.DATABASE })
+      expect(vscodeApi.postMessage).toBeCalledWith({ action: VscodeMessageAction.AddKey, data: { database: constants.DATABASE } })
       expect(utils.sendEventTelemetry).toBeCalledWith({
         event: TelemetryEvent.TREE_VIEW_KEY_ADD_BUTTON_CLICKED,
         eventData: { databaseId: constants.DATABASE.id },

@@ -16,11 +16,13 @@ export interface ResetSelectedKeyAction {
 export interface SelectKeyAction {
   action: VscodeMessageAction.SelectKey
   data: {
-    key: RedisString
-    keyString: string
-    keyType: AllKeyTypes
     database: Database
-    displayedKeyType?: string
+    keyInfo: {
+      key: RedisString
+      keyString: string
+      keyType: AllKeyTypes
+      displayedKeyType?: string
+    }
   }
 }
 
@@ -31,7 +33,9 @@ export interface RefreshTreeAction {
 
 export interface DatabaseAction {
   action: VscodeMessageAction.EditDatabase | VscodeMessageAction.AddKey | VscodeMessageAction.AddCli | VscodeMessageAction.OpenCli
-  data: Database
+  data: {
+    database: Database
+  }
 }
 
 export interface InformationMessageAction {
@@ -46,13 +50,15 @@ export interface SelectedKeyAction {
   VscodeMessageAction.RefreshTree |
   VscodeMessageAction.EditKeyName
   data: {
-    key?: RedisString,
-    type: SelectedKeyActionType,
     database: Database,
-    keyType?: KeyTypes,
-    newKey?: RedisString,
-    keyString?: string
-    displayedKeyType?: string
+    type: SelectedKeyActionType,
+    keyInfo: {
+      key?: RedisString,
+      keyType?: KeyTypes,
+      newKey?: RedisString,
+      keyString?: string
+      displayedKeyType?: string
+    }
   }
 }
 

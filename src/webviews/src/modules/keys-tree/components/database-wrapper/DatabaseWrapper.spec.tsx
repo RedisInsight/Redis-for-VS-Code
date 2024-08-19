@@ -63,12 +63,14 @@ describe('DatabaseWrapper', () => {
     const spySelectedKey = vi.spyOn(useSelectedKeyStore, 'useSelectedKeyStore') as Mock
 
     const selectedKeyAction = {
+      type: SelectedKeyActionType.Removed,
       database: {
         id: constants.DATABASE_ID,
       },
-      key: constants.KEY_NAME_1,
-      keyType: KeyTypes.Hash,
-      type: SelectedKeyActionType.Removed,
+      keyInfo: {
+        key: constants.KEY_NAME_1,
+        keyType: KeyTypes.Hash,
+      },
     }
 
     spySelectedKey.mockImplementation(() => ({

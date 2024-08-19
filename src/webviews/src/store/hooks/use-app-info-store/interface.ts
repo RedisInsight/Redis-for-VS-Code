@@ -105,3 +105,9 @@ export interface ContentFeatureCreateRedis {
     event?: string
   }>
 }
+
+export interface ContentCreateRedis extends ContentFeatureCreateRedis {
+  features?: {
+    [key: string]: ContentFeatureCreateRedis
+  }
+}

@@ -15,10 +15,12 @@ export interface SelectedKeyStore {
 
 interface SelectedKeyAction {
   database: Database
-  key?: RedisString
-  newKey?: RedisString
   type: SelectedKeyActionType
-  keyType?: KeyTypes
+  keyInfo: {
+    key?: RedisString
+    newKey?: RedisString
+    keyType?: KeyTypes
+  }
 }
 
 export interface SelectedKeyActions {

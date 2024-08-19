@@ -5,7 +5,7 @@ import * as path from 'path'
 import * as cp from 'child_process'
 import * as fs from 'fs'
 import { ChildProcessWithoutNullStreams } from 'child_process'
-import { workspaceStateService } from '../lib'
+import { setUIStorageField } from '../lib'
 import { CustomLogger } from '../logger'
 
 dotenv.config({ path: path.join(__dirname, '..', '..', '.env') })
@@ -25,7 +25,7 @@ export async function startBackendE2E(logger: CustomLogger): Promise<any> {
   const port = await (await getPort.default(+appPort!)).toString()
   logger.log(`Starting at port: ${port}`)
 
-  workspaceStateService.set('appPort', port)
+  await setUIStorageField('appPort', port)
 
   return new Promise((resolve) => {
     const backendSrcPath = path.join(backendPath, 'main.js')

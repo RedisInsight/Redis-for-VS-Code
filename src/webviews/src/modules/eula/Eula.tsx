@@ -155,7 +155,7 @@ export const Eula = ({ onSubmitted }: Props) => {
     //       : TelemetryEvent.SETTINGS_NOTIFICATION_MESSAGES_DISABLED,
     //   })
     // }
-    updateUserConfigSettingsAction({ agreements: values }, onSubmitted)
+    updateUserConfigSettingsAction({ agreements: { ...values, encryption: false } }, onSubmitted)
   }
 
   const SubmitBtn: ReactElement = (

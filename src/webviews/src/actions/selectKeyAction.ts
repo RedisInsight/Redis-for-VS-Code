@@ -1,6 +1,5 @@
-import { StorageItem, VscodeMessageAction } from 'uiSrc/constants'
+import { VscodeMessageAction } from 'uiSrc/constants'
 import { PostMessage } from 'uiSrc/interfaces'
-import { sessionStorageService } from 'uiSrc/services'
 import { fetchKeyInfo, resetZustand, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { TelemetryEvent, isEqualBuffers, sendEventTelemetry } from 'uiSrc/utils'
 
@@ -9,14 +8,15 @@ export const selectKeyAction = (message: PostMessage) => {
     return
   }
 
-  const { key, database } = message?.data
+  const { keyInfo, database } = message?.data
+  const { key } = keyInfo || {}
   const prevKey = useSelectedKeyStore.getState().data?.name
 
   if (isEqualBuffers(key, prevKey)) {
     return
   }
 
-  sessionStorageService.set(StorageItem.databaseId, database?.id)
+  window.ri.database = database
   resetZustand()
 
   fetchKeyInfo({ key }, true, ({ type: keyType, length }) => {

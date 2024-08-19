@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { getNonce, handleMessage } from './utils'
-import { workspaceStateService } from './lib'
+import { getUIStorage } from './lib'
 
 export class WebViewProvider implements vscode.WebviewViewProvider {
   _doc?: vscode.TextDocument
@@ -52,8 +52,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
     )
     const viewRoute = this._route
 
-    const appPort = workspaceStateService.get('appPort')
-    const appInfo = workspaceStateService.get('appInfo')
+    const uiStorage = getUIStorage()
 
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce()
@@ -79,8 +78,7 @@ export class WebViewProvider implements vscode.WebviewViewProvider {
         <meta http-equiv="Content-Security-Policy" content="${contentSecurity.join(';')}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script nonce="${nonce}">
-          window.appPort=${appPort};
-          window.appInfo=${JSON.stringify(appInfo)};
+          window.ri=${JSON.stringify(uiStorage)};
         </script>
       </head>
       <body>

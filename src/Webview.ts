@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { getNonce, handleMessage } from './utils'
-import { workspaceStateService } from './lib'
+import { getUIStorage } from './lib'
 
 type WebviewOptions = {
   context?: vscode.ExtensionContext
@@ -35,10 +35,12 @@ abstract class Webview {
     }
   }
 
-  protected getWebviewOptions(): vscode.WebviewOptions {
+  protected getWebviewOptions(): vscode.WebviewPanelOptions & vscode.WebviewOptions {
     return {
       // Enable javascript in the webview
       enableScripts: true,
+
+      retainContextWhenHidden: true,
 
       // And restrict the webview to only loading content from our extension's `dist` directory.
       localResourceRoots: [vscode.Uri.joinPath(this._opts.context?.extensionUri as vscode.Uri, 'dist')],
@@ -54,8 +56,7 @@ abstract class Webview {
     const scriptUri = webview.asWebviewUri(this._opts.scriptUri as vscode.Uri)
     const styleUri = webview.asWebviewUri(this._opts.styleUri as vscode.Uri)
 
-    const appInfo = workspaceStateService.get('appInfo')
-    const appPort = workspaceStateService.get('appPort')
+    const uiStorage = getUIStorage()
 
     const contentSecurity = [
       `img-src ${webview.cspSource} 'self' data:`,
@@ -88,8 +89,7 @@ abstract class Webview {
         <link href="${styleUri}" rel="stylesheet" />
         <script nonce="${this._opts.nonce}">
           window.acquireVsCodeApi = acquireVsCodeApi;
-          window.appPort=${appPort};
-          window.appInfo=${JSON.stringify(appInfo)};
+          window.ri=${JSON.stringify(uiStorage)};
         </script>
 
         <title>Redis for VS Code Webview</title>
@@ -129,6 +129,9 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
       if (opts.message) {
         instance.panel.webview.postMessage(opts.message)
       }
+      if (opts.title) {
+        instance.panel.title = opts.title
+      }
     } else {
       // Otherwise, create an instance
       instance = new WebviewPanel(options)
@@ -148,12 +151,8 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
       this.getWebviewOptions(),
     )
 
-    // todo: connection between webviews
-    if (opts.message) {
-      await this.panel.webview.postMessage(opts.message)
-    }
     // Update the content
-    this.update()
+    this.update(opts)
 
     // Listen for when the panel is disposed
     // This happens when the user closes the panel or when the panel is closed programmatically

@@ -1,8 +1,6 @@
 import React, { FC, useEffect } from 'react'
-import { StorageItem } from 'uiSrc/constants'
 import { Cli } from 'uiSrc/modules/cli/Cli'
 import { useCliSettingsStore } from 'uiSrc/modules/cli/hooks/cli-settings/useCliSettingsStore'
-import { sessionStorageService } from 'uiSrc/services'
 import { useDatabasesStore } from 'uiSrc/store'
 
 export const CliPage: FC<any> = () => {
@@ -11,10 +9,7 @@ export const CliPage: FC<any> = () => {
   const setConnectedDatabase = useDatabasesStore((state) => state.setConnectedDatabase)
 
   useEffect(() => {
-    const database = sessionStorageService.get(StorageItem.cliDatabase)
-    sessionStorageService.set(StorageItem.databaseId, database?.id)
-
-    setConnectedDatabase(database)
+    setConnectedDatabase(window.ri?.database!)
   }, [])
 
   return (

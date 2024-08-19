@@ -6,7 +6,7 @@ export const refreshTreeAction = (message: PostMessage) => {
   if (message.action !== VscodeMessageAction.RefreshTree) {
     return
   }
-  if (message.data?.key) {
+  if (message.data?.keyInfo?.key) {
     useSelectedKeyStore.getState().setSelectedKeyAction(message.data)
   } else {
     fetchDatabases()

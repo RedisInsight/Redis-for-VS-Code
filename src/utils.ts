@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { workspaceStateService } from './lib'
+import { getUIStorageField, setUIStorageField } from './lib'
 
 export const getNonce = () => {
   let text = ''
@@ -58,8 +58,8 @@ export const handleMessage = async (message: any = {}) => {
       vscode.commands.executeCommand('RedisForVSCode.editDatabaseClose', message)
       break
     case 'UpdateSettings':
-      await workspaceStateService.set('appInfo', {
-        ...workspaceStateService.get('appInfo'),
+      await setUIStorageField('appInfo', {
+        ...getUIStorageField('appInfo'),
         config: message.data,
       })
 
@@ -75,7 +75,7 @@ export const handleMessage = async (message: any = {}) => {
       vscode.commands.executeCommand('RedisForVSCode.closeEula', message)
       break
     case 'SaveAppInfo':
-      await workspaceStateService.set('appInfo', message.data)
+      await setUIStorageField('appInfo', message.data)
       break
     default:
       break

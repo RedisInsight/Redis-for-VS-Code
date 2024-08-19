@@ -23,8 +23,8 @@ export const Config = () => {
     appInfo.setInitialStateAppInfo()
     fetchDatabases()
 
-    if (window.appInfo) {
-      appInfo.setAppInfo(window.appInfo)
+    if (window.ri?.appInfo) {
+      appInfo.setAppInfo(window.ri?.appInfo)
       return
     }
 

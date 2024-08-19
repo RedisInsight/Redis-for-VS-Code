@@ -2,7 +2,7 @@ import { toNumber } from 'lodash'
 
 // server
 export const BASE_APP_URL = import.meta.env.RI_BASE_APP_URL || 'http://localhost'
-export const APP_PORT = toNumber(window.appPort) || import.meta.env.RI_APP_PORT || 5541
+export const APP_PORT = toNumber(window.ri?.appPort) || import.meta.env.RI_APP_PORT || 5541
 export const APP_PREFIX = import.meta.env.RI_APP_PREFIX || 'api'
 
 // browser
