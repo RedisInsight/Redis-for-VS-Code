@@ -56,7 +56,7 @@ export const AddKey = () => {
       action: VscodeMessageAction.CloseAddKeyAndRefresh,
       data: {
         type: SelectedKeyActionType.Added,
-        database: database!,
+        database: window.ri.database!,
         keyInfo: {
           keyType,
           keyString: keyName,
