@@ -23,6 +23,7 @@ import {
   KeyTypesShort,
 } from '@e2eSrc/helpers/constants'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 let keyName = `KeyForSearch*?[]789${Common.generateWord(10)}`
 let keyName2 = Common.generateWord(10)
@@ -426,10 +427,12 @@ describe('Filtering per key name in DB with 10 millions of keys', () => {
     await treeView.clearFilter()
     for (let i = 0; i < keyTypes.length - 1; i++) {
       await treeView.selectFilterGroupType(keyTypes[i].keyName)
+      // Waiting for long db loading
+      CommonDriverExtension.driverSleep(1000)
       // Verify that all results have the same type as in filter
       expect(
         await treeView.getElementText(treeView.getTreeViewItemByIndex(i + 1)),
-      ).contains(keyTypes[i].keyName, 'Keys filtered incorrectly by key type')
+      ).contains(keyTypes[i].keyName, 'Keys filtered incorrectly by key type after scanning more')
     }
   })
 })

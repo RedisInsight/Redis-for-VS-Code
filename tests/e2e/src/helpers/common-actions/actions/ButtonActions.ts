@@ -55,7 +55,7 @@ export class ButtonActions extends BaseActions{
    */
   static async clickElement(
     locatorToClick: Locator,
-    timeout: number = 3000,
+    timeout: number = 5000,
   ): Promise<void> {
     ButtonActions.initializeDriver()
     const elementToClick = await ButtonActions.driver.wait(
