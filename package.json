@@ -8,7 +8,10 @@
   "l10n": "./l10n",
   "publisher": "Redis",
   "pricing": "Free",
-  "categories": ["Visualization", "Programming Languages"],
+  "categories": [
+    "Visualization",
+    "Programming Languages"
+  ],
   "icon": "dist/webviews/resources/256x256.png",
   "author": {
     "name": "Redis Ltd.",
@@ -209,6 +212,8 @@
     "@vscode/vsce": "^3.0.0",
     "autoprefixer": "^10.4.16",
     "cross-env": "^7.0.3",
+    "csv-parser": "^3.0.0",
+    "csv-stringify": "^6.5.1",
     "esbuild": "^0.19.5",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -225,6 +230,7 @@
     "eslint-plugin-sonarjs": "^0.23.0",
     "eslint-plugin-storybook": "^0.6.15",
     "eslint-plugin-tailwindcss": "^3.15.1",
+    "googleapis": "^142.0.0",
     "html-entities": "^2.3.2",
     "husky": "^8.0.3",
     "identity-obj-proxy": "^3.0.0",

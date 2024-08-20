@@ -329,6 +329,27 @@ jobs:
 
             aws s3 cp release/ s3://${AWS_BUCKET_NAME}/private/vscode/${applicationVersion} --recursive
 
+  licenses-check:
+    executor: linux-executor
+    steps:
+      - checkout
+      - restore_cache:
+          <<: *uiDepsCacheKey
+      - run:
+          name: Run install all dependencies
+          command: |
+            yarn install
+            yarn --cwd tests/e2e install
+      - run:
+          name: Generate licenses csv files and send csv data to google sheet
+          command: |
+            npm i -g license-checker
+
+            echo "$GOOGLE_ACCOUNT_SERVICE_KEY_BASE64" | base64 -id > gasKey.json
+            SPREADSHEET_ID=$GOOGLE_SPREADSHEET_DEPENDENCIES_ID node .circleci/deps-licenses-report.js
+      - store_artifacts:
+          path: licenses
+          destination: licenses
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
@@ -538,4 +559,17 @@ workflows:
       #     requires:
       #       - Approve Publish Release (prod)
       #     <<: *prodFilter # double check for "latest"
+
+  weekly:
+    triggers:
+      - schedule:
+          cron: '0 0 * * 1'
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      # Process all licenses
+      - licenses-check:
+          name: Process licenses of packages
 
