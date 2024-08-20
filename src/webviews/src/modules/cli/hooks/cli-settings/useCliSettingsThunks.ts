@@ -185,10 +185,10 @@ function updateCliHistory() {
 }
 
 // async thunk function
-export function addCli(database: Database) {
+export function addCli() {
   updateCliHistory()
   useCliOutputStore.getState().resetOutput()
-  createCliClientAction(database)
+  useCliSettingsStore.getState().resetCliClientUuid()
 }
 
 // async thunk function

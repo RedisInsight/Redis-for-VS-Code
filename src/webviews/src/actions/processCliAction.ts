@@ -10,9 +10,14 @@ export const processCliAction = (message: PostMessage) => {
     return
   }
 
+  const prevDatabaseId = useDatabasesStore.getState().connectedDatabase?.id
   const database = message?.data?.database
+
+  if (prevDatabaseId === database?.id) {
+    return
+  }
   window.ri.database = database
+  addCli()
 
   useDatabasesStore.getState().setConnectedDatabase(database)
-  addCli(database)
 }
