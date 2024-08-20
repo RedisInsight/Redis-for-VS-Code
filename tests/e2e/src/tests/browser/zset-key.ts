@@ -27,15 +27,11 @@ import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 let keyName: string
 
 describe('ZSet Key fields verification', () => {
-  let bottomBar: BottomBar
-  let bottomBarPanel: BottomBarPanel
   let keyDetailsView: SortedSetKeyDetailsView
   let treeView: TreeView
   let addSortedSetKeyView: AddSortedSetKeyView
 
   before(async () => {
-    bottomBar = new BottomBar()
-    bottomBarPanel = new BottomBarPanel()
     keyDetailsView = new SortedSetKeyDetailsView()
     treeView = new TreeView()
     addSortedSetKeyView = new AddSortedSetKeyView()
