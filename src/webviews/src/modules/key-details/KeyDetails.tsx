@@ -2,11 +2,11 @@ import React, { useEffect } from 'react'
 import cx from 'classnames'
 import { useShallow } from 'zustand/react/shallow'
 
-import { KeyTypes, SelectedKeyActionType, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
-import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
+import { KeyTypes, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
+import { bufferToString, getGroupTypeDisplay, sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { RedisString } from 'uiSrc/interfaces'
 import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
-import { sessionStorageService, vscodeApi } from 'uiSrc/services'
+import { vscodeApi } from 'uiSrc/services'
 import { DynamicTypeDetails } from './components/dynamic-type-details'
 
 import { useKeysApi } from '../keys-tree/hooks/useKeys'
@@ -27,7 +27,7 @@ const KeyDetails = () => {
   const keysApi = useKeysApi()
 
   useEffect(() => {
-    keysApi.setDatabaseId(sessionStorageService.get(StorageItem.databaseId))
+    keysApi.setDatabaseId(window.ri?.database?.id || '')
   }, [keyName])
 
   const onCloseAddItemPanel = (isCancelled = false) => {
@@ -55,14 +55,23 @@ const KeyDetails = () => {
   const onRemoveKey = () => {
     vscodeApi.postMessage({
       action: VscodeMessageAction.CloseKeyAndRefresh,
-      data: { key: keyName, type: SelectedKeyActionType.Removed, database: database! },
+      data: { type: SelectedKeyActionType.Removed, database: database!, keyInfo: { key: keyName } },
     })
   }
 
   const onEditKey = (key: RedisString, newKey: RedisString) => {
     vscodeApi.postMessage({
       action: VscodeMessageAction.EditKeyName,
-      data: { key, newKey, type: SelectedKeyActionType.Renamed, database: database! },
+      data: {
+        type: SelectedKeyActionType.Renamed,
+        database: database!,
+        keyInfo: {
+          key,
+          newKey,
+          displayedKeyType: getGroupTypeDisplay(keyType),
+          newKeyString: bufferToString(newKey),
+        },
+      },
     })
   }
 

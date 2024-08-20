@@ -2,8 +2,9 @@ import * as vscode from 'vscode'
 import * as getPort from 'detect-port'
 import * as path from 'path'
 import * as fs from 'fs'
-import { workspaceStateService } from '../lib'
+import { setUIStorageField } from '../lib'
 import { CustomLogger } from '../logger'
+import { sleep } from '../utils'
 
 let gracefulShutdown: Function
 let beApp: any
@@ -16,7 +17,7 @@ export async function startBackend(logger: CustomLogger): Promise<any> {
   const port = await (await getPort.default(+appPort!)).toString()
   logger.log(`Starting at port: ${port}`)
 
-  workspaceStateService.set('appPort', port)
+  await setUIStorageField('appPort', port)
 
   if (!fs.existsSync(backendPath)) {
     const errorMessage = 'Can\'t find api folder. Please run "yarn download:backend" command'
@@ -31,6 +32,9 @@ export async function startBackend(logger: CustomLogger): Promise<any> {
       const { gracefulShutdown: gracefulShutdownFn, app: apiApp } = await server.default(port, logger)
       gracefulShutdown = gracefulShutdownFn
       beApp = apiApp
+
+      // wait BE requests to take jsons from github
+      await sleep(300)
       logger.log('BE started')
     } catch (error) {
       logger.log(`startBackendError: ${error}`)

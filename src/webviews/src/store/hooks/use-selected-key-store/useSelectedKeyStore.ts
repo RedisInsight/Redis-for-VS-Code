@@ -37,7 +37,7 @@ export const initialSelectedKeyState: SelectedKeyStore = {
 }
 
 export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>()(
-  immer(devtools(persist((set) => ({
+  immer(devtools((set, get) => ({
     ...initialSelectedKeyState,
     // actions
     resetSelectedKeyStore: () => set(initialSelectedKeyState),
@@ -51,13 +51,10 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
     // deleteSelectedKey: () => set({ data: null }),
     // update selected key
     updateSelectedKeyRefreshTime: (lastRefreshTime) => set({ lastRefreshTime }),
+    updateSelectedKeyName: (name) => set({ data: { ...get().data, name } }),
 
     setSelectedKeyAction: (action) => set({ action }),
     setSelectedKeyRefreshDisabled: (refreshDisabled: boolean) => set({ refreshDisabled }),
-  }),
-  {
-    name: 'selectedKey',
-    storage: createJSONStorage(() => sessionStorage),
   }))),
 )
 

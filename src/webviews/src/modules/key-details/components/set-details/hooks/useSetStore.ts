@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { AxiosError } from 'axios'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { remove } from 'lodash'
 import * as l10n from '@vscode/l10n'
 
@@ -39,7 +39,7 @@ export const initialState: SetState = {
 }
 
 export const useSetStore = create<SetState & SetActions>()(
-  immer(devtools(persist((set) => ({
+  immer(devtools((set) => ({
     ...initialState,
     // actions
     processSet: () => set(() => ({ loading: true })),
@@ -65,8 +65,7 @@ export const useSetStore = create<SetState & SetActions>()(
       remove(state.data.members, (member) =>
         members.findIndex((item) => isEqualBuffers(item, member)) > -1)
     }),
-  }),
-  { name: 'keySet' }))),
+  }))),
 )
 
 // Async action

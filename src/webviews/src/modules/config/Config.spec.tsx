@@ -37,8 +37,8 @@ describe('Config', () => {
     expect(useAppInfo.fetchAppInfo).toBeCalled()
   })
 
-  it('should not call fetchAppInfo if window.appInfo is object ', () => {
-    vi.stubGlobal('appInfo', { server: {} })
+  it('should not call fetchAppInfo if window.ri.appInfo is object ', () => {
+    vi.stubGlobal('ri', { appInfo: { server: {} } })
     render(<Config />, { withRouter: true })
     expect(useDatabases.fetchDatabases).toBeCalled()
     expect(useAppInfo.fetchAppInfo).not.toBeCalled()

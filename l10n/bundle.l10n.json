@@ -91,7 +91,6 @@
   "To optimize your experience, Redis for VS Code uses third-party tools.\n                All data collected is anonymized and will not be used for any purpose without your consent.": "To optimize your experience, Redis for VS Code uses third-party tools.\n                All data collected is anonymized and will not be used for any purpose without your consent.",
   "To use Redis for VS Code, please accept the terms and conditions: ": "To use Redis for VS Code, please accept the terms and conditions: ",
   "Server Side Public License": "Server Side Public License",
-  "Notice: To avoid automatic execution of malicious code, when adding new Workbench plugins, use files from trusted authors only.": "Notice: To avoid automatic execution of malicious code, when adding new Workbench plugins, use files from trusted authors only.",
   "Add Redis database": "Add Redis database",
   "Edit Redis database": "Edit Redis database",
   "Members": "Members",

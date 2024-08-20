@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import axios, { AxiosError, CancelTokenSource } from 'axios'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { isNumber } from 'lodash'
 
@@ -38,15 +38,14 @@ export const initialState: RejsonState = {
 }
 
 export const useRejsonStore = create<RejsonState & RejsonActions>()(
-  immer(devtools(persist((set) => ({
+  immer(devtools((set) => ({
     ...initialState,
     // actions
     resetRejsonStore: () => set(initialState),
     processRejson: () => set({ loading: true }),
     processRejsonFinal: () => set({ loading: false }),
     processRejsonSuccess: (data) => set({ data }),
-  }),
-  { name: 'keyRejson' }))),
+  }))),
 )
 
 // async actions

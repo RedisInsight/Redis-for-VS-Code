@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
-import { workspaceStateService } from './lib'
-
-export const NOTIFICATION_TIMEOUT = 5_000
+import { getUIStorageField, setUIStorageField } from './lib'
+import { MAX_TITLE_KEY_LENGTH } from './constants'
 
 export const getNonce = () => {
   let text = ''
@@ -14,17 +13,6 @@ export const getNonce = () => {
 
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
-
-export const waitFor = async (timeout: number, condition: () => boolean): Promise<boolean> => {
-  while (!condition() && timeout > 0) {
-    // eslint-disable-next-line no-param-reassign
-    timeout -= 100
-    // eslint-disable-next-line no-await-in-loop
-    await sleep(100)
-  }
-
-  return timeout > 0
-}
 
 export const handleMessage = async (message: any = {}) => {
   switch (message.action) {
@@ -71,8 +59,8 @@ export const handleMessage = async (message: any = {}) => {
       vscode.commands.executeCommand('RedisForVSCode.editDatabaseClose', message)
       break
     case 'UpdateSettings':
-      await workspaceStateService.set('appInfo', {
-        ...workspaceStateService.get('appInfo'),
+      await setUIStorageField('appInfo', {
+        ...getUIStorageField('appInfo'),
         config: message.data,
       })
 
@@ -88,7 +76,7 @@ export const handleMessage = async (message: any = {}) => {
       vscode.commands.executeCommand('RedisForVSCode.closeEula', message)
       break
     case 'SaveAppInfo':
-      await workspaceStateService.set('appInfo', message.data)
+      await setUIStorageField('appInfo', message.data)
       break
     default:
       break
@@ -97,3 +85,6 @@ export const handleMessage = async (message: any = {}) => {
 
 export const truncateText = (text = '', maxLength = 0, separator = '...') =>
   (text.length >= maxLength ? text.slice(0, maxLength) + separator : text)
+
+export const getTitleForKey = (keyType: string, keyString: string): string =>
+  `${keyType?.toLowerCase()}:${truncateText(keyString, MAX_TITLE_KEY_LENGTH)}`

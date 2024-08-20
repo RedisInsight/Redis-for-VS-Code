@@ -1,12 +1,42 @@
 {
   "name": "redis-for-vscode",
-  "productName": "Redis for VS Code",
   "version": "0.0.3",
-  "private": true,
-  "description": "Redis for VS Code",
+  "displayName": "Redis for VS Code",
+  "description": "Visually interact with data and build queries in Redis",
+  "license": "SEE LICENSE IN LICENSE",
   "main": "dist/extension.js",
   "l10n": "./l10n",
-  "publisher": "redis",
+  "publisher": "Redis",
+  "pricing": "Free",
+  "categories": ["Visualization", "Programming Languages"],
+  "icon": "dist/webviews/resources/256x256.png",
+  "author": {
+    "name": "Redis Ltd.",
+    "email": "support@redis.com",
+    "url": "https://redis.com/redis-enterprise/redis-insight"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RedisInsight/Redis-for-VS-Code.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RedisInsight/Redis-for-VS-Code/issues"
+  },
+  "qna": "https://github.com/RedisInsight/Redis-for-VS-Code/issues",
+  "homepage": "https://github.com/RedisInsight/Redis-for-VS-Code#readme",
+  "keywords": [
+    "Redis for VS Code",
+    "redis",
+    "redis insight",
+    "vsc",
+    "visual studio code",
+    "plugin",
+    "react",
+    "node",
+    "nest",
+    "typescript",
+    "vite"
+  ],
   "engines": {
     "vscode": "^1.87.0"
   },
@@ -19,14 +49,14 @@
         {
           "id": "ri-sidebar-view",
           "title": "Redis for VS Code",
-          "icon": "dist/webviews/resources/redisinsight.svg"
+          "icon": "dist/webviews/resources/redis_for_vscode.svg"
         }
       ],
       "panel": [
         {
           "id": "ri-panel-view",
           "title": "Redis CLI",
-          "icon": "dist/webviews/resources/redisinsight.svg"
+          "icon": "dist/webviews/resources/redis_for_vscode.svg"
         }
       ]
     },
@@ -36,7 +66,7 @@
           "type": "webview",
           "id": "ri-sidebar",
           "name": "Redis for VS Code",
-          "icon": "dist/webviews/resources/redisinsight.svg",
+          "icon": "dist/webviews/resources/redis_for_vscode.svg",
           "contextualTitle": "Redis for VS Code"
         }
       ],
@@ -134,31 +164,6 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix"
   },
-  "author": {
-    "name": "Redis Ltd.",
-    "email": "support@redis.com",
-    "url": "https://redis.com/redis-enterprise/redis-insight"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/RedisInsight/Redis-for-VS-Code.git"
-  },
-  "bugs": {
-    "url": "https://github.com/RedisInsight/Redis-for-VS-Code/issues"
-  },
-  "keywords": [
-    "Redis for VS Code",
-    "redis",
-    "redis insight",
-    "vsc",
-    "visual studio code",
-    "plugin",
-    "react",
-    "nest",
-    "typescript",
-    "vite"
-  ],
-  "homepage": "https://github.com/RedisInsight/Redis-for-VS-Code#readme",
   "devDependencies": {
     "@bithero/monaco-editor-vite-plugin": "^1.0.2",
     "@githubocto/tailwind-vscode": "^1.0.5",
@@ -201,7 +206,7 @@
     "@vitest/coverage-v8": "^1.3.1",
     "@vitest/ui": "^1.3.1",
     "@vscode/l10n-dev": "^0.0.35",
-    "@vscode/vsce": "^2.31.1",
+    "@vscode/vsce": "^3.0.0",
     "autoprefixer": "^10.4.16",
     "cross-env": "^7.0.3",
     "esbuild": "^0.19.5",
@@ -257,8 +262,6 @@
     "whatwg-fetch": "^3.6.19"
   },
   "dependencies": {
-    "@hediet/node-reload": "^0.8.0",
-    "@vscode/codicons": "^0.0.36",
     "@vscode/l10n": "^0.0.18",
     "@vscode/webview-ui-toolkit": "^1.4.0",
     "axios": "^1.5.1",
@@ -271,7 +274,6 @@
     "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
     "formik": "^2.4.5",
-    "helmet": "^7.0.0",
     "history": "^5.3.0",
     "html-react-parser": "^5.0.6",
     "immer": "^9.0.21",
@@ -303,8 +305,6 @@
     "react-vtree": "^3.0.0-beta.3",
     "react-window": "^1.8.6",
     "reactjs-popup": "^2.0.6",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1",
     "ws": "^8.17.1",
     "zustand": "^4.5.4"
   }

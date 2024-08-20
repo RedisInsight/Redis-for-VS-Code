@@ -27,7 +27,7 @@ export const NoKeysMessage: FC<Props> = (props) => {
       event: TelemetryEvent.TREE_VIEW_KEY_ADD_BUTTON_CLICKED,
       eventData: { databaseId: database.id },
     })
-    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey, data: database })
+    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey, data: { database } })
   }
 
   // TODO: will be implemented in the future

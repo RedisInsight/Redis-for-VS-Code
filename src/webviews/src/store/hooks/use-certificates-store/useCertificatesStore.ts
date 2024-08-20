@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { apiService } from 'uiSrc/services'
 import { ApiEndpoints } from 'uiSrc/constants'
@@ -14,16 +14,14 @@ export const initialCertsState: CertificatesStore = {
 }
 
 export const useCertificatesStore = create<CertificatesStore & CertificatesActions>()(
-  immer(devtools(persist((set) => ({
+  immer(devtools((set) => ({
     ...initialCertsState,
     // actions
     processCerts: () => set({ loading: true }),
     processCertsFinal: () => set({ loading: false }),
     processCertsSuccess: (caCerts: Certificate[], clientCerts: Certificate[]) =>
       set({ caCerts, clientCerts }),
-
-  }),
-  { name: 'certificates' }))),
+  }))),
 )
 
 // Asynchronous thunk action

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { getNonce, handleMessage } from './utils'
-import { workspaceStateService } from './lib'
+import { getUIStorage } from './lib'
 
 type WebviewOptions = {
   context?: vscode.ExtensionContext
@@ -10,7 +10,9 @@ type WebviewOptions = {
   scriptUri?: vscode.Uri
   styleUri?: vscode.Uri
   nonce?: string
-  message?: object
+  message?: {
+    data: object
+  }
   column?: vscode.ViewColumn
   handleMessage?: (message: any) => any
 }
@@ -35,10 +37,12 @@ abstract class Webview {
     }
   }
 
-  protected getWebviewOptions(): vscode.WebviewOptions {
+  protected getWebviewOptions(): vscode.WebviewPanelOptions & vscode.WebviewOptions {
     return {
       // Enable javascript in the webview
       enableScripts: true,
+
+      retainContextWhenHidden: true,
 
       // And restrict the webview to only loading content from our extension's `dist` directory.
       localResourceRoots: [vscode.Uri.joinPath(this._opts.context?.extensionUri as vscode.Uri, 'dist')],
@@ -54,8 +58,15 @@ abstract class Webview {
     const scriptUri = webview.asWebviewUri(this._opts.scriptUri as vscode.Uri)
     const styleUri = webview.asWebviewUri(this._opts.styleUri as vscode.Uri)
 
-    const appInfo = workspaceStateService.get('appInfo')
-    const appPort = workspaceStateService.get('appPort')
+    const uiStorage = getUIStorage()
+    const database = (this._opts?.message?.data as any)?.database || (uiStorage as any)?.database
+    const keyInfo = (this._opts?.message?.data as any)?.keyInfo || (uiStorage as any)?.keyInfo
+
+    const uiStorageStringify = JSON.stringify({
+      ...uiStorage,
+      database,
+      keyInfo,
+    })
 
     const contentSecurity = [
       `img-src ${webview.cspSource} 'self' data:`,
@@ -88,8 +99,7 @@ abstract class Webview {
         <link href="${styleUri}" rel="stylesheet" />
         <script nonce="${this._opts.nonce}">
           window.acquireVsCodeApi = acquireVsCodeApi;
-          window.appPort=${appPort};
-          window.appInfo=${JSON.stringify(appInfo)};
+          window.ri=${uiStorageStringify};
         </script>
 
         <title>Redis for VS Code Webview</title>
@@ -102,6 +112,7 @@ abstract class Webview {
   }
 
   public abstract update(opts?: WebviewOptions): void
+  public abstract setTitle(title: string): void
 }
 
 export class WebviewPanel extends Webview implements vscode.Disposable {
@@ -129,6 +140,9 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
       if (opts.message) {
         instance.panel.webview.postMessage(opts.message)
       }
+      if (opts.title) {
+        instance.panel.title = opts.title
+      }
     } else {
       // Otherwise, create an instance
       instance = new WebviewPanel(options)
@@ -147,8 +161,9 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
       opts.column || vscode.ViewColumn.One,
       this.getWebviewOptions(),
     )
+
     // Update the content
-    this.update()
+    this.update(opts)
 
     // Listen for when the panel is disposed
     // This happens when the user closes the panel or when the panel is closed programmatically
@@ -156,11 +171,6 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
       vscode.commands.executeCommand('RedisForVSCode.resetSelectedKey')
       this.dispose()
     }, null, this._disposables)
-
-    // todo: connection between webviews
-    if (opts.message) {
-      this.panel.webview.postMessage(opts.message)
-    }
 
     // Update the content based on view changes
     // this.panel.onDidChangeViewState(
@@ -188,13 +198,17 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
     this.panel.title = title || this._opts.title || ''
     this.panel.iconPath = vscode.Uri.joinPath(
       this._opts.context?.extensionUri as vscode.Uri,
-      'dist/webviews/resources/redisinsight.svg',
+      'dist/webviews/resources/redis_for_vscode.svg',
     )
     this.panel.webview.html = this._getContent(this.panel.webview)
 
     if (message) {
       this.panel.webview.postMessage(message)
     }
+  }
+
+  public setTitle(title: string) {
+    this.panel.title = title
   }
 
   public dispose() {

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
 import { refreshKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
@@ -40,7 +40,7 @@ export const initialState: ListState = {
 }
 
 export const useListStore = create<ListState & ListActions>()(
-  immer(devtools(persist((set) => ({
+  immer(devtools((set) => ({
     ...initialState,
     // actions
     resetListStore: () => set(initialState),
@@ -73,8 +73,7 @@ export const useListStore = create<ListState & ListActions>()(
       state.data.elements[state.data.elements.length === 1 ? 0 : element.index] = element
     }),
 
-  }),
-  { name: 'keyList' }))),
+  }))),
 )
 
 // async actions

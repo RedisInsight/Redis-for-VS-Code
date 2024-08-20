@@ -124,12 +124,17 @@ const formattingBuffer = (
       }
     }
     case KeyValueFormat.Vector64Bit: {
+      const valueUTF = bufferToUTF8(reply)
       try {
+        if (isEqualBuffers(reply, UTF8ToBuffer(valueUTF))) {
+          return { value: valueUTF, isValid: false }
+        }
+
         const vector = Array.from(bufferToFloat64Array(reply.data as Uint8Array))
         const value = JSONBigInt.stringify(vector)
         return JSONViewer({ value, useNativeBigInt: false, ...props })
       } catch (e) {
-        return { value: bufferToUTF8(reply), isValid: false }
+        return { value: valueUTF, isValid: false }
       }
     }
     case KeyValueFormat.Protobuf: {

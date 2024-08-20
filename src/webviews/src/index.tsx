@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break
       case VscodeMessageAction.EditDatabase:
         fetchCerts(() => {
-          fetchEditedDatabase(message?.data as Database)
+          fetchEditedDatabase(message?.data?.database)
         })
         break
 

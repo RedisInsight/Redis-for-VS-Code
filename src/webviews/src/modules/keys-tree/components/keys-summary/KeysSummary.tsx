@@ -1,7 +1,6 @@
 import React from 'react'
 import * as l10n from '@vscode/l10n'
 import cx from 'classnames'
-import { isNull } from 'lodash'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { BiSortDown, BiSortUp } from 'react-icons/bi'
 import { VscAdd } from 'react-icons/vsc'
@@ -37,7 +36,7 @@ export const KeysSummary = (props: Props) => {
       event: TelemetryEvent.TREE_VIEW_KEY_ADD_BUTTON_CLICKED,
       eventData: { databaseId: database.id },
     })
-    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey, data: database })
+    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey, data: { database } })
   }
 
   const changeSortHandle = () => {

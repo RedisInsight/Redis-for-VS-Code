@@ -4,9 +4,10 @@ import cx from 'classnames'
 import { VscChevronRight, VscChevronDown, VscTerminal, VscEdit } from 'react-icons/vsc'
 import * as l10n from '@vscode/l10n'
 import { useShallow } from 'zustand/react/shallow'
+import { set } from 'lodash'
 
-import { sessionStorageService, vscodeApi } from 'uiSrc/services'
-import { POPOVER_WINDOW_BORDER_WIDTH, SelectedKeyActionType, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
+import { vscodeApi } from 'uiSrc/services'
+import { POPOVER_WINDOW_BORDER_WIDTH, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
 import {
   TelemetryEvent,
   formatLongName,
@@ -43,7 +44,8 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
   const keysApi = useKeysApi()
 
   useEffect(() => {
-    const { type, key, keyType, database: databaseAction, newKey } = selectedKeyAction || {}
+    const { type, keyInfo, database: databaseAction } = selectedKeyAction || {}
+    const { key, keyType, newKey } = keyInfo || {}
     const { id: databaseId } = databaseAction || {}
 
     if (!type || databaseId !== database.id) {
@@ -89,14 +91,12 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
     keysApi.setDatabaseId(id)
 
     // todo: fix for cli first open
-    sessionStorageService.set(StorageItem.databaseId, database.id)
-    sessionStorageService.set(StorageItem.cliDatabase, database)
-    // contextApi.setDatabaseId(id)
+    set(window, 'ri.database', database)
     setShowTree(!showTree)
   }
 
   const openCliClickHandle = () => {
-    vscodeApi.postMessage({ action: VscodeMessageAction.AddCli, data: database })
+    vscodeApi.postMessage({ action: VscodeMessageAction.AddCli, data: { database } })
   }
 
   const editHandle = () => {
@@ -107,7 +107,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
       },
     })
 
-    vscodeApi.postMessage({ action: VscodeMessageAction.EditDatabase, data: database })
+    vscodeApi.postMessage({ action: VscodeMessageAction.EditDatabase, data: { database } })
   }
 
   const deleteDatabaseHandle = () => {

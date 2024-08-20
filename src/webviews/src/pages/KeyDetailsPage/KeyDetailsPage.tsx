@@ -1,15 +1,36 @@
 import React, { FC, useEffect } from 'react'
-import { useShallow } from 'zustand/react/shallow'
 import { KeyDetails } from 'uiSrc/modules'
-import { ContextStoreProvider, fetchDatabaseOverview, fetchKeyInfo, useSelectedKeyStore } from 'uiSrc/store'
+import {
+  ContextStoreProvider,
+  fetchDatabaseOverview,
+  fetchKeyInfo,
+  useDatabasesStore,
+} from 'uiSrc/store'
 import { KeysStoreProvider } from 'uiSrc/modules/keys-tree/hooks/useKeys'
+import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 
 export const KeyDetailsPage: FC = () => {
-  const selectedKey = useSelectedKeyStore(useShallow((state) => state.data?.name))
-
   useEffect(() => {
+    const { database, keyInfo: { key } = {} } = window.ri
+
+    if (!key || !database) {
+      return
+    }
+
+    fetchKeyInfo({ key }, true, ({ type: keyType, length }) => {
+      useDatabasesStore.getState().setConnectedDatabase(database!)
+      sendEventTelemetry({
+        event: TelemetryEvent.TREE_VIEW_KEY_VALUE_VIEWED,
+        eventData: {
+          keyType,
+          databaseId: database?.id,
+          length,
+        },
+      })
+    })
+
     fetchDatabaseOverview()
-  }, [selectedKey])
+  }, [])
 
   return (
     <div className="h-full" data-testid="key-details-page">

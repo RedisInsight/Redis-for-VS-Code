@@ -1,8 +1,7 @@
-import { StorageItem, VscodeMessageAction } from 'uiSrc/constants'
+import { VscodeMessageAction } from 'uiSrc/constants'
 import { PostMessage } from 'uiSrc/interfaces'
 import { addCli } from 'uiSrc/modules/cli/hooks/cli-settings/useCliSettingsThunks'
-import { sessionStorageService } from 'uiSrc/services'
-import { Database, useDatabasesStore } from 'uiSrc/store'
+import { useDatabasesStore } from 'uiSrc/store'
 
 export const processCliAction = (message: PostMessage) => {
   if (
@@ -11,11 +10,14 @@ export const processCliAction = (message: PostMessage) => {
     return
   }
 
-  const database = message?.data as Database
+  const prevDatabaseId = useDatabasesStore.getState().connectedDatabase?.id
+  const database = message?.data?.database
 
-  sessionStorageService.set(StorageItem.cliDatabase, database)
-  sessionStorageService.set(StorageItem.databaseId, database.id)
+  if (prevDatabaseId === database?.id) {
+    return
+  }
+  window.ri.database = database
+  addCli()
 
   useDatabasesStore.getState().setConnectedDatabase(database)
-  addCli(database)
 }

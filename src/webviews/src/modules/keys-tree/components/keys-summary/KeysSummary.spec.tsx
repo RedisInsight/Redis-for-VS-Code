@@ -81,7 +81,7 @@ describe('KeysSummary', () => {
     fireEvent.click(queryByTestId('add-key-button')!)
 
     expect(vscodeApi.postMessage).toBeCalledWith({
-      action: VscodeMessageAction.AddKey, data: mockDatabase,
+      action: VscodeMessageAction.AddKey, data: { database: mockDatabase },
     })
 
     expect(utils.sendEventTelemetry).toBeCalledWith({

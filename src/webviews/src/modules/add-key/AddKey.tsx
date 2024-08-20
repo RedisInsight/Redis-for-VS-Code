@@ -55,12 +55,14 @@ export const AddKey = () => {
     vscodeApi.postMessage({
       action: VscodeMessageAction.CloseAddKeyAndRefresh,
       data: {
-        key: stringToBuffer(keyName),
-        keyString: keyName,
-        keyType,
-        displayedKeyType: getGroupTypeDisplay(keyType),
-        database: database!,
         type: SelectedKeyActionType.Added,
+        database: window.ri.database!,
+        keyInfo: {
+          keyType,
+          keyString: keyName,
+          key: stringToBuffer(keyName),
+          displayedKeyType: getGroupTypeDisplay(keyType),
+        },
       },
     })
   }

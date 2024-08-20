@@ -25,7 +25,7 @@ class WorkspaceStateService {
   }
 
   async remove(key: string = '') {
-    await this.context.workspaceState.update(key, null)
+    await this.context.workspaceState.update(key, undefined)
   }
 
   getAll() {
@@ -37,8 +37,49 @@ export const initWorkspaceState = async (context: vscode.ExtensionContext) => {
   workspaceStateService = new WorkspaceStateService(context)
 
   // clear app cache
-  await workspaceStateService.remove('appPort')
-  await workspaceStateService.remove('appInfo')
+  await workspaceStateService.set('ui', {})
+}
+
+export const getObjectStorageField = (itemName = '', field = '') => {
+  try {
+    return (workspaceStateService?.get(itemName) as any)?.[field]
+  } catch (e) {
+    return null
+  }
+}
+
+export const setObjectStorageField = async (itemName = '', field = '', value?: any) => {
+  try {
+    const config: Config = workspaceStateService?.get(itemName) || {}
+
+    if (value === undefined) {
+      delete config[field]
+
+      await workspaceStateService?.set(itemName, config)
+      return
+    }
+
+    await workspaceStateService?.set(itemName, {
+      ...config,
+      [field]: value,
+    })
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+interface Config {
+  [key: string]: any;
+}
+
+export const getUIStorage = () =>
+  workspaceStateService?.get('ui') || {}
+
+export const getUIStorageField = (field: string = '') =>
+  getObjectStorageField('ui', field)
+
+export const setUIStorageField = async (field: string = '', value?: any) => {
+  await setObjectStorageField('ui', field, value)
 }
 
 // eslint-disable-next-line import/no-mutable-exports
