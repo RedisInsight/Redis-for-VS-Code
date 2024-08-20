@@ -63,6 +63,7 @@ export const CliBodyWrapper = () => {
 
   useEffect(() => {
     !cliClientUuid && host && createCliClientAction(database!)
+    resetCommand()
     return () => {
       removeCliClient()
     }
