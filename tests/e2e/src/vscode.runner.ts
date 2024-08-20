@@ -31,7 +31,7 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
       __dirname,
       '..',
       'test-extensions',
-      'redis.redis-for-vscode-0.0.3',
+      'redis.redis-for-vscode-0.0.1',
       'dist',
       'redis-backend',
       'dist-minified',
