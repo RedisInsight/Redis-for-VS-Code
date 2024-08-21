@@ -11,14 +11,13 @@ export const UnsupportedTypeDetails = () => (
       <div className={styles.textWrapper}>
         <h3>{l10n.t('This data type is not currently supported.')}</h3>
         <div>
-          {l10n.t('We are constantly working to launch support for more data types. If you have any ideas or suggestions, please ')}
-
+          {l10n.t('See our repository for the list of ')}
           <Link
             target="_blank"
             href={EXTERNAL_LINKS.githubIssues}
             data-testid="unsupported-key-github-btn"
           >
-            {l10n.t('contact us.')}
+            {l10n.t('supported data types.')}
           </Link>
         </div>
       </div>
