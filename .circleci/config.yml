@@ -231,16 +231,20 @@ jobs:
       - run:
           name: Build .vsix package
           command: |
+            envFile=".env"
             packagePath=./release/redis-for-vscode-extension-mac
 
             if [ << parameters.target >> ]; then
               yarn download:backend << parameters.target >>
 
+              echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY_STAGE'" >> $envFile
+              sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
               yarn package:stage --target darwin-<< parameters.target >> --out ${packagePath}-<< parameters.target >>.vsix
               exit 0;
             fi
 
             if [ << parameters.env >> == 'prod' ]; then
+              echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY'" >> $envFile
               yarn download:backend arm64
               yarn package:prod --target darwin-arm64 --out ${packagePath}-arm64.vsix
 
@@ -249,6 +253,8 @@ jobs:
               exit 0;
             fi
 
+            echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY_STAGE'" >> $envFile
+            sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
             yarn download:backend arm64
             yarn package:stage --target darwin-arm64 --out ${packagePath}-arm64.vsix
 
@@ -289,14 +295,17 @@ jobs:
       - run:
           name: Build .vsix package
           command: |
+            envFile=".env"
             packagePath=./release/redis-for-vscode-extension-win-x64.vsix
             yarn download:backend
 
             if [ << parameters.env >> == 'prod' ]; then
+              echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY'" >> $envFile
               yarn package:prod --out ${packagePath}
               exit 0;
             fi
 
+            sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
             yarn package:stage --out ${packagePath}
           shell: bash.exe
           no_output_timeout: 20m
