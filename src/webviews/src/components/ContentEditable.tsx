@@ -33,7 +33,7 @@ export const parseContentEditableHtml = (text: string = '') =>
 const onPaste = (e: React.ClipboardEvent) => {
   e.preventDefault()
 
-  const clipboardData = e.clipboardData || window.clipboardData || e.originalEvent?.clipboardData
+  const clipboardData = e.clipboardData || (window as any).clipboardData || (e as any).originalEvent.clipboardData
   const text = clipboardData.getData('text/plain') as string
 
   setTimeout(() => {
@@ -61,6 +61,7 @@ export function ContentEditable({
   return (
     <ReactContentEditable
       {...props}
+      autoFocus
       onPaste={onPaste}
       onChange={onChangeRef}
       onInput={onInputRef}
