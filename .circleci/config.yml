@@ -238,7 +238,7 @@ jobs:
               yarn download:backend << parameters.target >>
 
               echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY_STAGE'" >> $envFile
-              sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
+              sed -i '' "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
               yarn package:stage --target darwin-<< parameters.target >> --out ${packagePath}-<< parameters.target >>.vsix
               exit 0;
             fi
@@ -254,7 +254,7 @@ jobs:
             fi
 
             echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY_STAGE'" >> $envFile
-            sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
+            sed -i '' "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
             yarn download:backend arm64
             yarn package:stage --target darwin-arm64 --out ${packagePath}-arm64.vsix
 
