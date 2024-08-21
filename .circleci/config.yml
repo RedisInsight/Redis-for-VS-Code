@@ -349,14 +349,14 @@ workflows:
 
   e2e-tests:
     jobs:
-      # - approve:
-      #     name: Start E2E Tests
-      #     type: approval
-      #     filters:
-      #       branches:
-      #         only:
-      #           - /^e2e/feature.*/
-      #           - /^e2e/bugfix.*/
+      - approve:
+          name: Start E2E Tests
+          type: approval
+          filters:
+            branches:
+              only:
+                - /^e2e/feature.*/
+                - /^e2e/bugfix.*/
 
       - linux:
           name: Build extension - Linux (stage)
@@ -366,6 +366,8 @@ workflows:
               only:
                 - /^e2e/feature.*/
                 - /^e2e/bugfix.*/
+          requires:
+            - Start E2E Tests
 
       - e2e-app-image:
           name: E2ETest (linux)
@@ -478,7 +480,7 @@ workflows:
       # e2e tests on linux build
       - e2e-app-image:
           name: E2ETest (linux)
-          parallelism: 2
+          parallelism: 1
           requires:
             - Build extension - Linux (stage)
 
@@ -516,7 +518,7 @@ workflows:
       # e2e desktop tests on linux build
       - e2e-app-image:
           name: E2ETest (Linux)
-          parallelism: 2
+          parallelism: 1
           requires:
             - Build extension - Linux (prod)
 

@@ -1,6 +1,7 @@
 import { By } from 'selenium-webdriver'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
 import { KeyDetailsView } from './KeyDetailsView'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 /**
  * Base view for all keyTypes that have 2 columns value
@@ -13,8 +14,6 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     By.xpath(
       `//*[contains(@data-testid, "edit-${keyType}-button-${name}")] | //*[contains(@data-testid, "${keyType}_edit-btn-${name}")]`,
     )
-  getValueInput = (keyType: string, name: string): By =>
-    By.xpath(`//*[contains(@data-testid, "${keyType}_content-value-${name}")]`)
   getWrapperOfValueInput  = (keyType: string, name: string): By =>
     By.xpath(`//*[contains(@data-testid, "${keyType}_content-value-${name}")]/parent::*`)
 
@@ -36,6 +35,7 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     await ButtonActions.clickElement(editLocator)
     await InputActions.typeText(editorLocator, value)
     await ButtonActions.clickElement(this.applyButton)
+    await CommonDriverExtension.driverSleep(300)
   }
 
   /**
@@ -56,5 +56,6 @@ export class DoubleColumnKeyDetailsView extends KeyDetailsView {
     await ButtonActions.clickElement(editLocator)
     await InputActions.slowType(editorLocator, value)
     await ButtonActions.clickElement(this.applyButton)
+    await CommonDriverExtension.driverSleep(300)
   }
 }

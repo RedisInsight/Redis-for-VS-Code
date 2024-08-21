@@ -297,6 +297,8 @@ describe('Large key details verification', () => {
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(
       bigStringKeyParameters.keyName,
     )
+    // Wait until large key fully loaded
+    CommonDriverExtension.driverSleep(1000)
     expect(
       await stringKeyDetailsView.isElementDisabled(
         stringKeyDetailsView.editKeyValueButton,
