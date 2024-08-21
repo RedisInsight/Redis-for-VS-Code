@@ -1,5 +1,5 @@
 import React from 'react'
-import { KeyTypes, ModulesKeyTypes } from 'uiSrc/constants'
+import { KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeaderProps } from 'uiSrc/modules'
 // import ModulesTypeDetails from '../modules-type-details/ModulesTypeDetails'
 import { UnsupportedTypeDetails } from '../unsupported-type-details'
@@ -40,13 +40,8 @@ const DynamicTypeDetails = (props: Props) => {
   //   return <ModulesTypeDetails moduleName={MODULES_KEY_TYPES_NAMES[selectedKeyType]} />
   // }
 
-  // // Unsupported key type
-  if (!(Object.values(KeyTypes).includes(selectedKeyType as KeyTypes))
-    && !(Object.values(ModulesKeyTypes).includes(selectedKeyType as ModulesKeyTypes))) {
-    return <UnsupportedTypeDetails />
-  }
-
-  return null
+  // Unsupported key type
+  return <UnsupportedTypeDetails />
 }
 
 export { DynamicTypeDetails }
