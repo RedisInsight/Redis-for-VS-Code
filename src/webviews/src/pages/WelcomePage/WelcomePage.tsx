@@ -18,7 +18,7 @@ export const WelcomePage: FC = () => {
   const { contentCloud, contentDocker, contentGithub, contentRI } = useAppInfoStore((state) => ({
     contentCloud: state.createDbContent?.cloud_vscode,
     contentDocker: state.createDbContent?.docker,
-    contentGithub: state.createDbContent?.github,
+    contentGithub: state.createDbContent?.github_vscode,
     contentRI: state.createDbContent?.redis_insight,
   }))
   const handleClickConnect = () => {
@@ -51,8 +51,7 @@ export const WelcomePage: FC = () => {
       <div className="flex flex-col flex-grow">
         <Spacer size="m" />
         <h3>{l10n.t('About Redis for VS Code')}</h3>
-        <span>{l10n.t('Take your productivity to the next level when developing with Redis or Redis Stack! Use Redis for VS Code to visualize and optimize Redis data.')}</span>
-        <span>{l10n.t('A powerful desktop manager, Redis for VS Code provides an intuitive and efficient UI for Redis and Redis Stack and supports CLI interaction in a fully-featured desktop UI client.')}</span>
+        <span>{l10n.t('Redis for VS Code provides an intuitive and efficient UI to visualize and optimize your Redis data.')}</span>
         <Spacer size="l" />
         <div className={styles.content}>
           <div className={styles.section}>

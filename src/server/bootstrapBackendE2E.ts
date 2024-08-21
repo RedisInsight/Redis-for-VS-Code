@@ -17,7 +17,8 @@ const appPrefix = process.env.RI_APP_PREFIX
 const appFolder = process.env.RI_APP_FOLDER
 const appHost = process.env.RI_APP_HOST
 
-const backendPath = path.join(__dirname, '..', 'redis-backend/dist-minified')
+const backendPath = path.join(__dirname, '..', 'redis-backend', 'dist-minified')
+const defaultDirPath = path.join(backendPath, 'defaults')
 let PSinst: ChildProcessWithoutNullStreams
 
 export async function startBackendE2E(logger: CustomLogger): Promise<any> {
@@ -52,6 +53,7 @@ export async function startBackendE2E(logger: CustomLogger): Promise<any> {
           + `$env:RI_BUILD_TYPE=${process.env.RI_BUILD_TYPE};`
           + `$env:RI_SEGMENT_WRITE_KEY=${process.env.RI_SEGMENT_WRITE_KEY};`
           + `$env:RI_MIGRATE_OLD_FOLDERS=${process.env.RI_MIGRATE_OLD_FOLDERS};`
+          + `$env:RI_DEFAULTS_DIR=${defaultDirPath};`
           + '$env:RI_AUTO_BOOTSTRAP=true;'
           + `node ${backendSrcPath}`,
         ])
@@ -69,6 +71,7 @@ export async function startBackendE2E(logger: CustomLogger): Promise<any> {
               RI_BUILD_TYPE: process.env.RI_BUILD_TYPE,
               RI_SEGMENT_WRITE_KEY: process.env.RI_SEGMENT_WRITE_KEY,
               RI_MIGRATE_OLD_FOLDERS: process.env.RI_MIGRATE_OLD_FOLDERS,
+              RI_DEFAULTS_DIR: defaultDirPath,
               RI_AUTO_BOOTSTRAP: 'true',
               PATH: process.env.PATH,
             },

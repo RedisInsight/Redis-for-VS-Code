@@ -76,9 +76,9 @@ export const KeyTreeFilter = () => {
       closeOnEscape
       closeOnDocumentClick
       repositionOnResize
-      keepTooltipInside
+      keepTooltipInside={false}
       className="key-tree-filter-popup"
-      position="bottom left"
+      position="bottom right"
       trigger={() => (
         <VSCodeButton
           appearance="icon"
