@@ -12,5 +12,5 @@ export const MAX_TITLE_KEY_LENGTH = 30
 export const EXTENSION_ID = 'Redis.redis-for-vscode'
 
 export const EXTERNAL_LINKS = {
-  releaseNotes: 'https://github.com/RedisInsight/RedisInsight/releases',
+  releaseNotes: 'https://github.com/RedisInsight/Redis-for-VS-Code/releases',
 }

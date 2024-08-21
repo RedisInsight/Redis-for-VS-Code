@@ -284,10 +284,10 @@ const ListDetailsTable = (props: Props) => {
                 stringToSerializedBufferFormat(viewFormat, value),
                 viewFormat,
               )?.isValid}
-            onEdit={(isEditing) => handleEditElement(rowIndex, isEditing)}
+            onEdit={(isEditing) => handleEditElement(index, isEditing)}
             editToolTipContent={!isEditable ? editTooltipContent : null}
             onUpdateTextAreaHeight={() => clearCache(rowIndex)}
-            field={rowIndex.toString()}
+            field={index.toString()}
             testIdPrefix="list"
           >
             <div className="max-w-full whitespace-break-spaces">

@@ -7,7 +7,6 @@ import { Nullable } from 'uiSrc/interfaces'
 import { vscodeApi } from 'uiSrc/services'
 import { Database } from 'uiSrc/store'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
-import { Tooltip } from 'uiSrc/ui'
 
 import styles from './styles.module.scss'
 
@@ -52,16 +51,14 @@ export const NoKeysMessage: FC<Props> = (props) => {
     return (
       <div className="flex justify-between">
         <div>{l10n.t('Keys are the foundation of Redis.')}</div>
-        <Tooltip content={l10n.t('Add key')}>
-          <VSCodeButton
-            appearance="primary"
-            data-testid="add-key-from-tree"
-            className={styles.addKey}
-            onClick={handleAddKey}
-          >
-            {l10n.t('Add key')}
-          </VSCodeButton>
-        </Tooltip>
+        <VSCodeButton
+          appearance="primary"
+          data-testid="add-key-from-tree"
+          className={styles.addKey}
+          onClick={handleAddKey}
+        >
+          {l10n.t('Add key')}
+        </VSCodeButton>
       </div>
     )
   }

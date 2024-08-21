@@ -254,7 +254,7 @@ export const Eula = ({ onSubmitted }: Props) => {
                 {l10n.t('To use Redis for VS Code, please accept the terms and conditions: ')}
                 <Link
                   target="_blank"
-                  href="https://github.com/RedisInsight/RedisInsight/blob/main/LICENSE"
+                  href="https://github.com/RedisInsight/Redis-for-VS-Code/blob/main/LICENSE"
                 >
                   {l10n.t('Server Side Public License')}
                 </Link>

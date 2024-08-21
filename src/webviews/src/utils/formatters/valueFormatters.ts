@@ -29,6 +29,7 @@ import { reSerializeJSON } from 'uiSrc/utils/formatters/json'
 
 export interface FormattingProps {
   expanded?: boolean
+  skipVector?: boolean
 }
 
 const isTextViewFormatter = (format: KeyValueFormat) => [
@@ -111,6 +112,7 @@ const formattingBuffer = (
     case KeyValueFormat.Vector32Bit: {
       const valueUTF = bufferToUTF8(reply)
       try {
+        if (props?.skipVector) return { value: valueUTF, isValid: true }
         if (isEqualBuffers(reply, UTF8ToBuffer(valueUTF))) {
           return { value: valueUTF, isValid: false }
         }
@@ -126,6 +128,7 @@ const formattingBuffer = (
     case KeyValueFormat.Vector64Bit: {
       const valueUTF = bufferToUTF8(reply)
       try {
+        if (props?.skipVector) return { value: valueUTF, isValid: true }
         if (isEqualBuffers(reply, UTF8ToBuffer(valueUTF))) {
           return { value: valueUTF, isValid: false }
         }

@@ -14,7 +14,6 @@ import {
   bufferToString,
   createDeleteFieldHeader,
   createDeleteFieldMessage,
-  formatLongName,
   formattingBuffer,
   isEqualBuffers,
   isFormatEditable,
@@ -35,7 +34,6 @@ import {
   OVER_RENDER_BUFFER_COUNT,
   TableCellAlignment,
   TEXT_DISABLED_FORMATTER_EDITING,
-  TEXT_FAILED_CONVENT_FORMATTER,
   TEXT_UNPRINTABLE_CHARACTERS,
   SCAN_COUNT_DEFAULT,
   helpTexts,
@@ -312,7 +310,7 @@ const HashDetailsTable = (props: Props) => {
         const decompressedItem = fieldItem
         const field = bufferToString(fieldItem) || ''
         // Better to cut the long string, because it could affect virtual scroll performance
-        const { value } = formattingBuffer(decompressedItem, viewFormatProp, { expanded })
+        const { value } = formattingBuffer(decompressedItem, viewFormatProp, { expanded, skipVector: true })
 
         return (
           <div className="max-w-full whitespace-break-spaces">

@@ -12,11 +12,12 @@ const DynamicTypeDetailsTypeTests: any[] = [
   [KeyTypes.ZSet, 'zset-details'],
   [KeyTypes.List, 'list-details'],
   [KeyTypes.Set, 'set-details'],
+  [KeyTypes.ReJSON, 'json-details'],
+  [KeyTypes.Stream, 'unsupported-type-details'],
   // [KeyTypes.Stream, 'stream-details'],
-  // [KeyTypes.ReJSON, 'json-details'],
   // [ModulesKeyTypes.Graph, 'modules-type-details'],
   // [ModulesKeyTypes.TimeSeries, 'modules-type-details'],
-  // ['123', 'unsupported-type-details'],
+  ['123', 'unsupported-type-details'],
 ]
 
 describe('DynamicTypeDetails', () => {
@@ -29,7 +30,7 @@ describe('DynamicTypeDetails', () => {
       const { queryByTestId } = render(<DynamicTypeDetails
         {...instance(mockedProps)}
         keyType={type}
-      />)
+      />, { withRouter: true })
 
       expect(queryByTestId(testId)).toBeInTheDocument()
     })

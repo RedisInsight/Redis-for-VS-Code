@@ -2,12 +2,12 @@ import React from 'react'
 import { KeyTypes } from 'uiSrc/constants'
 import { KeyDetailsHeaderProps } from 'uiSrc/modules'
 // import ModulesTypeDetails from '../modules-type-details/ModulesTypeDetails'
-// import UnsupportedTypeDetails from '../unsupported-type-details/UnsupportedTypeDetails'
+import { UnsupportedTypeDetails } from '../unsupported-type-details'
 import { StringDetails } from '../string-details'
 import { HashDetails } from '../hash-details'
 import { ZSetDetails } from '../zset-details'
 import { ListDetails } from '../list-details'
-import { SetDetails } from '../set-details/SetDetails'
+import { SetDetails } from '../set-details'
 import { RejsonDetailsWrapper } from '../rejson-details'
 // import { StreamDetails } from '../stream-details'
 
@@ -26,6 +26,7 @@ const DynamicTypeDetails = (props: Props) => {
     [KeyTypes.List]: <ListDetails {...props} />,
     [KeyTypes.Set]: <SetDetails {...props} />,
     [KeyTypes.ReJSON]: <RejsonDetailsWrapper {...props} />,
+    [KeyTypes.Stream]: <UnsupportedTypeDetails />,
     // [KeyTypes.Stream]: <StreamDetails {...props} />,
   }
 
@@ -39,13 +40,8 @@ const DynamicTypeDetails = (props: Props) => {
   //   return <ModulesTypeDetails moduleName={MODULES_KEY_TYPES_NAMES[selectedKeyType]} />
   // }
 
-  // // Unsupported key type
-  // if (!(Object.values(KeyTypes).includes(selectedKeyType as KeyTypes))
-  //   && !(Object.values(ModulesKeyTypes).includes(selectedKeyType as ModulesKeyTypes))) {
-  //   return <UnsupportedTypeDetails />
-  // }
-
-  return null
+  // Unsupported key type
+  return <UnsupportedTypeDetails />
 }
 
 export { DynamicTypeDetails }
