@@ -183,13 +183,17 @@ jobs:
           name: Build .vsix package
           command: |
             packagePath=./release/redis-for-vscode-extension-linux-x64.vsix
+            envFile=".env"
             yarn download:backend
 
             if [ << parameters.env >> == 'prod' ]; then
+              echo "SEGMENT_WRITE_KEY=$SEGMENT_WRITE_KEY" >> $envFile
               yarn package:prod --out ${packagePath}
               exit 0;
             fi
 
+            echo "SEGMENT_WRITE_KEY=$SEGMENT_WRITE_KEY_STAGE" >> $envFile
+            sed -i '' 's/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME=".redis-for-vscode-stage"/' .env
             yarn package:stage --out ${packagePath}
       - persist_to_workspace:
           root: .

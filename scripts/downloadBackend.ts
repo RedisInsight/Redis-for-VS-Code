@@ -13,7 +13,7 @@ dotenv.config({
 const target = process.argv[2];
 const cdnPath = process.env.RI_CDN_PATH
 const backendPath = path.join(__dirname, '..', 'dist', 'redis-backend')
-const staticPath = path.join(backendPath, 'static')
+const tutorialsPath = path.join(backendPath, 'dist-minified', 'defaults', 'tutorials')
 
 const downloadBackend = async () => {
   if (fs.existsSync(backendPath)) {
@@ -86,8 +86,8 @@ function unzipRedisServer(redisInsideArchivePath: string, extractDir: string) {
 
   cp.spawnSync('tar', ['-xf', redisInsideArchivePath, '-C', extractDir, '--strip-components', '1', 'api'])
 
-  // remove plugins
-  fs.rmSync(staticPath, { recursive: true, force: true });
+  // remove tutorials
+  fs.rmSync(tutorialsPath, { recursive: true, force: true });
 }
 
 downloadBackend()

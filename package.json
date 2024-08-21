@@ -8,12 +8,15 @@
   "l10n": "./l10n",
   "publisher": "Redis",
   "pricing": "Free",
-  "categories": ["Visualization", "Programming Languages"],
+  "categories": [
+    "Visualization",
+    "Programming Languages"
+  ],
   "icon": "dist/webviews/resources/256x256.png",
   "author": {
     "name": "Redis Ltd.",
-    "email": "support@redis.com",
-    "url": "https://redis.com/redis-enterprise/redis-insight"
+    "email": "support@redis.io",
+    "url": "https://redis.io/insight/"
   },
   "repository": {
     "type": "git",

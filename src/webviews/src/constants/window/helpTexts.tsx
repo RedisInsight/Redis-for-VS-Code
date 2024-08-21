@@ -10,25 +10,25 @@ import styles from 'uiSrc/components/popover-delete/styles.module.scss'
 export const helpTexts = {
   REJSON_SHOULD_BE_LOADED: (
     <>
-      {l10n.t('RedisJSON module should be loaded to add this key. Find ')}
+      {l10n.t('This database does not support the JSON data structure. Learn more about JSON support ')}
       <Link
         to={getUtmExternalLink(EXTERNAL_LINKS.jsonModule, { campaign: UTM_CAMPAIGNS.tutorials })}
         className="underline hover:no-underline"
         target="_blank"
         data-test-subj="no-json-module-info"
       >
-        {l10n.t('more information')}
+        {l10n.t('here.')}
       </Link>
-      {l10n.t(' about RedisJSON or create your ')}
+      {l10n.t('You can also create a ')}
       <Link
         to={getUtmExternalLink(EXTERNAL_LINKS.tryFree, { campaign: UTM_CAMPAIGNS.redisjson })}
         className="underline hover:no-underline"
         target="_blank"
         data-test-subj="no-json-module-try-free"
       >
-        {l10n.t('free Redis database')}
+        {l10n.t('free Redis Cloud database')}
       </Link>
-      {l10n.t(' with RedisJSON on Redis Cloud.')}
+      {l10n.t(' with built-in JSON support.')}
     </>
   ),
   REMOVE_LAST_ELEMENT: (fieldType: string) => (

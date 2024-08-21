@@ -9,7 +9,8 @@ import { sleep } from '../utils'
 let gracefulShutdown: Function
 let beApp: any
 
-const backendPath = path.join(__dirname, '..', 'redis-backend/dist-minified')
+const backendPath = path.join(__dirname, '..', 'redis-backend', 'dist-minified')
+process.env.RI_DEFAULTS_DIR = path.join(backendPath, 'defaults')
 
 export async function startBackend(logger: CustomLogger): Promise<any> {
   const appPort = process.env.RI_APP_PORT

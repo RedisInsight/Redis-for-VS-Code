@@ -1,7 +1,7 @@
 export const EXTERNAL_LINKS = {
-  riAppDownload: 'https://redis.com/redis-enterprise/redis-insight/',
+  riAppDownload: 'https://redis.io/insight/',
   jsonModule: 'https://redis.io/docs/latest/operate/oss_and_stack/stack-with-enterprise/json/',
-  tryFree: 'https://redis.com/try-free/',
+  tryFree: 'https://redis.io/try-free/',
 }
 
 export const UTM_CAMPAIGNS = {
