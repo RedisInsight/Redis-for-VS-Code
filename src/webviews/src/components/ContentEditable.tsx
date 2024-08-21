@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactContentEditable, { Props } from 'react-contenteditable'
-import { parsePastedText } from 'uiSrc/utils/formatters'
+import { parsePastedText } from 'uiSrc/utils'
 
 const useRefCallback = <T extends any[]>(
   value: ((...args: T) => void) | undefined,
@@ -17,20 +17,28 @@ const useRefCallback = <T extends any[]>(
   }, [])
 }
 
+// remove line break and encode angular brackets
+export const parseContentEditableChangeHtml = (text: string = '') => text.replace(/&nbsp;/gi, ' ')
+
+export const parseMultilineContentEditableChangeHtml = (text: string = '') =>
+  parseContentEditableChangeHtml(text).replace(/<br>/gi, ' ')
+
+export const parseContentEditableHtml = (text: string = '') =>
+  text
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&amp;/gi, '&')
+
 const onPaste = (e: React.ClipboardEvent) => {
   e.preventDefault()
-  const clipboardData = e.clipboardData || window.Clipboard
+
+  const clipboardData = e.clipboardData || window.clipboardData || e.originalEvent?.clipboardData
   const text = clipboardData.getData('text/plain') as string
 
-  const selection = window.getSelection()
-  const range = selection?.getRangeAt(0)
-  if (range && selection) {
-    range.deleteContents()
-    range.insertNode(document.createTextNode(parsePastedText(text)))
-    range.collapse(false)
-    selection.removeAllRanges()
-    selection.addRange(range as Range)
-  }
+  setTimeout(() => {
+    document.execCommand('insertText', false, parsePastedText(text))
+  }, 0)
 }
 
 export function ContentEditable({

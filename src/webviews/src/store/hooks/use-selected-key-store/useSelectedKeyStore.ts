@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { AxiosError } from 'axios'
-import { createJSONStorage, devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { isNull } from 'lodash'
 import { KeyInfo, RedisString } from 'uiSrc/interfaces'
@@ -15,8 +15,8 @@ import {
 } from 'uiSrc/constants'
 import { bufferToString, getApiErrorMessage, getEncoding, getUrl, getDatabaseUrl, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
 import { fetchString } from 'uiSrc/modules'
-import { fetchHashFields } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
-import { fetchZSetMembers } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
+import { fetchHashFields, useHashStore } from 'uiSrc/modules/key-details/components/hash-details/hooks/useHashStore'
+import { fetchZSetMembers, useZSetStore } from 'uiSrc/modules/key-details/components/zset-details/hooks/useZSetStore'
 import {
   fetchListElements,
   fetchSearchingListElement,
@@ -213,4 +213,16 @@ export const fetchKeyValueByType = (key: RedisString, type?: KeyTypes) => {
   //     ))
   //   }
   // }
+}
+
+export function setInitialStateByType(type: KeyTypes) {
+  if (type === KeyTypes.Hash) {
+    useHashStore.getState().resetHashStore()
+  }
+  if (type === KeyTypes.List) {
+    useListStore.getState().resetListStore()
+  }
+  if (type === KeyTypes.ZSet) {
+    useZSetStore.getState().resetZSetStore()
+  }
 }

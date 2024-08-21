@@ -1,0 +1,11 @@
+.container {
+  @apply flex flex-grow pt-4 pb-7 px-10 justify-center;
+
+  h3 {
+    @apply font-bold text-[18px] pb-4;
+  }
+}
+
+.textWrapper {
+  @apply max-w-[640px] relative -top-[7%];
+}

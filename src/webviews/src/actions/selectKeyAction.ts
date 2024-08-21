@@ -1,6 +1,6 @@
 import { VscodeMessageAction } from 'uiSrc/constants'
 import { PostMessage } from 'uiSrc/interfaces'
-import { fetchDatabaseOverview, fetchKeyInfo, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { fetchDatabaseOverview, fetchKeyInfo, setInitialStateByType, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { TelemetryEvent, isEqualBuffers, sendEventTelemetry } from 'uiSrc/utils'
 
 export const selectKeyAction = (message: PostMessage) => {
@@ -22,6 +22,7 @@ export const selectKeyAction = (message: PostMessage) => {
   window.ri.database = database
 
   fetchKeyInfo({ key }, true, ({ type: keyType, length }) => {
+    setInitialStateByType(keyType!)
     fetchDatabaseOverview()
     useDatabasesStore.getState().setConnectedDatabase(database)
     sendEventTelemetry({
