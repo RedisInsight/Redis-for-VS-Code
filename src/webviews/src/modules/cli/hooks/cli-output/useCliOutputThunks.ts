@@ -14,7 +14,6 @@ import { useCliSettingsStore } from '../cli-settings/useCliSettingsStore'
 import { updateCliClientAction } from '../cli-settings/useCliSettingsThunks'
 import {
   cliParseTextResponseWithOffset,
-  cliParseTextResponseWithRedirect,
   getDbIndexFromSelectQuery,
 } from '../../utils'
 
@@ -24,7 +23,7 @@ export function sendCliCommandAction(
   onSuccessAction?: () => void,
   onFailAction?: () => void,
 ) {
-  return useCliOutputStore.setState(async (state) => {
+  useCliOutputStore.setState(async (state) => {
     let cliClientUuid
     try {
       cliClientUuid = useCliSettingsStore.getState().cliClientUuid
@@ -80,11 +79,10 @@ export function sendCliCommandAction(
 // Asynchronous thunk action
 export function sendCliClusterCommandAction(
   command: string = '',
-  options: any,
   onSuccessAction?: () => void,
   onFailAction?: () => void,
 ) {
-  return useCliOutputStore.setState(async (state) => {
+  useCliOutputStore.setState(async (state) => {
     let cliClientUuid
     try {
       const outputFormat = CliOutputFormatterType.Raw
@@ -97,33 +95,18 @@ export function sendCliClusterCommandAction(
 
       state.sendCliCommand()
 
-      const {
-        data: [
-          { response, status: dataStatus, node: nodeOptionsResponse },
-        ] = [],
-        status,
-      } = await apiService.post<any[]>(
+      const { data: { response, status: dataStatus }, status } = await apiService.post<any>(
         getUrl(
           ApiEndpoints.CLI,
           cliClientUuid,
           ApiEndpoints.SEND_CLUSTER_COMMAND,
         ),
-        { ...options, command, outputFormat },
+        { command, outputFormat },
       )
 
       if (isStatusSuccessful(status)) {
-        let isRedirected = false
-        if (options.nodeOptions && nodeOptionsResponse) {
-          const requestNodeAddress = `${options.nodeOptions.host}:${options.nodeOptions.port}`
-          const responseNodeAddress = `${nodeOptionsResponse.host}:${nodeOptionsResponse.port}`
-          isRedirected = requestNodeAddress !== responseNodeAddress
-        }
         onSuccessAction?.()
-        const result = outputFormat === CliOutputFormatterType.Raw && isRedirected
-          ? cliParseTextResponseWithRedirect(response, command, dataStatus, nodeOptionsResponse)
-          : cliParseTextResponseWithOffset(response, command, dataStatus)
-
-        state.concatToOutput(result)
+        state.concatToOutput(cliParseTextResponseWithOffset(response, command, dataStatus))
       }
     } catch (error) {
       const errorMessage = getApiErrorMessage(error as AxiosError)

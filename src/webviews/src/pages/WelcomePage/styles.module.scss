@@ -17,3 +17,7 @@
 .data {
   @apply max-w-[300px];
 }
+
+.github svg path {
+  fill: var(--vscode-foreground);
+}

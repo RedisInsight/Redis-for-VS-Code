@@ -216,62 +216,45 @@ describe('thunks', () => {
   })
 
   describe('Single Node Cluster Cli command', () => {
-    const options: any = {
-      command: constants.COMMAND,
-      nodeOptions: {
-        host: 'localhost',
-        port: 7000,
-        enableRedirection: true,
-      },
-      role: ClusterNodeRole.All,
-    }
-
     it('call both sendCliClusterCommandAction and sendCliCommandSuccess when response status is successed', async () => {
       // Arrange
       const command = constants.COMMAND
-      const data: any[] = [
-        {
-          response: '(nil)',
-          status: CommandExecutionStatus.Success,
-          node: { host: '127.0.0.1', port: 7002, slot: 6918 },
-        },
-      ]
+      const data: any = {
+        response: '(nil)',
+        status: CommandExecutionStatus.Success,
+        node: { host: '127.0.0.1', port: 7002, slot: 6918 },
+      }
       const responsePayload = { data, status: 200 }
 
       apiService.post = vi.fn().mockResolvedValue(responsePayload)
 
       // Act
-      sendCliClusterCommandAction(command, options)
+      sendCliClusterCommandAction(command)
       await waitForStack()
 
       // Assert
-      expect(useCliOutputStore.getState().data[0].toString()).toEqual(
-        '-> Redirected to slot [6918] located at 127.0.0.1:7002'
-      )
+      expect((useCliOutputStore.getState().data[0] as any).props?.children).toEqual('"(nil)"')
     })
 
     it('call both sendCliClusterCommandAction and sendCliCommandSuccess when response status is fail', async () => {
       // Arrange
       const command = constants.COMMAND
-      const data: any[] = [
-        {
-          response: null,
-          status: CommandExecutionStatus.Success,
-          node: { host: '127.0.0.1', port: 7002, slot: 6918 },
-        },
-      ]
+      const data: any = {
+        response: null,
+        status: CommandExecutionStatus.Success,
+        node: { host: '127.0.0.1', port: 7002, slot: 6918 },
+      }
+
       const responsePayload = { data, status: 200 }
 
       apiService.post = vi.fn().mockResolvedValue(responsePayload)
 
       // Act
-      sendCliClusterCommandAction(command, options)
+      sendCliClusterCommandAction(command)
       await waitForStack()
 
       // Assert
-      expect(useCliOutputStore.getState().data[0].toString()).toEqual(
-        '-> Redirected to slot [6918] located at 127.0.0.1:7002'
-      )
+      expect((useCliOutputStore.getState().data[0] as any).props?.children).toEqual('(nil)')
     })
 
     it('call both updateCliClientAction on ClientNotFound error', async () => {
@@ -287,7 +270,7 @@ describe('thunks', () => {
       apiService.post = vi.fn().mockRejectedValueOnce(responsePayload)
 
       // Act
-      sendCliClusterCommandAction(command, options)
+      sendCliClusterCommandAction(command)
       await waitForStack()
 
       // Assert

@@ -1,4 +1,5 @@
 import React, { FunctionComponent, SVGProps } from 'react'
+import cx from 'classnames'
 
 import { ContentFeatureCreateRedis } from 'uiSrc/store/hooks/use-app-info-store/interface'
 import styles from './styles.module.scss'
@@ -6,16 +7,17 @@ import styles from './styles.module.scss'
 export interface Props extends ContentFeatureCreateRedis {
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
   testId?: string
+  className?: string
   Icon?: FunctionComponent<SVGProps<SVGSVGElement>>
   styles?: any
 }
 
 export const PromoLink = (props: Props) => {
-  const { title, description, links, onClick, testId, Icon, styles: linkStyles } = props
+  const { title, description, links, onClick, testId, Icon, styles: linkStyles, className = '' } = props
 
   return (
     <a
-      className={styles.link}
+      className={cx(styles.link, className)}
       href={links?.main.url}
       target="_blank"
       rel="noreferrer"

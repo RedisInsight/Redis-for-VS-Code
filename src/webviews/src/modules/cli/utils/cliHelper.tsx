@@ -34,20 +34,6 @@ export enum CliPrefix {
 //   // status: CommandExecutionStatus
 // }
 
-const cliParseTextResponseWithRedirect = (
-  text: string = '',
-  command: string = '',
-  status: CommandExecutionStatus = CommandExecutionStatus.Success,
-  redirectTo: ClusterNode | undefined,
-) => {
-  let redirectMessage = ''
-  if (redirectTo) {
-    const { host, port, slot } = redirectTo
-    redirectMessage = `-> Redirected to slot [${slot}] located at ${host}:${port}`
-  }
-  return [redirectMessage, '\n', cliParseTextResponse(text, command, status), '\n']
-}
-
 const cliParseTextResponseWithOffset = (
   text: string = '',
   command: string = '',
@@ -244,7 +230,6 @@ const checkDeprecatedCommandGroup = (item: string) =>
 export {
   // cliParseTextResponse,
   cliParseTextResponseWithOffset,
-  cliParseTextResponseWithRedirect,
   // cliParseCommandsGroupResult,
   cliCommandOutput,
   // bashTextValue,
