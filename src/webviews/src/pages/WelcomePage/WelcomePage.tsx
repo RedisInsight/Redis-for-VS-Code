@@ -81,7 +81,7 @@ export const WelcomePage: FC = () => {
             <div className={styles.data}>
               <h3>{l10n.t('Recommended')}</h3>
               {contentGithub && (
-                <PromoLink Icon={GithubIcon} {...contentGithub} />
+                <PromoLink Icon={GithubIcon} className={styles.github} {...contentGithub} />
               )}
               {contentRI && (
                 <PromoLink Icon={ShortLogoSvg} {...contentRI} />

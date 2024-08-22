@@ -32,11 +32,14 @@
   padding: 16px;
   padding-bottom: 4px;
   border-radius: 4px;
+
+  > div {
+    @apply mb-3 items-center;
+  }
 }
 
 .dbInfoListValue {
   margin-left: 12px;
-  margin-bottom: 12px;
   @apply text-vscode-foreground;
 }
 
@@ -47,7 +50,6 @@
   & > div {
     display: inline-block;
     line-height: 20px;
-    margin-top: 5px;
     vertical-align: top;
   }
 }
