@@ -95,12 +95,7 @@ export function sendCliClusterCommandAction(
 
       state.sendCliCommand()
 
-      const {
-        data: [
-          { response, status: dataStatus },
-        ] = [],
-        status,
-      } = await apiService.post<any[]>(
+      const { data: { response, status: dataStatus }, status } = await apiService.post<any>(
         getUrl(
           ApiEndpoints.CLI,
           cliClientUuid,

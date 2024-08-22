@@ -4,10 +4,10 @@ import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 // import { DatabaseListModules } from 'uiSrc/components'
 import { VscInfo } from 'react-icons/vsc'
-import Popup from 'reactjs-popup'
 import { ConnectionType, Nullable } from 'uiSrc/interfaces'
 import { AdditionalRedisModule, Endpoint } from 'uiSrc/store'
 import { DatabaseModules } from 'uiSrc/components'
+import { Tooltip } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -25,20 +25,22 @@ const DbInfo = (props: Props) => {
   const { connectionType, nameFromProvider, nodes = null, host, port, db, modules, isFromCloud } = props
 
   const AppendEndpoints = () => (
-    <Popup
-      position="top center"
-      on={['hover']}
-      trigger={<VscInfo />}
+    <Tooltip
+      content={(
+        <>
+          <h2 className="font-bold pb-1">{l10n.t('Host:port')}</h2>
+          <ul className={styles.endpointsList}>
+            {nodes?.map(({ host: eHost, port: ePort }) => (
+              <li key={host + port}>
+                <div>{eHost}:{ePort};</div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     >
-      <span>{l10n.t('Host:port')}</span>
-      <ul className={styles.endpointsList}>
-        {nodes?.map(({ host: eHost, port: ePort }) => (
-          <li key={host + port}>
-            <div>{eHost}:{ePort};</div>
-          </li>
-        ))}
-      </ul>
-    </Popup>
+      <div className="pl-1 cursor-pointer"><VscInfo /></div>
+    </Tooltip>
   )
 
   return (
@@ -65,15 +67,13 @@ const DbInfo = (props: Props) => {
         </div>
       )}
       <div className="flex">
-        <>
-          {!!nodes?.length && <AppendEndpoints />}
-          <div>
-            {l10n.t('Host:')}
-          </div>
-          <div color="default" className={styles.dbInfoListValue} data-testid="db-info-host">
-            {host}
-          </div>
-        </>
+        <div>
+          {l10n.t('Host:')}
+        </div>
+        <div color="default" className={styles.dbInfoListValue} data-testid="db-info-host">
+          {host}
+        </div>
+        {!!nodes?.length && <AppendEndpoints />}
       </div>
 
       {!!db && (
@@ -88,9 +88,9 @@ const DbInfo = (props: Props) => {
       )}
 
       {!!modules?.length && (
-        <div className="flex items-center">
+        <div className="flex">
           <div>
-            Modules:
+            {l10n.t('Modules:')}
           </div>
           <div className={cx(styles.dbInfoListValue, styles.dbInfoModules)}>
             <DatabaseModules modules={modules} />
