@@ -219,13 +219,11 @@ describe('thunks', () => {
     it('call both sendCliClusterCommandAction and sendCliCommandSuccess when response status is successed', async () => {
       // Arrange
       const command = constants.COMMAND
-      const data: any[] = [
-        {
-          response: '(nil)',
-          status: CommandExecutionStatus.Success,
-          node: { host: '127.0.0.1', port: 7002, slot: 6918 },
-        },
-      ]
+      const data: any = {
+        response: '(nil)',
+        status: CommandExecutionStatus.Success,
+        node: { host: '127.0.0.1', port: 7002, slot: 6918 },
+      }
       const responsePayload = { data, status: 200 }
 
       apiService.post = vi.fn().mockResolvedValue(responsePayload)
@@ -241,13 +239,12 @@ describe('thunks', () => {
     it('call both sendCliClusterCommandAction and sendCliCommandSuccess when response status is fail', async () => {
       // Arrange
       const command = constants.COMMAND
-      const data: any[] = [
-        {
-          response: null,
-          status: CommandExecutionStatus.Success,
-          node: { host: '127.0.0.1', port: 7002, slot: 6918 },
-        },
-      ]
+      const data: any[] = {
+        response: null,
+        status: CommandExecutionStatus.Success,
+        node: { host: '127.0.0.1', port: 7002, slot: 6918 },
+      }
+
       const responsePayload = { data, status: 200 }
 
       apiService.post = vi.fn().mockResolvedValue(responsePayload)
