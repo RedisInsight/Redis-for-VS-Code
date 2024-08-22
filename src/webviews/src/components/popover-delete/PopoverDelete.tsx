@@ -68,7 +68,7 @@ const PopoverDelete = (props: Props) => {
       closeOnEscape
       closeOnDocumentClick
       repositionOnResize
-      keepTooltipInside
+      keepTooltipInside={false}
       position={position}
       onClose={() => closePopover?.()}
       onOpen={() => {
