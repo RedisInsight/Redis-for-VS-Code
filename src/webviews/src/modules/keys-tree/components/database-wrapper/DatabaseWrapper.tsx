@@ -167,6 +167,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
             header={formatLongName(name, 50, 10, '...')}
             text={l10n.t('will be deleted from Redis for VS Code.')}
             item={id}
+            position="bottom right"
             maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}
             disabled={false}
             triggerClassName={cx('hidden h-[22px] group-hover:!flex', { '!flex': showTree })}

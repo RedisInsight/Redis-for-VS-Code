@@ -14,7 +14,6 @@ import {
   // Pages
 } from 'uiSrc/constants'
 import { getCommandRepeat, isRepeatCountCorrect, sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
-import { ClusterNodeRole } from 'uiSrc/interfaces'
 import { checkUnsupportedCommand, clearOutput, cliCommandOutput } from 'uiSrc/modules/cli/utils/cliHelper'
 import { useDatabasesStore } from 'uiSrc/store'
 
@@ -41,7 +40,7 @@ export const CliBodyWrapper = () => {
     resetCliSettings: state.resetCliSettings,
   }))
   const database = useDatabasesStore(useShallow((state) => state.connectedDatabase))
-  const { id, host, port, connectionType } = database || {}
+  const { id, connectionType } = database || {}
 
   const data = useCliOutputStore((state) => state.data || [])
 
@@ -62,7 +61,7 @@ export const CliBodyWrapper = () => {
   }
 
   useEffect(() => {
-    !cliClientUuid && host && createCliClientAction(database!)
+    !cliClientUuid && database && createCliClientAction(database!)
     resetCommand()
     return () => {
       removeCliClient()
@@ -143,16 +142,7 @@ export const CliBodyWrapper = () => {
       return
     }
 
-    const options: any = {
-      command,
-      nodeOptions: {
-        host,
-        port,
-        enableRedirection: true,
-      },
-      role: ClusterNodeRole.All,
-    }
-    sendCliClusterCommandAction(command, options, resetCommand)
+    sendCliClusterCommandAction(command, resetCommand)
   }
 
   const resetCommand = () => {
@@ -160,7 +150,11 @@ export const CliBodyWrapper = () => {
   }
 
   return (
-    <section ref={refHotkeys} className={styles.section}>
+    <section
+      ref={refHotkeys}
+      className={styles.section}
+      onContextMenu={(e) => e.preventDefault()}
+    >
       <CliBody
         data={data}
         command={command}

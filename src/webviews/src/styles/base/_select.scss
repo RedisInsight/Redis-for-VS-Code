@@ -14,7 +14,7 @@ vscode-dropdown {
   @apply bg-vscode-input-background h-9;
 
   &__option {
-    @apply bg-vscode-input-background h-9 pl-2 items-center #{!important};
+    @apply bg-vscode-input-background h-9 pl-2 items-center text-vscode-foreground #{!important};
   }
 
   &::part(listbox) {
