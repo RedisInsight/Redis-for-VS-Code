@@ -23,7 +23,7 @@ export function sendCliCommandAction(
   onSuccessAction?: () => void,
   onFailAction?: () => void,
 ) {
-  return useCliOutputStore.setState(async (state) => {
+  useCliOutputStore.setState(async (state) => {
     let cliClientUuid
     try {
       cliClientUuid = useCliSettingsStore.getState().cliClientUuid
@@ -82,7 +82,7 @@ export function sendCliClusterCommandAction(
   onSuccessAction?: () => void,
   onFailAction?: () => void,
 ) {
-  return useCliOutputStore.setState(async (state) => {
+  useCliOutputStore.setState(async (state) => {
     let cliClientUuid
     try {
       const outputFormat = CliOutputFormatterType.Raw

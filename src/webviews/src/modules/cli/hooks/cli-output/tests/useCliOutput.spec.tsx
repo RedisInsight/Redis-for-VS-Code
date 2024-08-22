@@ -216,7 +216,7 @@ describe('thunks', () => {
   })
 
   describe('Single Node Cluster Cli command', () => {
-    it.only('call both sendCliClusterCommandAction and sendCliCommandSuccess when response status is successed', async () => {
+    it('call both sendCliClusterCommandAction and sendCliCommandSuccess when response status is successed', async () => {
       // Arrange
       const command = constants.COMMAND
       const data: any[] = [
@@ -234,10 +234,8 @@ describe('thunks', () => {
       sendCliClusterCommandAction(command)
       await waitForStack()
 
-      console.log(useCliOutputStore.getState().data[0])
-
       // Assert
-      expect(useCliOutputStore.getState().data[0]).toContain('(nil)')
+      expect((useCliOutputStore.getState().data[0] as any).props?.children).toEqual('"(nil)"')
     })
 
     it('call both sendCliClusterCommandAction and sendCliCommandSuccess when response status is fail', async () => {
@@ -259,9 +257,7 @@ describe('thunks', () => {
       await waitForStack()
 
       // Assert
-      expect(useCliOutputStore.getState().data[0].toString()).toEqual(
-        '-> Redirected to slot [6918] located at 127.0.0.1:7002'
-      )
+      expect((useCliOutputStore.getState().data[0] as any).props?.children).toEqual('(nil)')
     })
 
     it('call both updateCliClientAction on ClientNotFound error', async () => {

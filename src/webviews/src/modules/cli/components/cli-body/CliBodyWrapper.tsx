@@ -14,7 +14,6 @@ import {
   // Pages
 } from 'uiSrc/constants'
 import { getCommandRepeat, isRepeatCountCorrect, sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
-import { ClusterNodeRole } from 'uiSrc/interfaces'
 import { checkUnsupportedCommand, clearOutput, cliCommandOutput } from 'uiSrc/modules/cli/utils/cliHelper'
 import { useDatabasesStore } from 'uiSrc/store'
 
@@ -62,7 +61,7 @@ export const CliBodyWrapper = () => {
   }
 
   useEffect(() => {
-    !cliClientUuid && createCliClientAction(database!)
+    !cliClientUuid && database && createCliClientAction(database!)
     resetCommand()
     return () => {
       removeCliClient()
