@@ -15,9 +15,9 @@
 }
 
 .option {
-  @apply min-w-[80px] bg-vscode-input-background;
+  @apply min-w-[80px] bg-vscode-input-background text-vscode-foreground;
 
-  &:hover {
+  &:hover, &:global(.selected) {
     background-color: var(--vscode-sideBarTitle-background);
   }
 }
