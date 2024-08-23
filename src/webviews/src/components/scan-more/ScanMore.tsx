@@ -7,6 +7,7 @@ import { Tooltip } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {
+  loading: boolean
   disabled: boolean
   text?: string
   loadMoreItems?: (config: any) => void
@@ -16,14 +17,15 @@ export interface Props {
 
 export const ScanMore: FC<Props> = ({
   disabled,
+  loading,
   text,
   loadMoreItems,
 }) => (
   <div className={styles.container}>
     <div className="sidebar-nesting-level" />
-    <Tooltip content={disabled ? l10n.t('The entire database has been scanned.') : ''}>
+    <Tooltip content={(disabled && !loading) ? l10n.t('The entire database has been scanned.') : ''}>
       <VSCodeButton
-        disabled={disabled}
+        disabled={disabled || loading}
         data-testid="scan-more"
         className={styles.btn}
         onClick={loadMoreItems}

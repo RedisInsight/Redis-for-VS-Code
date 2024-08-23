@@ -19,7 +19,7 @@ import { Database, checkConnectToDatabase, deleteDatabases, useSelectedKeyStore 
 import DatabaseOfflineIconSvg from 'uiSrc/assets/database/database_icon_offline.svg?react'
 import DatabaseActiveIconSvg from 'uiSrc/assets/database/database_icon_active.svg?react'
 import { PopoverDelete } from 'uiSrc/components'
-import { RefreshBtn } from 'uiSrc/ui'
+import { RefreshBtn, Tooltip } from 'uiSrc/ui'
 import { useKeysApi, useKeysInContext } from '../../hooks/useKeys'
 
 import styles from './styles.module.scss'
@@ -141,10 +141,17 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
           {showTree && (<DatabaseActiveIconSvg className={styles.icon} />)}
           {!showTree && (<VscChevronRight className={cx(styles.icon, styles.iconNested)} />)}
           {!showTree && (<DatabaseOfflineIconSvg className={styles.icon} />)}
-          <div className={styles.databaseName}>
-            <div className="truncate">{name}</div>
-            <div>{getDbIndex(database.db)}</div>
-          </div>
+          <Tooltip
+            content={formatLongName(name, 100, 20)}
+            position="bottom center"
+            keepTooltipInside={false}
+            mouseEnterDelay={1000}
+          >
+            <div className={styles.databaseName}>
+              <div className="truncate">{name}</div>
+              <div>{getDbIndex(database.db)}</div>
+            </div>
+          </Tooltip>
         </div>
         <div className="flex pr-3.5">
           {showTree && (
