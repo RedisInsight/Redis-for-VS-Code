@@ -1,63 +1,33 @@
-# Redis for Visual Studio Code
+# <img src="https://github.com/RedisInsight/Redis-for-VS-Code/blob/main/src/resources/256x256.png" alt="logo" width="25"/>  Redis for VS Code
 
-Temporary repository to work on the VS Code extension  
+Redis for VS Code is the official Visual Studio Code extension that provides an intuitive and efficient GUI for Redis databases, developed by Redis.
 
-### yarn is required
-1. `npm i -g yarn`
-1. `yarn install`
-1. Download backend for your platform using `yarn download:backend`
-1. Click on the VSCode sidebar `Run and Debug` icon
-1. Chose one of the options in the select control and click on the green play icon. Options:  
-  a. `Run Dev Extension` - start 2 background dev tasks and the debug vscode instance with extension  
-  b. `Run only Extension` - start only the debug vscode instance with extension  
-1. In the opened Visual studio code instance, click the Redis for VS Code icon in the sidebar  
+![Redis for VS Code](.github/Redis_for_VS_Code_main_screen.png)
 
+## Key features:
+* Universal Redis Support: Connect to any Redis instance, including Redis Community Edition, Redis Cloud, Redis Software, and Redis on Azure Cache.
+* Advanced Connectivity: Supports TLS certificates and SSH tunnels, with an option for automatic data decompression for GZIP, SNAPPY, Brotli, and more.
+* Data types: Supports strings, hashes, lists, sets, sorted sets, and JSON.
+* Human-readable data representation: Offers formatters like ASCII, JSON, Binary, Hex, 32-bit, and 64-bit vectors, and other.
+* Integrated Redis CLI: Leverage Redis CLI with syntax preview as you type commands.
 
+For more details, check out the [release notes](https://github.com/RedisInsight/Redis-for-VS-Code/releases). 
 
-### Scripts:  
-`download:backend` - download backend for current platform   
-`dev` - run web server with custom router in the `RI_DATA_ROUTE` env variable. Like `RI_DATA_ROUTE=settings yarn dev`
-`dev:sidebar` - run web server with sidebar router   
-`l10n:collect` - auto find all new strings and add them to `./l10n/bundle.l10n.json`  
-`storybook:dev` - run web storybook dev server  
-`package:prod` - package plugin as *.vsix file for prod  
-`package:stage` - package plugin as *.vsix file as prerelease build   
+## Get started with Redis for VS Code
 
-`watch` - start node part of the plugin in dev mode   
-`build` - build web part of the plugin and run in dev mode  
+This repository contains the source code for the Redis for VS Code extension. To start using the extension, install it from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/vscode).
 
-### Docs for all people:
-[vsc toolkit storybook](https://microsoft.github.io/vscode-webview-ui-toolkit/)  
-[vsc toolkit figma](https://www.figma.com/file/PYCyGCOqN7gCFRnoPnbgqH/Visual-Studio-Code-Toolkit-(Community)?type=design&node-id=1-2&mode=design&t=IfTmvBc9Bh8KuMTy-0) 
+## Feedback
 
-### Docs for developers
-#### Technologies:
-[tailwind](https://tailwindcss.com/)  
-[msw](https://mswjs.io/) (mock be responses)  
-[storybook ](https://storybook.js.org/)  
-[storybook + msw](https://github.com/mswjs/msw-storybook-addon) (mock BE response)   
-[storybook + vitest](https://storybook.js.org/addons/@storybook/testing-react) (use stories as component for tests)   
-[vsc icons](https://react-icons.github.io/react-icons/icons?name=vsc)  
+We welcome your feedback and contributions to make Redis for VS Code even better. Here’s how you can get involved:
 
-[vite](https://vitejs.dev/)  
-[vitest](https://vitest.dev/)  
+* Suggest a new [feature](https://github.com/RedisInsight/Redis-for-VS-Code/issues/new?assignees=&labels=&projects=&template=feature_request.md&title=)
+* Upvote [popular feature requests](https://github.com/RedisInsight/Redis-for-VS-Code/issues?q=is%3Aissue+is%3Aopen+sort%3Acomments-desc)
+* Report a [bug](https://github.com/RedisInsight/Redis-for-VS-Code/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=%5BBUG%5D)
 
-#### Visual studio code
-[vsc extension overview](https://code.visualstudio.com/api/extension-guides/overview)  
-[vsc extension webview ](https://code.visualstudio.com/api/extension-guides/webview)  
-[How to Code a VSCode Extension](https://youtu.be/a5DX5pQ9p5M) (youtube)   
- 
+## Telemetry
 
-#### Visual studio code plugins
-[tailwind vsc plugin](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)   
-[vitest vcs plugin](https://marketplace.visualstudio.com/items?itemName=ZixuanChen.vitest-explorer)  
+Redis for VS Code includes an opt-in telemetry system to help us improve the developer experience. We respect your privacy — any data collected is anonymized. You can disable telemetry at any time via the extension’s settings page.
 
-The `F5` command starts 3 tasks:  
-  * dev mode for node vsc  
-  * dev mode for web view  
-  * open a new vsc instance with the plugin  
-
-`F5` is a shortcut to start the "Run and Debug" => "Run Dev Extension" task  
-
-To run only vsc instance without background dev tasks chose:  
-  "Run and Debug" => "Run only Extension"  
+## License 
+Redis for VS Code is licensed under the [SSPL](/LICENSE).
