@@ -104,7 +104,7 @@ export const AddKeyReJSON = (props: Props) => {
         <MonacoJson
           value={ReJSONValue}
           onChange={setReJSONValue}
-          wrapperClassName={!isJsonLoaded ? 'h-[calc(100vh-330px)]' : 'h-[calc(100vh-300px)]'}
+          wrapperClassName={!isJsonLoaded ? 'h-[calc(100vh-340px)]' : 'h-[calc(100vh-300px)]'}
           disabled={loading}
           data-testid="json-value"
         />

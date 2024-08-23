@@ -5,7 +5,6 @@ $inputMinWidth: 100px;
 .input {
   @apply bg-vscode-input-background text-vscode-input-foreground border-vscode-input-border focus:border-vscode-inputOption-activeBorder outline-none p-3 border-solid border;
 
-  border-color: transparent;
   border-radius: $cornerRadiusRound;
   min-width: $inputMinWidth;
 }
