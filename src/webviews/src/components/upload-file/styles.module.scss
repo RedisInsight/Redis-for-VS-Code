@@ -3,7 +3,7 @@
 }
 
 .uploadBtn {
-  @apply flex cursor-pointer py-1 items-center;
+  @apply flex cursor-pointer py-1 items-center text-vscode-foreground;
 }
 
 .emptyBtn {

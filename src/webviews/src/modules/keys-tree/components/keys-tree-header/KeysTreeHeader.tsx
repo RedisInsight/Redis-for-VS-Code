@@ -45,7 +45,8 @@ export const KeysTreeHeader = ({ database }: Props) => {
       />
       {isShowScanMore(scanned, total, nextCursor) && (
         <ScanMore
-          disabled={loading || isDisableScanMore(scanned, total, nextCursor)}
+          loading={loading}
+          disabled={isDisableScanMore(scanned, total, nextCursor)}
           loadMoreItems={loadMoreItems}
           text={l10n.t('({0}{1} Scanned)', notAccurateScanned, numberWithSpaces(scannedDisplay))}
         />

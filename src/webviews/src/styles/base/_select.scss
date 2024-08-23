@@ -11,10 +11,10 @@ vscode-dropdown {
 }
 
 .database-form-select {
-  @apply bg-vscode-input-background h-9;
+  @apply h-9;
 
   &__option {
-    @apply bg-vscode-input-background h-9 pl-2 items-center text-vscode-foreground #{!important};
+    @apply h-9 pl-2 items-center text-vscode-foreground #{!important};
   }
 
   &::part(listbox) {

@@ -119,7 +119,7 @@ export const KeyTreeFilter = () => {
           <Select
             options={sortOptions}
             idSelected={typeSelected}
-            containerClassName="select-without-border min-w-1 w-full"
+            containerClassName="min-w-1 w-full"
             onChange={onChangeType}
             testid="tree-view-filter-select"
           />
