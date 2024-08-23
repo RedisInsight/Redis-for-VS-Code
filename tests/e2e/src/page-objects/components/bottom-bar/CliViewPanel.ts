@@ -77,6 +77,7 @@ export class CliViewPanel extends WebView {
       await input.sendKeys(command.charAt(i))
     }
     await input.sendKeys(Key.ENTER)
+    await InputActions.driver.sleep(300)
   }
 
   /**

@@ -106,7 +106,7 @@ describe('Tree view verifications', () => {
 
     // Verify that user can change the sorting ASC-DESC
     await ButtonActions.clickElement(treeView.sortKeysBtn)
-    await CommonDriverExtension.driverSleep(500)
+    await CommonDriverExtension.driverSleep(1000)
     await treeView.openTreeFolders([`${keyNames[2]}`.split(':')[0]])
     await treeView.openTreeFolders([`${keyNames[0]}`.split(':')[0]])
     expect(
