@@ -22,6 +22,7 @@ import {
   DatabasesActions,
   InputActions,
   KeyDetailsActions,
+  NotificationActions,
 } from '@e2eSrc/helpers/common-actions'
 import { AddStringKeyView } from '@e2eSrc/page-objects/components/editor-view/AddStringKeyView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
@@ -97,6 +98,7 @@ describe('Key Details verifications', () => {
     )
 
     await InputActions.typeText(addStringKeyView.keyNameInput, keyName)
+    await NotificationActions.closeAllNotifications()
 
     await ButtonActions.clickElement(addStringKeyView.addButton)
     await addStringKeyView.switchBack()
