@@ -89,7 +89,7 @@ jobs:
           paths:
             - ~/.cache/yarn
 
-  e2e-app-image:
+  e2e-linux:
     executor: linux-executor-dlc
     parameters:
       report:
@@ -128,7 +128,7 @@ jobs:
           command: |
             cd tests/e2e/dist && export TEST_FILES=$(circleci tests glob "tests/**/*.js" | circleci tests split --split-by=timings)
             echo "Running tests: $TEST_FILES"
-            .circleci/e2e/test.app.sh
+            cd ../../.. .circleci/e2e/test.app.sh
       - when:
           condition:
             equal: [ true, << parameters.report >> ]
@@ -407,7 +407,7 @@ workflows:
           requires:
             - Start E2E Tests
 
-      - e2e-app-image:
+      - e2e-linux:
           name: E2ETest (linux)
           parallelism: 2
           requires:
@@ -516,7 +516,7 @@ workflows:
           name: Build extension - Windows (stage)
           <<: *stageFilter
       # e2e tests on linux build
-      - e2e-app-image:
+      - e2e-linux:
           name: E2ETest (linux)
           parallelism: 2
           requires:
@@ -554,7 +554,7 @@ workflows:
           <<: *prodFilter
 
       # e2e tests on linux build
-      - e2e-app-image:
+      - e2e-linux:
           name: E2ETest (Linux)
           parallelism: 2
           requires:
