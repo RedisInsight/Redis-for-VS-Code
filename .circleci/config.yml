@@ -117,7 +117,7 @@ jobs:
       - run:
           name: Run e2e tests
           command: |
-            cd tests/e2e/src && export TEST_FILES=$(circleci tests glob "tests/**/*.ts" | circleci tests split --split-by=timings) && cd ../..
+            cd tests/e2e/src && export TEST_FILES=$(circleci tests glob "tests/**/*.ts" | circleci tests split --split-by=timings) && cd ../../..
             .circleci/e2e/test.app.sh
       - when:
           condition:
