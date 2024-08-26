@@ -55,10 +55,10 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
         installDependencies: true,
       })
     }
-
+    console.log('Test Files to run: ', process.env.TEST_FILES)
     // Run tests
     await exTester.runTests(
-      process.env.TEST_FILES || [
+      [process.env.TEST_FILES ||
         path.join(__dirname, '..', 'dist', 'tests', 'setup.js'),
         path.join(__dirname, '..', 'dist', 'tests', '**', '*.js'),
       ],
