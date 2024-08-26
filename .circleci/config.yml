@@ -116,7 +116,10 @@ jobs:
             Xvfb :99 -screen 0 1920x1080x24 &
       - run:
           name: Compile TypeScript
-          command: yarn compile
+          command: cd tests/e2e && yarn compile
+      - run:
+          name: Verify Compiled Files
+          command: ls -R dist/tests/
       - run:
           name: Run e2e tests
           command: |
