@@ -128,7 +128,8 @@ jobs:
           command: |
             cd tests/e2e/dist && export TEST_FILES=$(circleci tests glob "tests/**/*.js" | circleci tests split --split-by=timings)
             echo "Running tests: $TEST_FILES"
-            cd ../../.. .circleci/e2e/test.app.sh
+            cd ../../../..
+            .circleci/e2e/test.app.sh
       - when:
           condition:
             equal: [ true, << parameters.report >> ]
