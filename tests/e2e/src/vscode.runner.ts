@@ -55,19 +55,21 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
         installDependencies: true,
       })
     }
-    console.log(
-      'Test Files to run: ',
-      (
-        process.env.TEST_FILES ||
-        path.join(__dirname, '..', 'dist', 'tests', '**', '*.js')
-      ).split('\n'),
-    )
+
+    const testFilesEnv = process.env.TEST_FILES;
+    if (testFilesEnv) {
+      const fullPaths = testFilesEnv.split('\n').map((file) => {
+        return path.join(__dirname, '..', 'dist', file);
+      });
+    
+      console.log('Full Paths:', fullPaths);
+    } else {
+      console.error('TEST_FILES environment variable is not defined.');
+    }
+
     // Run tests
     await exTester.runTests(
-      (
-        process.env.TEST_FILES ||
-        path.join(__dirname, '..', 'dist', 'tests', '**', '*.js')
-      ).split('\n'),
+      testFilesEnv || path.join(__dirname, '..', 'dist', 'tests', '**', '*.js'),
       {
         settings: 'settings.json',
         logLevel: logging.Level.INFO,
