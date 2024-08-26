@@ -19,6 +19,8 @@ import {
 import { ButtonActions, CheckboxActions } from '@e2eSrc/helpers/common-actions'
 import { WelcomeView } from '@e2eSrc/page-objects/components/editor-view/WelcomeView'
 import { CommonElementActions } from '@e2eSrc/helpers/common-actions/actions/CommonElementActions'
+import { Eula } from '@e2eSrc/helpers/api/Eula'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 describe('Agreements Verification', () => {
   let browser: VSBrowser
@@ -37,9 +39,14 @@ describe('Agreements Verification', () => {
     await ServerActions.waitForServerInitialized()
     await browser.waitForWorkbench(20_000)
     await new TitleBar().getWindowControls().maximize()
-    await (await new ActivityBar().getViewControl('Redis for VS Code'))?.openView()
   })
   beforeEach(async () => {
+    await Eula.reset()
+    await (await new ActivityBar().getViewControl('Redis for VS Code'))?.openView()
+    await CommonDriverExtension.driverSleep(200)
+    await (await new ActivityBar().getViewControl('Redis for VS Code'))?.closeView()
+    await CommonDriverExtension.driverSleep(200)
+    await (await new ActivityBar().getViewControl('Redis for VS Code'))?.openView()
     await eulaView.switchToInnerViewFrame(InnerViews.EulaInnerView)
     await eulaView.waitForElementVisibility(eulaView.submitButton)
   })
