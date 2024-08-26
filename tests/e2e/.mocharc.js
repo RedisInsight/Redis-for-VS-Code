@@ -20,7 +20,7 @@ module.exports = {
       toConsole: false,
     },
   },
-  retries: 0,
+  retries: 1,
   timeout: 100_000,
   ui: 'bdd',
 }

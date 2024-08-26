@@ -34,6 +34,7 @@ describe('Settings', () => {
     // Go to Settings page
     await ButtonActions.clickElement(treeView.settingsButton)
     await settingsView.switchToInnerViewFrame(InnerViews.SettingsInnerView)
+    await settingsView.setDelimiterDefaultValue()
   })
   beforeEach(async () => {
     await treeView.switchBack()

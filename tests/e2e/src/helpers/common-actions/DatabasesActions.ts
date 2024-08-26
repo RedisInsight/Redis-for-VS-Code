@@ -11,7 +11,7 @@ import { TreeView } from '@e2eSrc/page-objects/components'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { AddNewDatabaseParameters } from '../types/types'
 import { DatabaseAPIRequests } from '../api'
-import { NotificationActions } from './actions'
+import { InputActions, NotificationActions } from './actions'
 import { KeyDetailsActions } from './KeyDetailsActions'
 import { ServerActions } from './ServerActions'
 import { Eula } from '../api/Eula'
@@ -85,6 +85,7 @@ export class DatabasesActions extends CommonDriverExtension {
       await treeView.clickDatabaseByName(databaseParameters.databaseName!)
       await super.driverSleep(200)
     }
+    await InputActions.hoverElement(treeView.getCLIDatabaseBtnByName(databaseParameters.databaseName!),1000)
   }
 
   /**
