@@ -134,7 +134,7 @@ describe('Agreements Verification', () => {
 
   it('Verify that user can accept User Agreements', async () => {
     const expectedWelcomeLinks = [
-      'https://redis.io/docs/latest/develop/connect/insight/?utm_source=redisinsight&utm_medium=vscode&utm_campaign=empty_database',
+      'https://redis.io/try-free/?utm_source=redisinsight&utm_medium=vscode&utm_campaign=empty_database',
       'https://hub.docker.com/r/redis/redis-stack-server',
     ]
     await CheckboxActions.toggleCheckbox(eulaView.useRecommendedCheckbox, true)

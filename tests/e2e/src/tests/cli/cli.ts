@@ -2,7 +2,6 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
 import {
-  BottomBar,
   CliViewPanel,
   TreeView,
 } from '@e2eSrc/page-objects/components'
@@ -16,14 +15,12 @@ import { ButtonActions } from '@e2eSrc/helpers/common-actions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 
 describe('CLI critical', () => {
-  let bottomBar: BottomBar
   let cliViewPanel: CliViewPanel
   let treeView: TreeView
 
   let keyName = Common.generateWord(20)
 
   before(async () => {
-    bottomBar = new BottomBar()
     cliViewPanel = new CliViewPanel()
     treeView = new TreeView()
 
@@ -40,6 +37,7 @@ describe('CLI critical', () => {
     await treeView.switchBack()
     await CommonDriverExtension.driverSleep(1000)
     await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
+    await cliViewPanel.executeCommand('clear')
   })
   afterEach(async () => {
     await KeyAPIRequests.deleteKeyIfExistsApi(

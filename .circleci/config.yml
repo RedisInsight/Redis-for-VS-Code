@@ -401,7 +401,7 @@ workflows:
 
       - e2e-app-image:
           name: E2ETest (linux)
-          parallelism: 1
+          parallelism: 2
           requires:
             - Build extension - Linux (stage)
 
@@ -510,7 +510,7 @@ workflows:
       # e2e tests on linux build
       - e2e-app-image:
           name: E2ETest (linux)
-          parallelism: 1
+          parallelism: 2
           requires:
             - Build extension - Linux (stage)
 
@@ -545,10 +545,10 @@ workflows:
           env: prod
           <<: *prodFilter
 
-      # e2e desktop tests on linux build
+      # e2e tests on linux build
       - e2e-app-image:
           name: E2ETest (Linux)
-          parallelism: 1
+          parallelism: 2
           requires:
             - Build extension - Linux (prod)
 

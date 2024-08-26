@@ -78,6 +78,7 @@ describe('Edit Key values verification', () => {
       Config.ossStandaloneConfig.databaseName,
     )
     await new EditorView().closeAllEditors()
+    await NotificationActions.closeAllNotifications()
     await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     // Refresh database
     await treeView.refreshDatabaseByName(

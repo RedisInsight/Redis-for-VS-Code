@@ -51,7 +51,7 @@ export class TreeViewActions extends CommonDriverExtension {
   ): Promise<void> {
     let treeView = new TreeView()
     // Wait for key refresh
-    await TreeViewActions.driverSleep(1000)
+    await TreeViewActions.driverSleep(2000)
     // Verify not patterned keys
     await this.verifyNotPatternedKeys(delimiter)
 
