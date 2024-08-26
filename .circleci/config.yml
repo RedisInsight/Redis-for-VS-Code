@@ -115,6 +115,9 @@ jobs:
             sudo apt-get install -y xvfb
             Xvfb :99 -screen 0 1920x1080x24 &
       - run:
+          name: Compile TypeScript
+          command: yarn compile
+      - run:
           name: Run e2e tests
           command: |
             export TEST_FILES=$(circleci tests glob "tests/e2e/dist/tests/**/*.js" | circleci tests split --split-by=timings)
