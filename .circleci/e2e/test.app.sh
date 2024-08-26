@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-yarn --cwd tests/e2e install
+# Moved to config.yml
+# yarn --cwd tests/e2e install
 
 # Create folder before tests run to prevent permissions issues
 mkdir -p tests/e2e/remote

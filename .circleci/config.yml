@@ -115,6 +115,9 @@ jobs:
             sudo apt-get install -y xvfb
             Xvfb :99 -screen 0 1920x1080x24 &
       - run:
+          name: Install dependencies
+          command: cd tests/e2e && yarn install
+      - run:
           name: Compile TypeScript
           command: cd tests/e2e && yarn compile
       - run:
