@@ -56,15 +56,14 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
       })
     }
 
-    const testFilesEnv = process.env.TEST_FILES;
+    let testFilesEnv = process.env.TEST_FILES
     if (testFilesEnv) {
-      const fullPaths = testFilesEnv.split('\n').map((file) => {
-        return path.join(__dirname, '..', 'dist', file);
-      });
-    
-      console.log('Full Paths:', fullPaths);
+      testFilesEnv.split('\n').map(file => {
+        testFilesEnv = path.join(__dirname, '..', 'dist', file)
+      })
+      console.log('Full Paths:', testFilesEnv)
     } else {
-      console.error('TEST_FILES environment variable is not defined.');
+      console.error('TEST_FILES environment variable is not defined.')
     }
 
     // Run tests
