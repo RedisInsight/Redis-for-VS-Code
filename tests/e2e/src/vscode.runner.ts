@@ -58,7 +58,7 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
 
     let testFilesEnv: string | string[] = process.env.TEST_FILES!;
     if (process.env.TEST_FILES) {
-      testFilesEnv = process.env.TEST_FILES.split('\n').map((file) => {
+      testFilesEnv = process.env.TEST_FILES.split(' ').map((file) => {
         return path.join(__dirname, '..', 'dist', file);
       });
     
