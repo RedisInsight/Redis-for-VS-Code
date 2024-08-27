@@ -5,7 +5,6 @@ module.exports = {
   delay: false,
   diff: true,
   file: ['./tests/setup.js'],
-  fullTrace: true,
   package: './package.json',
   parallel: false,
   recursive: false,
