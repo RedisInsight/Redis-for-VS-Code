@@ -129,10 +129,11 @@ jobs:
             cd tests/e2e/dist
             export SETUP_TEST="tests/setup.js"
             export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.js" | circleci tests split --split-by=timings)
-            export TEST_FILES="$SETUP_TEST\n$TEST_FILES"
-            echo "Running tests: $TEST_FILES"
+            # Combine setup test and other tests into an array
+            export COMBINED_TEST_FILES=$(echo -e "$SETUP_TEST\n$TEST_FILES" | tr '\n' ' ')
+            echo "Running tests: $COMBINED_TEST_FILES"
             cd ../../..
-            .circleci/e2e/test.app.sh
+            TEST_FILES="$COMBINED_TEST_FILES" .circleci/e2e/test.app.sh
       - when:
           condition:
             equal: [ true, << parameters.report >> ]

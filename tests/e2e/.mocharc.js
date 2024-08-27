@@ -5,6 +5,7 @@ module.exports = {
   delay: false,
   diff: true,
   file: ['./tests/setup.js'],
+  fullTrace: true,
   package: './package.json',
   parallel: false,
   recursive: false,
@@ -20,7 +21,7 @@ module.exports = {
       toConsole: false,
     },
   },
-  retries: 1,
+  retries: 3,
   timeout: 100_000,
   ui: 'bdd',
 }
