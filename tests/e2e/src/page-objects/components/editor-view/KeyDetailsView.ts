@@ -48,6 +48,7 @@ export class KeyDetailsView extends WebView {
   applyTtlInputBtn = By.xpath(
     `//*[@data-testid='edit-ttl-btn']//*[@data-testid='apply-btn']`,
   )
+  unsupportedTypeMessage = By.xpath(`//*[@data-testid='unsupported-type-details']`)
 
   getTrashIcon = (keyType: string, name: string): By =>
     By.xpath(
