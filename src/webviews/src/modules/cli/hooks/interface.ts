@@ -95,7 +95,7 @@ export interface GetKeysWithDetailsResponse {
   maxResults?: number
 }
 
-export interface GetKeysWithDetailsShardResponse extends GetKeysWithDetailsResponse{
+export interface GetKeysWithDetailsShardResponse extends GetKeysWithDetailsResponse {
   id?: string
 }
 

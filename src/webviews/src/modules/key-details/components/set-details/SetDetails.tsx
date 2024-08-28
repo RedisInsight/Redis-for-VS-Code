@@ -56,7 +56,7 @@ export const SetDetails = (props: Props) => {
 
   const Actions = ({ children }: PropsWithChildren) => ([
     children,
-    <AddItemsAction title={l10n.t('Add Members')} openAddItemPanel={openAddItemPanel} />,
+    <AddItemsAction key={1} title={l10n.t('Add Members')} openAddItemPanel={openAddItemPanel} />,
   ])
 
   return (

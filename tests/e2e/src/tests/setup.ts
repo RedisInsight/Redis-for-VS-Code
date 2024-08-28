@@ -43,9 +43,6 @@ describe('Agreements Verification', () => {
     await eulaView.switchToInnerViewFrame(InnerViews.EulaInnerView)
     await eulaView.waitForElementVisibility(eulaView.submitButton)
   })
-  after(async () => {
-    await treeView.switchBack()
-  })
   afterEach(async () => {
     await treeView.switchBack()
   })

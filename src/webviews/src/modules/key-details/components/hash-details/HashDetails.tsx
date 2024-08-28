@@ -83,7 +83,7 @@ const HashDetails = (props: Props) => {
       />
     ),
     children,
-    <AddItemsAction title={l10n.t('Add Fields')} openAddItemPanel={openAddItemPanel} />,
+    <AddItemsAction key={3} title={l10n.t('Add Fields')} openAddItemPanel={openAddItemPanel} />,
   ])
 
   return (

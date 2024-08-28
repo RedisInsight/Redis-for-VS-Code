@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'

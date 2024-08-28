@@ -428,7 +428,7 @@ describe('Filtering per key name in DB with 10 millions of keys', () => {
     for (let i = 0; i < keyTypes.length - 1; i++) {
       await treeView.selectFilterGroupType(keyTypes[i].keyName)
       // Waiting for long db loading
-      CommonDriverExtension.driverSleep(2000)
+      CommonDriverExtension.driverSleep(3000)
       // Verify that all results have the same type as in filter
       expect(
         await treeView.getElementText(treeView.getTreeViewItemByIndex(i + 1)),

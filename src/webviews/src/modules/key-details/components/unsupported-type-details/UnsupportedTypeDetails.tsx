@@ -14,7 +14,8 @@ export const UnsupportedTypeDetails = () => (
           {l10n.t('See our repository for the list of ')}
           <Link
             target="_blank"
-            href={EXTERNAL_LINKS.githubIssues}
+            className="pl-0"
+            href={EXTERNAL_LINKS.githubRepo}
             data-testid="unsupported-key-github-btn"
           >
             {l10n.t('supported data types.')}
