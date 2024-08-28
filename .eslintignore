@@ -34,7 +34,6 @@ node_modules
 .DS_Store
 
 # App packaged
-storybook-static
 dist
 backend_dist
 scripts
@@ -52,7 +51,6 @@ package.json
 *.scss.d.ts
 yarn.lock
 pnpm-lock.yaml
-!.storybook
 
 # E2E tests
 tests

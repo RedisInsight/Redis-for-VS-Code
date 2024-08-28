@@ -19,7 +19,6 @@ lerna-debug.log*
 coverage
 /.nyc_output
 **/coverage
-storybook-static
 
 # IDEs and editors
 /.idea

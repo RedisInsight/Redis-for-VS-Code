@@ -54,6 +54,7 @@ const isObjectTests = [
 
 describe('isBigInt', () => {
   it.each(isBigIntTests)('for input: %s (name), should be output: %s',
+    // @ts-ignore
     (value, expected) => {
       const result = isBigInt(value)
       expect(result).toBe(expected)
@@ -62,6 +63,7 @@ describe('isBigInt', () => {
 
 describe('isArray', () => {
   it.each(isArrayTests)('for input: %s (name), should be output: %s',
+    // @ts-ignore
     (value, expected) => {
       const result = isArray(value)
       expect(result).toBe(expected)
@@ -70,6 +72,7 @@ describe('isArray', () => {
 
 describe('isObject', () => {
   it.each(isObjectTests)('for input: %s (name), should be output: %s',
+    // @ts-ignore
     (value, expected) => {
       const result = isObject(value)
       expect(result).toBe(expected)

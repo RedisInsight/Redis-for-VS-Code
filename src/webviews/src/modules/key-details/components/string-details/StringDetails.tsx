@@ -95,6 +95,7 @@ const StringDetails = (props: Props) => {
   const Actions = ({ children }: PropsWithChildren) => ([
     children,
     <EditItemAction
+      key={1}
       title={editToolTip}
       isEditable={isStringEditable && isEditable}
       onEditItem={() => {

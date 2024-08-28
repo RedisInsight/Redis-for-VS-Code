@@ -6,10 +6,12 @@ module.exports = {
     browser: true,
   },
   extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'airbnb-base',
     'airbnb-typescript',
-    'airbnb/hooks',
     'plugin:sonarjs/recommended',
-    'plugin:storybook/recommended',
     // TODO: in a separate pull request enable and fix all classes sorting issues for tailwind
     // 'plugin:tailwindcss/recommended',
   ],
@@ -47,21 +49,6 @@ module.exports = {
         code: 140,
       },
     ],
-    'jsx-a11y/label-has-associated-control': [
-      2,
-      {
-        labelComponents: [
-          'FormLabel',
-        ],
-        labelAttributes: [
-          'label',
-        ],
-        controlComponents: [
-          'input',
-        ],
-        depth: 1,
-      },
-    ],
     'class-methods-use-this': 'off',
     // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
     'react-refresh/only-export-components': ['warn'],
@@ -94,6 +81,13 @@ module.exports = {
     'object-curly-newline': 'off',
     'no-nested-ternary': 'off',
     'no-param-reassign': ['error', { props: false }],
+    'default-param-last': 'off',
+    '@typescript-eslint/default-param-last': 'off',
+    'no-unsafe-optional-chaining': 'off',
+    'function-paren-newline': 'off',
+    'prefer-regex-literals': 'off',
+    'react/display-name': 'off',
+    'no-promise-executor-return': 'off',
     'sonarjs/no-duplicate-string': 'off',
     'sonarjs/cognitive-complexity': [1, 20],
     'sonarjs/no-identical-functions': [0, 5],
