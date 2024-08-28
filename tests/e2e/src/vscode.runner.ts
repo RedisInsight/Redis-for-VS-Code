@@ -56,12 +56,31 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
       })
     }
 
+    let testFilesEnv: string | string[] = process.env.TEST_FILES!
+    if (process.env.TEST_FILES) {
+      testFilesEnv = process.env.TEST_FILES.split('\n').map(file => file.trim()).map((file) => {
+        return path.join(__dirname, '..', 'dist', file)
+      })
+
+      // Always prepend setup.js
+      const setupTestPath = path.join(
+        __dirname,
+        '..',
+        'dist',
+        'tests',
+        'setup.js',
+      )
+      testFilesEnv.unshift(setupTestPath)
+
+      console.log('Full Paths:', testFilesEnv)
+    } else {
+      console.error('TEST_FILES environment variable is not defined.')
+    }
+
     // Run tests
     await exTester.runTests(
-      [
-        path.join(__dirname, '..', 'dist', 'tests', 'setup.js'),
-        path.join(__dirname, '..', 'dist', 'tests', '**', '*.js'),
-      ],
+      testFilesEnv ||
+        path.join(__dirname, '..', 'dist', 'tests', '**', '*.e2e.js'),
       {
         settings: 'settings.json',
         logLevel: logging.Level.INFO,

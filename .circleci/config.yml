@@ -48,8 +48,6 @@ executors:
     machine:
       image: ubuntu-2004:2023.04.2
       docker_layer_caching: true
-    environment:
-      DISPLAY: ":99"
   docker-node:
     docker:
       - image: cimg/node:20.15
@@ -91,7 +89,7 @@ jobs:
           paths:
             - ~/.cache/yarn
 
-  e2e-app-image:
+  e2e-linux:
     executor: linux-executor-dlc
     parameters:
       report:
@@ -117,9 +115,21 @@ jobs:
             sudo apt-get install -y xvfb
             Xvfb :99 -screen 0 1920x1080x24 &
       - run:
+          name: Install dependencies
+          command: cd tests/e2e && yarn install
+      - run:
+          name: Compile TypeScript
+          command: cd tests/e2e && yarn compile
+      - run:
+          name: Verify Compiled Files
+          command: ls -R tests/e2e/dist/tests/
+      - run:
           name: Run e2e tests
           command: |
-            cd tests/e2e && export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.ts" | circleci tests split --split-by=timings) && cd ../..
+            cd tests/e2e/dist
+            export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.js" | circleci tests split --split-by=timings)
+            echo "Running tests: $TEST_FILES"
+            cd ../../..
             .circleci/e2e/test.app.sh
       - when:
           condition:
@@ -402,7 +412,7 @@ workflows:
           requires:
             - Start E2E Tests
 
-      - e2e-app-image:
+      - e2e-linux:
           name: E2ETest (linux)
           parallelism: 2
           requires:
@@ -511,7 +521,7 @@ workflows:
           name: Build extension - Windows (stage)
           <<: *stageFilter
       # e2e tests on linux build
-      - e2e-app-image:
+      - e2e-linux:
           name: E2ETest (linux)
           parallelism: 2
           requires:
@@ -549,7 +559,7 @@ workflows:
           <<: *prodFilter
 
       # e2e tests on linux build
-      - e2e-app-image:
+      - e2e-linux:
           name: E2ETest (Linux)
           parallelism: 2
           requires:
