@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { ChangeEvent, useRef, useState } from 'react'
 import cx from 'classnames'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'

@@ -4,7 +4,6 @@ import { viteStaticCopy } from 'vite-plugin-static-copy'
 import * as dotenv from 'dotenv'
 import { reactClickToComponent } from 'vite-plugin-react-click-to-component'
 // import compression from 'vite-plugin-compression2'
-import { monaco } from '@bithero/monaco-editor-vite-plugin'
 import svgr from 'vite-plugin-svgr'
 import { fileURLToPath, URL } from 'node:url'
 import path from 'path'
@@ -31,10 +30,6 @@ export default defineConfig({
           dest: './',
         },
       ],
-    }),
-    monaco({
-      features: 'all',
-      languages: ['json'],
     }),
     // compression({
     //   algorithm: 'gzip', exclude: [/\.(br)$ /, /\.(gz)$/],

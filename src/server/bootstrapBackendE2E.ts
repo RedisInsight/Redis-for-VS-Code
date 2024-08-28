@@ -59,8 +59,7 @@ export async function startBackendE2E(logger: CustomLogger): Promise<any> {
         ])
       } else {
         PSinst = cp.spawn(
-          'node', [path.resolve(backendPath, 'main.js')],
-          {
+          'node', [path.resolve(backendPath, 'main.js')], {
             env:
             {
               NODE_ENV: 'production',

@@ -46,8 +46,8 @@ const ListDetails = (props: Props) => {
 
   const Actions = ({ children }: PropsWithChildren) => ([
     children,
-    <AddItemsAction title={l10n.t('Add Elements')} openAddItemPanel={openAddItemPanel} />,
-    <RemoveItemsAction title={l10n.t('Remove Elements')} openRemoveItemPanel={openRemoveItemPanel} />,
+    <AddItemsAction key={1} title={l10n.t('Add Elements')} openAddItemPanel={openAddItemPanel} />,
+    <RemoveItemsAction key={2} title={l10n.t('Remove Elements')} openRemoveItemPanel={openRemoveItemPanel} />,
   ])
 
   return (
