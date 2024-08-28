@@ -87,8 +87,8 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
     checkConnectToDatabase(id, connectToInstance)
   }
 
-  const connectToInstance = (id = '') => {
-    keysApi.setDatabaseId(id)
+  const connectToInstance = (database: Database) => {
+    keysApi.setDatabaseId(database.id)
 
     // todo: fix for cli first open
     set(window, 'ri.database', database)
@@ -145,7 +145,7 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
             content={formatLongName(name, 100, 20)}
             position="bottom center"
             keepTooltipInside={false}
-            mouseEnterDelay={1000}
+            mouseEnterDelay={2_000}
           >
             <div className={styles.databaseName}>
               <div className="truncate">{name}</div>

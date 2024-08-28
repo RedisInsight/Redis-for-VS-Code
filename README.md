@@ -2,7 +2,7 @@
 
 Redis for VS Code is the official Visual Studio Code extension that provides an intuitive and efficient GUI for Redis databases, developed by Redis.
 
-![Redis for VS Code](.github/Redis_for_VS_Code_main_screen.png)
+![Redis for VS Code](https://github.com/RedisInsight/Redis-for-VS-Code/blob/main/.github/Redis_for_VS_Code_main_screen.png)
 
 ## Key features:
 * Universal Redis Support: Connect to any Redis instance, including Redis Community Edition, Redis Cloud, Redis Software, and Redis on Azure Cache.

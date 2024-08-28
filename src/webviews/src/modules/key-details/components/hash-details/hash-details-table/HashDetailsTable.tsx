@@ -22,6 +22,7 @@ import {
   stringToBuffer,
   validateTTLNumber,
   truncateNumberToDuration,
+  decompressingBuffer,
 } from 'uiSrc/utils'
 import { StopPropagation } from 'uiSrc/components/virtual-table'
 import {
@@ -76,7 +77,10 @@ export interface Props {
 const HashDetailsTable = (props: Props) => {
   const { isExpireFieldsAvailable, onRemoveKey } = props
 
-  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
+  const { databaseId, compressor } = useDatabasesStore((state) => ({
+    databaseId: state.connectedDatabase?.id,
+    compressor: state.connectedDatabase?.compressor ?? null,
+  }))
 
   const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
 
@@ -306,8 +310,7 @@ const HashDetailsTable = (props: Props) => {
       className: 'value-table-separate-border',
       headerClassName: 'value-table-separate-border',
       render: (_name: string, { field: fieldItem }: HashField, expanded?: boolean) => {
-        // const { value: decompressedItem } = decompressingBuffer(fieldItem, compressor)
-        const decompressedItem = fieldItem
+        const { value: decompressedItem } = decompressingBuffer(fieldItem, compressor)
         const field = bufferToString(fieldItem) || ''
         // Better to cut the long string, because it could affect virtual scroll performance
         const { value } = formattingBuffer(decompressedItem, viewFormatProp, { expanded, skipVector: true })
@@ -339,10 +342,8 @@ const HashDetailsTable = (props: Props) => {
         expanded?: boolean,
         rowIndex = 0,
       ) {
-        // const { value: decompressedFieldItem } = decompressingBuffer(fieldItem, compressor)
-        // const { value: decompressedValueItem } = decompressingBuffer(valueItem, compressor)
-        const decompressedFieldItem = fieldItem
-        const decompressedValueItem = valueItem
+        const { value: decompressedFieldItem } = decompressingBuffer(fieldItem, compressor)
+        const { value: decompressedValueItem } = decompressingBuffer(valueItem!, compressor)
         const value = bufferToString(valueItem)
         const field = bufferToString(decompressedFieldItem)
         // Better to cut the long string, because it could affect virtual scroll performance

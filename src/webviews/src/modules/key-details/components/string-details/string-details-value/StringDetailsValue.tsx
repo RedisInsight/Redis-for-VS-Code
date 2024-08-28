@@ -22,6 +22,7 @@ import {
   stringToBuffer,
   isFullStringLoaded,
   stringToSerializedBufferFormat,
+  decompressingBuffer,
 } from 'uiSrc/utils'
 import {
   TEXT_DISABLED_COMPRESSED_VALUE,
@@ -30,10 +31,9 @@ import {
   TEXT_UNPRINTABLE_CHARACTERS,
   AddStringFormConfig as config,
 } from 'uiSrc/constants'
-// import { decompressingBuffer } from 'uiSrc/utils/decompressors'
 import { downloadFile } from 'uiSrc/utils/dom/downloadFile'
 
-import { useContextInContext, useSelectedKeyStore } from 'uiSrc/store'
+import { useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { IFetchKeyArgs, RedisString } from 'uiSrc/interfaces'
 import { TextArea, Tooltip } from 'uiSrc/ui'
 import { InlineEditor } from 'uiSrc/components'
@@ -52,7 +52,6 @@ export interface Props {
 }
 
 const StringDetailsValue = (props: Props) => {
-  const compressor = null
   const { isEditItem, setIsEdit, onRefresh, onDownloaded, onLoadAll, onUpdated } = props
 
   const {
@@ -60,6 +59,8 @@ const StringDetailsValue = (props: Props) => {
     initialValue,
     setIsStringCompressed,
   } = useStringStore(useShallow(useStringSelector))
+
+  const compressor = useDatabasesStore((state) => state.connectedDatabase?.compressor ?? null)
 
   const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
 
@@ -85,11 +86,7 @@ const StringDetailsValue = (props: Props) => {
   useEffect(() => {
     if (!initialValue) return
 
-    // const { value: decompressedValue, isCompressed } = decompressingBuffer(initialValue, compressor)
-    const { value: decompressedValue, isCompressed } = {
-      value: initialValue,
-      isCompressed: false,
-    }
+    const { value: decompressedValue, isCompressed } = decompressingBuffer(initialValue, compressor)
 
     const initialValueString = bufferToString(decompressedValue, viewFormat)
     const { value: formattedValue, isValid } = formattingBuffer(decompressedValue, viewFormatProp, { expanded: true })

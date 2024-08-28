@@ -1,11 +1,8 @@
-import { cloneDeep } from 'lodash'
-
 import { apiService } from 'uiSrc/services'
 import { checkRediStack } from 'uiSrc/utils'
 import { ConnectionType } from 'uiSrc/constants'
 import * as utils from 'uiSrc/utils'
 import {
-  cleanup,
   waitForStack,
 } from 'testSrc/helpers'
 import {
@@ -17,6 +14,7 @@ import {
   checkConnectToDatabase,
   deleteDatabases,
   fetchDatabaseOverview,
+  fetchDatabaseById,
 } from './useDatabasesStore'
 
 let databases: any[]
@@ -124,6 +122,26 @@ describe('useDatabasesStore', () => {
     })
   })
 
+  describe('setDatabaseToList', () => {
+    it('should properly set database to the list of databases', () => {
+      const { setDatabaseToList, loadDatabasesSuccess } = useDatabasesStore.getState()
+      const mockCompressor = 'zstd'
+
+      // set databases
+      loadDatabasesSuccess(databases)
+
+      const database = {
+        ...databases[1],
+        compressor: mockCompressor,
+      }
+
+      setDatabaseToList(database)
+
+      // Assert
+      expect(useDatabasesStore.getState().data[1]?.compressor).toEqual(mockCompressor)
+    })
+  })
+
   describe('thunks', () => {
     describe('fetchDatabases', () => {
       it('call both fetchDatabases and loadDatabasesSuccess when fetch is successed', async () => {
@@ -153,6 +171,37 @@ describe('useDatabasesStore', () => {
         // Assert
         expect(useDatabasesStore.getState().data).toEqual([])
         expect(useDatabasesStore.getState().loading).toEqual(false)
+        expect(utils.showErrorMessage).toBeCalled()
+      })
+    })
+
+    describe('fetchDatabaseById', () => {
+      it('fetchDatabaseById should return database full info when fetch is successed', async () => {
+        // Arrange
+        const mockCompressor = 'zstd'
+        const mockDatabase = { ...databases[1], compressor: mockCompressor }
+        const responsePayload = { data: mockDatabase, status: 200 }
+
+        apiService.get = vi.fn().mockResolvedValue(responsePayload)
+
+        // Act
+
+        await waitForStack()
+
+        expect(await fetchDatabaseById(mockDatabase.id)).toEqual(mockDatabase)
+      })
+
+      it('call showErrorMessage when fetch is fail', async () => {
+        // Arrange
+        useDatabasesStore.setState((state) => ({ ...state, data: [] }))
+
+        apiService.get = vi.fn().mockRejectedValueOnce(errorResponsePayload)
+
+        // Act
+        fetchDatabaseById('123')
+        await waitForStack()
+
+        // Assert
         expect(utils.showErrorMessage).toBeCalled()
       })
     })
@@ -296,9 +345,12 @@ describe('useDatabasesStore', () => {
     })
 
     describe('checkConnectToDatabase', () => {
-      it('call checkConnectToDatabase when fetch is successed', async () => {
+      it('call set database full info when fetch is successed', async () => {
         // Arrange
-        const responseGetPayload = { status: 200 }
+        useDatabasesStore.getState().loadDatabasesSuccess(databases)
+        const mockCompressor = 'zstd'
+        const mockDatabase = { ...databases[1], compressor: mockCompressor }
+        const responseGetPayload = { status: 200, data: mockDatabase }
 
         apiService.get = vi.fn().mockResolvedValue(responseGetPayload)
 
@@ -307,6 +359,7 @@ describe('useDatabasesStore', () => {
         await waitForStack()
 
         expect(useDatabasesStore.getState().loading).toEqual(false)
+        expect(useDatabasesStore.getState().data[1].compressor).toEqual(mockCompressor)
       })
 
       it('call showErrorMessage when fetch is fail', async () => {

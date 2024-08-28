@@ -17,6 +17,7 @@ import {
   showErrorMessage,
   showInformationMessage,
 } from 'uiSrc/utils'
+import { Nullable } from 'uiSrc/interfaces'
 import { Database, DatabaseOverview, DatabasesActions, DatabasesStore } from './interface'
 
 export const initialDatabasesState: DatabasesStore = {
@@ -44,6 +45,18 @@ export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
         [...(orderBy(data, 'lastConnection', 'desc'))],
         'cloudDetails.free',
       ) as Database[] || null
+    }),
+
+    setDatabaseToList: (databaseFull: Database) => set((state) => {
+      const databases = state.data.map((database) => {
+        if (database.id === databaseFull.id) {
+          return { ...database, ...databaseFull }
+        }
+
+        return database
+      })
+
+      state.data = databases
     }),
 
     setEditDatabase: (editDatabase: Database) => set({ editDatabase }),
@@ -149,6 +162,21 @@ export const fetchEditedDatabase = (database: Database, onSuccess?: () => void) 
   })
 }
 
+export const fetchDatabaseById = async (databaseId: string, onSuccess?: (data: Database) => void): Promise<Nullable<Database>> => {
+  try {
+    const { data, status } = await apiService.get<Database>(`${ApiEndpoints.DATABASES}/${databaseId}`)
+
+    if (isStatusSuccessful(status)) {
+      onSuccess?.(data)
+      return data
+    }
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
+  }
+
+  return null
+}
+
 export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?: () => void) => {
   useDatabasesStore.setState(async (state) => {
     state.processDatabase()
@@ -170,7 +198,7 @@ export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?
 
 export function checkConnectToDatabase(
   id: string = '',
-  onSuccessAction?: (id: string) => void,
+  onSuccessAction?: (database: Database) => void,
   onFailAction?: () => void,
   resetInstance: boolean = true,
 ) {
@@ -181,7 +209,9 @@ export function checkConnectToDatabase(
       const { status } = await apiService.get(`${ApiEndpoints.DATABASES}/${id}/connect`)
 
       if (isStatusSuccessful(status)) {
-        onSuccessAction?.(id)
+        const database = await fetchDatabaseById(id)
+        state.setDatabaseToList(database!)
+        onSuccessAction?.(database!)
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))

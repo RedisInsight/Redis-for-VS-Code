@@ -18,7 +18,7 @@ const mockedProps = {
   database: mockDatabase,
 }
 beforeEach(() => {
-  apiService.get = vi.fn().mockResolvedValue({ status: 200 })
+  apiService.get = vi.fn().mockResolvedValue({ status: 200, data: {} })
 })
 
 vi.spyOn(utils, 'sendEventTelemetry')
