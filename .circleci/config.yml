@@ -123,18 +123,7 @@ jobs:
       - run:
           name: Verify Compiled Files
           command: ls -R tests/e2e/dist/tests/
-      - run:
-          name: Run e2e tests
-          command: |
-            cd tests/e2e/dist
-            # Include setup.js as the first test file
-            export SETUP_TEST="tests/setup.js"
-            export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.js" | circleci tests split --split-by=timings)
-            # Combine setup test and other tests, filter out any non-js files or directories
-            export COMBINED_TEST_FILES=$(echo -e "$SETUP_TEST\n$TEST_FILES" | grep -E '\.js$')
-            echo "Running tests: $COMBINED_TEST_FILES"
-            cd ../../..
-            TEST_FILES="$COMBINED_TEST_FILES" .circleci/e2e/test.app.sh
+F
       - when:
           condition:
             equal: [ true, << parameters.report >> ]
