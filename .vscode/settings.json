@@ -41,8 +41,7 @@
     "**/yarn.lock": true,
     "*.{css,sass,scss}.d.ts": true,
     "pnpm-lock.yaml": true,
-    "**/pnpm-lock.yaml": true,
-    // "src/webviews/public/customThemes.css": true,
+    "**/pnpm-lock.yaml": true
   },
   "cSpell.words": ["githubocto", "tailwindcss", "webviews", "zustand"],
   "testing.automaticallyOpenPeekView": "never",
