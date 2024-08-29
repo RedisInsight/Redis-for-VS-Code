@@ -118,7 +118,7 @@ $borderColor: var(--vscode-tree-tableColumnsBorder);
 }
 
 :global(.key-details-table) {
-  @apply relative;
+  @apply relative w-full;
   :global(.ReactVirtualized__Table__row) {
     font-size: 13px;
 
