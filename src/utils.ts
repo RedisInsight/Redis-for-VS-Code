@@ -56,7 +56,7 @@ export const handleMessage = async (message: any = {}) => {
       vscode.commands.executeCommand('RedisForVSCode.addDatabaseClose')
       break
     case 'CloseEditDatabase':
-      vscode.commands.executeCommand('RedisForVSCode.editDatabaseClose', message)
+      vscode.commands.executeCommand('RedisForVSCode.editDatabaseClose', message.data)
       break
     case 'UpdateSettings':
       await setUIStorageField('appInfo', {

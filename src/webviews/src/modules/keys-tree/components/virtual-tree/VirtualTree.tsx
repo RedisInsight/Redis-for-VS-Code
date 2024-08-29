@@ -12,6 +12,7 @@ import { AllKeyTypes, DEFAULT_DELIMITER, DEFAULT_TREE_SORTING, KeyTypes, MAX_HEI
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { bufferToString } from 'uiSrc/utils'
 import { useDisposableWebworker } from 'uiSrc/hooks'
+import { Database } from 'uiSrc/store'
 import { NodeMeta, TreeData, TreeNode } from './interfaces'
 import { Node } from '../node'
 import { MIN_NODE_WIDTH, PADDING_LEVEL } from '../../constants'
@@ -27,6 +28,7 @@ export interface Props {
   sorting?: SortOrder
   commonFilterType: Nullable<KeyTypes>
   statusSelected: Nullable<string>,
+  database: Database
   statusOpen: OpenedNodes
   webworkerFn: (...args: any) => any
   onStatusOpen?: (name: string, value: boolean) => void
@@ -47,6 +49,7 @@ const VirtualTree = (props: Props) => {
     statusOpen = {},
     statusSelected,
     loading,
+    database,
     deleting = false,
     sorting = DEFAULT_TREE_SORTING,
     commonFilterType = null,
@@ -100,15 +103,11 @@ const VirtualTree = (props: Props) => {
       elements.current = {}
       rerender({})
       runWebworker?.({ items: [], delimiter, sorting })
-      // todo: remove after testing
-      // setResult(webworkerFn?.({ items: [], delimiter, sorting }))
       return
     }
 
     setConstructingTree?.(true)
     runWebworker?.({ items, delimiter, sorting })
-    // todo: remove after testing
-    // setResult(webworkerFn?.({ items, delimiter, sorting }))
   }, [items, delimiter])
 
   const handleUpdateSelected = useCallback((name: RedisString, keyString: string, type: AllKeyTypes) => {
@@ -243,7 +242,7 @@ const VirtualTree = (props: Props) => {
         }
       }
     },
-    [statusSelected, statusOpen, rerenderState, containerWidth],
+    [statusSelected, statusOpen, rerenderState, containerWidth, database],
   )
 
   const containerHeight = isUndefined(innerRef.current?.clientHeight)

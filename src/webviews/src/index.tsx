@@ -18,6 +18,7 @@ import {
   processCliAction,
   refreshTreeAction,
   selectKeyAction,
+  refreshKeyAction,
 } from './actions'
 import { MonacoLanguages } from './components'
 
@@ -45,6 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Sidebar
       case VscodeMessageAction.CloseEula:
         useAppInfoStore.getState().setIsShowConcepts(false)
+        break
+      case VscodeMessageAction.RefreshKey:
+        refreshKeyAction(message)
         break
       case VscodeMessageAction.RefreshTree:
         refreshTreeAction(message)

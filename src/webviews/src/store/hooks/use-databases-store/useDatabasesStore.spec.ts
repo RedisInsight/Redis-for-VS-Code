@@ -310,19 +310,18 @@ describe('useDatabasesStore', () => {
     })
 
     describe('updateDatabase', () => {
-      it('call both updateDatabase and fetchDatabases when fetch is successed', async () => {
+      it('call both updateDatabase when fetch is successed', async () => {
         // Arrange
-        const responsePatchPayload = { status: 200 }
-        const responseGetPayload = { data: [databases[1]], status: 200 }
+        const responsePatchPayload = { status: 200, data: databases[1] }
 
-        apiService.get = vi.fn().mockResolvedValue(responseGetPayload)
+        const onSuccessMock = vi.fn()
         apiService.patch = vi.fn().mockResolvedValue(responsePatchPayload)
 
         // Act
-        updateDatabase(databases[1])
+        updateDatabase(databases[1], onSuccessMock)
         await waitForStack()
 
-        expect(useDatabasesStore.getState().data).toEqual(checkRediStack([databases[1]]))
+        expect(onSuccessMock).toHaveBeenCalledWith(databases[1])
         expect(useDatabasesStore.getState().loading).toEqual(false)
         expect(utils.showInformationMessage).toBeCalledWith('Database has been edited')
       })

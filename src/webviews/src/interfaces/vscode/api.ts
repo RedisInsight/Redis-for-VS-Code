@@ -26,13 +26,12 @@ export interface SelectKeyAction {
   }
 }
 
-export interface RefreshTreeAction {
-  action: VscodeMessageAction.RefreshTree
-  data: { key?: RedisString, type: SelectedKeyActionType, databaseId: string }
-}
-
 export interface DatabaseAction {
-  action: VscodeMessageAction.EditDatabase | VscodeMessageAction.AddKey | VscodeMessageAction.AddCli | VscodeMessageAction.OpenCli
+  action: VscodeMessageAction.EditDatabase
+  | VscodeMessageAction.AddKey
+  | VscodeMessageAction.AddCli
+  | VscodeMessageAction.OpenCli
+  | VscodeMessageAction.CloseEditDatabase
   data: {
     database: Database
   }
@@ -50,16 +49,23 @@ export interface SelectedKeyAction {
   VscodeMessageAction.RefreshTree |
   VscodeMessageAction.EditKeyName
   data: {
-    database: Database,
-    type: SelectedKeyActionType,
+    database: Database
+    type: SelectedKeyActionType
     keyInfo: {
-      key?: RedisString,
-      keyType?: KeyTypes,
-      newKey?: RedisString,
-      newKeyString?: string,
+      key?: RedisString
+      keyType?: KeyTypes
+      newKey?: RedisString
+      newKeyString?: string
       keyString?: string
       displayedKeyType?: string
     }
+  }
+}
+
+export interface RefreshAction {
+  action: VscodeMessageAction.RefreshKey
+  data: {
+    database?: Database
   }
 }
 
@@ -70,7 +76,6 @@ export interface SelectedKeyCloseAction {
 export interface NoDataAction {
   action: VscodeMessageAction.CloseAddDatabase
   | VscodeMessageAction.OpenAddDatabase
-  | VscodeMessageAction.CloseEditDatabase
 }
 
 export interface CloseAddKeyAction {
@@ -89,12 +94,12 @@ export interface UpdateSettingsDelimiterAction {
 }
 
 export interface SaveAppInfoAction {
-  action: VscodeMessageAction.SaveAppInfo,
+  action: VscodeMessageAction.SaveAppInfo
   data: Partial<AppInfoStore>
 }
 
 export interface ShowEulaAction {
-  action: VscodeMessageAction.ShowEula,
+  action: VscodeMessageAction.ShowEula
 }
 
 export interface CloseEulaAction {
@@ -114,4 +119,5 @@ export type PostMessage =
   SaveAppInfoAction |
   ShowEulaAction |
   CloseEulaAction |
-  ResetSelectedKeyAction
+  ResetSelectedKeyAction |
+  RefreshAction

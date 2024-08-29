@@ -165,6 +165,11 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('RedisForVSCode.editDatabaseClose', (args) => {
       WebviewPanel.getInstance({ viewId: ViewId.EditDatabase }).dispose()
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
+
+      const keyDetailsWebview = WebviewPanel.instances[ViewId.Key]
+      if (keyDetailsWebview) {
+        keyDetailsWebview.postMessage({ action: 'RefreshKey', data: args })
+      }
     }),
 
     vscode.commands.registerCommand('RedisForVSCode.closeAddKeyAndRefresh', (args) => {

@@ -1,4 +1,5 @@
 export { selectKeyAction } from './selectKeyAction'
 export { addKeyAction } from './addKeyAction'
 export { refreshTreeAction } from './refreshTreeAction'
+export { refreshKeyAction } from './refreshKeyAction'
 export { processCliAction } from './processCliAction'
