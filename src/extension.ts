@@ -168,18 +168,18 @@ export async function activate(context: vscode.ExtensionContext) {
 
       const keyDetailsWebview = WebviewPanel.instances[ViewId.Key]
       if (keyDetailsWebview) {
-        keyDetailsWebview.postMessage({ action: 'RefreshKey', data: args })
+        keyDetailsWebview.postMessage({ action: 'SetDatabase', data: args })
       }
     }),
 
     vscode.commands.registerCommand('RedisForVSCode.closeAddKeyAndRefresh', (args) => {
       WebviewPanel.getInstance({ viewId: ViewId.AddKey })?.dispose()
-      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
+      sidebarProvider.view?.webview.postMessage({ action: 'SetSelectedKeyAction', data: args })
       vscode.commands.executeCommand('RedisForVSCode.openKey', { action: 'SelectKey', data: args })
     }),
 
     vscode.commands.registerCommand('RedisForVSCode.closeKeyAndRefresh', (args) => {
-      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
+      sidebarProvider.view?.webview.postMessage({ action: 'SetSelectedKeyAction', data: args })
       WebviewPanel.getInstance({ viewId: ViewId.Key })?.dispose()
     }),
 
@@ -188,7 +188,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('RedisForVSCode.editKeyName', (args) => {
-      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
+      sidebarProvider.view?.webview.postMessage({ action: 'SetSelectedKeyAction', data: args })
       const title = getTitleForKey(args.keyInfo?.displayedKeyType, args.keyInfo?.newKeyString)
       WebviewPanel.getInstance({ viewId: ViewId.Key }).setTitle(title)
     }),

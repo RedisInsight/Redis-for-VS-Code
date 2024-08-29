@@ -26,12 +26,18 @@ export interface SelectKeyAction {
   }
 }
 
-export interface DatabaseAction {
+export interface SetDatabaseAction {
   action: VscodeMessageAction.EditDatabase
   | VscodeMessageAction.AddKey
-  | VscodeMessageAction.AddCli
-  | VscodeMessageAction.OpenCli
   | VscodeMessageAction.CloseEditDatabase
+  | VscodeMessageAction.RefreshTree
+  | VscodeMessageAction.SetDatabase
+  data: {
+    database: Database
+  }
+}
+export interface CliAction {
+  action: VscodeMessageAction.AddCli
   data: {
     database: Database
   }
@@ -46,7 +52,7 @@ export interface SelectedKeyAction {
   action:
   VscodeMessageAction.CloseKeyAndRefresh |
   VscodeMessageAction.CloseAddKeyAndRefresh |
-  VscodeMessageAction.RefreshTree |
+  VscodeMessageAction.SetSelectedKeyAction |
   VscodeMessageAction.EditKeyName
   data: {
     database: Database
@@ -59,13 +65,6 @@ export interface SelectedKeyAction {
       keyString?: string
       displayedKeyType?: string
     }
-  }
-}
-
-export interface RefreshAction {
-  action: VscodeMessageAction.RefreshKey
-  data: {
-    database?: Database
   }
 }
 
@@ -108,7 +107,7 @@ export interface CloseEulaAction {
 
 export type PostMessage =
   SelectKeyAction |
-  DatabaseAction |
+  SetDatabaseAction |
   InformationMessageAction |
   SelectedKeyAction |
   NoDataAction |
@@ -120,4 +119,4 @@ export type PostMessage =
   ShowEulaAction |
   CloseEulaAction |
   ResetSelectedKeyAction |
-  RefreshAction
+  CliAction
