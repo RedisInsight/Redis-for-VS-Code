@@ -370,6 +370,15 @@ jobs:
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
+  license-checker:
+    jobs:
+      - licenses-check:
+          name: Run License checker
+          filters:
+            branches:
+              only:
+                - /^license.*/
+
   frontend-tests:
     <<: *ignore-for-manual-build
     jobs:
