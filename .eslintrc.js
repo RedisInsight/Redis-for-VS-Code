@@ -11,7 +11,6 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'airbnb-base',
     'airbnb-typescript',
-    'plugin:sonarjs/recommended',
     // TODO: in a separate pull request enable and fix all classes sorting issues for tailwind
     // 'plugin:tailwindcss/recommended',
   ],
@@ -88,9 +87,6 @@ module.exports = {
     'prefer-regex-literals': 'off',
     'react/display-name': 'off',
     'no-promise-executor-return': 'off',
-    'sonarjs/no-duplicate-string': 'off',
-    'sonarjs/cognitive-complexity': [1, 20],
-    'sonarjs/no-identical-functions': [0, 5],
     'import/order': [
       1,
       {

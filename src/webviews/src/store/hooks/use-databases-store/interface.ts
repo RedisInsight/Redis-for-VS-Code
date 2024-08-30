@@ -1,4 +1,4 @@
-import { ConnectionType } from 'uiSrc/constants'
+import { ConnectionType, KeyValueCompressor } from 'uiSrc/constants'
 import { Nullable } from 'uiSrc/interfaces'
 
 export interface DatabasesStore {
@@ -19,6 +19,7 @@ export interface Database {
   endpoints?: Nullable<Endpoint[]>
   connectionType?: ConnectionType
   lastConnection?: Nullable<Date>
+  compressor?: Nullable<KeyValueCompressor>
   password?: Nullable<string>
   username?: Nullable<string>
   name?: string
@@ -104,7 +105,9 @@ export interface DatabasesActions {
   processDatabase: () => void
   processDatabaseFinal: () => void
   loadDatabasesSuccess: (data: Database[]) => void
+  setDatabaseToList: (database: Database) => void
   setEditDatabase: (data: Database) => void
+  addDatabaseToList: (data: Database) => void
   setConnectedDatabase: (data: Database) => void
   resetConnectedDatabase: () => void
   getDatabaseOverviewSuccess: (data: DatabaseOverview) => void

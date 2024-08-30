@@ -26,13 +26,20 @@ export interface SelectKeyAction {
   }
 }
 
-export interface RefreshTreeAction {
-  action: VscodeMessageAction.RefreshTree
-  data: { key?: RedisString, type: SelectedKeyActionType, databaseId: string }
+export interface SetDatabaseAction {
+  action: VscodeMessageAction.EditDatabase
+  | VscodeMessageAction.AddKey
+  | VscodeMessageAction.CloseEditDatabase
+  | VscodeMessageAction.RefreshTree
+  | VscodeMessageAction.SetDatabase
+  | VscodeMessageAction.CloseAddDatabase
+  | VscodeMessageAction.AddDatabase
+  data: {
+    database: Database
+  }
 }
-
-export interface DatabaseAction {
-  action: VscodeMessageAction.EditDatabase | VscodeMessageAction.AddKey | VscodeMessageAction.AddCli | VscodeMessageAction.OpenCli
+export interface CliAction {
+  action: VscodeMessageAction.AddCli
   data: {
     database: Database
   }
@@ -47,16 +54,16 @@ export interface SelectedKeyAction {
   action:
   VscodeMessageAction.CloseKeyAndRefresh |
   VscodeMessageAction.CloseAddKeyAndRefresh |
-  VscodeMessageAction.RefreshTree |
+  VscodeMessageAction.SetSelectedKeyAction |
   VscodeMessageAction.EditKeyName
   data: {
-    database: Database,
-    type: SelectedKeyActionType,
+    database: Database
+    type: SelectedKeyActionType
     keyInfo: {
-      key?: RedisString,
-      keyType?: KeyTypes,
-      newKey?: RedisString,
-      newKeyString?: string,
+      key?: RedisString
+      keyType?: KeyTypes
+      newKey?: RedisString
+      newKeyString?: string
       keyString?: string
       displayedKeyType?: string
     }
@@ -68,9 +75,7 @@ export interface SelectedKeyCloseAction {
 }
 
 export interface NoDataAction {
-  action: VscodeMessageAction.CloseAddDatabase
-  | VscodeMessageAction.OpenAddDatabase
-  | VscodeMessageAction.CloseEditDatabase
+  action: VscodeMessageAction.OpenAddDatabase
 }
 
 export interface CloseAddKeyAction {
@@ -89,12 +94,12 @@ export interface UpdateSettingsDelimiterAction {
 }
 
 export interface SaveAppInfoAction {
-  action: VscodeMessageAction.SaveAppInfo,
+  action: VscodeMessageAction.SaveAppInfo
   data: Partial<AppInfoStore>
 }
 
 export interface ShowEulaAction {
-  action: VscodeMessageAction.ShowEula,
+  action: VscodeMessageAction.ShowEula
 }
 
 export interface CloseEulaAction {
@@ -103,7 +108,7 @@ export interface CloseEulaAction {
 
 export type PostMessage =
   SelectKeyAction |
-  DatabaseAction |
+  SetDatabaseAction |
   InformationMessageAction |
   SelectedKeyAction |
   NoDataAction |
@@ -114,4 +119,5 @@ export type PostMessage =
   SaveAppInfoAction |
   ShowEulaAction |
   CloseEulaAction |
-  ResetSelectedKeyAction
+  ResetSelectedKeyAction |
+  CliAction

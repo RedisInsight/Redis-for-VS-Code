@@ -1,13 +1,14 @@
-import { VscodeMessageAction } from 'uiSrc/constants'
-import { PostMessage } from 'uiSrc/interfaces'
-import { fetchDatabaseOverview, fetchKeyInfo, setInitialStateByType, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
+import { SelectKeyAction } from 'uiSrc/interfaces'
+import {
+  fetchDatabaseOverview,
+  fetchKeyInfo,
+  setInitialStateByType,
+  useDatabasesStore,
+  useSelectedKeyStore,
+} from 'uiSrc/store'
 import { TelemetryEvent, isEqualBuffers, sendEventTelemetry } from 'uiSrc/utils'
 
-export const selectKeyAction = (message: PostMessage) => {
-  if (message.action !== VscodeMessageAction.SelectKey) {
-    return
-  }
-
+export const selectKeyAction = (message: SelectKeyAction) => {
   const { keyInfo, database } = message?.data
   const { key } = keyInfo || {}
   const prevKey = useSelectedKeyStore.getState().data?.name

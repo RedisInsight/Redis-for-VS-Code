@@ -17,7 +17,7 @@ export const helpTexts = {
         target="_blank"
         data-test-subj="no-json-module-info"
       >
-        {l10n.t('here.')}
+        {l10n.t('here. ')}
       </Link>
       {l10n.t('You can also create a ')}
       <Link

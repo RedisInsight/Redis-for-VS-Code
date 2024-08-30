@@ -32,10 +32,9 @@ import {
   sendEventTelemetry,
   TelemetryEvent,
   getColumnWidth,
+  decompressingBuffer,
 } from 'uiSrc/utils'
 import { VirtualTable } from 'uiSrc/components'
-// import { getColumnWidth } from 'uiSrc/components/virtual-grid'
-// import { decompressingBuffer } from 'uiSrc/utils/decompressors'
 import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { Nullable } from 'uiSrc/interfaces'
 import { EditableTextArea } from 'uiSrc/modules/key-details/shared'
@@ -60,7 +59,11 @@ export interface Props {
 const ListDetailsTable = (props: Props) => {
   const { isFooterOpen } = props
 
-  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
+  const { databaseId, compressor } = useDatabasesStore((state) => ({
+    databaseId: state.connectedDatabase?.id,
+    compressor: state.connectedDatabase?.compressor ?? null,
+  }))
+
   const { [KeyTypes.List]: listSizes } = useContextInContext((state) => state.browser.keyDetailsSizes)
 
   const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
@@ -257,8 +260,7 @@ const ListDetailsTable = (props: Props) => {
         expanded: boolean = false,
         rowIndex = 0,
       ) {
-        // const { value: decompressedElementItem } = decompressingBuffer(elementItem, compressor)
-        const decompressedElementItem = elementItem
+        const { value: decompressedElementItem } = decompressingBuffer(elementItem, compressor)
         const element = bufferToString(elementItem)
         const { value: formattedValue, isValid } = formattingBuffer(decompressedElementItem, viewFormatProp, { expanded })
 

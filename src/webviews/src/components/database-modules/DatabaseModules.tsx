@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-nested-template-literals */
 import React from 'react'
 import cx from 'classnames'
 import Popup from 'reactjs-popup'
@@ -39,7 +38,6 @@ const DatabaseModules = React.memo((props: Props) => {
     const { abbreviation = '', name = moduleName } = getModule(moduleName)
 
     const moduleAlias = truncateText(name, 50)
-    // eslint-disable-next-line sonarjs/no-nested-template-literals
     let icon = DEFAULT_MODULES_INFO[propName as RedisDefaultModules]?.icon
     const content = `${moduleAlias}${semanticVersion || version ? ` v. ${semanticVersion || version}` : ''}`
 
