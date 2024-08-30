@@ -18,6 +18,7 @@ import {
   selectKeyAction,
   setDatabaseAction,
   refreshTreeAction,
+  addDatabaseAction,
 } from './actions'
 import { MonacoLanguages } from './components'
 
@@ -51,6 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
         break
       case VscodeMessageAction.RefreshTree:
         refreshTreeAction(message)
+        break
+      case VscodeMessageAction.AddDatabase:
+        addDatabaseAction(message)
         break
       case VscodeMessageAction.EditDatabase:
         fetchCerts(() => {

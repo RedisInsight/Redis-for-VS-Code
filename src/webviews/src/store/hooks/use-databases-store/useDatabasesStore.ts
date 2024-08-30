@@ -59,6 +59,10 @@ export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
       state.data = databases
     }),
 
+    addDatabaseToList: (database: Database) => set((state) => {
+      state.data.push(database)
+    }),
+
     setEditDatabase: (editDatabase: Database) => set({ editDatabase }),
     setConnectedDatabase: (connectedDatabase: Database) => set({ connectedDatabase }),
     resetConnectedDatabase: () => set({ connectedDatabase: cloneDeep(initialDatabasesState.connectedDatabase) }),
@@ -96,7 +100,7 @@ export const fetchDatabases = (onSuccess?: () => void) => {
 export const createDatabaseStandalone = (
   payload: Database,
   onRedirectToSentinel?: () => void,
-  onSuccess?: (id: string) => void,
+  onSuccess?: (database: Database) => void,
 ) => {
   useDatabasesStore.setState(async (state) => {
     state.processDatabase()
@@ -108,7 +112,7 @@ export const createDatabaseStandalone = (
 
         showInformationMessage(successMessages.ADDED_NEW_DATABASE(payload.name ?? '').title)
 
-        onSuccess?.(data.id)
+        onSuccess?.(data)
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))

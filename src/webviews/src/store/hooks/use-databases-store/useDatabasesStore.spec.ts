@@ -142,6 +142,26 @@ describe('useDatabasesStore', () => {
     })
   })
 
+  describe('addDatabaseToList', () => {
+    it('should properly add database to the list of databases', () => {
+      const { addDatabaseToList, loadDatabasesSuccess } = useDatabasesStore.getState()
+      const mockCompressor = 'zstd'
+
+      // set databases
+      loadDatabasesSuccess(databases)
+
+      const database = {
+        ...databases[1],
+        compressor: mockCompressor,
+      }
+
+      addDatabaseToList(database)
+
+      // Assert
+      expect(useDatabasesStore.getState().data[databases.length].compressor).toEqual(mockCompressor)
+    })
+  })
+
   describe('thunks', () => {
     describe('fetchDatabases', () => {
       it('call both fetchDatabases and loadDatabasesSuccess when fetch is successed', async () => {

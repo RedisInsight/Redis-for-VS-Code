@@ -107,6 +107,7 @@ export interface DatabasesActions {
   loadDatabasesSuccess: (data: Database[]) => void
   setDatabaseToList: (database: Database) => void
   setEditDatabase: (data: Database) => void
+  addDatabaseToList: (data: Database) => void
   setConnectedDatabase: (data: Database) => void
   resetConnectedDatabase: () => void
   getDatabaseOverviewSuccess: (data: DatabaseOverview) => void

@@ -32,6 +32,8 @@ export interface SetDatabaseAction {
   | VscodeMessageAction.CloseEditDatabase
   | VscodeMessageAction.RefreshTree
   | VscodeMessageAction.SetDatabase
+  | VscodeMessageAction.CloseAddDatabase
+  | VscodeMessageAction.AddDatabase
   data: {
     database: Database
   }
@@ -73,8 +75,7 @@ export interface SelectedKeyCloseAction {
 }
 
 export interface NoDataAction {
-  action: VscodeMessageAction.CloseAddDatabase
-  | VscodeMessageAction.OpenAddDatabase
+  action: VscodeMessageAction.OpenAddDatabase
 }
 
 export interface CloseAddKeyAction {
