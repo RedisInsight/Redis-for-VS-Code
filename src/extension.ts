@@ -159,7 +159,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('RedisForVSCode.addDatabaseClose', (args) => {
       WebviewPanel.getInstance({ viewId: ViewId.AddDatabase }).dispose()
-      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree', data: args })
+      sidebarProvider.view?.webview.postMessage({ action: 'AddDatabase', data: args })
     }),
 
     vscode.commands.registerCommand('RedisForVSCode.editDatabaseClose', (args) => {

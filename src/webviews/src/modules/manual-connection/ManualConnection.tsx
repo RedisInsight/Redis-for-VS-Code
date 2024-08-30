@@ -64,8 +64,8 @@ const ManualConnection = (props: Props) => {
     createDatabaseStandalone(payload, onMastersSentinelFetched, onDbAdded)
   }
 
-  const onDbAdded = () => {
-    vscodeApi.postMessage({ action: VscodeMessageAction.CloseAddDatabase })
+  const onDbAdded = (database: Database) => {
+    vscodeApi.postMessage({ action: VscodeMessageAction.CloseAddDatabase, data: { database } })
   }
 
   const onDbEdited = (database: Database) => {

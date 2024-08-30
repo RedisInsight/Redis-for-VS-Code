@@ -53,7 +53,7 @@ export const handleMessage = async (message: any = {}) => {
       vscode.commands.executeCommand('RedisForVSCode.addDatabase')
       break
     case 'CloseAddDatabase':
-      vscode.commands.executeCommand('RedisForVSCode.addDatabaseClose')
+      vscode.commands.executeCommand('RedisForVSCode.addDatabaseClose', message.data)
       break
     case 'CloseEditDatabase':
       vscode.commands.executeCommand('RedisForVSCode.editDatabaseClose', message.data)
