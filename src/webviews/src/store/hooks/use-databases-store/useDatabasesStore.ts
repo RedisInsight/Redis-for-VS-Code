@@ -81,8 +81,8 @@ export const fetchDatabases = (onSuccess?: () => void) => {
 
       if (isStatusSuccessful(status)) {
         localStorageService.set(StorageItem.databasesCount, data?.length)
-        onSuccess?.()
         state.loadDatabasesSuccess(data)
+        onSuccess?.()
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))
@@ -177,16 +177,15 @@ export const fetchDatabaseById = async (databaseId: string, onSuccess?: (data: D
   return null
 }
 
-export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?: () => void) => {
+export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?: (database: Database) => void) => {
   useDatabasesStore.setState(async (state) => {
     state.processDatabase()
     try {
-      const { status } = await apiService.patch(`${ApiEndpoints.DATABASES}/${id}`, payload)
+      const { status, data: database } = await apiService.patch<Database>(`${ApiEndpoints.DATABASES}/${id}`, payload)
 
       if (isStatusSuccessful(status)) {
         showInformationMessage(successMessages.EDITED_NEW_DATABASE(payload.name ?? '').title)
-        fetchDatabases()
-        onSuccess?.()
+        onSuccess?.(database)
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))

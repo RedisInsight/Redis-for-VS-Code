@@ -1,15 +1,8 @@
-import { VscodeMessageAction } from 'uiSrc/constants'
-import { PostMessage } from 'uiSrc/interfaces'
+import { CliAction } from 'uiSrc/interfaces'
 import { addCli } from 'uiSrc/modules/cli/hooks/cli-settings/useCliSettingsThunks'
 import { useDatabasesStore } from 'uiSrc/store'
 
-export const processCliAction = (message: PostMessage) => {
-  if (
-    message.action !== VscodeMessageAction.AddCli
-    && message.action !== VscodeMessageAction.OpenCli) {
-    return
-  }
-
+export const processCliAction = (message: CliAction) => {
   const prevDatabaseId = useDatabasesStore.getState().connectedDatabase?.id
   const database = message?.data?.database
 

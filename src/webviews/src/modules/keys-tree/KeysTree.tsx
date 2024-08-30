@@ -169,7 +169,7 @@ export const KeysTree = ({ database }: Props) => {
         items={items}
         delimiter={delimiter}
         sorting={sorting}
-        // deleting={deleting}
+        database={database}
         statusSelected={selectedKeyName}
         statusOpen={statusOpen}
         loading={loading || constructingTree}

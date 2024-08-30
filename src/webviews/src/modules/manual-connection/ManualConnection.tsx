@@ -68,8 +68,11 @@ const ManualConnection = (props: Props) => {
     vscodeApi.postMessage({ action: VscodeMessageAction.CloseAddDatabase })
   }
 
-  const onDbEdited = () => {
-    vscodeApi.postMessage({ action: VscodeMessageAction.CloseEditDatabase })
+  const onDbEdited = (database: Database) => {
+    vscodeApi.postMessage({
+      action: VscodeMessageAction.CloseEditDatabase,
+      data: { database },
+    })
   }
 
   const handleEditDatabase = (payload: any) => {

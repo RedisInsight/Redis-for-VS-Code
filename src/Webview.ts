@@ -11,6 +11,7 @@ type WebviewOptions = {
   styleUri?: vscode.Uri
   nonce?: string
   message?: {
+    action?: string
     data: object
   }
   column?: vscode.ViewColumn
@@ -113,6 +114,7 @@ abstract class Webview {
 
   public abstract update(opts?: WebviewOptions): void
   public abstract setTitle(title: string): void
+  public abstract postMessage(message: any): void
 }
 
 export class WebviewPanel extends Webview implements vscode.Disposable {
@@ -209,6 +211,10 @@ export class WebviewPanel extends Webview implements vscode.Disposable {
 
   public setTitle(title: string) {
     this.panel.title = title
+  }
+
+  public postMessage(message: any) {
+    this.panel.webview.postMessage(message)
   }
 
   public dispose() {

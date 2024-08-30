@@ -5,19 +5,19 @@ import { MemoryRouter as Router } from 'react-router-dom'
 import {
   useSelectedKeyStore,
   fetchEditedDatabase,
-  Database,
   fetchCerts,
 } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
-import { PostMessage } from 'uiSrc/interfaces'
+import { PostMessage, SelectKeyAction, SetDatabaseAction } from 'uiSrc/interfaces'
 import { VscodeMessageAction } from 'uiSrc/constants'
 import { useAppInfoStore } from './store/hooks/use-app-info-store/useAppInfoStore'
 import {
-  addKeyAction,
   processCliAction,
-  refreshTreeAction,
+  setSelectedKeyAction,
   selectKeyAction,
+  setDatabaseAction,
+  refreshTreeAction,
 } from './actions'
 import { MonacoLanguages } from './components'
 
@@ -33,10 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     switch (message.action) {
       // Key details
       case VscodeMessageAction.SelectKey:
-        selectKeyAction(message)
-        break
-      case VscodeMessageAction.AddKey:
-        addKeyAction(message)
+        selectKeyAction(message as SelectKeyAction)
         break
       case VscodeMessageAction.ResetSelectedKey:
         useSelectedKeyStore.getState().resetSelectedKeyStore()
@@ -46,12 +43,18 @@ document.addEventListener('DOMContentLoaded', () => {
       case VscodeMessageAction.CloseEula:
         useAppInfoStore.getState().setIsShowConcepts(false)
         break
+      case VscodeMessageAction.SetDatabase:
+        setDatabaseAction(message as SetDatabaseAction)
+        break
+      case VscodeMessageAction.SetSelectedKeyAction:
+        setSelectedKeyAction(message)
+        break
       case VscodeMessageAction.RefreshTree:
         refreshTreeAction(message)
         break
       case VscodeMessageAction.EditDatabase:
         fetchCerts(() => {
-          fetchEditedDatabase(message?.data?.database)
+          fetchEditedDatabase(message?.data?.database as SetDatabaseAction['data']['database'])
         })
         break
 
@@ -65,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // CLI
       case VscodeMessageAction.AddCli:
-      case VscodeMessageAction.OpenCli:
         processCliAction(message)
         break
       default:
