@@ -84,7 +84,7 @@ export async function activate(context: vscode.ExtensionContext) {
         viewId: ViewId.AddKey,
         handleMessage: (message) => handleMessage(message),
         message: args,
-      })
+      }).postMessage({ action: 'SetDatabase', data: { database: args.data?.database } })
     }),
 
     vscode.commands.registerCommand('RedisForVSCode.addDatabase', (args) => {
