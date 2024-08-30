@@ -41,7 +41,8 @@
     "**/yarn.lock": true,
     "*.{css,sass,scss}.d.ts": true,
     "pnpm-lock.yaml": true,
-    "**/pnpm-lock.yaml": true
+    "**/pnpm-lock.yaml": true,
+    "**/test-extensions": true
   },
   "cSpell.words": ["githubocto", "tailwindcss", "webviews", "zustand"],
   "testing.automaticallyOpenPeekView": "never",

@@ -3,7 +3,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { useLocation } from 'react-router-dom'
 import { isDifferentConsentsExists } from 'uiSrc/utils'
-import { fetchDatabases } from 'uiSrc/store'
+import { fetchDatabases, useDatabasesStore } from 'uiSrc/store'
 import { fetchAppInfo, useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 import { vscodeApi } from 'uiSrc/services'
 import { VscodeMessageAction } from 'uiSrc/constants'
@@ -22,6 +22,10 @@ export const Config = () => {
   useEffect(() => {
     appInfo.setInitialStateAppInfo()
     fetchDatabases()
+
+    if (window.ri?.database) {
+      useDatabasesStore.getState().setConnectedDatabase(window.ri.database)
+    }
 
     if (window.ri?.appInfo) {
       appInfo.setAppInfo(window.ri?.appInfo)

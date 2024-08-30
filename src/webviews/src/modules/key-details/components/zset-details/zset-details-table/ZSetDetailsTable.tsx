@@ -17,6 +17,7 @@ import {
   formattingBuffer,
   isEqualBuffers,
   validateScoreNumber,
+  decompressingBuffer,
 } from 'uiSrc/utils'
 import { StopPropagation } from 'uiSrc/components/virtual-table'
 import {
@@ -37,7 +38,6 @@ import {
 import { Nullable, RedisString } from 'uiSrc/interfaces'
 import { useContextApi, useContextInContext, useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 
-import { Tooltip } from 'uiSrc/ui'
 import { EditableInput } from 'uiSrc/modules/key-details/shared'
 import {
   deleteZSetMembers,
@@ -70,7 +70,10 @@ export interface Props {
 const ZSetDetailsTable = (props: Props) => {
   const { isFooterOpen, onRemoveKey } = props
 
-  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
+  const { databaseId, compressor } = useDatabasesStore((state) => ({
+    databaseId: state.connectedDatabase?.id,
+    compressor: state.connectedDatabase?.compressor ?? null,
+  }))
 
   const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
 
@@ -278,8 +281,7 @@ const ZSetDetailsTable = (props: Props) => {
       className: 'p-0',
       headerClassName: 'value-table-separate-border',
       render: function Name(_name: string, { name: nameItem }: IZsetMember, expanded?: boolean) {
-        // const { value: decompressedNameItem } = decompressingBuffer(nameItem, compressor)
-        const decompressedNameItem = nameItem
+        const { value: decompressedNameItem } = decompressingBuffer(nameItem, compressor)
         const name = bufferToString(nameItem)
         const { value } = formattingBuffer(decompressedNameItem, viewFormat, { expanded })
         const cellContent = (value as string)?.substring?.(0, 200) ?? value

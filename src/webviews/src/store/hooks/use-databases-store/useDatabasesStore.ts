@@ -17,6 +17,7 @@ import {
   showErrorMessage,
   showInformationMessage,
 } from 'uiSrc/utils'
+import { Nullable } from 'uiSrc/interfaces'
 import { Database, DatabaseOverview, DatabasesActions, DatabasesStore } from './interface'
 
 export const initialDatabasesState: DatabasesStore = {
@@ -46,6 +47,22 @@ export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
       ) as Database[] || null
     }),
 
+    setDatabaseToList: (databaseFull: Database) => set((state) => {
+      const databases = state.data.map((database) => {
+        if (database.id === databaseFull.id) {
+          return { ...database, ...databaseFull }
+        }
+
+        return database
+      })
+
+      state.data = databases
+    }),
+
+    addDatabaseToList: (database: Database) => set((state) => {
+      state.data.push(database)
+    }),
+
     setEditDatabase: (editDatabase: Database) => set({ editDatabase }),
     setConnectedDatabase: (connectedDatabase: Database) => set({ connectedDatabase }),
     resetConnectedDatabase: () => set({ connectedDatabase: cloneDeep(initialDatabasesState.connectedDatabase) }),
@@ -68,8 +85,8 @@ export const fetchDatabases = (onSuccess?: () => void) => {
 
       if (isStatusSuccessful(status)) {
         localStorageService.set(StorageItem.databasesCount, data?.length)
-        onSuccess?.()
         state.loadDatabasesSuccess(data)
+        onSuccess?.()
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))
@@ -83,7 +100,7 @@ export const fetchDatabases = (onSuccess?: () => void) => {
 export const createDatabaseStandalone = (
   payload: Database,
   onRedirectToSentinel?: () => void,
-  onSuccess?: (id: string) => void,
+  onSuccess?: (database: Database) => void,
 ) => {
   useDatabasesStore.setState(async (state) => {
     state.processDatabase()
@@ -95,7 +112,7 @@ export const createDatabaseStandalone = (
 
         showInformationMessage(successMessages.ADDED_NEW_DATABASE(payload.name ?? '').title)
 
-        onSuccess?.(data.id)
+        onSuccess?.(data)
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))
@@ -149,16 +166,30 @@ export const fetchEditedDatabase = (database: Database, onSuccess?: () => void) 
   })
 }
 
-export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?: () => void) => {
+export const fetchDatabaseById = async (databaseId: string, onSuccess?: (data: Database) => void): Promise<Nullable<Database>> => {
+  try {
+    const { data, status } = await apiService.get<Database>(`${ApiEndpoints.DATABASES}/${databaseId}`)
+
+    if (isStatusSuccessful(status)) {
+      onSuccess?.(data)
+      return data
+    }
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
+  }
+
+  return null
+}
+
+export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?: (database: Database) => void) => {
   useDatabasesStore.setState(async (state) => {
     state.processDatabase()
     try {
-      const { status } = await apiService.patch(`${ApiEndpoints.DATABASES}/${id}`, payload)
+      const { status, data: database } = await apiService.patch<Database>(`${ApiEndpoints.DATABASES}/${id}`, payload)
 
       if (isStatusSuccessful(status)) {
         showInformationMessage(successMessages.EDITED_NEW_DATABASE(payload.name ?? '').title)
-        fetchDatabases()
-        onSuccess?.()
+        onSuccess?.(database)
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))
@@ -170,7 +201,7 @@ export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?
 
 export function checkConnectToDatabase(
   id: string = '',
-  onSuccessAction?: (id: string) => void,
+  onSuccessAction?: (database: Database) => void,
   onFailAction?: () => void,
   resetInstance: boolean = true,
 ) {
@@ -181,7 +212,9 @@ export function checkConnectToDatabase(
       const { status } = await apiService.get(`${ApiEndpoints.DATABASES}/${id}/connect`)
 
       if (isStatusSuccessful(status)) {
-        onSuccessAction?.(id)
+        const database = await fetchDatabaseById(id)
+        state.setDatabaseToList(database!)
+        onSuccessAction?.(database!)
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))

@@ -1,11 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import {
-  before,
-  after,
-  afterEach,
-  EditorView,
-} from 'vscode-extension-tester'
+import { before, after, afterEach, EditorView } from 'vscode-extension-tester'
 import {
   HashKeyDetailsView,
   TreeView,
@@ -16,9 +11,13 @@ import {
   AddStringKeyView,
   JsonKeyDetailsView,
   AddJsonKeyView,
+  CliViewPanel,
 } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
+import {
+  DatabaseAPIRequests,
+  KeyAPIRequests,
+} from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import {
   HashKeyParameters,
@@ -36,6 +35,7 @@ import {
 } from '@e2eSrc/helpers/common-actions'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { KeyTypesShort } from '@e2eSrc/helpers/constants'
+import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 
 let keyName: string
 const keyValueBefore = 'ValueBeforeEdit!'
@@ -51,6 +51,9 @@ describe('Edit Key values verification', () => {
   let keyDetailsView: KeyDetailsView
   let addStringKeyView: AddStringKeyView
   let addJsonKeyView: AddJsonKeyView
+  let cliViewPanel: CliViewPanel
+
+  let keyNames: string[] = []
 
   before(async () => {
     hashKeyDetailsView = new HashKeyDetailsView()
@@ -62,6 +65,7 @@ describe('Edit Key values verification', () => {
     keyDetailsView = new KeyDetailsView()
     addStringKeyView = new AddStringKeyView()
     addJsonKeyView = new AddJsonKeyView()
+    cliViewPanel = new CliViewPanel()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -77,6 +81,12 @@ describe('Edit Key values verification', () => {
       keyName,
       Config.ossStandaloneConfig.databaseName,
     )
+    for (const key of keyNames) {
+      await KeyAPIRequests.deleteKeyIfExistsApi(
+        key,
+        Config.ossStandaloneConfig.databaseName,
+      )
+    }
     await new EditorView().closeAllEditors()
     await NotificationActions.closeAllNotifications()
     await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
@@ -142,10 +152,7 @@ describe('Edit Key values verification', () => {
     // Open key details iframe
     await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
 
-    await sortedSetKeyDetailsView.editSortedSetKeyValue(
-      scoreAfter,
-      '0',
-    )
+    await sortedSetKeyDetailsView.editSortedSetKeyValue(scoreAfter, '0')
     let resultValue = await (
       await sortedSetKeyDetailsView.getElements(
         sortedSetKeyDetailsView.scoreSortedSetFieldsList,
@@ -270,5 +277,48 @@ describe('Edit Key values verification', () => {
         await keyDetailsView.getElementText(jsonKeyDetailsView.jsonKeyValue),
       ),
     ).eql(jsonValueAfter, 'Edited JSON value is incorrect')
+  })
+
+  it('Verify that user can see the message that data type not currently supported when open any of the unsupported data types', async function () {
+    keyNames = [
+      `stream-${Common.generateWord(10)}`,
+      `graph-${Common.generateWord(10)}`,
+      `timeSeries-${Common.generateWord(10)}`,
+      `bloom-${Common.generateWord(10)}`,
+    ]
+    const unsupportedTypeMessage = 'This data type is not currently supported.'
+
+    // Open CLI and create unsupported keys
+    await treeView.openCliByDatabaseName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+    await treeView.switchBack()
+    await CommonDriverExtension.driverSleep(1000)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
+    // Create Stream key
+    await cliViewPanel.executeCommand(`XADD ${keyNames[0]} * 'field' 'value'`)
+    // Create Graph key
+    await cliViewPanel.executeCommand(`GRAPH.QUERY ${keyNames[1]} "CREATE ()"`)
+    // Create TimeSeries key
+    await cliViewPanel.executeCommand(`TS.CREATE ${keyNames[2]}`)
+    // Create BloomFilter key
+    await cliViewPanel.executeCommand(`BF.RESERVE ${keyNames[3]} 0.001 50`)
+
+    // Verify that unsupported key type message is displayed
+    for (const key of keyNames) {
+      await treeView.switchBack()
+      await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+      // Refresh database
+      await treeView.refreshDatabaseByName(
+        Config.ossStandaloneConfig.databaseName,
+      )
+      await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(key)
+      expect(
+        await keyDetailsView.getElementText(keyDetailsView.unsupportedTypeMessage),
+      ).contains(
+        unsupportedTypeMessage,
+        'Unsupported key type message not displayed',
+      )
+    }
   })
 })

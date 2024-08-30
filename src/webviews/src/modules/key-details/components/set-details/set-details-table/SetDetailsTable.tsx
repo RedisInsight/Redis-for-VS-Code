@@ -14,6 +14,7 @@ import {
   TelemetryEvent,
   getMatchType,
   getColumnWidth,
+  decompressingBuffer,
 } from 'uiSrc/utils'
 import {
   KeyTypes,
@@ -52,7 +53,10 @@ export interface Props {
 export const SetDetailsTable = (props: Props) => {
   const { isFooterOpen, onRemoveKey } = props
 
-  const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
+  const { databaseId, compressor } = useDatabasesStore((state) => ({
+    databaseId: state.connectedDatabase?.id,
+    compressor: state.connectedDatabase?.compressor ?? null,
+  }))
 
   const viewFormatProp = useContextInContext((state) => state.browser.viewFormat)
 
@@ -181,8 +185,7 @@ export const SetDetailsTable = (props: Props) => {
       className: cx('value-table-separate-border', styles.cellBody),
       headerClassName: cx('value-table-separate-border', styles.cellHeader),
       render: function Name(_name: string, memberItem: RedisString, expanded: boolean = false) {
-        // const { value: decompressedMemberItem } = decompressingBuffer(memberItem, compressor)
-        const decompressedMemberItem = memberItem
+        const { value: decompressedMemberItem } = decompressingBuffer(memberItem, compressor)
         const member = bufferToString(memberItem || '')
         // Better to cut the long string, because it could affect virtual scroll performance
         const { value } = formattingBuffer(decompressedMemberItem, viewFormatProp, { expanded })
