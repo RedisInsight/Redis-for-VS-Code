@@ -39,8 +39,8 @@ aliases:
     run:
       name: Generate license file for all vscode dependencies
       command: |
-        npm i -g license-checker
-        license-checker --json --out licenses.json
+        sudo npm i -g license-checker
+        sudo license-checker --json --out licenses.json
       shell: /bin/bash
 
   licenses-generate-windows: &licensesGenerateWindows
