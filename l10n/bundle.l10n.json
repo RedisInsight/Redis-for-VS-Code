@@ -103,7 +103,7 @@
   "Key name*": "Key name*",
   "Encrypted data": "Encrypted data",
   "This database does not support the JSON data structure. Learn more about JSON support ": "This database does not support the JSON data structure. Learn more about JSON support ",
-  "here.": "here.",
+  "here. ": "here. ",
   "You can also create a ": "You can also create a ",
   "free Redis Cloud database": "free Redis Cloud database",
   " with built-in JSON support.": " with built-in JSON support.",
