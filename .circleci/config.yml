@@ -35,22 +35,6 @@ aliases:
     when:
       not: *manual-build-conditions
 
-  licenses-generate: &licensesGenerate
-    run:
-      name: Generate license file for all vscode dependencies
-      command: |
-        sudo npm i -g license-checker
-        sudo license-checker --json --out licenses.json
-      shell: /bin/bash
-
-  licenses-generate-windows: &licensesGenerateWindows
-    run:
-      name: Generate license file for all vscode dependencies
-      command: |
-        npm i -g license-checker
-        license-checker --json --out licenses.json
-      shell: powershell.exe
-
 orbs:
   node: circleci/node@5.3.0
   win: circleci/windows@5.0.0
@@ -195,7 +179,6 @@ jobs:
           name: Install dependencies
           command: |
             yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
-      - <<: *licensesGenerate
       - run:
           name: Build .vsix package
           command: |
@@ -205,13 +188,13 @@ jobs:
 
             if [ << parameters.env >> == 'prod' ]; then
               echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY'" >> $envFile
-              yarn package:prod --out ${packagePath}
+              yarn package:prod --target linux-x64 --out ${packagePath}
               exit 0;
             fi
 
             echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY_STAGE'" >> $envFile
             sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
-            yarn package:stage --out ${packagePath}
+            yarn package:stage --target linux-x64 --out ${packagePath}
       - persist_to_workspace:
           root: .
           paths:
@@ -245,7 +228,6 @@ jobs:
           command: |
             yarn install
           no_output_timeout: 15m
-      - <<: *licensesGenerate
       - run:
           name: Build .vsix package
           command: |
@@ -310,7 +292,6 @@ jobs:
             yarn install
           shell: bash.exe
           no_output_timeout: 15m
-      - <<: *licensesGenerateWindows
       - run:
           name: Build .vsix package
           command: |
@@ -320,12 +301,12 @@ jobs:
 
             if [ << parameters.env >> == 'prod' ]; then
               echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY'" >> $envFile
-              yarn package:prod --out ${packagePath}
+              yarn package:prod --target win32-x64 --out ${packagePath}
               exit 0;
             fi
 
             sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
-            yarn package:stage --out ${packagePath}
+            yarn package:stage --target win32-x64 --out ${packagePath}
           shell: bash.exe
           no_output_timeout: 20m
       - persist_to_workspace:
