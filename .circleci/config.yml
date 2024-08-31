@@ -188,13 +188,13 @@ jobs:
 
             if [ << parameters.env >> == 'prod' ]; then
               echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY'" >> $envFile
-              yarn package:prod --ignore-other-target-folders --target linux-x64 --out ${packagePath}
+              yarn package:prod --target linux-x64 --out ${packagePath}
               exit 0;
             fi
 
             echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY_STAGE'" >> $envFile
             sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
-            yarn package:stage --ignore-other-target-folders --target linux-x64 --out ${packagePath}
+            yarn package:stage --target linux-x64 --out ${packagePath}
       - persist_to_workspace:
           root: .
           paths:
@@ -239,27 +239,27 @@ jobs:
 
               echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY_STAGE'" >> $envFile
               sed -i '' "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
-              yarn package:stage --ignore-other-target-folders --target darwin-<< parameters.target >> --out ${packagePath}-<< parameters.target >>.vsix
+              yarn package:stage --target darwin-<< parameters.target >> --out ${packagePath}-<< parameters.target >>.vsix
               exit 0;
             fi
 
             if [ << parameters.env >> == 'prod' ]; then
               echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY'" >> $envFile
               yarn download:backend arm64
-              yarn package:prod --ignore-other-target-folders --target darwin-arm64 --out ${packagePath}-arm64.vsix
+              yarn package:prod --target darwin-arm64 --out ${packagePath}-arm64.vsix
 
               yarn download:backend x64
-              yarn package:prod --ignore-other-target-folders --target darwin-x64 --out ${packagePath}-x64.vsix
+              yarn package:prod --target darwin-x64 --out ${packagePath}-x64.vsix
               exit 0;
             fi
 
             echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY_STAGE'" >> $envFile
             sed -i '' "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
             yarn download:backend arm64
-            yarn package:stage --ignore-other-target-folders --target darwin-arm64 --out ${packagePath}-arm64.vsix
+            yarn package:stage --target darwin-arm64 --out ${packagePath}-arm64.vsix
 
             yarn download:backend x64
-            yarn package:stage --ignore-other-target-folders --target darwin-x64 --out ${packagePath}-x64.vsix
+            yarn package:stage --target darwin-x64 --out ${packagePath}-x64.vsix
       - persist_to_workspace:
           root: .
           paths:
@@ -301,12 +301,12 @@ jobs:
 
             if [ << parameters.env >> == 'prod' ]; then
               echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY'" >> $envFile
-              yarn package:prod --ignore-other-target-folders --target win32-x64 --out ${packagePath}
+              yarn package:prod --target win32-x64 --out ${packagePath}
               exit 0;
             fi
 
             sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
-            yarn package:stage --ignore-other-target-folders --target win32-x64 --out ${packagePath}
+            yarn package:stage --target win32-x64 --out ${packagePath}
           shell: bash.exe
           no_output_timeout: 20m
       - persist_to_workspace:
