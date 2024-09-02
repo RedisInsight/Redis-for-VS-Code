@@ -173,8 +173,6 @@ export const KeysTree = ({ database }: Props) => {
         statusSelected={selectedKeyName}
         statusOpen={statusOpen}
         loading={loading || constructingTree}
-        // commonFilterType={commonFilterType}
-        commonFilterType={null}
         setConstructingTree={setConstructingTree}
         webworkerFn={constructKeysToTree}
         onStatusSelected={handleStatusSelected}

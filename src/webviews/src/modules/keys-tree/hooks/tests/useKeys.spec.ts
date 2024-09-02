@@ -365,7 +365,6 @@ describe('useKeys', () => {
         // Act
         useKeysStore.getState().fetchKeysMetadataTree(
           data.map(({ name }, i) => ([i, name])) as any,
-          null,
           controller.signal,
           onSuccessMock,
         )

@@ -8,6 +8,7 @@ import { PopupActions, PopupPosition } from 'reactjs-popup/dist/types'
 
 import { RedisString } from 'uiSrc/interfaces'
 import { DEFAULT_POPOVER_MAX_WIDTH } from 'uiSrc/constants'
+import { RiButton } from 'uiSrc/ui'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -76,15 +77,14 @@ const PopoverDelete = (props: Props) => {
         handleButtonClick?.()
       }}
       trigger={(open) => (
-        <VSCodeButton
-          appearance={!triggerText ? 'icon' : 'primary'}
+        <RiButton
           disabled={disabled}
           className={cx(styles.trigger, triggerClassName, { '!flex': open })}
           aria-label="remove item"
           data-testid={testid ? `${testid}-trigger` : 'remove-trigger'}
         >
           {triggerText || <VscTrash />}
-        </VSCodeButton>
+        </RiButton>
       )}
     >
       <div

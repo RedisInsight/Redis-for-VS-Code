@@ -1,0 +1,13 @@
+.button {
+  @apply flex justify-center items-center text-vscode-foreground min-h-[22px] min-w-[22px];
+  border-radius: 5px;
+
+  svg {
+    @apply min-w-4 min-h-4;
+  }
+
+  &:hover {
+    background-color: var(--button-icon-hover-background);
+  }
+}
+

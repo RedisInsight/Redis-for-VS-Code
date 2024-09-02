@@ -2,7 +2,6 @@ import { FormikErrors, useFormik } from 'formik'
 import { isEmpty, pick } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import Popup from 'reactjs-popup'
 import { VSCodeButton, VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 
 import { VscInfo } from 'react-icons/vsc'
@@ -25,6 +24,7 @@ import {
   SSHDetails,
 } from 'uiSrc/components'
 import { useCertificatesStore } from 'uiSrc/store'
+import { Tooltip } from 'uiSrc/ui'
 
 export interface Props {
   formFields: DbConnectionInfo
@@ -52,7 +52,7 @@ const ManualConnectionForm = (props: Props) => {
     onSubmit,
     onHostNamePaste,
     submitButtonText,
-    // loading,
+    loading,
     isEditMode,
     isCloneMode,
     setIsCloneMode,
@@ -83,7 +83,7 @@ const ManualConnectionForm = (props: Props) => {
 
   const formRef = useRef<HTMLDivElement>(null)
 
-  const submitIsDisable = () => !isEmpty(errors)
+  const submitIsDisable = () => !isEmpty(errors) || loading
 
   const validate = (values: DbConnectionInfo) => {
     const errs = getFormErrors(values)
@@ -156,13 +156,12 @@ const ManualConnectionForm = (props: Props) => {
     return !submitIsDisabled
       ? Btn
       : (
-        <Popup
+        <Tooltip
           position="top center"
-          trigger={Btn}
-          on="hover"
+          content={!isEmpty(errors) && getRequiredFieldsText(errors)}
         >
-          {getRequiredFieldsText(errors)}
-        </Popup>
+          {Btn}
+        </Tooltip>
       )
   }
 
