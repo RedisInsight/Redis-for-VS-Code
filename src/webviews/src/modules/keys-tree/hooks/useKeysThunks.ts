@@ -151,7 +151,6 @@ KeysThunks
   // Asynchronous thunk action
   fetchKeysMetadataTree: async (
     keys: RedisString[][],
-    filter: Nullable<KeyTypes>,
     signal?: AbortSignal,
     onSuccessAction?: (data: KeyInfo[]) => void,
     onFailAction?: () => void,
@@ -159,7 +158,7 @@ KeysThunks
     try {
       const { data } = await apiService.post<KeyInfo[]>(
         getDatabaseUrl(get().databaseId, ApiEndpoints.KEYS_METADATA),
-        { keys: keys.map(([,nameBuffer]) => nameBuffer), type: filter || undefined },
+        { keys: keys.map(([,nameBuffer]) => nameBuffer), type: get().filter || undefined },
         { params: { encoding: getEncoding() }, signal },
       )
 

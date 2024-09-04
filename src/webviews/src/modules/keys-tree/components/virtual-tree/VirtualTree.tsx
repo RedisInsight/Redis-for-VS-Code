@@ -26,7 +26,6 @@ export interface Props {
   loading: boolean
   deleting?: boolean
   sorting?: SortOrder
-  commonFilterType: Nullable<KeyTypes>
   statusSelected: Nullable<string>,
   database: Database
   statusOpen: OpenedNodes
@@ -52,7 +51,6 @@ const VirtualTree = (props: Props) => {
     database,
     deleting = false,
     sorting = DEFAULT_TREE_SORTING,
-    commonFilterType = null,
     onStatusOpen,
     onStatusSelected,
     setConstructingTree,
@@ -143,13 +141,12 @@ const VirtualTree = (props: Props) => {
   ): void => {
     keysApi.fetchKeysMetadataTree(
       itemsInit,
-      commonFilterType,
       controller.current?.signal,
       (loadedItems) =>
         onSuccessFetchedMetadata(loadedItems),
       () => { rerender({}) },
     )
-  }, [commonFilterType])
+  }, [])
 
   const onSuccessFetchedMetadata = useCallback((
     loadedItems: any[],
@@ -254,8 +251,8 @@ const VirtualTree = (props: Props) => {
   const onItemsRendered = () => {
     if (isNotRendered.current) {
       isNotRendered.current = false
-      rerender({})
     }
+    rerender({})
   }
 
   return (
