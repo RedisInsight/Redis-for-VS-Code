@@ -2,13 +2,15 @@ import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 
-import { KeyTypes, AddListFormConfig as config } from 'uiSrc/constants'
+import { HEAD_DESTINATION, KeyTypes, ListElementDestination, TAIL_DESTINATION, AddListFormConfig as config } from 'uiSrc/constants'
 import { getRequiredFieldsText, stringToBuffer } from 'uiSrc/utils'
 import { Maybe } from 'uiSrc/interfaces'
 import { useKeysApi, useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
-import { InputText, Tooltip } from 'uiSrc/ui'
+import { InputText, Select, SelectOption, Tooltip } from 'uiSrc/ui'
 import { CreateListWithExpireDto } from 'uiSrc/modules/keys-tree/hooks/interface'
 import { AddItemsActions } from 'uiSrc/components'
+
+import styles from '../../styles.module.scss'
 
 export interface Props {
   keyName: string
@@ -16,9 +18,23 @@ export interface Props {
   onClose: (isCancelled?: boolean, keyType?: KeyTypes) => void
 }
 
+const optionsDestinations: SelectOption[] = [
+  {
+    value: TAIL_DESTINATION,
+    label: l10n.t('Push to tail'),
+    testid: TAIL_DESTINATION,
+  },
+  {
+    value: HEAD_DESTINATION,
+    label: l10n.t('Push to head'),
+    testid: HEAD_DESTINATION,
+  },
+]
+
 export const AddKeyList = (props: Props) => {
   const { keyName = '', keyTTL, onClose } = props
   const [elements, setElements] = useState<string[]>([''])
+  const [destination, setDestination] = useState<ListElementDestination>(TAIL_DESTINATION)
   const [isFormValid, setIsFormValid] = useState<boolean>(false)
 
   const keysApi = useKeysApi()
@@ -60,6 +76,7 @@ export const AddKeyList = (props: Props) => {
   const submitData = (): void => {
     const data: CreateListWithExpireDto = {
       keyName: stringToBuffer(keyName),
+      destination,
       elements: elements.map((el) => stringToBuffer(el)),
     }
     if (keyTTL !== undefined) {
@@ -74,6 +91,17 @@ export const AddKeyList = (props: Props) => {
     <>
       <form onSubmit={onFormSubmit} className="key-footer-items-container pl-0 h-full">
         <h3 className="font-bold uppercase pb-3">{l10n.t('Element')}</h3>
+          <div className="w-1/3 mr-2 mb-3">
+            <Select
+              position="below"
+              options={optionsDestinations}
+              containerClassName={styles.select}
+              itemClassName={styles.selectOption}
+              idSelected={destination}
+              onChange={(value) => setDestination(value as ListElementDestination)}
+              testid="destination-select"
+            />
+          </div>
         {elements.map((item, index) => (
           <div key={index}>
             <div className="flex items-center mb-3">

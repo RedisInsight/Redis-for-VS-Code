@@ -22,3 +22,14 @@
   border-top: 1px solid;
   opacity: .5;
 }
+
+.select {
+  @apply h-full w-full bg-vscode-dropdown-background ;
+
+  &::part(control) {
+    @apply border-vscode-dropdown-background;
+  }
+  &::part(listbox) {
+    @apply mt-4;
+  }
+}
