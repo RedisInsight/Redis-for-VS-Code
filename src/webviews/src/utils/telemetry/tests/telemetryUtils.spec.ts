@@ -79,7 +79,7 @@ const getLengthByKeyTypeTests = [
   [KeyTypes.Set, { members: [,] }, 1],
   [KeyTypes.ZSet, { members: [,,,,], expire: 123 }, 4],
   [KeyTypes.String, { value: '123', expire: 123 }, 3],
-  [KeyTypes.List, { expire: 3 }, 1],
+  [KeyTypes.List, { expire: 3, elements: [''] }, 1],
   [KeyTypes.Stream, { }, 1],
   [KeyTypes.ReJSON, { }, undefined],
   ['oeuoeu', { }, undefined],

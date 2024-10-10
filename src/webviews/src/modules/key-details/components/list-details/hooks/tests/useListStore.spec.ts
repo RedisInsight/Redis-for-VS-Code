@@ -165,7 +165,7 @@ describe('async', () => {
 
     insertListElementsAction({
       keyName: constants.KEY_NAME_4,
-      element: constants.KEY_4_ELEMENT,
+      elements: [constants.KEY_4_ELEMENT],
       destination: ListElementDestination.Head,
     })
     await waitForStack()

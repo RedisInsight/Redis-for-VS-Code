@@ -447,7 +447,7 @@ describe('useKeys', () => {
         // Arrange
         const data: CreateListWithExpireDto = {
           keyName: 'keyName',
-          element: 'element',
+          elements: ['element'],
         }
         const responsePayload = { data, status: 200 }
 
