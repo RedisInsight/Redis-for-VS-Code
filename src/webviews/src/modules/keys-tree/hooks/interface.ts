@@ -105,7 +105,7 @@ export interface CreateSetWithExpireDto extends KeyWithExpireDto {
 }
 
 export interface CreateListWithExpireDto extends KeyWithExpireDto {
-  element: RedisString
+  elements: RedisString[]
 }
 
 export interface HashFieldDto {

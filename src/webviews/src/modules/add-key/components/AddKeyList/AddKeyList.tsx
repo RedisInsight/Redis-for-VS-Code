@@ -8,6 +8,7 @@ import { Maybe } from 'uiSrc/interfaces'
 import { useKeysApi, useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
 import { InputText, Tooltip } from 'uiSrc/ui'
 import { CreateListWithExpireDto } from 'uiSrc/modules/keys-tree/hooks/interface'
+import { AddItemsActions } from 'uiSrc/components'
 
 export interface Props {
   keyName: string
@@ -17,7 +18,7 @@ export interface Props {
 
 export const AddKeyList = (props: Props) => {
   const { keyName = '', keyTTL, onClose } = props
-  const [element, setElement] = useState<string>('')
+  const [elements, setElements] = useState<string[]>([''])
   const [isFormValid, setIsFormValid] = useState<boolean>(false)
 
   const keysApi = useKeysApi()
@@ -26,6 +27,28 @@ export const AddKeyList = (props: Props) => {
   useEffect(() => {
     setIsFormValid(keyName.length > 0)
   }, [keyName])
+
+  const addElement = () => {
+    setElements([...elements, ''])
+  }
+
+  const removeElement = (index: number) => {
+    setElements(elements.filter((_el, i) => i !== index))
+  }
+
+  const clearElement = (index: number) => {
+    const newElements = [...elements]
+    newElements[index] = ''
+    setElements(newElements)
+  }
+
+  const handleElementChange = (value: string, index: number) => {
+    const newElements = [...elements]
+    newElements[index] = value
+    setElements(newElements)
+  }
+
+  const isClearDisabled = (item:string) => elements.length === 1 && !item.length
 
   const onFormSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
@@ -37,7 +60,7 @@ export const AddKeyList = (props: Props) => {
   const submitData = (): void => {
     const data: CreateListWithExpireDto = {
       keyName: stringToBuffer(keyName),
-      element: stringToBuffer(element),
+      elements: elements.map((el) => stringToBuffer(el)),
     }
     if (keyTTL !== undefined) {
       data.expire = keyTTL
@@ -51,16 +74,32 @@ export const AddKeyList = (props: Props) => {
     <>
       <form onSubmit={onFormSubmit} className="key-footer-items-container pl-0 h-full">
         <h3 className="font-bold uppercase pb-3">{l10n.t('Element')}</h3>
-        <InputText
-          name="element"
-          id="element"
-          placeholder={config.element.placeholder}
-          value={element}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setElement(e.target.value)}
-          disabled={loading}
-          data-testid="element"
-        />
+        {elements.map((item, index) => (
+          <div key={index}>
+            <div className="flex items-center mb-3">
+              <InputText
+                name={`element-${index}`}
+                id={`element-${index}`}
+                placeholder={config.element.placeholder}
+                value={item}
+                disabled={loading}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleElementChange(e.target.value, index)}
+                data-testid={`element-${index}`}
+              />
+              <AddItemsActions
+                id={index}
+                index={index}
+                length={elements.length}
+                addItem={addElement}
+                removeItem={removeElement}
+                clearItemValues={clearElement}
+                clearIsDisabled={isClearDisabled(item)}
+                disabled={loading}
+              />
+            </div>
+          </div>
+        ))}
         <button type="submit" className="hidden">
           {l10n.t('Submit')}
         </button>
