@@ -56,12 +56,14 @@ async function downloadRedisBackendArchive(
   destDir: string,
 ): Promise<string> {
   ensureFolderExists(destDir)
-  const downloadUrl = getDownloadUrl()
+  let downloadUrl = getDownloadUrl()
 
   return new Promise((resolve, reject) => {
     const requestOptions: https.RequestOptions = parseUrl(downloadUrl)
     https.get(requestOptions, (res) => {
-      if (res.statusCode !== 200) {
+      if (res.statusCode === 302 && res.headers.location) {
+        downloadUrl = res.headers.location
+      } else if (res.statusCode !== 200) {
         reject(new Error('Failed to get Redis Insight backend archive location'))
       }
 
