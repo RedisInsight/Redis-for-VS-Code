@@ -25,7 +25,7 @@
 
 .select {
   @apply h-full w-full bg-vscode-dropdown-background ;
-
+  border: calc(var(--border-width)* 1px) solid var(--dropdown-border);
   &::part(control) {
     @apply border-vscode-dropdown-background;
   }
