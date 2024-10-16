@@ -1,6 +1,6 @@
 {
   "name": "redis-insight-vsc-plugin",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "End-to-end tests",
   "scripts": {
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

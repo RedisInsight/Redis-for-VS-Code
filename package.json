@@ -1,6 +1,6 @@
 {
   "name": "redis-for-vscode",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "displayName": "Redis for VS Code",
   "description": "Visually interact with data and build queries in Redis",
   "license": "SEE LICENSE IN LICENSE",
