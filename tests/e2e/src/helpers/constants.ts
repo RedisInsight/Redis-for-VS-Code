@@ -139,3 +139,8 @@ export enum Formatters {
   Vector32 = 'Vector 32-bit',
   Vector64 = 'Vector 64-bit',
 }
+
+export enum AddElementInList  {
+  Head ,
+  Tail,
+}

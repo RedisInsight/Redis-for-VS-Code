@@ -165,7 +165,7 @@ describe('Edit Key values verification', () => {
     keyName = Common.generateWord(10)
     const listKeyParameters: ListKeyParameters = {
       keyName: keyName,
-      element: keyValueBefore,
+      element: [keyValueBefore],
     }
     await KeyAPIRequests.addListKeyApi(
       listKeyParameters,
