@@ -1,9 +1,8 @@
 import { By } from 'selenium-webdriver'
 import { expect } from 'chai'
 import { DoubleColumnKeyDetailsView } from '@e2eSrc/page-objects/components/editor-view/DoubleColumnKeyDetailsView'
-import { KeyTypesShort } from '@e2eSrc/helpers/constants'
+import { AddElementInList, KeyTypesShort } from '@e2eSrc/helpers/constants'
 import { ButtonActions, InputActions } from '@e2eSrc/helpers/common-actions'
-import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 /**
  * List Key details view
@@ -17,7 +16,9 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
   truncatedValue = By.xpath(
     `//*[contains(@data-testid, 'list-element-')]//*[@class='truncate']`,
   )
-  addListKeyElementInput = By.xpath(`//*[@data-testid='elements-input']`)
+
+  addAdditionalElement = By.xpath(`//*[@data-testid='add-new-item']`)
+
   saveElementButton = By.xpath(`//*[@data-testid='save-elements-btn']`)
   removeElementFromListIconButton = By.xpath(
     `//*[@data-testid='remove-key-value-items-btn']`,
@@ -35,6 +36,16 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
   getElementValueByText = (text: string): By =>
     By.xpath(
       `//*[contains(@data-testid, 'list-element-value-')]/*[contains(text(), '${text}')]`,
+    )
+
+  getElementValueByIndex = (index: number): By =>
+    By.xpath(
+      `//*[@data-testid='list-element-value-${index}']`,
+    )
+
+  getElementValueInput = (index: number): By =>
+    By.xpath(
+      `//*[@data-testid='element-${index}']`,
     )
 
   /**
@@ -55,38 +66,24 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
    * Add element to the List key to tail
    * @param element The value of the list element
    */
-  async addListElementToTail(element: string): Promise<void> {
+  async addListElement(element: string[], position: AddElementInList = AddElementInList.Tail): Promise<void> {
     await ButtonActions.clickElement(this.addKeyValueItemsButton)
-    await InputActions.typeText(this.addListKeyElementInput, element)
-    await ButtonActions.clickElement(this.saveElementButton)
-  }
 
-  /**
-   * Add element to the List key to tail
-   * @param element The value of the list element
-   */
-  async addListElementToHead(element: string): Promise<void> {
-    await ButtonActions.clickElement(this.addKeyValueItemsButton)
-    await ButtonActions.clickAndWaitForElement(
-      this.destinationSelect,
-      this.fromHeadSelection,
-    )
-    await ButtonActions.clickElement(this.fromHeadSelection)
-    await InputActions.typeText(this.addListKeyElementInput, element)
-    await ButtonActions.clickElement(this.saveElementButton)
-  }
+    if(position === AddElementInList.Head){
+      await ButtonActions.clickAndWaitForElement(
+        this.destinationSelect,
+        this.fromHeadSelection,
+      )
+      await ButtonActions.clickAndWaitForElement(this.fromHeadSelection, this.fromHeadSelection, false)
+    }
+    for (let i = 0; i < element.length; i ++){
+      await InputActions.typeText(this.getElementValueInput(i), element[i])
 
-  /**
-   * Remove List element from tail for Redis databases less then v. 6.2.
-   */
-  async removeListElementFromTailOld(): Promise<void> {
-    await ButtonActions.clickElement(this.removeElementFromListIconButton)
-    expect(await super.isElementDisabled(this.countInput, 'class')).eql(
-      true,
-      'Count Input not disabled',
-    )
-    await ButtonActions.clickElement(this.removeElementFromListButton)
-    await ButtonActions.clickElement(this.confirmRemoveListElementButton)
+      if (element.length > 1 && i < element.length - 1) {
+        await ButtonActions.clickElement(this.addAdditionalElement)
+      }
+    }
+    await ButtonActions.clickElement(this.saveElementButton)
   }
 
   /**
