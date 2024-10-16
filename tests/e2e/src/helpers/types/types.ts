@@ -1,4 +1,4 @@
-import { KeyTypesShort } from '../constants'
+import { AddElementInList, KeyTypesShort } from '../constants'
 
 /**
  * Add new database parameters
@@ -192,7 +192,8 @@ export type SortedSetKeyParameters = {
  */
 export type ListKeyParameters = {
   keyName: string
-  element: string
+  position?: AddElementInList
+  element: string[]
 }
 
 /**

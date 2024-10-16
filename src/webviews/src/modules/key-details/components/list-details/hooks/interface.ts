@@ -61,7 +61,7 @@ export interface DeleteListElementsDto extends KeyDto {
 }
 
 export interface PushElementToListDto extends KeyDto {
-  element: RedisString
+  elements: RedisString[]
   destination: ListElementDestination
 }
 

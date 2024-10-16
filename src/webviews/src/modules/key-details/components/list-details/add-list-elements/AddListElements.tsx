@@ -13,6 +13,7 @@ import { TelemetryEvent, sendEventTelemetry, stringToBuffer } from 'uiSrc/utils'
 
 import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { InputText, Select, SelectOption } from 'uiSrc/ui'
+import { AddItemsActions } from 'uiSrc/components'
 import { PushElementToListDto } from '../hooks/interface'
 import { insertListElementsAction, useListStore } from '../hooks/useListStore'
 import styles from '../styles.module.scss'
@@ -37,7 +38,7 @@ const optionsDestinations: SelectOption[] = [
 const AddListElements = (props: Props) => {
   const { closePanel } = props
 
-  const [element, setElement] = useState<string>('')
+  const [elements, setElements] = useState<string[]>([''])
   const [destination, setDestination] = useState<ListElementDestination>(TAIL_DESTINATION)
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
@@ -58,15 +59,37 @@ const AddListElements = (props: Props) => {
       eventData: {
         databaseId,
         keyType: KeyTypes.List,
-        numberOfAdded: 1,
+        numberOfAdded: elements.length,
       },
     })
   }
 
+  const addElement = () => {
+    setElements([...elements, ''])
+  }
+
+  const removeElement = (index: number) => {
+    setElements(elements.filter((_el, i) => i !== index))
+  }
+
+  const clearElement = (index: number) => {
+    const newElements = [...elements]
+    newElements[index] = ''
+    setElements(newElements)
+  }
+
+  const handleElementChange = (value: string, index: number) => {
+    const newElements = [...elements]
+    newElements[index] = value
+    setElements(newElements)
+  }
+
+  const isClearDisabled = (item:string) => elements.length === 1 && !item.length
+
   const submitData = (): void => {
     const data: PushElementToListDto = {
       keyName: selectedKey!,
-      element: stringToBuffer(element),
+      elements: elements.map((el) => stringToBuffer(el)),
       destination,
     }
     insertListElementsAction(data, onSuccessAdded)
@@ -76,8 +99,8 @@ const AddListElements = (props: Props) => {
     <>
       <div className="key-footer-items-container">
         <div className="flex items-center mb-3">
-          <div className="flex grow">
-            <div className="w-1/3 mr-2">
+          <div className="flex-column grow">
+            <div className="w-1/3 mr-2 mb-3">
               <Select
                 position="below"
                 options={optionsDestinations}
@@ -88,18 +111,33 @@ const AddListElements = (props: Props) => {
                 testid="destination-select"
               />
             </div>
-            <div className="w-2/3">
-              <InputText
-                name={config.element.name}
-                id={config.element.name}
-                placeholder={config.element.placeholder}
-                value={element}
-                autoComplete="off"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setElement(e.target.value)}
-                data-testid="elements-input"
-                inputRef={elementInput}
-              />
-            </div>
+            {elements.map((item, index) => (
+              <div key={index}>
+                <div className="flex items-center mb-3">
+                  <InputText
+                    name={`element-${index}`}
+                    id={`element-${index}`}
+                    placeholder={config.element.placeholder}
+                    value={item}
+                    disabled={loading}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      handleElementChange(e.target.value, index)}
+                    inputRef={index === elements.length - 1 ? elementInput : null}
+                    data-testid={`element-${index}`}
+                  />
+                  <AddItemsActions
+                    id={index}
+                    index={index}
+                    length={elements.length}
+                    addItem={addElement}
+                    removeItem={removeElement}
+                    clearItemValues={clearElement}
+                    clearIsDisabled={isClearDisabled(item)}
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

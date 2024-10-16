@@ -1,4 +1,4 @@
-import { KeyTypes } from 'uiSrc/constants'
+import { KeyTypes, ListElementDestination } from 'uiSrc/constants'
 import { KeyDto, KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { ZSetMember } from 'uiSrc/modules/key-details/components/zset-details/hooks/interface'
 
@@ -105,7 +105,8 @@ export interface CreateSetWithExpireDto extends KeyWithExpireDto {
 }
 
 export interface CreateListWithExpireDto extends KeyWithExpireDto {
-  element: RedisString
+  elements: RedisString[],
+  destination: ListElementDestination,
 }
 
 export interface HashFieldDto {

@@ -13,7 +13,6 @@ import {
   StringKeyParameters,
 } from '../types/types'
 import { Key } from '../common-actions/KeyActions'
-import { KeyTypesShort } from '../constants'
 
 const getKeysPathMask = '/databases/databaseId/keys/get-info?encoding=buffer'
 const bufferPathMask = '/databases/databaseId/keys?encoding=buffer'
@@ -150,7 +149,7 @@ export class KeyAPIRequests {
       await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
-      element: Buffer.from(keyParameters.element, 'utf-8'),
+      elements: keyParameters.element.map(el => Buffer.from(el, 'utf-8'))
     }
     const response = await CommonAPIRequests.sendPostRequest(
       `/databases/${databaseId}/list?encoding=buffer`,
@@ -179,7 +178,7 @@ export class KeyAPIRequests {
     const requestBody = {
       destination,
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
-      element: Buffer.from(keyParameters.element, 'utf-8'),
+      elements: keyParameters.element.map(el => Buffer.from(el, 'utf-8'))
     }
     const response = await CommonAPIRequests.sendPutRequest(
       `/databases/${databaseId}/list?encoding=buffer`,

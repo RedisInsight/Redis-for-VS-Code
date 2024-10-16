@@ -161,8 +161,9 @@ describe('Large key details verification', () => {
     keyName = Common.generateWord(20)
     const listKeyParameters: ListKeyParameters = {
       keyName: keyName,
-      element:
+      element:[
         'wqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsa',
+    ]
     }
 
     await KeyAPIRequests.addListKeyApi(
