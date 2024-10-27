@@ -10,4 +10,5 @@ runs:
   using: 'composite'
   steps:
     - name: Download backend
+      shell: bash
       run: yarn download:backend ${{ inputs.arch }}
