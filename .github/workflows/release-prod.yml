@@ -1,0 +1,33 @@
+name: Release (prod)
+
+on:
+  push:
+    branches:
+      - 'latest'
+
+jobs:
+  tests-prod:
+    name: Run all tests
+    uses: ./.github/workflows/tests.yml
+    secrets: inherit
+
+  builds-prod:
+    name: Create all builds for release
+    uses: ./.github/workflows/build.yml
+    needs: tests-prod
+    secrets: inherit
+    with:
+      environment: 'production'
+      target: 'all'
+
+  e2e-linux-tests:
+    name: E2E Docker tests
+    needs: builds-prod
+    uses: ./.github/workflows/tests-e2e-linux.yml
+    secrets: inherit
+
+  aws-prod:
+    name: Realse to AWS S3
+    uses: ./.github/workflows/aws.yml
+    needs: builds-prod
+    secrets: inherit

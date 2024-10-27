@@ -1,0 +1,28 @@
+name: Install all libraries action
+description: Install all libraries and dependencies
+
+runs:
+  using: 'composite'
+  steps:
+    # OS libraries
+    - name: Setup Node
+      uses: actions/setup-node@v4.0.4
+      with:
+        node-version: '20.15'
+        # disable cache for windows
+        # https://github.com/actions/setup-node/issues/975
+        cache: ${{ runner.os != 'Windows' && 'yarn' || '' }}
+        cache-dependency-path: ${{ runner.os != 'Windows' && '**/yarn.lock' || '' }}
+
+    # - name: Setup Python
+    #   uses: actions/setup-python@v5
+    #   with:
+    #     python-version: '3.11'
+
+    - name: Install TypeScript
+      run: yarn global add typescript
+
+    - name: Install dependencies for root package.js
+      run: yarn install --frozen-lockfile
+
+      # run: yarn install
