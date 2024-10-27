@@ -16,22 +16,25 @@ jobs:
     secrets: inherit
 
   # E2E Approve
-  e2e-approve:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    if: startsWith(github.ref_name, 'e2e/')
-    environment: ${{ startsWith(github.ref_name, 'e2e/') && 'e2e-approve' || 'staging' }}
-    name: Approve E2E tests
-    steps:
-      - uses: actions/checkout@v4
+  # e2e-approve:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 60
+  #   if: startsWith(github.ref_name, 'e2e/')
+  #   environment: ${{ startsWith(github.ref_name, 'e2e/') && 'e2e-approve' || 'staging' }}
+  #   name: Approve E2E tests
+  #   steps:
+  #     - uses: actions/checkout@v4
 
   # E2E Docker
-  build-linux:
-    uses: ./.github/workflows/pipeline-build-linux.yml
-    needs: e2e-approve
+  build:
+    uses: ./.github/workflows/build.yml
     secrets: inherit
+  # build-linux:
+  #   uses: ./.github/workflows/pipeline-build-linux.yml
+  #   needs: e2e-approve
+  #   secrets: inherit
 
   e2e-linux-tests:
-    needs: build-linux
+    needs: build
     uses: ./.github/workflows/tests-e2e-linux.yml
     secrets: inherit

@@ -1,10 +1,6 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - 'feature/**'
-
   # Manual trigger build
   workflow_dispatch:
     inputs:
