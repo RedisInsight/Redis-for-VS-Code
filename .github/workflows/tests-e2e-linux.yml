@@ -63,6 +63,7 @@ jobs:
     - name: Setup e2e tests
       working-directory: ./tests/e2e
       run: |
+        npm i -g yarn
         yarn install
         yarn compile
         ls -R dist/tests/
