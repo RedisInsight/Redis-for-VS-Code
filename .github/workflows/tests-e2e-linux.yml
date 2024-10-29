@@ -60,7 +60,8 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20.15'
-        cache: 'yarn'
+
+    - run: node -v
 
     - name: Install dependencies for root package.js
       run: yarn install --frozen-lockfile
@@ -72,6 +73,7 @@ jobs:
       run: |
         # npm i -g yarn
         # npm i -g vsce
+        npm install -g @vscode/vsce
         yarn install
         yarn compile
         ls -R dist/tests/
