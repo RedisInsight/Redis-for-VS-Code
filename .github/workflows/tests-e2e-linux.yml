@@ -130,6 +130,17 @@ jobs:
         list-suites: 'failed'
         fail-on-error: 'false'
 
+    - name: Generate mocha test results for ${{ matrix.parallel }}th node
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: 'Test results: E2E (linux) ${{ matrix.parallel }}th node'
+        path: tests/e2e/mochawesome-report/*.json
+        reporter: mocha-json
+        list-tests: 'failed'
+        list-suites: 'failed'
+        fail-on-error: 'false'
+
   # merge-artifacts:
   #   runs-on: ubuntu-latest
   #   needs: e2e-linux-tests

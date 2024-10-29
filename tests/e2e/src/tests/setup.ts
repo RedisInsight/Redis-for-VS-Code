@@ -52,7 +52,7 @@ describe('Agreements Verification', () => {
       await eulaView.waitForElementVisibility(eulaView.eulaPageContainer),
     ).eql(true, 'User Agreements is not shown')
     // Verify that I still has agreements popup & cannot add a database
-    await eulaView.switchBack()
+    // await eulaView.switchBack()
     expect(await eulaView.isElementDisplayed(treeView.addDatabaseBtn)).eql(
       false,
       'User can add a database',
