@@ -55,6 +55,12 @@ jobs:
     - run: mkdir release
     - run: cp -R ./release2 ./release
 
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.15'
+        cache: 'yarn'
+
     - name: Setup e2e tests
       working-directory: ./tests/e2e
       run: |
