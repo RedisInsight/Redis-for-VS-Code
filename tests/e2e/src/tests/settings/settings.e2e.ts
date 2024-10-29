@@ -89,8 +89,8 @@ describe('Settings', () => {
     await ButtonActions.clickElement(InputWithButtons.cancelInput)
     // Check the previous delimiter value
     expect(await InputActions.getInputValue(settingsView.delimiterInput)).eql(
-      'uaoeu:',
-      'Default uoeuaoe udelimiter not applied',
+      ':',
+      'Default delimiter not applied',
     )
 
     // Change delimiter
