@@ -34,13 +34,13 @@ jobs:
     - name: Build windows package (production)
       if: inputs.environment == 'production'
       run: |
-        yarn package:prod --target win32-x64 --out ${packagePath}
+        yarn package:prod --target win32-x64 --out ${{ env.packagePath }}
 
     - name: Build windows package (staging)
       if: inputs.environment == 'staging'
       run: |
         sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
-        yarn package:stage --target win32-x64 --out ${packagePath}
+        yarn package:stage --target win32-x64 --out ${{ env.packagePath }}
 
     - uses: actions/upload-artifact@v4
       name: Upload extension artifact
