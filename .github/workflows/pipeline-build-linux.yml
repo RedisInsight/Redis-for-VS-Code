@@ -16,39 +16,23 @@ jobs:
     environment: ${{ inputs.environment }}
 
     steps:
-    # SSH
-    # - name: Setup upterm session
-    #   uses: mxschmitt/action-tmate@v3 #1 better
-
     - uses: actions/checkout@v4
+      # SSH
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     detached: true
 
-    # - name: Install all libs and dependencies
-    #   uses: ./.github/actions/install-all-build-libs
     - name: Setup Node
       uses: actions/setup-node@v4.0.4
       with:
         node-version: '20.15'
-        # disable cache for windows
-        # https://github.com/actions/setup-node/issues/975
-        cache: 'yarn'
-
-    # - name: Setup Python
-    #   uses: actions/setup-python@v5
-    #   with:
-    #     python-version: '3.11'
 
     - name: Install dependencies for root package.js
       run: yarn install --frozen-lockfile
 
-
-    # - run: rm -rf tsconfig.json
-
     - name: Download backend
       uses: ./.github/actions/download-backend
-
-    # - run: ls -la ./scripts
-    # - run: yarn download:backend
-    # - run: yarn download:backend ${{ inputs.arch }}
 
     - name: Set RI_SEGMENT_WRITE_KEY to .env file
       run: echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY'" >> $envFile

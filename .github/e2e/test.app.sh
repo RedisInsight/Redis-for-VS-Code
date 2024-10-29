@@ -11,4 +11,5 @@ docker compose -f tests/e2e/rte.docker-compose.yml up --force-recreate -d -V
 
 # Run tests
 RI_SOCKETS_CORS=true \
+xvfb-run --auto-servernum \
 yarn --cwd tests/e2e dotenv -e .ci.env yarn --cwd tests/e2e test:ci

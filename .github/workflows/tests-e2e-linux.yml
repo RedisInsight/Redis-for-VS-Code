@@ -10,34 +10,25 @@ on:
 
 env:
   SLACK_TEST_REPORT_KEY: ${{ secrets.SLACK_TEST_REPORT_KEY }}
+  TEST_BIG_DB_DUMP: ${{ secrets.TEST_BIG_DB_DUMP }}
 
 jobs:
   e2e-linux-tests:
     runs-on: ubuntu-latest
     name: E2E tests
-    container:
-      image: docker:latest
-      options: --privileged
-      volumes:
-        - /usr/src/app/results:/usr/src/app/results
-        - /usr/src/app/report:/usr/src/app/report
     strategy:
       fail-fast: false
       matrix:
         # Number of threads to run tests
-        # parallel: [0, 1, 2, 3]
-        parallel: [0]
+        parallel: [0, 1, 2, 3]
 
     steps:
     - uses: actions/checkout@v4
 
-    # - name: Setup repository
-    #   run: git config --global --add safe.directory /__w/RedisInsight/Redis-for-VS-Code
-
-    - name: Start Xvfb
-      run: |
-        apt-get install -y xvfb net-tools
-        Xvfb :99 -screen 0 1920x1080x24 &
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.15'
 
     - name: Download linux artifact
       uses: actions/download-artifact@v4
@@ -48,6 +39,7 @@ jobs:
     - name: Setup e2e tests
       working-directory: ./tests/e2e
       run: |
+        npm install -g @vscode/vsce
         yarn install
         yarn compile
         ls -R dist/tests/
@@ -55,7 +47,7 @@ jobs:
     - name: Generate short list of the test files
       working-directory: ./tests/e2e
       run: |
-        testFiles=$(find tests -type f -name '*.e2e.js' | sort | awk "NR % 4 == ${{ matrix.parallel }}")
+        testFiles=$(find dist -type f -name '*.e2e.js' | sort | awk "NR % 1 == ${{ matrix.parallel }}")
         echo $testFiles
 
         # Multi-Line value
@@ -67,12 +59,12 @@ jobs:
       run: |
         .github/e2e/test.app.sh
 
-    - name: Upload Test Report
+    - name: Upload Test Mocha Report
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: report-linux-node-${{ matrix.parallel }}
-        path: /usr/src/app/report
+        name: mocha-report-linux-node-${{ matrix.parallel }}
+        path: tests/e2e/mochawesome-report
 
     - name: Send report to Slack
       if: inputs.report && always()
@@ -85,7 +77,7 @@ jobs:
       if: always()
       with:
         name: 'Test results: E2E (linux) ${{ matrix.parallel }}th node'
-        path: /usr/src/app/results/results.xml
+        path: tests/e2e/mochawesome-report/junit-report.xml
         reporter: java-junit
         list-tests: 'failed'
         list-suites: 'failed'
@@ -99,6 +91,8 @@ jobs:
       id: merge-artifacts
       uses: actions/upload-artifact/merge@v4
       with:
-        name: report-e2e-linux
-        pattern: report-linux-node-*
+        name: mocha-report-linux
+        pattern: mocha-report-linux-node-*
+        separate-directories: true
         delete-merged: true
+        retention-days: 5

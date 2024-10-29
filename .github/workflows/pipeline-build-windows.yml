@@ -16,10 +16,6 @@ jobs:
     environment: ${{ inputs.environment }}
 
     steps:
-    # SSH debugging
-    # - name: Setup upterm session
-    #   uses: mxschmitt/action-tmate@v3 #1 better
-
     - uses: actions/checkout@v4
 
     - name: Install all libs and dependencies
