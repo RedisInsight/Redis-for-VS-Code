@@ -29,8 +29,8 @@ jobs:
       fail-fast: false
       matrix:
         # Number of threads to run tests
-        # parallel: [0, 1, 2, 3]
-        parallel: [0]
+        parallel: [0, 1, 2, 3]
+        # parallel: [0]
 
     steps:
     - uses: actions/checkout@v4
@@ -126,17 +126,6 @@ jobs:
         name: 'Test results: E2E (linux) ${{ matrix.parallel }}th node'
         path: tests/e2e/mochawesome-report/junit-report.xml
         reporter: java-junit
-        list-tests: 'failed'
-        list-suites: 'failed'
-        fail-on-error: 'false'
-
-    - name: Generate mocha test results for ${{ matrix.parallel }}th node
-      uses: dorny/test-reporter@v1
-      if: always()
-      with:
-        name: 'Test results: E2E (linux) ${{ matrix.parallel }}th node'
-        path: tests/e2e/mochawesome-report/*.json
-        reporter: mocha-json
         list-tests: 'failed'
         list-suites: 'failed'
         fail-on-error: 'false'

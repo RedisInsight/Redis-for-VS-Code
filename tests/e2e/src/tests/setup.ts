@@ -70,17 +70,17 @@ describe('Agreements Verification', () => {
     // Verify that Submit button disabled by default if EULA not accepted
     expect(
       await eulaView.isElementDisabled(eulaView.submitButton, 'class'),
-    ).eql(false, 'Submut button not disabled by default')
+    ).eql(true, 'Submut button not disabled by default')
   })
 
   it('Verify that when user checks "Use recommended settings" option on EULA screen, all options (except Licence Terms) are checked', async () => {
     // Verify options unchecked before enabling Use recommended settings
     expect(
       await CheckboxActions.getCheckboxState(eulaView.analyticsCheckbox),
-    ).eql(true, 'Enable Analytics switcher is checked')
+    ).eql(false, 'Enable Analytics switcher is checked')
     expect(
       await CheckboxActions.getCheckboxState(eulaView.useRecommendedCheckbox),
-    ).eql(true, 'Use recommended settings switcher is checked')
+    ).eql(false, 'Use recommended settings switcher is checked')
     expect(await CheckboxActions.getCheckboxState(eulaView.eulaCheckbox)).eql(
       false,
       'EULA switcher is checked',
