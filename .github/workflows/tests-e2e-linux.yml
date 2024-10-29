@@ -36,7 +36,7 @@ jobs:
 
     - name: Start Xvfb
       run: |
-        apt-get install -y xvfb net-tools
+        apt-get update -y && apt-get install -y xvfb net-tools
         Xvfb :99 -screen 0 1920x1080x24 &
 
     # - name: Download linux artifact
