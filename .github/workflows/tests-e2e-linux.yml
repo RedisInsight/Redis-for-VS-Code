@@ -17,7 +17,7 @@ env:
 
 jobs:
   e2e-linux-tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     name: E2E tests
     # container:
     #   image: ubuntu:latest
@@ -34,6 +34,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.15'
 
     # - name: Setup repository
     #   run: git config --global --add safe.directory /__w/Redis-for-VS-Code/Redis-for-VS-Code
@@ -54,10 +59,6 @@ jobs:
         name: linux-build
         path: ./release
 
-    - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.15'
 
     # - run: node -v
 

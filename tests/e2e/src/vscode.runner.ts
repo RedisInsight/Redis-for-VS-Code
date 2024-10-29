@@ -42,8 +42,6 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
     await exTester.downloadChromeDriver()
     // Install vsix if not installed yet
     if (!fs.existsSync(extensionDir)) {
-      console.log('await exTester.installVsix');
-
       await exTester.installVsix({
         vsixFile: path.join(
           __dirname,
