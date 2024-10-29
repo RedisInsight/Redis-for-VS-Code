@@ -83,15 +83,6 @@ jobs:
         echo "$testFiles" >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
 
-    # - name: Run tests
-    #   working-directory: ./tests/e2e
-    #   run: |
-    #     cp ../../release/redis-for-vscode-extension.vsix ./redis-for-vscode-extension.vsix
-    #     yarn install:deps
-    #     yarn install:extension
-    #     # yarn test:test
-    #     xvfb-run --auto-servernum yarn test:test
-
     - name: Run tests
       run: |
         .github/e2e/test.app.sh
@@ -130,4 +121,6 @@ jobs:
       with:
         name: mocha-report-linux
         pattern: mocha-report-linux-node-*
+        separate-directories: true
         delete-merged: true
+        retention-days: 5
