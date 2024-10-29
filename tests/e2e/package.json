@@ -9,7 +9,7 @@
     "install:vs-code": "extest get-vscode -s ./test-resources",
     "install:chrome-driver": "extest get-chromedriver -s ./test-resources",
     "install:deps": "yarn install:vs-code && yarn install:chrome-driver",
-    "install:extension": "extest install-vsix -f redis-insight-vsc-plugin.vsix -e ./test-extensions",
+    "install:extension": "extest install-vsix -f redis-for-vscode-extension.vsix -e ./test-extensions",
     "test": "yarn run compile && dotenv -e .env extest run-tests dist/tests/setup.js dist/tests/**/*.js --code_settings settings.json -r . --extensions_dir ./test-extensions",
     "test:ci": "yarn compile && dotenv -e .env ts-node ./src/vscode.runner.ts",
     "test:ci:clear": "rimraf ./test-extensions && yarn --cwd ../../ package:prod &&  yarn compile && dotenv -e .ci.env ts-node ./src/vscode.runner.ts"

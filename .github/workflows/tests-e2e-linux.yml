@@ -90,10 +90,11 @@ jobs:
     - name: Run tests
       working-directory: ./tests/e2e
       run: |
-        cp ../../release/redis-insight-vsc-plugin.vsix ./redis-insight-vsc-plugin.vsix
+        cp ../../release/redis-for-vscode-extension.vsix ./redis-for-vscode-extension.vsix
         yarn install:deps
         yarn install:extension
         yarn test
+        # xvfb-run --auto-servernum yarn test
 
     # - name: Run tests
     #   run: |
