@@ -38,11 +38,11 @@ jobs:
     # - name: Setup repository
     #   run: git config --global --add safe.directory /__w/Redis-for-VS-Code/Redis-for-VS-Code
 
-    - name: Start Xvfb
-      run: |
+    # - name: Start Xvfb
+      # run: |
         # apt-get update -y && apt-get install -y xvfb net-tools
-        sudo apt-get update -y && sudo apt-get install -y xvfb net-tools libsecret-1-dev
-        Xvfb :99 -screen 0 1920x1080x24 &
+        # sudo apt-get update -y && sudo apt-get install -y xvfb net-tools libsecret-1-dev
+        # Xvfb :99 -screen 0 1920x1080x24 &
 
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
@@ -93,7 +93,7 @@ jobs:
         cp ../../release/redis-for-vscode-extension.vsix ./redis-for-vscode-extension.vsix
         yarn install:deps
         yarn install:extension
-        yarn test
+        yarn test:test
         # xvfb-run --auto-servernum yarn test
 
     # - name: Run tests
