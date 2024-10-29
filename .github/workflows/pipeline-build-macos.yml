@@ -39,12 +39,12 @@ jobs:
       with:
         arch: x64
 
-    - name: Build macos package (staging)
-      if: inputs.environment == 'staging'
+    - name: Build macos x64 package (staging)
+      if: inputs.environment != 'production'
       run: |
         sed -i '' "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
 
-        yarn package:stage --target darwin-${{ inputs.target }} --out ${packagePath}-${{ inputs.target }}.vsix
+        yarn package:stage --target darwin-x64 --out ${packagePath}-x64.vsix
 
     - name: Build macos x64 package (production)
       if: inputs.environment == 'production'
@@ -55,6 +55,14 @@ jobs:
       uses: ./.github/actions/download-backend
       with:
         arch: arm64
+
+    - name: Build macos arm64 package (staging)
+      if: inputs.environment != 'production'
+      run: |
+        sed -i '' "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
+
+        yarn package:stage --target darwin-arm64 --out ${packagePath}-arm64.vsix
+
 
     - name: Build macos arm64 package (production)
       if: inputs.environment == 'production'

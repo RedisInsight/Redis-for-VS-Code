@@ -6,9 +6,10 @@ runs:
   steps:
     # OS libraries
     - name: Setup Node
-      uses: actions/setup-node@v4.0.4
+      uses: actions/setup-node@v4
       with:
         node-version: '20.15'
+        cache: 'yarn'
 
     - name: Install dependencies for root package.js
       shell: bash
