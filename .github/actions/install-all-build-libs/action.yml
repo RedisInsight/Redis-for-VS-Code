@@ -9,22 +9,7 @@ runs:
       uses: actions/setup-node@v4.0.4
       with:
         node-version: '20.15'
-        # disable cache for windows
-        # https://github.com/actions/setup-node/issues/975
-        cache: ${{ runner.os != 'Windows' && 'yarn' || '' }}
-        cache-dependency-path: ${{ runner.os != 'Windows' && '**/yarn.lock' || '' }}
-
-    # - name: Setup Python
-    #   uses: actions/setup-python@v5
-    #   with:
-    #     python-version: '3.11'
-
-    # - name: Install TypeScript
-    #   shell: bash
-    #   run: yarn global add typescript
 
     - name: Install dependencies for root package.js
       shell: bash
-      run: yarn install --frozen-lockfile
-
-      # run: yarn install
+      run: yarn install --frozen-lockfile --network-timeout 1000000
