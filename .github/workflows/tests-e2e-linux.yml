@@ -71,7 +71,7 @@ jobs:
     - name: Generate short list of the test files
       working-directory: ./tests/e2e
       run: |
-        testFiles=$(find tests -type f -name '*.e2e.js' | sort | awk "NR % 4 == ${{ matrix.parallel }}")
+        testFiles=$(find dist -type f -name '*.e2e.js' | sort | awk "NR % 4 == ${{ matrix.parallel }}")
         echo $testFiles
 
         # Multi-Line value
