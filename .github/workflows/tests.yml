@@ -27,12 +27,12 @@ jobs:
 
   # E2E Docker
 
-  # build-linux:
-  #   uses: ./.github/workflows/pipeline-build-linux.yml
-  #   needs: e2e-approve
-  #   secrets: inherit
+  build-linux:
+    uses: ./.github/workflows/pipeline-build-linux.yml
+    # needs: e2e-approve
+    secrets: inherit
 
   e2e-linux-tests:
-    # needs: build-linux
+    needs: build-linux
     uses: ./.github/workflows/tests-e2e-linux.yml
     secrets: inherit

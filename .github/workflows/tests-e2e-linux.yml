@@ -44,35 +44,31 @@ jobs:
         # sudo apt-get update -y && sudo apt-get install -y xvfb net-tools libsecret-1-dev
         # Xvfb :99 -screen 0 1920x1080x24 &
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      with:
-        detached: true
-    # - name: Download linux artifact
-    #   uses: actions/download-artifact@v4
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v3
     #   with:
-    #     name: linux-build
-    #     path: ./release
-
-    - run: mv ./release2 ./release
+    #     detached: true
+    - name: Download linux artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: linux-build
+        path: ./release
 
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: '20.15'
 
-    - run: node -v
+    # - run: node -v
 
-    - name: Install dependencies for root package.js
-      run: yarn install --frozen-lockfile
-    - run: yarn download:backend
-    - run: yarn package:prod
+    # - name: Install dependencies for root package.js
+    #   run: yarn install --frozen-lockfile
+    # - run: yarn download:backend
+    # - run: yarn package:prod
 
     - name: Setup e2e tests
       working-directory: ./tests/e2e
       run: |
-        # npm i -g yarn
-        # npm i -g vsce
         npm install -g @vscode/vsce
         yarn install
         yarn compile
@@ -102,19 +98,19 @@ jobs:
       run: |
         .github/e2e/test.app.sh
 
-    - name: Upload Test Screenshots
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: screenshots-${{ matrix.parallel }}
-        path: tests/e2e/test-resources/screenshots
-
-    # - name: Upload Test Report
+    # - name: Upload Test Screenshots
     #   uses: actions/upload-artifact@v4
     #   if: always()
     #   with:
-    #     name: report-linux-node-${{ matrix.parallel }}
-    #     path: /usr/src/app/report
+    #     name: screenshots-${{ matrix.parallel }}
+    #     path: tests/e2e/test-resources/screenshots
+
+    - name: Upload Test Mocha Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: mocha-report-linux-node-${{ matrix.parallel }}
+        path: tests/e2e/mochawesome-report
 
     - name: Send report to Slack
       if: inputs.report && always()
@@ -127,20 +123,20 @@ jobs:
       if: always()
       with:
         name: 'Test results: E2E (linux) ${{ matrix.parallel }}th node'
-        path: /usr/src/app/results/results.xml
+        path: tests/e2e/mochawesome-report/junit-report.xml
         reporter: java-junit
         list-tests: 'failed'
         list-suites: 'failed'
         fail-on-error: 'false'
 
-  merge-artifacts:
-    runs-on: ubuntu-latest
-    needs: e2e-linux-tests
-    steps:
-    - name: Merge report artifacts
-      id: merge-artifacts
-      uses: actions/upload-artifact/merge@v4
-      with:
-        name: report-e2e-linux
-        pattern: report-linux-node-*
-        delete-merged: true
+  # merge-artifacts:
+  #   runs-on: ubuntu-latest
+  #   needs: e2e-linux-tests
+  #   steps:
+  #   - name: Merge report artifacts
+  #     id: merge-artifacts
+  #     uses: actions/upload-artifact/merge@v4
+  #     with:
+  #       name: report-e2e-linux
+  #       pattern: report-linux-node-*
+  #       delete-merged: true
