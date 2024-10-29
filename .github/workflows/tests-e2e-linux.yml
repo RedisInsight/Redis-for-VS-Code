@@ -64,6 +64,7 @@ jobs:
 
     - name: Install dependencies for root package.js
       run: yarn install --frozen-lockfile
+    - run: yarn package:prod
 
     - name: Setup e2e tests
       working-directory: ./tests/e2e
@@ -88,7 +89,7 @@ jobs:
     - name: Run tests
       run: |
         # .github/e2e/test.app.sh
-        yarn --cwd tests/e2e test:ci:clear
+        yarn --cwd tests/e2e test
 
     - name: Upload Test Report
       uses: actions/upload-artifact@v4
