@@ -40,13 +40,13 @@ jobs:
     - name: Start Xvfb
       run: |
         # apt-get update -y && apt-get install -y xvfb net-tools
-        apt-get update -y && apt-get install -y xvfb net-tools openssh-client xz-utils
+        apt-get update -y && apt-get install -y xvfb net-tools
         Xvfb :99 -screen 0 1920x1080x24 &
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      with:
-        detached: true
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v3
+    #   with:
+    #     detached: true
     # - name: Download linux artifact
     #   uses: actions/download-artifact@v4
     #   with:
@@ -59,11 +59,15 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20.15'
+        cache: 'yarn'
+
+    - name: Install dependencies for root package.js
+      run: yarn install --frozen-lockfile
 
     - name: Setup e2e tests
       working-directory: ./tests/e2e
       run: |
-        npm i -g yarn
+        # npm i -g yarn
         yarn install
         yarn compile
         ls -R dist/tests/
