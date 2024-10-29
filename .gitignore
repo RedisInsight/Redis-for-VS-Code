@@ -44,7 +44,7 @@ vendor
 licenses
 out
 scripts/*.js
-*.vsix
+# *.vsix
 
 
 # E2E tests report
