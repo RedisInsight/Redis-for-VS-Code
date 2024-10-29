@@ -11,9 +11,6 @@ on:
 env:
   SLACK_TEST_REPORT_KEY: ${{ secrets.SLACK_TEST_REPORT_KEY }}
   TEST_BIG_DB_DUMP: ${{ secrets.TEST_BIG_DB_DUMP }}
-  DBUS_SESSION_BUS_ADDRESS: ${{ vars.DBUS_SESSION_BUS_ADDRESS }}
-  DISPLAY: ${{ vars.DISPLAY }}
-  TEST_RESOURCES: test-resources
 
 jobs:
   e2e-linux-tests:
@@ -99,13 +96,6 @@ jobs:
       run: |
         .github/e2e/test.app.sh
 
-    # - name: Upload Test Screenshots
-    #   uses: actions/upload-artifact@v4
-    #   if: always()
-    #   with:
-    #     name: screenshots-${{ matrix.parallel }}
-    #     path: tests/e2e/test-resources/screenshots
-
     - name: Upload Test Mocha Report
       uses: actions/upload-artifact@v4
       if: always()
@@ -130,14 +120,14 @@ jobs:
         list-suites: 'failed'
         fail-on-error: 'false'
 
-  # merge-artifacts:
-  #   runs-on: ubuntu-latest
-  #   needs: e2e-linux-tests
-  #   steps:
-  #   - name: Merge report artifacts
-  #     id: merge-artifacts
-  #     uses: actions/upload-artifact/merge@v4
-  #     with:
-  #       name: report-e2e-linux
-  #       pattern: report-linux-node-*
-  #       delete-merged: true
+  merge-artifacts:
+    runs-on: ubuntu-latest
+    needs: e2e-linux-tests
+    steps:
+    - name: Merge report artifacts
+      id: merge-artifacts
+      uses: actions/upload-artifact/merge@v4
+      with:
+        name: mocha-report-linux
+        pattern: mocha-report-linux-node-*
+        delete-merged: true
