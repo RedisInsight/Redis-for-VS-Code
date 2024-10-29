@@ -18,12 +18,12 @@ jobs:
   e2e-linux-tests:
     runs-on: ubuntu-latest
     name: E2E tests
-    container:
-      image: ubuntu:latest
-      options: --privileged
-      volumes:
-        - /usr/src/app/results:/usr/src/app/results
-        - /usr/src/app/report:/usr/src/app/report
+    # container:
+    #   image: ubuntu:latest
+    #   options: --privileged
+    #   volumes:
+    #     - /usr/src/app/results:/usr/src/app/results
+    #     - /usr/src/app/report:/usr/src/app/report
     strategy:
       fail-fast: false
       matrix:
