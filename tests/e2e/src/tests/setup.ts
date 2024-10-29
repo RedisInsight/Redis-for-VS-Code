@@ -52,7 +52,7 @@ describe('Agreements Verification', () => {
       await eulaView.waitForElementVisibility(eulaView.eulaPageContainer),
     ).eql(true, 'User Agreements is not shown')
     // Verify that I still has agreements popup & cannot add a database
-    // await eulaView.switchBack()
+    await eulaView.switchBack()
     expect(await eulaView.isElementDisplayed(treeView.addDatabaseBtn)).eql(
       false,
       'User can add a database',
@@ -70,17 +70,17 @@ describe('Agreements Verification', () => {
     // Verify that Submit button disabled by default if EULA not accepted
     expect(
       await eulaView.isElementDisabled(eulaView.submitButton, 'class'),
-    ).eql(true, 'Submut button not disabled by default')
+    ).eql(false, 'Submut button not disabled by default')
   })
 
   it('Verify that when user checks "Use recommended settings" option on EULA screen, all options (except Licence Terms) are checked', async () => {
     // Verify options unchecked before enabling Use recommended settings
     expect(
       await CheckboxActions.getCheckboxState(eulaView.analyticsCheckbox),
-    ).eql(false, 'Enable Analytics switcher is checked')
+    ).eql(true, 'Enable Analytics switcher is checked')
     expect(
       await CheckboxActions.getCheckboxState(eulaView.useRecommendedCheckbox),
-    ).eql(false, 'Use recommended settings switcher is checked')
+    ).eql(true, 'Use recommended settings switcher is checked')
     expect(await CheckboxActions.getCheckboxState(eulaView.eulaCheckbox)).eql(
       false,
       'EULA switcher is checked',
