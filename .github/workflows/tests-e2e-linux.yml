@@ -90,6 +90,7 @@ jobs:
     - name: Run tests
       working-directory: ./tests/e2e
       run: |
+        cp ../../release/redis-insight-vsc-plugin.vsix ./redis-insight-vsc-plugin.vsix
         yarn install:deps
         yarn install:extension
         yarn test
