@@ -26,8 +26,8 @@ jobs:
       fail-fast: false
       matrix:
         # Number of threads to run tests
-        parallel: [0, 1, 2, 3]
-        # parallel: [0]
+        # parallel: [0, 1, 2, 3]
+        parallel: [0]
 
     steps:
     - uses: actions/checkout@v4
@@ -56,14 +56,6 @@ jobs:
         name: linux-build
         path: ./release
 
-
-    # - run: node -v
-
-    # - name: Install dependencies for root package.js
-    #   run: yarn install --frozen-lockfile
-    # - run: yarn download:backend
-    # - run: yarn package:prod
-
     - name: Setup e2e tests
       working-directory: ./tests/e2e
       run: |
@@ -75,7 +67,7 @@ jobs:
     - name: Generate short list of the test files
       working-directory: ./tests/e2e
       run: |
-        testFiles=$(find dist -type f -name '*.e2e.js' | sort | awk "NR % 4 == ${{ matrix.parallel }}")
+        testFiles=$(find dist -type f -name '*.e2e.js' | sort | awk "NR % 1 == ${{ matrix.parallel }}")
         echo $testFiles
 
         # Multi-Line value

@@ -1,4 +1,4 @@
-name: Tests
+name: ✅ Tests
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
     # needs: e2e-approve
     secrets: inherit
 
-  e2e-linux-tests:
+  e2e-linux-tests-test:
     needs: build-linux
     uses: ./.github/workflows/tests-e2e-linux.yml
     secrets: inherit
