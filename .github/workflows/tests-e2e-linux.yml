@@ -95,19 +95,26 @@ jobs:
         cp ../../release/redis-for-vscode-extension.vsix ./redis-for-vscode-extension.vsix
         yarn install:deps
         yarn install:extension
-        yarn test:test
-        # xvfb-run --auto-servernum yarn test
+        # yarn test:test
+        xvfb-run --auto-servernum yarn test:test
 
     # - name: Run tests
     #   run: |
     #     .github/e2e/test.app.sh
 
-    - name: Upload Test Report
+    - name: Upload Test Screenshots
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: report-linux-node-${{ matrix.parallel }}
-        path: /usr/src/app/report
+        name: screenshots-${{ matrix.parallel }}
+        path: test-resources/screenshots
+
+    # - name: Upload Test Report
+    #   uses: actions/upload-artifact@v4
+    #   if: always()
+    #   with:
+    #     name: report-linux-node-${{ matrix.parallel }}
+    #     path: /usr/src/app/report
 
     - name: Send report to Slack
       if: inputs.report && always()
