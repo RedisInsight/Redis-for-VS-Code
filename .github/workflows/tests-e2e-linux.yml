@@ -64,6 +64,7 @@ jobs:
 
     - name: Install dependencies for root package.js
       run: yarn install --frozen-lockfile
+    - run: yarn download:backend
     - run: yarn package:prod
 
     - name: Setup e2e tests
