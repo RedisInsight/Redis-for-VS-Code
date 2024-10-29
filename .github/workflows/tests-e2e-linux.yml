@@ -43,10 +43,10 @@ jobs:
         apt-get update -y && apt-get install -y xvfb net-tools libsecret-1-dev
         Xvfb :99 -screen 0 1920x1080x24 &
 
-    # - name: Setup tmate session
-    #   uses: mxschmitt/action-tmate@v3
-    #   with:
-    #     detached: true
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      with:
+        detached: true
     # - name: Download linux artifact
     #   uses: actions/download-artifact@v4
     #   with:
