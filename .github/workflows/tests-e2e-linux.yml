@@ -39,7 +39,8 @@ jobs:
 
     - name: Start Xvfb
       run: |
-        apt-get update -y && apt-get install -y xvfb net-tools
+        # apt-get update -y && apt-get install -y xvfb net-tools
+        apt-get update -y && apt-get install -y xvfb net-tools openssh-client xz-utils
         Xvfb :99 -screen 0 1920x1080x24 &
 
     - name: Setup tmate session
@@ -52,8 +53,7 @@ jobs:
     #     name: linux-build
     #     path: ./release
 
-    - run: mkdir release
-    - run: cp -R ./release2 ./release
+    - run: mv ./release2 ./release
 
     - name: Setup Node
       uses: actions/setup-node@v4
