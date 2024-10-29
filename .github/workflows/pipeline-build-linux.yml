@@ -17,8 +17,11 @@ jobs:
 
     steps:
     # SSH
-    # - name: Setup upterm session
-    #   uses: mxschmitt/action-tmate@v3 #1 better
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v3
+    #   with:
+    #     detached: true
+
 
     - uses: actions/checkout@v4
 
