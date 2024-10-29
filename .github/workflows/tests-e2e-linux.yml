@@ -107,7 +107,7 @@ jobs:
       if: always()
       with:
         name: screenshots-${{ matrix.parallel }}
-        path: test-resources/screenshots
+        path: tests/e2e/test-resources/screenshots
 
     # - name: Upload Test Report
     #   uses: actions/upload-artifact@v4
