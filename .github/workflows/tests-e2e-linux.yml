@@ -13,6 +13,7 @@ env:
   TEST_BIG_DB_DUMP: ${{ secrets.TEST_BIG_DB_DUMP }}
   DBUS_SESSION_BUS_ADDRESS: ${{ vars.DBUS_SESSION_BUS_ADDRESS }}
   DISPLAY: ${{ vars.DISPLAY }}
+  TEST_RESOURCES: test-resources
 
 jobs:
   e2e-linux-tests:
