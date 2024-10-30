@@ -1,0 +1,38 @@
+name: Tests UI
+on:
+  workflow_call:
+
+env:
+  SLACK_AUDIT_REPORT_KEY: ${{ secrets.SLACK_AUDIT_REPORT_KEY }}
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    name: Frontend tests
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install all libs and dependencies
+      uses: ./.github/actions/install-all-build-libs
+
+    - name: Unit tests UI
+      run: yarn test:cov --ci --silent
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        check_name: 'FE Unit tests summary'
+        comment_mode: 'failures'
+        files: reports/junit.xml
+
+    - name: Generate test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: 'Test results: FE unit tests'
+        path: reports/junit.xml
+        reporter: jest-junit
+        list-tests: 'failed'
+        list-suites: 'failed'
+        fail-on-error: 'false'

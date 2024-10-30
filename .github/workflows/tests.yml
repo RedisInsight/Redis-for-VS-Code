@@ -1,0 +1,35 @@
+name: ✅ Tests
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+      - 'e2e/**'
+
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  frontend-tests:
+    if: startsWith(github.ref_name, 'feature/')
+    uses: ./.github/workflows/tests-frontend.yml
+    secrets: inherit
+
+  # E2E Approve
+  e2e-approve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    if: startsWith(github.ref_name, 'e2e/')
+    environment: ${{ startsWith(github.ref_name, 'e2e/') && 'e2e-approve' || 'staging' }}
+    name: Approve E2E tests
+
+  # E2E Docker
+  build-linux:
+    uses: ./.github/workflows/pipeline-build-linux.yml
+    needs: e2e-approve
+    secrets: inherit
+
+  e2e-linux-test:
+    needs: build-linux
+    uses: ./.github/workflows/tests-e2e-linux.yml
+    secrets: inherit

@@ -49,9 +49,7 @@ export default defineConfig({
   server: {
     port: 8080,
     fs: {
-      allow: [
-        './',
-      ],
+      allow: ['./'],
     },
   },
   envPrefix: 'RI_',
@@ -89,7 +87,6 @@ export default defineConfig({
         'src/webviews/src/**/index.ts',
         'src/webviews/src/**/*.d.ts',
         'src/webviews/src/**/interface.ts',
-        'src/webviews/src/**/*.stories.*',
       ],
       thresholds: {
         statements: 80,
@@ -103,6 +100,15 @@ export default defineConfig({
         inline: ['rawproto', 'react-monaco-editor'],
       },
     },
+    reporters: [
+      'default',
+      [
+        'junit',
+        {
+          outputFile: './reports/junit.xml',
+        },
+      ],
+    ],
   },
 })
 
