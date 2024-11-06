@@ -84,6 +84,18 @@
     },
     "commands": [
       {
+        "command": "RedisForVSCode.signInWithGitHub",
+        "title": "Sign in with Github",
+        "category": "Redis for VS Code",
+        "icon": "$(add)"
+      },
+      {
+        "command": "RedisForVSCode.signInWithMicrosoft",
+        "title": "Sign in with Microsoft",
+        "category": "Redis for VS Code",
+        "icon": "$(add)"
+      },
+      {
         "command": "RedisForVSCode.addCli",
         "title": "Add CLI",
         "category": "Redis for VS Code",
