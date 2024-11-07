@@ -43,50 +43,14 @@ export async function activate(context: vscode.ExtensionContext) {
   // Show the status bar item
   // myStatusBarItem.show()
 
+  vscode.window.registerUriHandler({
+    handleUri(uri: vscode.Uri) {
+      console.debug('registerUriHandler', { uri })
+    },
+  })
+
   context.subscriptions.push(
     myStatusBarItem,
-    vscode.commands.registerCommand('RedisForVSCode.signInWithGitHub', async () => {
-      try {
-        const session = await vscode.authentication.getSession('github', ['user:email'], { forceNewSession: true })
-
-        if (session) {
-          const response = await fetch('https://api.github.com/user', {
-            headers: {
-              Authorization: `token ${session.accessToken}`,
-              'User-Agent': 'VSCode Extension',
-            },
-          })
-
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status} ${response.statusText}`)
-          }
-
-          const userData = await response.json()
-
-          console.debug('github', { session, userData })
-
-          vscode.window.showInformationMessage(`Hello, ${userData.login}!`)
-        } else {
-          vscode.window.showErrorMessage('GitHub sign-in was not successful.')
-        }
-      } catch (error) {
-        vscode.window.showErrorMessage(`Sign-in failed: ${error}`)
-      }
-    }),
-    vscode.commands.registerCommand('RedisForVSCode.signInWithMicrosoft', async () => {
-      try {
-        const session = await vscode.authentication.getSession('microsoft', ['user.read'], { forceNewSession: true })
-
-        if (session) {
-          console.debug('microsoft', { session })
-          vscode.window.showInformationMessage(`Signed in as ${session.account.label}`)
-        } else {
-          vscode.window.showErrorMessage('Microsoft sign-in failed.')
-        }
-      } catch (error: any) {
-        vscode.window.showErrorMessage(`Sign-in failed: ${error.message}`)
-      }
-    }),
     vscode.window.registerWebviewViewProvider('ri-sidebar', sidebarProvider),
     vscode.window.registerWebviewViewProvider('ri-panel', panelProvider, { webviewOptions: { retainContextWhenHidden: true } }),
 
