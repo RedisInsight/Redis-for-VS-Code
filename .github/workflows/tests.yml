@@ -22,6 +22,8 @@ jobs:
     if: startsWith(github.ref_name, 'e2e/')
     environment: ${{ startsWith(github.ref_name, 'e2e/') && 'e2e-approve' || 'staging' }}
     name: Approve E2E tests
+    steps:
+      - uses: actions/checkout@v4
 
   # E2E Docker
   build-linux:
