@@ -16,7 +16,7 @@ jobs:
       uses: ./.github/actions/install-all-build-libs
 
     - name: Unit tests UI
-      run: yarn test:cov --ci --silent
+      run: yarn test:cov --ci
 
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
