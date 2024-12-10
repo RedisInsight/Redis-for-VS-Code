@@ -7,6 +7,7 @@ import { KeyInfo, RedisString } from 'uiSrc/interfaces'
 import { apiService } from 'uiSrc/services'
 import {
   ApiEndpoints,
+  CustomHeaders,
   DEFAULT_SEARCH_MATCH,
   KeyTypes,
   SCAN_COUNT_DEFAULT,
@@ -60,7 +61,7 @@ export const useSelectedKeyStore = create<SelectedKeyStore & SelectedKeyActions>
 
 // Asynchronous thunk action
 export const fetchKeyInfo = (
-  { key, databaseId }: { key: RedisString, databaseId?: string },
+  { key, databaseId, dbIndex }: { key: RedisString, databaseId?: string, dbIndex?: number },
   fetchKeyValue = true,
   onSuccess?: (data: KeyInfo) => void,
 ) => {
@@ -70,7 +71,7 @@ export const fetchKeyInfo = (
       const { data, status } = await apiService.post<KeyInfo>(
         databaseId ? getDatabaseUrl(databaseId, ApiEndpoints.KEY_INFO) : getUrl(ApiEndpoints.KEY_INFO),
         { keyName: key },
-        { params: { encoding: getEncoding() } },
+        { headers: { [CustomHeaders.DbIndex]: dbIndex } },
       )
 
       if (isStatusSuccessful(status)) {

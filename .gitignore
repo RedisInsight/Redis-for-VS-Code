@@ -38,6 +38,7 @@ reports
 # App packaged
 release
 dist
+report
 distWeb
 dll
 vendor

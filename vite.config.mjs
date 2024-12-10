@@ -82,6 +82,9 @@ export default defineConfig({
     testTimeout: 20000,
     setupFiles: ['./src/webviews/test/setup.ts'],
     coverage: {
+      enabled: true,
+      reporter: 'html',
+      reportsDirectory: './report/coverage',
       include: ['src/webviews/src/**'],
       exclude: [
         'src/webviews/src/**/index.ts',
@@ -103,9 +106,9 @@ export default defineConfig({
     reporters: [
       'default',
       [
-        'junit',
+        'html',
         {
-          outputFile: './reports/junit.xml',
+          outputFile: './report/index.html',
         },
       ],
     ],

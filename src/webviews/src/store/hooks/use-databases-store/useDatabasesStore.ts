@@ -28,6 +28,7 @@ export const initialDatabasesState: DatabasesStore = {
   connectedDatabase: null,
   databaseOverview: {
     version: '',
+    totalKeysPerDb: {},
   },
 }
 
@@ -48,15 +49,9 @@ export const useDatabasesStore = create<DatabasesStore & DatabasesActions>()(
     }),
 
     setDatabaseToList: (databaseFull: Database) => set((state) => {
-      const databases = state.data.map((database) => {
-        if (database.id === databaseFull.id) {
-          return { ...database, ...databaseFull }
-        }
+      const dbIndex = state.data.findIndex(({ id }) => id === databaseFull.id)
 
-        return database
-      })
-
-      state.data = databases
+      state.data[dbIndex] = databaseFull
     }),
 
     addDatabaseToList: (database: Database) => set((state) => {
@@ -181,6 +176,23 @@ export const fetchDatabaseById = async (databaseId: string, onSuccess?: (data: D
   return null
 }
 
+export const fetchDatabaseOverviewById = async (databaseId: string): Promise<Nullable<DatabaseOverview>> => {
+  try {
+    const { data, status } = await apiService.get<DatabaseOverview>(
+      `${ApiEndpoints.DATABASES}/${databaseId}/overview`,
+      { params: { keyspace: 'full' },
+      })
+
+    if (isStatusSuccessful(status)) {
+      return data
+    }
+  } catch (error) {
+    showErrorMessage(getApiErrorMessage(error as AxiosError))
+  }
+
+  return null
+}
+
 export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?: (database: Database) => void) => {
   useDatabasesStore.setState(async (state) => {
     state.processDatabase()
@@ -201,7 +213,7 @@ export const updateDatabase = ({ id, ...payload }: Partial<Database>, onSuccess?
 
 export function checkConnectToDatabase(
   id: string = '',
-  onSuccessAction?: (database: Database) => void,
+  onSuccessAction?: (database: Database, overview: DatabaseOverview) => void,
   onFailAction?: () => void,
   resetInstance: boolean = true,
 ) {
@@ -213,8 +225,10 @@ export function checkConnectToDatabase(
 
       if (isStatusSuccessful(status)) {
         const database = await fetchDatabaseById(id)
+        const overview = await fetchDatabaseOverviewById(id)
         state.setDatabaseToList(database!)
-        onSuccessAction?.(database!)
+
+        onSuccessAction?.(database!, overview!)
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))
@@ -245,16 +259,42 @@ export const deleteDatabases = (databases: Database[], onSuccess?: () => void) =
   })
 }
 
-export const fetchDatabaseOverview = () => {
+export const fetchDatabaseOverview = (onSuccess?: (data: DatabaseOverview) => void) => {
   useDatabasesStore.setState(async (state) => {
     try {
       const { data, status } = await apiService.get<DatabaseOverview>(getUrl(ApiEndpoints.OVERVIEW))
 
       if (isStatusSuccessful(status)) {
         state.getDatabaseOverviewSuccess(data)
+        onSuccess?.(data)
       }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error as AxiosError))
+    }
+  })
+}
+
+export function checkDatabaseIndexAction(
+  id: string,
+  index: number,
+  onSuccessAction?: () => void,
+  onFailAction?: () => void,
+) {
+  useDatabasesStore.setState(async (state) => {
+    state.processDatabase()
+    try {
+      const { status } = await apiService.get(
+        `${ApiEndpoints.DATABASES}/${id}/db/${index}`,
+      )
+
+      if (isStatusSuccessful(status)) {
+        onSuccessAction?.()
+      }
+    } catch (error) {
+      showErrorMessage(getApiErrorMessage(error as AxiosError))
+      onFailAction?.()
+    } finally {
+      state.processDatabaseFinal()
     }
   })
 }

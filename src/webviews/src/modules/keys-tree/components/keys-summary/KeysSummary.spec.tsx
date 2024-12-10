@@ -14,8 +14,10 @@ const mockedProps: Props = {
   database: mockDatabase,
   total: 1,
   scanned: 1,
+  showTree: true,
   resultsLength: 1,
   loading: false,
+  toggleShowTree: () => {},
 }
 
 vi.spyOn(utils, 'sendEventTelemetry')

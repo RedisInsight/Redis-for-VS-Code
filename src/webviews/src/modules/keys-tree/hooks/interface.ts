@@ -4,6 +4,7 @@ import { ZSetMember } from 'uiSrc/modules/key-details/components/zset-details/ho
 
 export interface KeysStore {
   databaseId: Nullable<string>
+  databaseIndex: Nullable<number>
   loading: boolean
   deleting: boolean
   isFiltered: boolean
@@ -28,10 +29,10 @@ export interface KeysActions {
   // Add key
   addKey: () => void
   addKeyFinal: () => void
-  addKeySuccess: (data: KeysStoreData) => void
   addKeyToTree: (key: RedisString, keyType: KeyTypes) => void
   resetAddKey: () => void
   setDatabaseId: (databaseId: string) => void
+  setDatabaseIndex: (databaseIndex: number) => void
 
   setFilterAndSearch: (filter: Nullable<KeyTypes>, search: string) => void
 }

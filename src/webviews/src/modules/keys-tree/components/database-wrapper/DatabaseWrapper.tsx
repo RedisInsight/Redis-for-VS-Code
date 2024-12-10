@@ -1,73 +1,40 @@
-import React, { useEffect, useState } from 'react'
-import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import React, { useState } from 'react'
 import cx from 'classnames'
-import { VscChevronRight, VscChevronDown, VscTerminal, VscEdit } from 'react-icons/vsc'
+import { VscChevronRight, VscChevronDown, VscEdit } from 'react-icons/vsc'
+import { isUndefined, toNumber } from 'lodash'
 import * as l10n from '@vscode/l10n'
-import { useShallow } from 'zustand/react/shallow'
-import { set } from 'lodash'
+import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 
-import { vscodeApi } from 'uiSrc/services'
-import { POPOVER_WINDOW_BORDER_WIDTH, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
 import {
   TelemetryEvent,
   formatLongName,
-  getDbIndex,
   getRedisModulesSummary,
   sendEventTelemetry,
 } from 'uiSrc/utils'
-import { Database, checkConnectToDatabase, deleteDatabases, useSelectedKeyStore } from 'uiSrc/store'
+import { ContextStoreProvider, Database, DatabaseOverview, checkConnectToDatabase, deleteDatabases } from 'uiSrc/store'
 import DatabaseOfflineIconSvg from 'uiSrc/assets/database/database_icon_offline.svg?react'
 import DatabaseActiveIconSvg from 'uiSrc/assets/database/database_icon_active.svg?react'
+import { Tooltip } from 'uiSrc/ui'
 import { PopoverDelete } from 'uiSrc/components'
-import { RefreshBtn, Tooltip } from 'uiSrc/ui'
-import { useKeysApi, useKeysInContext } from '../../hooks/useKeys'
+import { POPOVER_WINDOW_BORDER_WIDTH, VscodeMessageAction } from 'uiSrc/constants'
+import { vscodeApi } from 'uiSrc/services'
+import { Maybe } from 'uiSrc/interfaces'
 
+import { LogicalDatabaseWrapper } from '../logical-database-wrapper'
+import { KeysTreeHeader } from '../keys-tree-header'
+import { KeysStoreProvider } from '../../hooks/useKeys'
+import { KeysTree } from '../../KeysTree'
 import styles from './styles.module.scss'
 
 export interface Props {
   database: Database
-  children: React.ReactNode
 }
 
-export const DatabaseWrapper = ({ children, database }: Props) => {
+export const DatabaseWrapper = React.memo(({ database }: Props) => {
   const { id, name } = database
 
-  const lastRefreshTime = useKeysInContext((state) => state.data.lastRefreshTime)
-  const { selectedKeyAction, setSelectedKeyAction, setSelectedKey } = useSelectedKeyStore(useShallow((state) => ({
-    selectedKeyAction: state.action,
-    setSelectedKeyAction: state.setSelectedKeyAction,
-    setSelectedKey: state.processSelectedKeySuccess,
-  })))
-
   const [showTree, setShowTree] = useState<boolean>(false)
-
-  const keysApi = useKeysApi()
-
-  useEffect(() => {
-    const { type, keyInfo, database: databaseAction } = selectedKeyAction || {}
-    const { key, keyType, newKey } = keyInfo || {}
-    const { id: databaseId } = databaseAction || {}
-
-    if (!type || databaseId !== database.id) {
-      return
-    }
-
-    switch (type) {
-      case SelectedKeyActionType.Added:
-        keysApi.addKeyIntoTree(key!, keyType!)
-        setSelectedKey({ name: key! })
-        break
-      case SelectedKeyActionType.Removed:
-        keysApi.deleteKeyFromTree(key!)
-        break
-      case SelectedKeyActionType.Renamed:
-        keysApi.editKeyName(key!, newKey!)
-        break
-      default:
-        break
-    }
-    setSelectedKeyAction(null)
-  }, [selectedKeyAction])
+  const [totalKeysPerDb, setTotalKeysPerDb] = useState<Maybe<Record<string, number>>>(undefined)
 
   const handleCheckConnectToDatabase = ({ id, provider, modules }: Database) => {
     if (showTree) {
@@ -87,16 +54,12 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
     checkConnectToDatabase(id, connectToInstance)
   }
 
-  const connectToInstance = (database: Database) => {
-    keysApi.setDatabaseId(database.id)
-
-    // todo: fix for cli first open
-    set(window, 'ri.database', database)
+  const connectToInstance = (database: Database, overview: DatabaseOverview) => {
+    // TODO: fix for cli first open
+    // TODO: remove after tests
+    // set(window, 'ri.database', database)
     setShowTree(!showTree)
-  }
-
-  const openCliClickHandle = () => {
-    vscodeApi.postMessage({ action: VscodeMessageAction.AddCli, data: { database } })
+    setTotalKeysPerDb(overview?.totalKeysPerDb)
   }
 
   const editHandle = () => {
@@ -123,9 +86,36 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
     })
   }
 
-  const refreshHandle = () => {
-    keysApi.fetchPatternKeysAction()
-  }
+  const Chevron = () => (showTree ? (
+    <VscChevronDown className={cx(styles.icon, styles.iconNested)} />
+  ) : (
+    <VscChevronRight className={cx(styles.icon, styles.iconNested)} />
+  ))
+
+  const DatabaseIcon = () => (showTree ? (
+    <DatabaseActiveIconSvg className={styles.icon} />
+  ) : (
+    <DatabaseOfflineIconSvg className={styles.icon} />
+  ))
+
+  const LogicalDatabase = (
+    { database, open, dbTotal }:
+    { database: Database, open?: boolean, dbTotal?: number },
+  ) => (
+    <ContextStoreProvider>
+      <KeysStoreProvider>
+        <LogicalDatabaseWrapper database={database}>
+          <KeysTreeHeader
+            database={database}
+            open={open}
+            dbTotal={dbTotal}
+          >
+            <KeysTree database={database} />
+          </KeysTreeHeader>
+        </LogicalDatabaseWrapper>
+      </KeysStoreProvider>
+    </ContextStoreProvider>
+  )
 
   return (
     <div className={cx('flex w-full flex-col')}>
@@ -137,10 +127,8 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
           className={styles.databaseNameWrapper}
           data-testid={`database-${id}`}
         >
-          {showTree && (<VscChevronDown className={cx(styles.icon, styles.iconNested)} />)}
-          {showTree && (<DatabaseActiveIconSvg className={styles.icon} />)}
-          {!showTree && (<VscChevronRight className={cx(styles.icon, styles.iconNested)} />)}
-          {!showTree && (<DatabaseOfflineIconSvg className={styles.icon} />)}
+          {<Chevron/>}
+          {<DatabaseIcon/>}
           <Tooltip
             content={formatLongName(name, 100, 20)}
             position="bottom center"
@@ -149,19 +137,10 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
           >
             <div className={styles.databaseName}>
               <div className="truncate">{name}</div>
-              <div>{getDbIndex(database.db)}</div>
             </div>
           </Tooltip>
         </div>
         <div className="flex pr-3.5">
-          {showTree && (
-            <RefreshBtn
-              lastRefreshTime={lastRefreshTime}
-              position="left center"
-              onClick={refreshHandle}
-              triggerTestid="refresh-keys"
-            />
-          )}
           <VSCodeButton
             appearance="icon"
             onClick={editHandle}
@@ -182,14 +161,31 @@ export const DatabaseWrapper = ({ children, database }: Props) => {
             handleButtonClick={() => clickDeleteDatabaseHandle()}
             testid={`delete-database-${id}`}
           />
-          {showTree && (
-            <VSCodeButton appearance="icon" onClick={openCliClickHandle} data-testid="terminal-button">
-              <VscTerminal />
-            </VSCodeButton>
-          )}
         </div>
       </div>
-      {showTree && children}
+      {showTree && (<>
+        {!isUndefined(totalKeysPerDb) && Object.keys(totalKeysPerDb!).map((databaseIndex) => (
+          <LogicalDatabase
+            key={id + databaseIndex}
+            open={Object.keys(totalKeysPerDb!)?.length === 1}
+            dbTotal={totalKeysPerDb?.[databaseIndex]}
+            // database={database}
+            database={{
+              ...database,
+              db: toNumber(databaseIndex.replace('db', '')),
+            }}
+            // dbIndex={toNumber(databaseIndex.replace('db', ''))}
+          />
+        ))}
+        {isUndefined(totalKeysPerDb) && (
+          <LogicalDatabase
+            key={id}
+            // database={database}
+            database={{ ...database, db: 0 }}
+            open={true}
+          />
+        )}
+      </>)}
     </div>
   )
-}
+})

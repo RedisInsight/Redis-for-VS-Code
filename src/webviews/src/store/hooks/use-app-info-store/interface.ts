@@ -54,6 +54,7 @@ export interface GetServerInfoResponse {
   encryptionStrategies: string[]
   sessionId: number
   controlNumber: number
+  databaseCount: number
   controlGroup: string
 }
 
