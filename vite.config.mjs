@@ -106,6 +106,12 @@ export default defineConfig({
     reporters: [
       'default',
       [
+        'junit',
+        {
+          outputFile: './reports/junit.xml',
+        },
+      ],
+      [
         'html',
         {
           outputFile: './report/index.html',
