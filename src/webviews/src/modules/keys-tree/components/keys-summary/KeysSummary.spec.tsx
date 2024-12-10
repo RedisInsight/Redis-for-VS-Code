@@ -79,12 +79,12 @@ describe('KeysSummary', () => {
   })
 
   it('should call sendEventTelemetry and postMessage actions after click on Add Key icon', async () => {
-    const { queryByTestId } = render(<KeysSummary {...mockedProps} />)
+    const { queryByTestId } = render(<KeysSummary {...mockedProps} dbIndex={mockDatabase.db!} />)
 
     fireEvent.click(queryByTestId('add-key-button')!)
 
     expect(vscodeApi.postMessage).toBeCalledWith({
-      action: VscodeMessageAction.AddKey, data: { database: mockDatabase },
+      action: VscodeMessageAction.AddKey, data: { database: { ...mockDatabase } },
     })
 
     expect(utils.sendEventTelemetry).toBeCalledWith({
