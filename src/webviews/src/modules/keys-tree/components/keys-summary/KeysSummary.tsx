@@ -3,15 +3,15 @@ import * as l10n from '@vscode/l10n'
 import cx from 'classnames'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { BiSortDown, BiSortUp } from 'react-icons/bi'
-import { VscAdd, VscChevronDown, VscChevronRight, VscDatabase, VscTerminal } from 'react-icons/vsc'
+import { VscAdd, VscDatabase, VscTerminal } from 'react-icons/vsc'
 import { isUndefined } from 'lodash'
 
 import { TelemetryEvent, nullableNumberWithSpaces, numberWithSpaces, sendEventTelemetry } from 'uiSrc/utils'
 import { vscodeApi } from 'uiSrc/services'
 import { SortOrder, VscodeMessageAction } from 'uiSrc/constants'
 import { checkDatabaseIndexAction, Database, useContextApi, useContextInContext } from 'uiSrc/store'
-import { Nullable } from 'uiSrc/interfaces'
-import { RefreshBtn, Tooltip } from 'uiSrc/ui'
+import { Maybe, Nullable } from 'uiSrc/interfaces'
+import { Chevron, RefreshBtn, Tooltip } from 'uiSrc/ui'
 
 import { KeyTreeFilter } from '../keys-tree-filter'
 import { useKeysApi, useKeysInContext } from '../../hooks/useKeys'
@@ -24,7 +24,7 @@ export interface Props {
   loading: boolean
   total: Nullable<number>
   showTree: boolean
-  dbIndex: number
+  dbIndex: Maybe<number>
   toggleShowTree: (value?: boolean) => void
 }
 
@@ -46,7 +46,7 @@ export const KeysSummary = (props: Props) => {
     })
     vscodeApi.postMessage({
       action: VscodeMessageAction.AddKey,
-      data: { database: { ...database, db: dbIndex! } },
+      data: { database: { ...database, db: dbIndex } },
     })
   }
 
@@ -69,7 +69,7 @@ export const KeysSummary = (props: Props) => {
       return
     }
     if (!showTree) {
-      checkDatabaseIndexAction(database.id, dbIndex!, () => toggleShowTree())
+      checkDatabaseIndexAction(database.id, dbIndex, () => toggleShowTree())
       return
     }
     toggleShowTree()
@@ -78,21 +78,12 @@ export const KeysSummary = (props: Props) => {
   const openCliClickHandle = () => {
     vscodeApi.postMessage({
       action: VscodeMessageAction.AddCli,
-      data: { database: { ...database, db: dbIndex! } },
+      data: { database: { ...database, db: dbIndex } },
     })
   }
 
   const refreshHandle = () => {
     keysApi.fetchPatternKeysAction()
-  }
-
-  const Chevron = () => {
-    if (!isMultiDbIndex) return null
-    return showTree ? (
-      <VscChevronDown className={cx(styles.icon, styles.iconNested)} />
-    ) : (
-      <VscChevronRight className={cx(styles.icon, styles.iconNested)} />
-    )
   }
 
   const DbIndex = () => {
@@ -137,7 +128,7 @@ export const KeysSummary = (props: Props) => {
         onClick={handleToggleShowTree}
         data-testid="keys-summary"
       >
-        {<Chevron />}
+        {<Chevron open={showTree} display={isMultiDbIndex} />}
         {<DbIndex />}
         {<Summary />}
       </div>

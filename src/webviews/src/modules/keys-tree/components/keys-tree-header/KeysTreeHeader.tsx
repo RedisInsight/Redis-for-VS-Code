@@ -67,7 +67,7 @@ export const KeysTreeHeader = ({ database, open, dbTotal, children }: Props) => 
         loading={loading}
         scanned={scanned}
         total={dbTotal ?? total}
-        dbIndex={dbIndex!}
+        dbIndex={dbIndex}
         resultsLength={resultsLength}
         showTree={showTree}
         toggleShowTree={handleToggleShowTree}

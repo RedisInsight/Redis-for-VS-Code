@@ -111,11 +111,11 @@ export const KeysTree = ({ database }: Props) => {
     if (isUndefined(type)) {
       return
     }
-    fetchKeyInfo({ key: name, databaseId: database.id, dbIndex: dbIndex! }, false, () => {
+    fetchKeyInfo({ key: name, databaseId: database.id, dbIndex }, false, () => {
       vscodeApi.postMessage({
         action: VscodeMessageAction.SelectKey,
         data: {
-          database: { ...database, db: dbIndex! },
+          database: { ...database, db: dbIndex },
           keyInfo: { key: name, keyString, keyType: type, displayedKeyType: getGroupTypeDisplay(type) },
         },
       })
@@ -152,7 +152,7 @@ export const KeysTree = ({ database }: Props) => {
 
     return (
       <div className="pl-8">
-        <NoKeysMessage total={keysState.total} database={database} />
+        <NoKeysMessage total={keysState.total} database={database} dbIndex={dbIndex} />
       </div>
     )
   }

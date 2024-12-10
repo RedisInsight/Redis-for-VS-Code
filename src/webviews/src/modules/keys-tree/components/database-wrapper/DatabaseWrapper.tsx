@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { VscChevronRight, VscChevronDown, VscEdit } from 'react-icons/vsc'
+import { VscEdit } from 'react-icons/vsc'
 import { isUndefined, toNumber } from 'lodash'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
@@ -12,9 +12,7 @@ import {
   sendEventTelemetry,
 } from 'uiSrc/utils'
 import { ContextStoreProvider, Database, DatabaseOverview, checkConnectToDatabase, deleteDatabases } from 'uiSrc/store'
-import DatabaseOfflineIconSvg from 'uiSrc/assets/database/database_icon_offline.svg?react'
-import DatabaseActiveIconSvg from 'uiSrc/assets/database/database_icon_active.svg?react'
-import { Tooltip } from 'uiSrc/ui'
+import { Chevron, DatabaseIcon, Tooltip } from 'uiSrc/ui'
 import { PopoverDelete } from 'uiSrc/components'
 import { POPOVER_WINDOW_BORDER_WIDTH, VscodeMessageAction } from 'uiSrc/constants'
 import { vscodeApi } from 'uiSrc/services'
@@ -86,18 +84,6 @@ export const DatabaseWrapper = React.memo(({ database }: Props) => {
     })
   }
 
-  const Chevron = () => (showTree ? (
-    <VscChevronDown className={cx(styles.icon, styles.iconNested)} />
-  ) : (
-    <VscChevronRight className={cx(styles.icon, styles.iconNested)} />
-  ))
-
-  const DatabaseIcon = () => (showTree ? (
-    <DatabaseActiveIconSvg className={styles.icon} />
-  ) : (
-    <DatabaseOfflineIconSvg className={styles.icon} />
-  ))
-
   const LogicalDatabase = (
     { database, open, dbTotal }:
     { database: Database, open?: boolean, dbTotal?: number },
@@ -127,8 +113,8 @@ export const DatabaseWrapper = React.memo(({ database }: Props) => {
           className={styles.databaseNameWrapper}
           data-testid={`database-${id}`}
         >
-          {<Chevron/>}
-          {<DatabaseIcon/>}
+          {<Chevron open={showTree} />}
+          {<DatabaseIcon open={showTree} />}
           <Tooltip
             content={formatLongName(name, 100, 20)}
             position="bottom center"
@@ -164,23 +150,20 @@ export const DatabaseWrapper = React.memo(({ database }: Props) => {
         </div>
       </div>
       {showTree && (<>
-        {!isUndefined(totalKeysPerDb) && Object.keys(totalKeysPerDb!).map((databaseIndex) => (
+        {!isUndefined(totalKeysPerDb) && Object.keys(totalKeysPerDb).map((databaseIndex) => (
           <LogicalDatabase
             key={id + databaseIndex}
-            open={Object.keys(totalKeysPerDb!)?.length === 1}
+            open={Object.keys(totalKeysPerDb)?.length === 1}
             dbTotal={totalKeysPerDb?.[databaseIndex]}
-            // database={database}
             database={{
               ...database,
               db: toNumber(databaseIndex.replace('db', '')),
             }}
-            // dbIndex={toNumber(databaseIndex.replace('db', ''))}
           />
         ))}
         {isUndefined(totalKeysPerDb) && (
           <LogicalDatabase
             key={id}
-            // database={database}
             database={{ ...database, db: 0 }}
             open={true}
           />

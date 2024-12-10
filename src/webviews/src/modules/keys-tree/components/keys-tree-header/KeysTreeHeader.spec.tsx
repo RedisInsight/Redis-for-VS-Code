@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { render, constants } from 'testSrc/helpers'
-import { KeysTreeHeader } from './KeysTreeHeader'
+import { KeysTreeHeader, Props } from './KeysTreeHeader'
 import * as useKeys from '../../hooks/useKeys'
 
 const useKeysInContextMock = vi.spyOn(useKeys, 'useKeysInContext')
@@ -9,12 +9,9 @@ const useKeysInContextMock = vi.spyOn(useKeys, 'useKeysInContext')
 const mockDatabase = constants.DATABASE
 const mockedProps: Props = {
   database: mockDatabase,
-  total: 1,
-  scanned: 1,
-  showTree: true,
-  resultsLength: 1,
-  loading: false,
-  toggleShowTree: () => {},
+  dbTotal: 1,
+  open: true,
+  children: <div/>,
 }
 
 describe('KeysTreeHeaders', () => {

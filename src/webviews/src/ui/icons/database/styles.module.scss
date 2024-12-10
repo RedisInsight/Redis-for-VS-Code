@@ -1,0 +1,7 @@
+.icon {
+  @apply mr-2 w-[14px] h-[14px] min-w-[14px] ml-[3px];
+
+  &Nested {
+    @apply m-0;
+  }
+}
