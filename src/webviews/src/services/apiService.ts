@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { isNumber } from 'lodash'
-import { sessionStorageService } from 'uiSrc/services'
-import { StorageItem, CustomHeaders, BASE_URL } from 'uiSrc/constants'
+import { CustomHeaders, BASE_URL } from 'uiSrc/constants'
+import { getEncoding } from 'uiSrc/utils'
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -12,10 +12,18 @@ export const requestInterceptor = (config: AxiosRequestConfig): any => {
     const databaseId = /databases\/([\w-]+)\/?.*/.exec(config.url || '')?.[1]
 
     if (databaseId) {
-      const dbIndex = sessionStorageService.get(`${StorageItem.dbIndex}${databaseId}`)
+      const dbIndex = window.ri?.database?.db
+      const encoding = getEncoding()
 
       if (isNumber(dbIndex)) {
         config.headers[CustomHeaders.DbIndex] = dbIndex
+      }
+
+      if (encoding) {
+        config.params = {
+          encoding,
+          ...config.params,
+        }
       }
     }
 

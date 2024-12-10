@@ -30,6 +30,7 @@ enum StorageItem {
   OAuthAgreement = 'OAuthAgreement',
   cliDatabase = 'cliDatabase',
   databaseId = 'databaseId',
+  openTreeNode = 'openTreeNode',
 }
 
 export { StorageItem }

@@ -7,6 +7,7 @@ import { KeysStore, KeysActions } from './interface'
 
 export const initialKeysState: KeysStore = {
   databaseId: null,
+  databaseIndex: null,
   deleting: false,
   loading: false,
   filter: null,
@@ -93,14 +94,6 @@ KeysStore & KeysActions
   addKey: () => set({ loading: true }),
   addKeyFinal: () => set({ loading: false }),
 
-  addKeySuccess: (data) => set((state) => ({
-    data: {
-      ...state.data,
-      previousResultCount: data.keys?.length,
-      lastRefreshTime: Date.now(),
-    },
-  })),
-
   addKeyToTree: (key, type) => set((state) => {
     state.data?.keys.unshift({ name: key, type })
 
@@ -115,6 +108,8 @@ KeysStore & KeysActions
   resetAddKey: () => set({ addKeyLoading: false }),
 
   setDatabaseId: (databaseId) => set({ databaseId }),
+
+  setDatabaseIndex: (databaseIndex) => set({ databaseIndex }),
 
   setFilterAndSearch: (filter, search = DEFAULT_SEARCH_MATCH) =>
     set({ filter, search }),

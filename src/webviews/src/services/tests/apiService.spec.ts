@@ -1,10 +1,11 @@
 import { AxiosRequestConfig } from 'axios'
-import { sessionStorageService } from 'uiSrc/services'
 import { requestInterceptor } from 'uiSrc/services/apiService'
+
+const mockDbIndex = 5
+vi.stubGlobal('ri', { database: { db: mockDbIndex } })
 
 describe('requestInterceptor', () => {
   it('should properly set db-index to headers', () => {
-    sessionStorageService.get = vi.fn().mockReturnValue(5)
 
     const config: AxiosRequestConfig = {
       headers: {},
@@ -12,11 +13,10 @@ describe('requestInterceptor', () => {
     }
 
     requestInterceptor(config)
-    expect(config?.headers?.['ri-db-index']).toEqual(5)
+    expect(config?.headers?.['ri-db-index']).toEqual(mockDbIndex)
   })
 
   it('should not set db-index to headers with url not related to database', () => {
-    sessionStorageService.get = vi.fn().mockReturnValue(5)
 
     const config: AxiosRequestConfig = {
       headers: {},

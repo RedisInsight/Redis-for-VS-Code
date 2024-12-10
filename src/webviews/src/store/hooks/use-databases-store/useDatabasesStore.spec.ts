@@ -15,6 +15,7 @@ import {
   deleteDatabases,
   fetchDatabaseOverview,
   fetchDatabaseById,
+  checkDatabaseIndexAction,
 } from './useDatabasesStore'
 
 let databases: any[]
@@ -426,6 +427,23 @@ describe('useDatabasesStore', () => {
         expect(useDatabasesStore.getState().databaseOverview.version).toEqual(versionMock)
         expect(useDatabasesStore.getState().loading).toEqual(false)
         expect(utils.showErrorMessage).toBeCalled()
+      })
+    })
+
+    describe('checkDatabaseIndexAction', () => {
+      it('should set loading', async () => {
+      // Arrange
+        const responseGetPayload = { status: 200 }
+
+        apiService.get = vi.fn().mockResolvedValue(responseGetPayload)
+
+        // Act
+        checkDatabaseIndexAction('databaseId', 1)
+        expect(useDatabasesStore.getState().loading).toEqual(true)
+
+        await waitForStack()
+
+        expect(useDatabasesStore.getState().loading).toEqual(false)
       })
     })
   })

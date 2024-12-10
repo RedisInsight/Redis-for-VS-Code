@@ -86,6 +86,8 @@ module.exports = {
     'function-paren-newline': 'off',
     'prefer-regex-literals': 'off',
     'react/display-name': 'off',
+    'react/jsx-indent-props': [2, 2],
+    'react/jsx-indent': [2, 2],
     'no-promise-executor-return': 'off',
     'import/order': [
       1,

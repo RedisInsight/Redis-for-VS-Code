@@ -11,7 +11,7 @@ module.exports = {
   reporterOptions: {
     reporterEnabled: 'mochawesome, mocha-junit-reporter',
     mochawesomeReporterOptions: {
-      reportFilename: '[status]_[datetime]-[name]-report',
+      reportFilename: 'index',
       quiet: true,
     },
     mochaJunitReporterReporterOptions: {

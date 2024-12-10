@@ -10,6 +10,9 @@
     "source.fixAll.eslint": "explicit"
   },
   "eslint.validate": ["javascript", "typescript"],
+  "eslint.workingDirectories": [
+    { "directory": "./", "changeProcessCWD": true }
+  ],
   "files.associations": {
     "*.css": "postcss",
     "*.scss": "postcss"
@@ -35,6 +38,7 @@
     ".eslintcache": true,
     "bower_components": true,
     "release": true,
+    "src/webviews/public": true,
     "npm-debug.log.*": true,
     "tests/**/__snapshots__": true,
     "yarn.lock": true,
@@ -44,7 +48,13 @@
     "**/pnpm-lock.yaml": true,
     "**/test-extensions": true
   },
-  "cSpell.words": ["githubocto", "tailwindcss", "webviews", "zustand"],
+  "cSpell.words": [
+    "githubocto",
+    "keyspace",
+    "tailwindcss",
+    "webviews",
+    "zustand"
+  ],
   "testing.automaticallyOpenPeekView": "never",
   "[typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"

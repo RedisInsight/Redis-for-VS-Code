@@ -28,6 +28,8 @@ vite.config.mjs
 # test
 coverage
 test
+report
+reports
 tests
 test-workspace
 .vscode-test

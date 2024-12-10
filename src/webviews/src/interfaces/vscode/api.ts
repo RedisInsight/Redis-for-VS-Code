@@ -34,6 +34,7 @@ export interface SetDatabaseAction {
   | VscodeMessageAction.SetDatabase
   | VscodeMessageAction.CloseAddDatabase
   | VscodeMessageAction.AddDatabase
+  | VscodeMessageAction.UpdateDatabaseInList
   data: {
     database: Database
   }

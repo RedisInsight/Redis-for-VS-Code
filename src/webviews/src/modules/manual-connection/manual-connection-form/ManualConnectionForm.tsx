@@ -7,17 +7,13 @@ import { VSCodeButton, VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 import { VscInfo } from 'react-icons/vsc'
 import {
   Keys,
-  validationErrors,
   fieldDisplayNames,
-  SubmitBtnText,
   ConnectionType,
 } from 'uiSrc/constants'
 import { DbConnectionInfo, ISubmitButton } from 'uiSrc/interfaces'
 import { getFormErrors, getRequiredFieldsText } from 'uiSrc/utils'
 import {
-  DbIndex,
   DbInfo,
-  MessageStandalone,
   TlsDetails,
   DatabaseForm,
   DbCompressor,
@@ -247,9 +243,6 @@ const ManualConnectionForm = (props: Props) => {
               onHostNamePaste={onHostNamePaste}
               showFields={{ host: true, alias: true, port: true, timeout: true }}
             />
-            <DbIndex
-              formik={formik}
-            />
             <DbCompressor
               formik={formik}
             />
@@ -293,11 +286,6 @@ const ManualConnectionForm = (props: Props) => {
                 autoFocus={!isCloneMode && isEditMode}
                 onHostNamePaste={onHostNamePaste}
               />
-              {isCloneMode && (
-                <DbIndex
-                  formik={formik}
-                />
-              )}
               <DbCompressor
                 formik={formik}
               />
