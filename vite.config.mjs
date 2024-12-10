@@ -103,21 +103,11 @@ export default defineConfig({
         inline: ['rawproto', 'react-monaco-editor'],
       },
     },
-    reporters: [
-      'default',
-      [
-        'junit',
-        {
-          outputFile: './reports/junit.xml',
-        },
-      ],
-      [
-        'html',
-        {
-          outputFile: './report/index.html',
-        },
-      ],
-    ],
+    reporters: ['default', 'junit', 'html'],
+    outputFile: {
+      junit: './reports/junit.xml',
+      html: './report/index.html',
+    },
   },
 })
 
