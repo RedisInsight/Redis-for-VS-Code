@@ -1,20 +1,28 @@
 import React from 'react'
+import cx from 'classnames'
+import { IconBaseProps } from 'react-icons/lib'
 
 import DatabaseOfflineIconSvg from 'uiSrc/assets/database/database_icon_offline.svg?react'
 import DatabaseActiveIconSvg from 'uiSrc/assets/database/database_icon_active.svg?react'
-import styles from './styles.module.scss'
 
-export interface Props {
+export interface Props extends IconBaseProps {
   open?: boolean
-  display?: boolean
+  hidden?: boolean
+  className?: string
 }
 
-export const DatabaseIcon = ({ open = false, display = true }: Props) => {
-  if (!display) return null
+export const DatabaseIcon = ({ open = false, hidden = false, className = '', ...props }: Props) => {
+  if (hidden) return null
 
   return open ? (
-    <DatabaseActiveIconSvg className={styles.icon} />
+    <DatabaseActiveIconSvg
+      {...props}
+      className={cx('sidebar-icon', className)}
+     />
   ) : (
-    <DatabaseOfflineIconSvg className={styles.icon} />
+    <DatabaseOfflineIconSvg
+      {...props}
+      className={cx('sidebar-icon', className)}
+    />
   )
 }

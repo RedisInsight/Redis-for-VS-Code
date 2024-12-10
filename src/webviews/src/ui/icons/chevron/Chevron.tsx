@@ -1,20 +1,26 @@
 import React from 'react'
 import cx from 'classnames'
-
 import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
-import styles from './styles.module.scss'
+import { IconBaseProps } from 'react-icons/lib'
 
-export interface Props {
+export interface Props extends IconBaseProps {
   open?: boolean
-  display?: boolean
+  hidden?: boolean
+  className?: string
 }
 
-export const Chevron = ({ open = false, display = true }: Props) => {
-  if (!display) return null
+export const Chevron = ({ open = false, hidden = false, className = '', ...props }: Props) => {
+  if (hidden) return null
 
   return open ? (
-    <VscChevronDown className={cx(styles.icon, styles.iconNested)} />
+    <VscChevronDown
+      {...props}
+      className={cx('sidebar-icon', 'sidebar-icon-nested', className)}
+    />
   ) : (
-    <VscChevronRight className={cx(styles.icon, styles.iconNested)} />
+    <VscChevronRight
+      {...props}
+      className={cx('sidebar-icon', 'sidebar-icon-nested', className)}
+    />
   )
 }

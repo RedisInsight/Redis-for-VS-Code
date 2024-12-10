@@ -53,6 +53,14 @@ vscode-button::part(control) {
       @apply border-none;
     }
   }
+
+  .sidebar-icon {
+    @apply mr-2 w-[14px] h-[14px] min-w-[14px] ml-[3px];
+
+    &-nested {
+      @apply m-0;
+    }
+  }
 }
 
 .table-loading:before {

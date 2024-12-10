@@ -128,7 +128,7 @@ export const KeysSummary = (props: Props) => {
         onClick={handleToggleShowTree}
         data-testid="keys-summary"
       >
-        {<Chevron open={showTree} display={isMultiDbIndex} />}
+        {<Chevron open={showTree} hidden={!isMultiDbIndex} />}
         {<DbIndex />}
         {<Summary />}
       </div>
