@@ -1,21 +1,32 @@
 import React from 'react'
 
-import { render } from 'testSrc/helpers'
+import { render, constants } from 'testSrc/helpers'
 import { KeysTreeHeader } from './KeysTreeHeader'
 import * as useKeys from '../../hooks/useKeys'
 
 const useKeysInContextMock = vi.spyOn(useKeys, 'useKeysInContext')
 
+const mockDatabase = constants.DATABASE
+const mockedProps: Props = {
+  database: mockDatabase,
+  total: 1,
+  scanned: 1,
+  showTree: true,
+  resultsLength: 1,
+  loading: false,
+  toggleShowTree: () => {},
+}
+
 describe('KeysTreeHeaders', () => {
   it('should render', () => {
-    expect(render(<KeysTreeHeader />)).toBeTruthy()
+    expect(render(<KeysTreeHeader {...mockedProps} />)).toBeTruthy()
   })
 
   it.skip('should hide Scan more button when totalItemsCount < scanned', () => {
     const initialState = { scanned: 2, total: 1 }
     useKeysInContextMock.mockImplementation(() => initialState)
 
-    const { queryByTestId } = render(<KeysTreeHeader />)
+    const { queryByTestId } = render(<KeysTreeHeader {...mockedProps} />)
 
     expect(queryByTestId('scan-more')).not.toBeInTheDocument()
   })
@@ -25,7 +36,7 @@ describe('KeysTreeHeaders', () => {
 
     useKeysInContextMock.mockImplementation(() => initialState)
 
-    const { queryByTestId } = render(<KeysTreeHeader />)
+    const { queryByTestId } = render(<KeysTreeHeader {...mockedProps} />)
 
     expect(queryByTestId('scan-more')).toBeInTheDocument()
   })
@@ -35,7 +46,7 @@ describe('KeysTreeHeaders', () => {
 
     useKeysInContextMock.mockImplementation(() => initialState)
 
-    const { queryByTestId } = render(<KeysTreeHeader />)
+    const { queryByTestId } = render(<KeysTreeHeader {...mockedProps} />)
 
     expect(queryByTestId('scan-more')).toBeInTheDocument()
   })
@@ -45,7 +56,7 @@ describe('KeysTreeHeaders', () => {
 
     useKeysInContextMock.mockImplementation(() => initialState)
 
-    const { queryByTestId } = render(<KeysTreeHeader />)
+    const { queryByTestId } = render(<KeysTreeHeader {...mockedProps} />)
 
     expect(queryByTestId('scan-more')).toBeInTheDocument()
   })

@@ -14,6 +14,7 @@ const mockedProps: Props = {
   database: mockDatabase,
   total: 1,
   scanned: 1,
+  dbIndex: 0,
   showTree: true,
   resultsLength: 1,
   loading: false,
