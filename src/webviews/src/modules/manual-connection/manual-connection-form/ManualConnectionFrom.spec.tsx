@@ -384,12 +384,13 @@ describe('DatabaseForm', () => {
         />
       </div>,
     )
-    await waitFor(() => {
-      fireEvent.click(screen.getByTestId('select-ca-cert'))
-    })
-    await waitFor(() => {
-      fireEvent.click(queryAllByText('Add new CA certificate')[0] || document)
-    })
+
+    const caCertComponent = screen.queryByTestId('select-ca-cert')
+    fireEvent.keyDown(caCertComponent?.firstChild!, { key: 'ArrowDown' })
+
+    await waitFor(() => screen.getByText('Add new CA certificate'))
+
+    fireEvent.click(screen.getByText('Add new CA certificate'))
 
     expect(screen.getByTestId(NEW_CA_CERT)).toBeInTheDocument()
     await waitFor(() => {
@@ -423,7 +424,7 @@ describe('DatabaseForm', () => {
 
     expect(handleSubmit).toBeCalledWith(
       expect.objectContaining({
-        selectedCaCertName: ADD_NEW_CA_CERT,
+        selectedCaCertName: ADD_NEW_CA_CERT.value,
         newCaCertName: '321',
         newCaCert: '123',
       }),

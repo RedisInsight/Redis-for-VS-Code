@@ -4,6 +4,7 @@ import { KeyInfo } from 'uiSrc/interfaces'
 import { Certificate } from 'uiSrc/store/hooks/use-certificates-store/interface'
 import { UTF8ToArray, stringToBuffer } from 'uiSrc/utils'
 import { Database } from 'uiSrc/store'
+import { SuperSelectOption } from 'uiSrc/components'
 
 const COMMON_CONSENT_CONTENT = {
   defaultValue: false,
@@ -139,6 +140,10 @@ export const constants = {
 
   get CLIENT_CERTS() {
     return CLIENT_CERTS
+  },
+
+  get SUPER_SELECT_OPTIONS() {
+    return SUPER_SELECT_OPTIONS
   },
 
   TEST_DATABASE_ID: uuidv4(),
@@ -313,6 +318,10 @@ const KEYS_LIST: any = {
 
 const CA_CERTS: Certificate[] = [{ id: 'id1', name: 'ca_name1' }, { id: 'id2', name: 'ca_name2' }]
 const CLIENT_CERTS: Certificate[] = [{ id: 'id11', name: 'client_name1' }, { id: 'id12', name: 'client_name2' }]
+const SUPER_SELECT_OPTIONS: SuperSelectOption[] = [
+  { value: 'val', label: 'lab' },
+  { value: 'val2', label: 'lab2' },
+]
 
 const DATABASE: Database = {
   id: constants.TEST_DATABASE_ID,

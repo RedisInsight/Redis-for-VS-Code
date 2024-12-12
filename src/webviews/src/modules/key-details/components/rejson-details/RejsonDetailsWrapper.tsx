@@ -8,6 +8,7 @@ import { KeyTypes } from 'uiSrc/constants'
 import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
 import { Spinner } from 'uiSrc/ui'
 
+import { parseJsonData } from './utils'
 import { IJSONData } from './interfaces'
 import { RejsonDetails } from './rejson-details'
 import { useRejsonStore } from './hooks/useRejsonStore'
@@ -17,8 +18,8 @@ import styles from './styles.module.scss'
 export interface Props extends KeyDetailsHeaderProps {}
 
 const RejsonDetailsWrapper = (props: Props) => {
-  const { data, downloaded, type, path, loading } = useRejsonStore(useShallow((state) => ({
-    data: state.data.data,
+  const { updatedData, downloaded, type, path, loading } = useRejsonStore(useShallow((state) => ({
+    updatedData: state.data.data,
     type: state.data.type,
     path: state.data.path,
     loading: state.loading,
@@ -34,6 +35,8 @@ const RejsonDetailsWrapper = (props: Props) => {
   const databaseId = useDatabasesStore((state) => state.connectedDatabase?.id)
 
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
+
+  const data = parseJsonData(updatedData)
 
   useEffect(() => {
     setExpandedRows(new Set())

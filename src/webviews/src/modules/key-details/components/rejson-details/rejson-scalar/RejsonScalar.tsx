@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { GoAlert } from 'react-icons/go'
-import { isNull, isString } from 'lodash'
 
 import { InlineEditor, PopoverDelete, FieldMessage } from 'uiSrc/components'
 import { TelemetryEvent, bufferToString, createDeleteFieldHeader, createDeleteFieldMessage, sendEventTelemetry } from 'uiSrc/utils'
@@ -9,7 +8,7 @@ import { Nullable } from 'uiSrc/interfaces'
 import { useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
 
 import { JSONScalarProps } from '../interfaces'
-import { generatePath, getClassNameByValue, isValidJSON } from '../utils'
+import { generatePath, getClassNameByValue, isValidJSON, stringifyScalarValue } from '../utils'
 import { setReJSONDataAction } from '../hooks/useRejsonStore'
 import { JSONErrors } from '../constants'
 
@@ -36,7 +35,7 @@ export const RejsonScalar = (props: JSONScalarProps) => {
   const databaseId = useKeysInContext((state) => state.databaseId)
 
   useEffect(() => {
-    setChangedValue(isString(value) ? `"${value}"` : isNull(value) ? 'null' : value)
+    setChangedValue(stringifyScalarValue(value))
   }, [value])
 
   const onDeclineChanges = () => {
