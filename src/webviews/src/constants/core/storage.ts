@@ -31,6 +31,7 @@ enum StorageItem {
   cliDatabase = 'cliDatabase',
   databaseId = 'databaseId',
   openTreeNode = 'openTreeNode',
+  openTreeDatabase = 'openTreeDatabase',
 }
 
 export { StorageItem }
