@@ -36,7 +36,7 @@ jobs:
       if: always()
       run: |
 
-        GZIP_FILE=report/html.meta.json.gz
+        GZIP_FILE=html.meta.json.gz
         S3_SUB_PATH="${{ steps.date.outputs.date }}/${{ github.run_id }}/${{ env.REPORT_NAME }}"
 
         aws s3 cp report/ s3://${AWS_BUCKET_NAME_TEST}/public/${S3_SUB_PATH} --recursive --exclude "*.gz"
