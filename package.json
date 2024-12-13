@@ -236,6 +236,7 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.5",
+    "upath": "^2.0.1",
     "uuid": "^9.0.1",
     "vite": "^5.2.10",
     "vite-plugin-react-click-to-component": "^3.0.0",

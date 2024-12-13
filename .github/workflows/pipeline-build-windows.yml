@@ -25,7 +25,7 @@ jobs:
       uses: ./.github/actions/download-backend
 
     - name: Set RI_SEGMENT_WRITE_KEY to .env file
-      run: echo "RI_SEGMENT_WRITE_KEY='$RI_SEGMENT_WRITE_KEY'" >> $envFile
+      run: echo "RI_SEGMENT_WRITE_KEY='${{ env.RI_SEGMENT_WRITE_KEY }}'" >> ${{ env.envFile }}
 
     - name: Build windows package (production)
       if: inputs.environment == 'production'
@@ -35,7 +35,7 @@ jobs:
     - name: Build windows package (staging)
       if: inputs.environment == 'staging'
       run: |
-        sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" $envFile
+        sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" ${{ env.envFile }}
         yarn package:stage --target win32-x64 --out ${{ env.packagePath }}
 
     - uses: actions/upload-artifact@v4
