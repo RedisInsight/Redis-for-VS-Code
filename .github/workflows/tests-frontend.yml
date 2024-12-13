@@ -36,6 +36,7 @@ jobs:
 
 
     - name: Deploy 🚀
+      if: always()
       env:
         AWS_BUCKET_NAME_TEST: ${{ vars.AWS_BUCKET_NAME_TEST }}
         AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
