@@ -28,21 +28,26 @@ jobs:
         compression-level: 0
         path: report
 
-    - name: Deploy report
-      uses: RedisInsight/RedisInsight/.github/actions/deploy-test-reports@873a0ebf55c85d3127bb4efb4d0636d9ab838226
-      if: always()
-      with:
-        group: 'report'
-        AWS_BUCKET_NAME_TEST: ${{ vars.AWS_BUCKET_NAME_TEST }}
-        AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
-        AWS_DISTRIBUTION_ID: ${{ secrets.AWS_DISTRIBUTION_ID }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Get current date
       id: date
       if: always()
       uses: RedisInsight/RedisInsight/.github/actions/get-current-date@873a0ebf55c85d3127bb4efb4d0636d9ab838226
+
+
+    - name: Deploy 🚀
+      env:
+        AWS_BUCKET_NAME_TEST: ${{ vars.AWS_BUCKET_NAME_TEST }}
+        AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+        AWS_DISTRIBUTION_ID: ${{ secrets.AWS_DISTRIBUTION_ID }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+
+        SUB_PATH=test-reports/${{ steps.date.outputs.date }}
+
+        aws s3 cp public/ s3://${AWS_BUCKET_NAME_TEST}/public/${SUB_PATH} --recursive
+
 
     - name: Add link to report in the workflow summary
       if: always()
