@@ -85,6 +85,9 @@ export default defineConfig({
       enabled: true,
       reporter: ['text', 'html'],
       reportsDirectory: './report/coverage',
+      htmlReporter: {
+        subdir: '../'
+      },
       include: ['src/webviews/src/**'],
       exclude: [
         'src/webviews/src/**/index.ts',
