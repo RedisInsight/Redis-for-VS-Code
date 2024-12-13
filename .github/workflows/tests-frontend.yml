@@ -25,15 +25,6 @@ jobs:
     - name: Unit tests UI
       run: yarn test:cov
 
-    - name: Upload Test Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: ${{ env.REPORT_NAME }}
-        compression-level: 0
-        path: report
-
-
     - name: Get current date
       id: date
       if: always()
@@ -44,7 +35,7 @@ jobs:
       if: always()
       run: |
 
-        SUB_PATH=test-reports/${{ steps.date.outputs.date }}
+        SUB_PATH=test-reports/${{ steps.date.outputs.date }}/${{ github.run_id }}
 
         aws s3 cp report/ s3://${AWS_BUCKET_NAME_TEST}/public/${SUB_PATH} --recursive
 
