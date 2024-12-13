@@ -11,6 +11,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   REPORT_NAME: "report-vscode-fe"
+  S3_PATH: "report-vscode-fe"
 
 jobs:
   unit-tests:
@@ -35,13 +36,20 @@ jobs:
       if: always()
       run: |
 
-        SUB_PATH=test-reports/${{ steps.date.outputs.date }}/${{ github.run_id }}
+        GZIP_FILE=report/html.meta.json.gz
+        S3_SUB_PATH="${{ steps.date.outputs.date }}/${{ github.run_id }}/${{ env.REPORT_NAME }}"
 
-        aws s3 cp report/ s3://${AWS_BUCKET_NAME_TEST}/public/${SUB_PATH} --recursive
+        aws s3 cp report/ s3://${AWS_BUCKET_NAME_TEST}/public/${S3_SUB_PATH} --recursive --exclude "*.gz"
+
+        # s3 modified "gzip" content-type
+        # https://github.com/aws/aws-cli/issues/1131
+        aws s3 cp $GZIP_FILE s3://${AWS_BUCKET_NAME_TEST}/public/${S3_SUB_PATH} --content-type "application/x-gzip" --metadata-directive REPLACE
+
+        echo "$S3_SUB_PATH" >> $GITHUB_ENV
 
 
     - name: Add link to report in the workflow summary
       if: always()
       run: |
-        link="${{ vars.DEFAULT_TEST_REPORTS_URL }}/${{ steps.date.outputs.date }}/${{ github.run_id }}/${{ env.REPORT_NAME }}/index.html"
+        link="${{ vars.DEFAULT_TEST_REPORTS_URL }}/${S3_SUB_PATH}/index.html"
         echo "[${link}](${link})" >> $GITHUB_STEP_SUMMARY
