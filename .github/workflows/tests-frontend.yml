@@ -28,7 +28,7 @@ jobs:
         path: report
 
     - name: Deploy report
-      uses: RedisInsight/RedisInsight/.github/actions/deploy-test-reports
+      uses: RedisInsight/RedisInsight/.github/actions/deploy-test-reports@2.62.0
       if: always()
       with:
         group: 'report'
