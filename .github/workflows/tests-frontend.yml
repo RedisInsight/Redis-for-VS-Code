@@ -43,7 +43,7 @@ jobs:
 
         # s3 modified "gzip" content-type
         # https://github.com/aws/aws-cli/issues/1131
-        aws s3 cp $GZIP_FILE s3://${AWS_BUCKET_NAME_TEST}/public/${S3_SUB_PATH} --content-type "application/x-gzip" --metadata-directive REPLACE
+        aws s3 cp report/${GZIP_FILE} s3://${AWS_BUCKET_NAME_TEST}/public/${S3_SUB_PATH}/${GZIP_FILE} --content-type "application/x-gzip" --metadata-directive REPLACE
 
         echo "$S3_SUB_PATH" >> $GITHUB_ENV
 
