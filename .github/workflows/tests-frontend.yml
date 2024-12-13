@@ -28,7 +28,7 @@ jobs:
         path: report
 
     - name: Deploy report
-      uses: RedisInsight/RedisInsight/.github/actions/deploy-test-reports@2.62.0
+      uses: RedisInsight/RedisInsight/.github/actions/deploy-test-reports@873a0ebf55c85d3127bb4efb4d0636d9ab838226
       if: always()
       with:
         group: 'report'
@@ -41,7 +41,7 @@ jobs:
     - name: Get current date
       id: date
       if: always()
-      uses: RedisInsight/RedisInsight/.github/actions/get-current-date@2.62.0
+      uses: RedisInsight/RedisInsight/.github/actions/get-current-date@873a0ebf55c85d3127bb4efb4d0636d9ab838226
 
     - name: Add link to report in the workflow summary
       if: always()
