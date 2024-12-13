@@ -6,7 +6,6 @@ import { sendEventTelemetry, TelemetryEvent, stringToBuffer } from 'uiSrc/utils'
 import { KeyDetailsHeader, KeyDetailsHeaderProps } from 'uiSrc/modules'
 import { KeyTypes } from 'uiSrc/constants'
 import { useDatabasesStore, useSelectedKeyStore } from 'uiSrc/store'
-import { Spinner } from 'uiSrc/ui'
 
 import { IJSONData } from './interfaces'
 import { RejsonDetails } from './rejson-details'
@@ -91,8 +90,6 @@ const RejsonDetailsWrapper = (props: Props) => {
             data-testid="json-details"
             className={styles.container}
           >
-            {loading && <div className={styles.keySpinner}><Spinner /></div>}
-
             {!isUndefined(data) && (
               <RejsonDetails
                 selectedKey={selectedKey || stringToBuffer('')}
