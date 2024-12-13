@@ -25,6 +25,7 @@ jobs:
       if: always()
       with:
         name: ${{ env.REPORT_NAME }}
+        compression-level: 0
         path: report
 
     - name: Deploy report
