@@ -150,7 +150,7 @@
     "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
     "test:watch": "vitest watch --dir ./src/webviews/src",
     "test:watch:ui": "vitest watch --ui --coverage --dir ./src/webviews/src",
-    "test:cov": "vitest run --silent --coverage --dir ./src/webviews/src",
+    "test:cov": "vitest run --silent --coverage --dir ./src/webviews/src/store/hooks/use-selected-key-store",
     "package:prod": "npx mkdirp release && npx @vscode/vsce package",
     "package:stage": "npx mkdirp release && npx @vscode/vsce package --pre-release",
     "prepare": "husky install"

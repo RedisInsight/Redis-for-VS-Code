@@ -3,7 +3,9 @@ on:
   workflow_call:
 
 env:
+  SLACK_AUDIT_REPORT_CHANNEL: ${{ secrets.SLACK_AUDIT_REPORT_CHANNEL }}
   SLACK_AUDIT_REPORT_KEY: ${{ secrets.SLACK_AUDIT_REPORT_KEY }}
+  REPORT_NAME: "report-vscode-fe"
 
 jobs:
   unit-tests:
@@ -18,21 +20,31 @@ jobs:
     - name: Unit tests UI
       run: yarn test:cov
 
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2
+    - name: Upload Test Report
+      uses: actions/upload-artifact@v4
       if: always()
       with:
-        check_name: 'FE Unit tests summary'
-        comment_mode: 'failures'
-        files: reports/junit.xml
+        name: ${{ env.REPORT_NAME }}
+        path: report
 
-    - name: Generate test results
-      uses: dorny/test-reporter@v1
+    - name: Deploy report
+      uses: RedisInsight/RedisInsight/.github/actions/deploy-test-reports
       if: always()
       with:
-        name: 'Test results: FE unit tests'
-        path: reports/junit.xml
-        reporter: jest-junit
-        list-tests: 'failed'
-        list-suites: 'failed'
-        fail-on-error: 'false'
+        group: 'report'
+        AWS_BUCKET_NAME_TEST: ${{ vars.AWS_BUCKET_NAME_TEST }}
+        AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+        AWS_DISTRIBUTION_ID: ${{ secrets.AWS_DISTRIBUTION_ID }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Get current date
+      id: date
+      if: always()
+      uses: RedisInsight/RedisInsight/.github/actions/get-current-date@2.62.0
+
+    - name: Add link to report in the workflow summary
+      if: always()
+      run: |
+        link="${{ vars.DEFAULT_TEST_REPORTS_URL }}/${{ steps.date.outputs.date }}/${{ github.run_id }}/${{ env.REPORT_NAME }}/index.html"
+        echo "[${link}](${link})" >> $GITHUB_STEP_SUMMARY
