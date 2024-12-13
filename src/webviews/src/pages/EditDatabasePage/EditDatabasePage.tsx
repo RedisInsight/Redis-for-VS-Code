@@ -6,7 +6,7 @@ export const EditDatabasePage: FC<any> = () => {
   const database = useDatabasesStore((state) => state.editDatabase)
 
   useEffect(() => {
-    const { database } = window.ri
+    const { database } = window.ri || {}
     fetchCerts(() => {
       fetchEditedDatabase(database!)
     })

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren, useCallback, useState } from 'react'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 
@@ -72,7 +72,7 @@ const HashDetails = (props: Props) => {
     })
   }
 
-  const Actions = ({ children }: PropsWithChildren) => ([
+  const Actions = useCallback(({ children }: PropsWithChildren) => ([
     isExpireFieldsAvailable && (
       <Checkbox
         checked={showTtl}
@@ -84,7 +84,7 @@ const HashDetails = (props: Props) => {
     ),
     children,
     <AddItemsAction key={3} title={l10n.t('Add Fields')} openAddItemPanel={openAddItemPanel} />,
-  ])
+  ]), [])
 
   return (
     <div className="fluid flex-column relative">
