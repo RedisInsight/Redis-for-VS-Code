@@ -90,7 +90,7 @@ export const KeysSummary = (props: Props) => {
     if (!isMultiDbIndex) return null
     return (
       <>
-        <VscDatabase />
+        <VscDatabase className="sidebar-icon" />
         <span className="px-1">{dbIndex}</span>
       </>
     )
@@ -108,7 +108,7 @@ export const KeysSummary = (props: Props) => {
     }
 
     return (
-      <span>
+      <span className="truncate">
         {'('}
         <span data-testid="keys-number-of-results">{numberWithSpaces(resultsLength)}</span>
         {' / '}
