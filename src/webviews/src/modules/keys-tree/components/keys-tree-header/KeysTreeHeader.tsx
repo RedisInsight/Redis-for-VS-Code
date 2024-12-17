@@ -72,7 +72,7 @@ export const KeysTreeHeader = ({ database, open, dbTotal, children }: Props) => 
         showTree={showTree}
         toggleShowTree={handleToggleShowTree}
       />
-      {isShowScanMore(scanned, total, nextCursor) && (
+      {isShowScanMore(scanned, total, nextCursor) && showTree && (
         <ScanMore
           loading={loading}
           disabled={isDisableScanMore(scanned, total, nextCursor)}

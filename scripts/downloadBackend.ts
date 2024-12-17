@@ -3,7 +3,9 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as cp from 'child_process'
 import * as dotenv from 'dotenv'
+import * as upath from 'upath'
 import { parse as parseUrl } from 'url'
+
 
 dotenv.config({
   path: [
@@ -80,13 +82,28 @@ async function downloadRedisBackendArchive(
   })
 }
 
+function getNormalizedString(string: string) {
+  return string?.startsWith('D:')
+    ? upath.normalize(string).replace('D:', '/d')
+    : string
+}
+
 function unzipRedisServer(redisInsideArchivePath: string, extractDir: string) {
   // tar does not create extractDir by default
   if (!fs.existsSync(extractDir)) {
     fs.mkdirSync(extractDir)
   }
 
-  cp.spawnSync('tar', ['-xf', redisInsideArchivePath, '-C', extractDir, '--strip-components', '1', 'api'])
+  cp.spawnSync('tar', [
+    '-xf',
+    getNormalizedString(redisInsideArchivePath),
+    '-C',
+    getNormalizedString(extractDir),
+    '--strip-components',
+    '1',
+    'api',
+  ])
+
 
   // remove tutorials
   fs.rmSync(tutorialsPath, { recursive: true, force: true });

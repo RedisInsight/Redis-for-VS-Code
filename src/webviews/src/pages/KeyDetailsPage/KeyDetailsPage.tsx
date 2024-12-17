@@ -11,7 +11,7 @@ import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 
 export const KeyDetailsPage: FC = () => {
   useEffect(() => {
-    const { database, keyInfo: { key } = {} } = window.ri
+    const { database, keyInfo: { key } = {} } = window.ri || {}
 
     if (!key || !database) {
       return

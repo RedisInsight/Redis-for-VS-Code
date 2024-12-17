@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { VscEdit } from 'react-icons/vsc'
 import { isUndefined, toNumber } from 'lodash'
@@ -14,8 +14,8 @@ import {
 import { ContextStoreProvider, Database, DatabaseOverview, checkConnectToDatabase, deleteDatabases } from 'uiSrc/store'
 import { Chevron, DatabaseIcon, Tooltip } from 'uiSrc/ui'
 import { PopoverDelete } from 'uiSrc/components'
-import { POPOVER_WINDOW_BORDER_WIDTH, VscodeMessageAction } from 'uiSrc/constants'
-import { vscodeApi } from 'uiSrc/services'
+import { POPOVER_WINDOW_BORDER_WIDTH, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
+import { sessionStorageService, vscodeApi } from 'uiSrc/services'
 import { Maybe } from 'uiSrc/interfaces'
 
 import { LogicalDatabaseWrapper } from '../logical-database-wrapper'
@@ -34,9 +34,20 @@ export const DatabaseWrapper = React.memo(({ database }: Props) => {
   const [showTree, setShowTree] = useState<boolean>(false)
   const [totalKeysPerDb, setTotalKeysPerDb] = useState<Maybe<Record<string, number>>>(undefined)
 
+  useEffect(() => {
+    const showTreeInit = !!sessionStorageService.get(`${StorageItem.openTreeDatabase + id}`)
+
+    if (showTreeInit) {
+      checkConnectToDatabase(id, connectToInstance)
+    }
+  }, [])
+
   const handleCheckConnectToDatabase = ({ id, provider, modules }: Database) => {
+    const newShowTree = !showTree
+    sessionStorageService.set(`${StorageItem.openTreeDatabase + id}`, newShowTree)
+
     if (showTree) {
-      setShowTree(false)
+      setShowTree(newShowTree)
       return
     }
     const modulesSummary = getRedisModulesSummary(modules)

@@ -13,7 +13,7 @@ const mockedProps = mock<KeyDetailsHeaderProps>()
 const KEY_INPUT_TEST_ID = 'edit-key-input'
 const TTL_INPUT_TEST_ID = 'edit-ttl-input'
 const KEY_COPY_TEST_ID = 'copy-name-button'
-const REFRESH_TEST_ID = 'refresh-key-btn'
+const REFRESH_TEST_ID = 'key-refresh-btn'
 const supportedKeyTypes = [
   KeyTypes.Hash,
   KeyTypes.List,
@@ -94,6 +94,6 @@ describe('KeyDetailsHeader', () => {
 
     render(<KeyDetailsHeader {...mockedProps} />)
 
-    expect(screen.getByTestId(REFRESH_TEST_ID)?.lastChild).toBeDisabled()
+    expect(screen.getByTestId(REFRESH_TEST_ID)).toBeDisabled()
   })
 })

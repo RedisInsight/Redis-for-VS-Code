@@ -50,7 +50,7 @@ describe('DatabaseWrapper', () => {
     fireEvent.click(queryByTestId(`database-${mockDatabase.id}`)!)
     await waitForStack()
 
-    fireEvent.click(queryByTestId('refresh-keys')!)
+    fireEvent.click(queryByTestId('refresh-keys-refresh-btn')!)
     await waitForStack()
 
     expect(useKeys.useKeysApi().fetchPatternKeysAction).toBeCalled()
