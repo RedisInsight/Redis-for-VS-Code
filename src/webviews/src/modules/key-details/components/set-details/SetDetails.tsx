@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren, useCallback, useState } from 'react'
 import cx from 'classnames'
 import * as l10n from '@vscode/l10n'
 
@@ -54,10 +54,10 @@ export const SetDetails = (props: Props) => {
     addSetMembersAction(data, () => onSuccessAdded(data.members))
   }
 
-  const Actions = ({ children }: PropsWithChildren) => ([
+  const Actions = useCallback(({ children }: PropsWithChildren) => ([
     children,
     <AddItemsAction key={1} title={l10n.t('Add Members')} openAddItemPanel={openAddItemPanel} />,
-  ])
+  ]), [])
 
   return (
     <div className="fluid flex-column relative">

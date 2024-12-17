@@ -149,14 +149,6 @@
   }
 }
 
-.keySpinner {
-  @apply absolute w-full;
-
-  span {
-    @apply w-full #{!important};
-  }
-}
-
 .fullWidthTextArea {
   @apply h-[150px] w-full pb-[30px] max-w-none scroll-pb-5;
 }

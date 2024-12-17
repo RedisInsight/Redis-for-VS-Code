@@ -1,3 +1,10 @@
+.container {
+  @apply h-[22px] flex flex-row justify-between pl-6;
+  &:hover {
+    background-color: var(--vscode-merge-commonHeaderBackground);
+  }
+}
+
 .content {
-  @apply flex-grow-0 text-vscode-foreground opacity-80 pl-3;
+  @apply flex flex-row items-center flex-grow text-vscode-foreground opacity-80 pl-1 truncate;
 }

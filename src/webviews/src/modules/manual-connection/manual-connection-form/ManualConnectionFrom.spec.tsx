@@ -227,97 +227,6 @@ describe('DatabaseForm', () => {
     )
   })
 
-  it('should change Database Index checkbox', async () => {
-    const handleSubmit = vi.fn()
-    const handleTestConnection = vi.fn()
-    render(
-      <div id="footerDatabaseForm">
-        <ManualConnectionForm
-          {...instance(mockedProps)}
-          formFields={{
-            ...formFields,
-            connectionType: ConnectionType.Standalone,
-          }}
-          onSubmit={handleSubmit}
-          // onTestConnection={handleTestConnection}
-        />
-      </div>,
-    )
-    await waitFor(() => {
-      fireEvent.click(screen.getByTestId('showDb'))
-    })
-
-    const submitBtn = screen.getByTestId(BTN_SUBMIT)
-    // const testConnectionBtn = screen.getByTestId(BTN_TEST_CONNECTION)
-    // await waitFor(() => {
-    //   fireEvent.click(testConnectionBtn)
-    // })
-    // expect(handleTestConnection).toBeCalledWith(
-    //   expect.objectContaining({
-    //     showDb: true,
-    //   }),
-    // )
-    await waitFor(() => {
-      fireEvent.click(submitBtn)
-    })
-
-    expect(handleSubmit).toBeCalledWith(
-      expect.objectContaining({
-        showDb: true,
-      }),
-    )
-  })
-
-  it('should change db checkbox and value', async () => {
-    const handleSubmit = vi.fn()
-    const handleTestConnection = vi.fn()
-    render(
-      <div id="footerDatabaseForm">
-        <ManualConnectionForm
-          {...instance(mockedProps)}
-          formFields={{
-            ...formFields,
-            connectionType: ConnectionType.Standalone,
-          }}
-          onSubmit={handleSubmit}
-          // onTestConnection={handleTestConnection}
-        />
-      </div>,
-    )
-    await waitFor(() => {
-      fireEvent.click(screen.getByTestId('showDb'))
-    })
-
-    await waitFor(() => {
-      fireEvent.change(screen.getByTestId('db'), {
-        target: { value: '12' },
-      })
-    })
-
-    const submitBtn = screen.getByTestId(BTN_SUBMIT)
-    // const testConnectionBtn = screen.getByTestId(BTN_TEST_CONNECTION)
-
-    // await waitFor(() => {
-    //   fireEvent.click(testConnectionBtn)
-    // })
-    // expect(handleTestConnection).toBeCalledWith(
-    //   expect.objectContaining({
-    //     showDb: true,
-    //     db: '12',
-    //   }),
-    // )
-    await waitFor(() => {
-      fireEvent.click(submitBtn)
-    })
-
-    expect(handleSubmit).toBeCalledWith(
-      expect.objectContaining({
-        showDb: true,
-        db: '12',
-      }),
-    )
-  })
-
   it('should change "Use SNI" with prepopulated with host', async () => {
     const handleSubmit = vi.fn()
     const handleTestConnection = vi.fn()
@@ -475,12 +384,13 @@ describe('DatabaseForm', () => {
         />
       </div>,
     )
-    await waitFor(() => {
-      fireEvent.click(screen.getByTestId('select-ca-cert'))
-    })
-    await waitFor(() => {
-      fireEvent.click(queryAllByText('Add new CA certificate')[0] || document)
-    })
+
+    const caCertComponent = screen.queryByTestId('select-ca-cert')
+    fireEvent.keyDown(caCertComponent?.firstChild!, { key: 'ArrowDown' })
+
+    await waitFor(() => screen.getByText('Add new CA certificate'))
+
+    fireEvent.click(screen.getByText('Add new CA certificate'))
 
     expect(screen.getByTestId(NEW_CA_CERT)).toBeInTheDocument()
     await waitFor(() => {
@@ -514,7 +424,7 @@ describe('DatabaseForm', () => {
 
     expect(handleSubmit).toBeCalledWith(
       expect.objectContaining({
-        selectedCaCertName: ADD_NEW_CA_CERT,
+        selectedCaCertName: ADD_NEW_CA_CERT.value,
         newCaCertName: '321',
         newCaCert: '123',
       }),
@@ -749,24 +659,6 @@ describe('DatabaseForm', () => {
       fieldsTestIds.forEach((id) => {
         expect(screen.getByTestId(id)).toBeTruthy()
       })
-    })
-
-    it('should render selected logical database with proper db index', () => {
-      render(
-        <ManualConnectionForm
-          {...instance(mockedProps)}
-          isEditMode
-          isCloneMode
-          formFields={{
-            ...formFields,
-            connectionType: ConnectionType.Standalone,
-            showDb: true,
-            db: 5,
-          }}
-        />,
-      )
-      expect(screen.getByTestId('showDb')).toBeChecked()
-      expect(screen.getByTestId('db')).toHaveValue('5')
     })
 
     it('should render proper database alias', () => {

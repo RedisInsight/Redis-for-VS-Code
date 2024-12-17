@@ -3,7 +3,7 @@ import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import React, { FC } from 'react'
 
 import { VscodeMessageAction } from 'uiSrc/constants'
-import { Nullable } from 'uiSrc/interfaces'
+import { Maybe, Nullable } from 'uiSrc/interfaces'
 import { vscodeApi } from 'uiSrc/services'
 import { Database } from 'uiSrc/store'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
@@ -13,12 +13,14 @@ import styles from './styles.module.scss'
 export interface Props {
   total: Nullable<number>
   database: Database
+  dbIndex: Maybe<number>
 }
 
 export const NoKeysMessage: FC<Props> = (props) => {
   const {
     total,
     database,
+    dbIndex,
   } = props
 
   const handleAddKey = () => {
@@ -26,7 +28,10 @@ export const NoKeysMessage: FC<Props> = (props) => {
       event: TelemetryEvent.TREE_VIEW_KEY_ADD_BUTTON_CLICKED,
       eventData: { databaseId: database.id },
     })
-    vscodeApi.postMessage({ action: VscodeMessageAction.AddKey, data: { database } })
+    vscodeApi.postMessage({
+      action: VscodeMessageAction.AddKey,
+      data: { database: { ...database, db: dbIndex } },
+    })
   }
 
   // TODO: will be implemented in the future

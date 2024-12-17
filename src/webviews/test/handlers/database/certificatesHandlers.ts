@@ -12,6 +12,10 @@ const handlers: RequestHandler[] = [
     getMWSUrl(`${ApiEndpoints.CLIENT_CERTIFICATES}`),
     () => HttpResponse.json(constants.CLIENT_CERTS),
   ),
+  http.delete(
+    getMWSUrl(`${ApiEndpoints.CA_CERTIFICATES}/${constants.CA_CERTS[0]?.id}`),
+    () => HttpResponse.json(null),
+  ),
 
 ]
 

@@ -14,8 +14,11 @@ const mockedProps: Props = {
   database: mockDatabase,
   total: 1,
   scanned: 1,
+  dbIndex: 0,
+  showTree: true,
   resultsLength: 1,
   loading: false,
+  toggleShowTree: () => {},
 }
 
 vi.spyOn(utils, 'sendEventTelemetry')
@@ -76,12 +79,12 @@ describe('KeysSummary', () => {
   })
 
   it('should call sendEventTelemetry and postMessage actions after click on Add Key icon', async () => {
-    const { queryByTestId } = render(<KeysSummary {...mockedProps} />)
+    const { queryByTestId } = render(<KeysSummary {...mockedProps} dbIndex={mockDatabase.db!} />)
 
     fireEvent.click(queryByTestId('add-key-button')!)
 
     expect(vscodeApi.postMessage).toBeCalledWith({
-      action: VscodeMessageAction.AddKey, data: { database: mockDatabase },
+      action: VscodeMessageAction.AddKey, data: { database: { ...mockDatabase } },
     })
 
     expect(utils.sendEventTelemetry).toBeCalledWith({

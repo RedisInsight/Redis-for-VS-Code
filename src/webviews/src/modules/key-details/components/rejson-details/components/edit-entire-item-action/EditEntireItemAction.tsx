@@ -83,6 +83,7 @@ export const EditEntireItemAction = (props: Props) => {
               className={styles.declineBtn}
               onClick={onCancel}
               aria-label="Cancel add"
+              data-testid="cancel-edit-btn"
             >
               <VscChromeClose />
             </VSCodeButton>

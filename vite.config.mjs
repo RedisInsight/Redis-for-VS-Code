@@ -82,6 +82,9 @@ export default defineConfig({
     testTimeout: 20000,
     setupFiles: ['./src/webviews/test/setup.ts'],
     coverage: {
+      enabled: true,
+      reporter: ['text', 'html'],
+      reportsDirectory: './report/coverage',
       include: ['src/webviews/src/**'],
       exclude: [
         'src/webviews/src/**/index.ts',
@@ -100,15 +103,11 @@ export default defineConfig({
         inline: ['rawproto', 'react-monaco-editor'],
       },
     },
-    reporters: [
-      'default',
-      [
-        'junit',
-        {
-          outputFile: './reports/junit.xml',
-        },
-      ],
-    ],
+    reporters: ['default', 'junit', 'html'],
+    outputFile: {
+      junit: './report/junit.xml',
+      html: './report/index.html',
+    },
   },
 })
 
