@@ -2,40 +2,61 @@ import React, { ChangeEvent, useId } from 'react'
 import cx from 'classnames'
 import { FormikProps } from 'formik'
 import * as l10n from '@vscode/l10n'
-import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 import { CheckboxChangeEvent } from 'rc-checkbox'
+import { find } from 'lodash'
+import { MenuListProps } from 'react-select'
 
-import { validateCertName, validateField } from 'uiSrc/utils'
+import { sendEventTelemetry, TelemetryEvent, validateCertName, validateField } from 'uiSrc/utils'
 import {
   ADD_NEW,
   ADD_NEW_CA_CERT,
-  ADD_NEW_CA_CERT_LABEL,
-  ADD_NEW_LABEL,
+  ApiEndpoints,
   NO_CA_CERT,
-  NO_CA_CERT_LABEL,
 } from 'uiSrc/constants'
-import { DbConnectionInfo } from 'uiSrc/interfaces'
-import { Checkbox, InputText, Select, TextArea } from 'uiSrc/ui'
+import { DbConnectionInfo, RedisString } from 'uiSrc/interfaces'
+import { Checkbox, InputText, TextArea } from 'uiSrc/ui'
+import { removeCertAction } from 'uiSrc/store'
+import { SuperSelectRemovableOption, SuperSelect, SuperSelectOption } from 'uiSrc/components'
 import styles from './styles.module.scss'
+
+const suffix = '_tls_details'
 
 export interface Props {
   formik: FormikProps<DbConnectionInfo>
   caCertificates?: { id: string, name: string }[]
   certificates?: { id: string, name: string }[]
 }
+
 const TlsDetails = (props: Props) => {
   const { formik, caCertificates, certificates } = props
   const id = useId()
 
-  const optionsCertsCA = [
-    {
-      value: NO_CA_CERT,
-      label: NO_CA_CERT_LABEL,
-    },
-    {
-      value: ADD_NEW_CA_CERT,
-      label: ADD_NEW_CA_CERT_LABEL,
-    },
+  const handleDeleteCaCert = (id: RedisString, onSuccess?: () => void) => {
+    removeCertAction(id, ApiEndpoints.CA_CERTIFICATES, () => {
+      onSuccess?.()
+      handleClickDeleteCert('CA')
+    })
+  }
+
+  const handleDeleteClientCert = (id: RedisString, onSuccess?: () => void) => {
+    removeCertAction(id, ApiEndpoints.CLIENT_CERTIFICATES, () => {
+      onSuccess?.()
+      handleClickDeleteCert('Client')
+    })
+  }
+
+  const handleClickDeleteCert = (certificateType: 'Client' | 'CA') => {
+    sendEventTelemetry({
+      event: TelemetryEvent.CONFIG_DATABASES_CERTIFICATE_REMOVED,
+      eventData: {
+        certificateType,
+      },
+    })
+  }
+
+  const optionsCertsCA: SuperSelectOption[] = [
+    NO_CA_CERT,
+    ADD_NEW_CA_CERT,
   ]
 
   caCertificates?.forEach((cert) => {
@@ -45,12 +66,7 @@ const TlsDetails = (props: Props) => {
     })
   })
 
-  const optionsCertsClient = [
-    {
-      value: ADD_NEW,
-      label: ADD_NEW_LABEL,
-    },
-  ]
+  const optionsCertsClient: SuperSelectOption[] = [ADD_NEW]
 
   certificates?.forEach((cert) => {
     optionsCertsClient.push({
@@ -130,17 +146,22 @@ const TlsDetails = (props: Props) => {
               <div className="w-[100px]">
                 {`${l10n.t('CA Certificate')}${formik.values.verifyServerTlsCert ? '*' : ''}`}
               </div>
-              <Select
-                // name="selectedCaCertName"
-                // placeholder="Select CA certificate"
+              <SuperSelect
                 containerClassName="database-form-select w-[256px]"
-                itemClassName="database-form-select__option"
-                idSelected={formik.values.selectedCaCertName ?? NO_CA_CERT}
+                selectedOption={find(optionsCertsCA, { value: formik.values.selectedCaCertName }) as SuperSelectOption ?? NO_CA_CERT}
                 options={optionsCertsCA}
-                onChange={(value) => {
+                components={{ MenuList: (props: MenuListProps<SuperSelectOption, false>) => (
+                  <SuperSelectRemovableOption
+                    {...props}
+                    suffix={suffix}
+                    countDefaultOptions={2}
+                    onDeleteOption={handleDeleteCaCert}
+                  />
+                ) }}
+                onChange={(option) => {
                   formik.setFieldValue(
                     'selectedCaCertName',
-                    value || NO_CA_CERT,
+                    option?.value || NO_CA_CERT?.value,
                   )
                 }}
                 testid="select-ca-cert"
@@ -148,7 +169,7 @@ const TlsDetails = (props: Props) => {
             </div>
 
             {formik.values.tls
-              && formik.values.selectedCaCertName === ADD_NEW_CA_CERT && (
+              && formik.values.selectedCaCertName === ADD_NEW_CA_CERT.value && (
                 <div className="mb-3">
                   <InputText
                     name="newCaCertName"
@@ -170,7 +191,7 @@ const TlsDetails = (props: Props) => {
           </div>
 
           {formik.values.tls
-            && formik.values.selectedCaCertName === ADD_NEW_CA_CERT && (
+            && formik.values.selectedCaCertName === ADD_NEW_CA_CERT.value && (
             <div>
               <TextArea
                 name="newCaCert"
@@ -203,13 +224,23 @@ const TlsDetails = (props: Props) => {
           <div>
             <div className="flex items-center pb-3">
               <div className="w-[100px]">{l10n.t('Client Certificate*')}</div>
-              <Select
+              <SuperSelect
                 containerClassName="database-form-select w-[256px]"
-                itemClassName="database-form-select__option"
+                selectedOption={find(optionsCertsClient, { value: formik.values.selectedTlsClientCertId }) as SuperSelectOption ?? ADD_NEW}
                 options={optionsCertsClient}
-                idSelected={formik.values.selectedTlsClientCertId ?? ADD_NEW}
-                onChange={(value) => {
-                  formik.setFieldValue('selectedTlsClientCertId', value)
+                components={{ MenuList: (props: MenuListProps<SuperSelectOption, false>) => (
+                  <SuperSelectRemovableOption
+                    {...props}
+                    countDefaultOptions={1}
+                    suffix={suffix}
+                    onDeleteOption={handleDeleteClientCert}
+                  />
+                ) }}
+                onChange={(option) => {
+                  formik.setFieldValue(
+                    'selectedTlsClientCertId',
+                    option?.value || ADD_NEW?.value,
+                  )
                 }}
                 testid="select-cert"
               />

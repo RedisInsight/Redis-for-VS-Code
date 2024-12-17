@@ -1,3 +1,4 @@
+import { ObjectInputStream } from 'java-object-serialization'
 import { RedisResponseBufferType } from 'uiSrc/interfaces'
 import {
   bufferToString,
@@ -14,6 +15,13 @@ import {
   bufferToJava,
   bufferToUint8Array,
 } from 'uiSrc/utils'
+import JavaDate from 'uiSrc/utils/formatters/javaDate'
+
+try {
+  // Register JavaDate class for deserialization
+  ObjectInputStream.RegisterObjectClass(JavaDate, JavaDate.ClassName, JavaDate.SerialVersionUID)
+  // eslint-disable-next-line no-empty
+} catch (e) {}
 
 const defaultValues = [
   { unicode: 'test', ascii: 'test', hex: '74657374', uint8Array: [116, 101, 115, 116], binary: '01110100011001010111001101110100' },

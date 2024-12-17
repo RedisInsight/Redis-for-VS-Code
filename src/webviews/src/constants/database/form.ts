@@ -1,11 +1,11 @@
 import * as l10n from '@vscode/l10n'
 
-export const ADD_NEW_CA_CERT = 'ADD_NEW_CA_CERT'
 export const ADD_NEW_CA_CERT_LABEL = l10n.t('Add new CA certificate')
-export const NO_CA_CERT = 'NO_CA_CERT'
 export const NO_CA_CERT_LABEL = l10n.t('No CA Certificate')
-export const ADD_NEW = 'ADD_NEW'
 export const ADD_NEW_LABEL = l10n.t('Add new certificate')
+export const ADD_NEW_CA_CERT = { value: 'ADD_NEW_CA_CERT', label: ADD_NEW_CA_CERT_LABEL }
+export const NO_CA_CERT = { value: 'NO_CA_CERT', label: NO_CA_CERT_LABEL }
+export const ADD_NEW = { value: 'ADD_NEW', label: ADD_NEW_LABEL }
 export const NONE = l10n.t('NONE')
 export const DEFAULT_HOST = '127.0.0.1'
 export const DEFAULT_PORT = '6379'

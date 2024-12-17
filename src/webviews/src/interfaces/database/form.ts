@@ -13,7 +13,7 @@ export interface DbConnectionInfo extends Database {
   servername?: string
   verifyServerTlsCert?: boolean
   caCertificates?: { name: string, id: string }[]
-  selectedCaCertName: string | typeof ADD_NEW_CA_CERT | typeof NO_CA_CERT
+  selectedCaCertName: string | typeof ADD_NEW_CA_CERT.value | typeof NO_CA_CERT.value
   newCaCertName?: string
   newCaCert?: string
   username?: string

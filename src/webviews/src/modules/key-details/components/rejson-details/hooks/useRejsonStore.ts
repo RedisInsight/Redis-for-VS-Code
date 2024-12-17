@@ -22,6 +22,7 @@ import {
   RejsonState,
   RejsonDataState,
 } from './interface'
+import { parseJsonData } from '../utils'
 
 const JSON_LENGTH_TO_FORCE_RETRIEVE = 200
 // eslint-disable-next-line import/no-mutable-exports
@@ -222,7 +223,10 @@ export const fetchVisualisationResults = async (
     )
 
     if (isStatusSuccessful(status)) {
-      return data
+      return {
+        ...data,
+        data: parseJsonData(data?.data),
+      }
     }
 
     throw new Error(data.toString())

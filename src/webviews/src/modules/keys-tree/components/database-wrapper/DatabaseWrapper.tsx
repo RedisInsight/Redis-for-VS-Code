@@ -148,7 +148,7 @@ export const DatabaseWrapper = React.memo(({ database }: Props) => {
           </VSCodeButton>
           <PopoverDelete
             header={formatLongName(name, 50, 10, '...')}
-            text={l10n.t('will be deleted from Redis for VS Code.')}
+            text={l10n.t('will be removed from Redis for VS Code.')}
             item={id}
             position="bottom right"
             maxWidth={window.innerWidth - POPOVER_WINDOW_BORDER_WIDTH}

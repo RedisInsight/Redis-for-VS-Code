@@ -10,6 +10,7 @@ export const RiButton = React.forwardRef<HTMLButtonElement, Props>(({ children, 
   <button
     ref={ref}
     {...props}
+    type="button"
     className={cx(styles.button, className)}
   >
     {children}

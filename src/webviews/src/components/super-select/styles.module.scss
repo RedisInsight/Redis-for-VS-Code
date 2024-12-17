@@ -1,0 +1,38 @@
+.container {
+  @apply min-w-[210px];
+}
+
+.selectContainer {
+  @apply min-h-8 h-8 #{!important};
+}
+
+.control {
+  @apply bg-vscode-dropdown-background border-solid border border-vscode-input-border rounded-none min-h-8 h-8 cursor-pointer #{!important};
+}
+
+.option {
+  @apply bg-vscode-input-background cursor-pointer #{!important};
+
+  &:hover {
+    background-color: var(--vscode-sideBarTitle-background) !important;
+  }
+
+  &Selected {
+    @apply text-vscode-foreground #{!important};
+    background-color: var(--vscode-sideBarTitle-background) !important;
+  }
+}
+
+.indicatorsContainer {
+  @apply min-h-8 h-8 #{!important};
+}
+
+.menu {
+  @apply mt-0 max-h-[200px] rounded-none overflow-auto #{!important};
+}
+
+.singleValue {
+  @apply text-vscode-foreground #{!important};
+}
+
+
