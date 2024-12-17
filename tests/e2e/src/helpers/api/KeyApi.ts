@@ -148,6 +148,7 @@ export class KeyAPIRequests {
     const databaseId =
       await DatabaseAPIRequests.getDatabaseIdByName(databaseName)
     const requestBody = {
+      destination: "TAIL",
       keyName: Buffer.from(keyParameters.keyName, 'utf-8'),
       elements: keyParameters.element.map(el => Buffer.from(el, 'utf-8'))
     }

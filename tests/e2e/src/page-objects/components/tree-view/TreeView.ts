@@ -27,7 +27,7 @@ export class TreeView extends WebView {
     `//a[@aria-label='Open Redis for VS Code settings']`,
   )
   deleteKeyInListBtn = By.xpath(
-    `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
+    `//button[starts-with(@data-testid, 'remove-key-')]`,
   )
   submitDeleteKeyButton = By.xpath(
     `//div[@class='popup-content ']//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
