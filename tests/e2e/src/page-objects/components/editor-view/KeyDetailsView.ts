@@ -37,7 +37,7 @@ export class KeyDetailsView extends WebView {
     `//vscode-button[starts-with(@data-testid, 'copy-name-button')]`,
   )
   detailsDeleteKeyButton = By.xpath(
-    `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
+    `//button[starts-with(@data-testid, 'remove-key-')]`,
   )
   submitDetailsDeleteKeyButton = By.xpath(
     `//div[@class='popup-content ']//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
