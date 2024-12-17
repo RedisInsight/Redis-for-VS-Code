@@ -43,3 +43,11 @@
   @apply mr-3 relative;
   z-index: 2;
 }
+
+.keySpinner {
+  @apply absolute w-full -ml-4 -bottom-1.5;
+
+  span {
+    @apply w-full #{!important};
+  }
+}

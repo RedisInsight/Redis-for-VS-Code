@@ -11,7 +11,8 @@ import { vscodeApi } from 'uiSrc/services'
 import { SortOrder, VscodeMessageAction } from 'uiSrc/constants'
 import { checkDatabaseIndexAction, Database, useContextApi, useContextInContext } from 'uiSrc/store'
 import { Maybe, Nullable } from 'uiSrc/interfaces'
-import { Chevron, RefreshBtn, Tooltip } from 'uiSrc/ui'
+import { Chevron, Tooltip } from 'uiSrc/ui'
+import { AutoRefresh } from 'uiSrc/components'
 
 import { KeyTreeFilter } from '../keys-tree-filter'
 import { useKeysApi, useKeysInContext } from '../../hooks/useKeys'
@@ -86,11 +87,30 @@ export const KeysSummary = (props: Props) => {
     keysApi.fetchPatternKeysAction()
   }
 
+  const handleEnableAutoRefresh = (enableAutoRefresh: boolean, refreshRate: string) => {
+    const event = enableAutoRefresh
+      ? TelemetryEvent.TREE_VIEW_KEY_LIST_AUTO_REFRESH_ENABLED
+      : TelemetryEvent.TREE_VIEW_KEY_LIST_AUTO_REFRESH_DISABLED
+    sendEventTelemetry({
+      event,
+      eventData: {
+        databaseId: database?.id,
+        refreshRate: +refreshRate,
+      },
+    })
+  }
+
+  const handleChangeAutoRefreshRate = (enableAutoRefresh: boolean, refreshRate: string) => {
+    if (enableAutoRefresh) {
+      handleEnableAutoRefresh(enableAutoRefresh, refreshRate)
+    }
+  }
+
   const DbIndex = () => {
     if (!isMultiDbIndex) return null
     return (
       <>
-        <VscDatabase className="sidebar-icon" />
+        <VscDatabase className="sidebar-icon sidebar-icon-nested" />
         <span className="px-1">{dbIndex}</span>
       </>
     )
@@ -156,11 +176,15 @@ export const KeysSummary = (props: Props) => {
         <VSCodeButton appearance="icon" onClick={addKeyClickHandle} data-testid="add-key-button">
           <VscAdd />
         </VSCodeButton>
-        <RefreshBtn
+        <AutoRefresh
+          displayText={false}
+          loading={loading}
           lastRefreshTime={lastRefreshTime}
-          position="left center"
-          onClick={refreshHandle}
-          triggerTestid="refresh-keys"
+          onRefresh={refreshHandle}
+          onEnableAutoRefresh={handleEnableAutoRefresh}
+          onChangeAutoRefreshRate={handleChangeAutoRefreshRate}
+          testid="refresh-keys"
+          postfix="logical-database"
         />
         <VSCodeButton appearance="icon" onClick={openCliClickHandle} data-testid="terminal-button">
           <VscTerminal />

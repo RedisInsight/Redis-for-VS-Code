@@ -83,7 +83,7 @@ export default defineConfig({
     setupFiles: ['./src/webviews/test/setup.ts'],
     coverage: {
       enabled: true,
-      reporter: 'html',
+      reporter: ['text', 'html'],
       reportsDirectory: './report/coverage',
       include: ['src/webviews/src/**'],
       exclude: [
@@ -105,7 +105,7 @@ export default defineConfig({
     },
     reporters: ['default', 'junit', 'html'],
     outputFile: {
-      junit: './reports/junit.xml',
+      junit: './report/junit.xml',
       html: './report/index.html',
     },
   },

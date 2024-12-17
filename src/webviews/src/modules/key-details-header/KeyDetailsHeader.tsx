@@ -1,18 +1,17 @@
-import React, { ReactElement, ReactNode } from 'react'
-import { isUndefined } from 'lodash'
+import React, { Fragment, ReactNode } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 
 import {
   AllKeyTypes,
+  HIDE_LAST_REFRESH,
   KeyTypes,
 } from 'uiSrc/constants'
 import { Maybe, RedisString } from 'uiSrc/interfaces'
 import { editKeyTTL, refreshKeyInfo, useDatabasesStore, useSelectedKeyStore, editKey } from 'uiSrc/store'
 import { TelemetryEvent, formatLongName, getGroupTypeDisplay, sendEventTelemetry } from 'uiSrc/utils'
-import { PopoverDelete } from 'uiSrc/components'
-import { RefreshBtn } from 'uiSrc/ui'
+import { AutoRefresh, PopoverDelete } from 'uiSrc/components'
 import { KeyDetailsHeaderFormatter } from './components/key-details-header-formatter'
 import { KeyDetailsHeaderName } from './components/key-details-header-name'
 import { KeyDetailsHeaderTTL } from './components/key-details-header-ttl'
@@ -35,11 +34,13 @@ const KeyDetailsHeader = ({
   onRemoveKey,
   onEditKey,
   keyType,
-  Actions,
+  Actions = Fragment,
 }: KeyDetailsHeaderProps) => {
-  const { data, refreshDisabled, lastRefreshTime } = useSelectedKeyStore(useShallow((state) => ({
+  const { data, refreshDisabled, loading, refreshing, lastRefreshTime } = useSelectedKeyStore(useShallow((state) => ({
     data: state.data,
     refreshDisabled: state.refreshDisabled || state.loading,
+    refreshing: state.refreshing,
+    loading: state.loading,
     lastRefreshTime: state.lastRefreshTime,
   })))
 
@@ -85,24 +86,29 @@ const KeyDetailsHeader = ({
     })
   }
 
-  const RefreshButton = () => (
-    <RefreshBtn
-      lastRefreshTime={lastRefreshTime}
-      disabled={refreshDisabled}
-      triggerClassName={styles.actionBtn}
-      onClick={handleRefreshKey}
-      triggerTestid="refresh-key-btn"
-    />
-  )
+  const handleEnableAutoRefresh = (enableAutoRefresh: boolean, refreshRate: string) => {
+    const event = enableAutoRefresh
+      ? TelemetryEvent.TREE_VIEW_KEY_DETAILS_AUTO_REFRESH_ENABLED
+      : TelemetryEvent.TREE_VIEW_KEY_DETAILS_AUTO_REFRESH_DISABLED
+    sendEventTelemetry({
+      event,
+      eventData: {
+        length,
+        databaseId,
+        keyType: type,
+        refreshRate: +refreshRate,
+      },
+    })
+  }
+
+  const handleChangeAutoRefreshRate = (enableAutoRefresh: boolean, refreshRate: string) => {
+    if (enableAutoRefresh) {
+      handleEnableAutoRefresh(enableAutoRefresh, refreshRate)
+    }
+  }
 
   return (
     <div className={`key-details-header ${styles.container}`} data-testid="key-details-header">
-      {/* {loading && (
-        <div>
-          {l10n.t('loading...')}
-        </div>
-      )} */}
-      {/* {!loading && ( */}
       <AutoSizer disableHeight>
         {({ width = 0 }) => (
           <div style={{ width }}>
@@ -117,12 +123,20 @@ const KeyDetailsHeader = ({
               <KeyDetailsHeaderTTL onEditTTL={handleEditTTL} />
               <div className="flex ml-auto">
                 <div className={styles.subtitleActionBtns}>
-                  {isUndefined(Actions) && <RefreshButton />}
-                  {!isUndefined(Actions) && (
-                    <Actions width={width}>
-                      <RefreshButton />
-                    </Actions>
-                  )}
+                  <Actions width={width} key='auto-refresh'>
+                    <AutoRefresh
+                      postfix={type}
+                      disabled={refreshing || refreshDisabled}
+                      loading={refreshDisabled}
+                      lastRefreshTime={lastRefreshTime}
+                      displayText={width > HIDE_LAST_REFRESH}
+                      containerClassName={styles.actionBtn}
+                      onRefresh={handleRefreshKey}
+                      onEnableAutoRefresh={handleEnableAutoRefresh}
+                      onChangeAutoRefreshRate={handleChangeAutoRefreshRate}
+                      testid="key"
+                    />
+                  </Actions>
                   {Object.values(KeyTypes).includes(keyType as KeyTypes) && (
                     <KeyDetailsHeaderFormatter width={width} />
                   )}
@@ -143,7 +157,7 @@ const KeyDetailsHeader = ({
           </div>
         )}
       </AutoSizer>
-      {/* )} */}
+      {(loading || refreshing) && <div className="table-loading" />}
     </div>
   )
 }
