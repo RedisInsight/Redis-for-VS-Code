@@ -12,7 +12,6 @@ jobs:
     secrets: inherit
     with:
       group_tests: 'without_e2e'
-      short_rte_list: false
       pre_release: true
 
   builds:
