@@ -82,8 +82,8 @@ async function downloadRedisBackendArchive(
   })
 }
 
-function getNormalizedString(string: string) {
-  return string?.startsWith('D:')
+function getNormalizedCIString(string: string) {
+  return string?.startsWith('D:') && process.env.CI
     ? upath.normalize(string).replace('D:', '/d')
     : string
 }
@@ -96,9 +96,9 @@ function unzipRedisServer(redisInsideArchivePath: string, extractDir: string) {
 
   cp.spawnSync('tar', [
     '-xf',
-    getNormalizedString(redisInsideArchivePath),
+    getNormalizedCIString(redisInsideArchivePath),
     '-C',
-    getNormalizedString(extractDir),
+    getNormalizedCIString(extractDir),
     '--strip-components',
     '1',
     'api',

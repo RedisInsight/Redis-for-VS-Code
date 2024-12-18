@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
-import { DEFAULT_ERROR_MESSAGE, DEFAULT_SEARCH_MATCH, KeyTypes } from 'uiSrc/constants'
-import { KeyInfo } from 'uiSrc/interfaces'
+import { DEFAULT_ERROR_MESSAGE, DEFAULT_SEARCH_MATCH, KeyTypes, VscodeMessageAction } from 'uiSrc/constants'
+import { CliAction, KeyInfo, SelectKeyAction } from 'uiSrc/interfaces'
 import { Certificate } from 'uiSrc/store/hooks/use-certificates-store/interface'
 import { UTF8ToArray, stringToBuffer } from 'uiSrc/utils'
 import { Database } from 'uiSrc/store'
@@ -196,6 +196,14 @@ export const constants = {
     return ['info', 'server']
   },
 
+  get VSCODE_SELECT_KEY_ACTION() {
+    return VSCODE_SELECT_KEY_ACTION
+  },
+
+  get VSCODE_CLI_ACTION() {
+    return VSCODE_CLI_ACTION
+  },
+
   SERVER_INFO: {
     id: 'cceadb87-d2aa-47be-b647-5be34dcb8636',
     createDateTime: '2024-02-27T13:10:54.000Z',
@@ -354,5 +362,24 @@ const REDIS_COMMANDS = {
     ],
     arity: -2,
     provider: 'main',
+  },
+}
+
+const VSCODE_SELECT_KEY_ACTION: SelectKeyAction = {
+  action: VscodeMessageAction.SelectKey,
+  data: {
+    database: constants.DATABASE,
+    keyInfo: {
+      key: constants.KEY_NAME_2,
+      keyString: constants.KEY_NAME_HASH_2,
+      keyType: constants.KEY_TYPE_2,
+    },
+  },
+}
+
+const VSCODE_CLI_ACTION: CliAction = {
+  action: VscodeMessageAction.AddCli,
+  data: {
+    database: constants.DATABASE,
   },
 }

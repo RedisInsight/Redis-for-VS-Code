@@ -199,6 +199,8 @@ const AutoRefresh = React.memo(({
       </Tooltip>
 
       <Popover
+        closeOnEscape
+        closeOnDocumentClick
         repositionOnResize
         keepTooltipInside={false}
         open={isPopoverOpen}

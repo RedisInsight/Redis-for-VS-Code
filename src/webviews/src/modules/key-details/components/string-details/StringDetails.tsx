@@ -103,7 +103,7 @@ const StringDetails = (props: Props) => {
         setEditItem(!editItem)
       }}
     />,
-  ]), [])
+  ]), [isStringEditable, isEditable])
 
   return (
     <div className="fluid flex-column relative">

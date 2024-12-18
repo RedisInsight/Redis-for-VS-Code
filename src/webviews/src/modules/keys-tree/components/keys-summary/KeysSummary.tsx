@@ -159,10 +159,12 @@ export const KeysSummary = (props: Props) => {
       )} */}
 
       <div className={cx('hidden', 'pr-3.5', 'group-hover:!flex', { '!flex': showTree })}>
+        <KeyTreeFilter />
         <Tooltip
+          repositionOnResize
           keepTooltipInside={false}
           content={l10n.t('Sort by key names displayed')}
-          position="bottom right"
+          position="bottom center"
         >
           <VSCodeButton
             appearance="icon"
@@ -172,7 +174,6 @@ export const KeysSummary = (props: Props) => {
             {isSortingASC ? <BiSortDown /> : <BiSortUp />}
           </VSCodeButton>
         </Tooltip>
-        <KeyTreeFilter />
         <VSCodeButton appearance="icon" onClick={addKeyClickHandle} data-testid="add-key-button">
           <VscAdd />
         </VSCodeButton>
