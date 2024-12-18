@@ -141,6 +141,6 @@ export enum Formatters {
 }
 
 export enum AddElementInList  {
-  Head ,
+  Head,
   Tail,
 }

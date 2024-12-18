@@ -5,7 +5,6 @@ import {
   DropdownActions,
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
-import { CommonDriverExtension, Config } from '@e2eSrc/helpers'
 
 /**
  * Tree list view with databases and keys
@@ -63,7 +62,7 @@ export class TreeView extends WebView {
   keyMask = '//*[@data-testid="key-$name"]'
   getItemDeleteButton = (keyName: string): Locator =>
     By.xpath(
-      `//vscode-button[starts-with(@data-testid, 'remove-key-${keyName}')]`,
+      `//button[starts-with(@data-testid, 'remove-key-${keyName}')]`,
     )
   getTreeViewItemByIndex = (index: number): Locator =>
     By.xpath(
