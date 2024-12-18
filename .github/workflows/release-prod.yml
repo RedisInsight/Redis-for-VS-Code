@@ -10,6 +10,10 @@ jobs:
     name: Run all tests
     uses: ./.github/workflows/tests.yml
     secrets: inherit
+    with:
+      group_tests: 'without_e2e'
+      short_rte_list: false
+      pre_release: true
 
   builds-prod:
     name: Create all builds for release
