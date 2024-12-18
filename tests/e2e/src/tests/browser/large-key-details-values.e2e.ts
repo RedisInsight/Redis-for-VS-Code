@@ -305,7 +305,7 @@ describe('Large key details verification', () => {
         stringKeyDetailsView.editKeyValueButton,
         'class',
       ),
-    ).eql(true, 'Edit String key button not disabled')
+    ).eql(true, 'Edit String key value button not disabled before loading all clicked')
 
     // Verify that user can see String key value with only 5000 characters uploaded if length is more than 5000
     // Verify that 3 dots after truncated big strings displayed
@@ -338,7 +338,7 @@ describe('Large key details verification', () => {
         stringKeyDetailsView.editKeyValueButton,
         'class',
       ),
-    ).eql(false, 'Edit key value button not disabled')
+    ).eql(false, 'Edit key value button disabled after loading all clicked')
     // Verify that user can see not fully loaded String key with > 5000 characters after clicking on Refresh button
     await ButtonActions.clickAndWaitForElement(
       stringKeyDetailsView.refreshKeyButton,

@@ -31,7 +31,7 @@ export class KeyDetailsView extends WebView {
     `//vscode-button[@data-testid='search-button']`,
   )
   addKeyValueItemsButton = By.xpath(
-    `//*[@data-testid = 'add-key-value-items-btn']`,
+    `//*[@data-testid='add-key-value-items-btn']`,
   )
   copyButton = By.xpath(
     `//vscode-button[starts-with(@data-testid, 'copy-name-button')]`,

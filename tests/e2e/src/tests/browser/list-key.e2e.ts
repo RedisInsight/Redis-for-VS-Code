@@ -9,6 +9,7 @@ import { Config } from '@e2eSrc/helpers/Conf'
 import { ListKeyParameters } from '@e2eSrc/helpers/types/types'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import { AddElementInList, KeyTypesShort } from '@e2eSrc/helpers/constants'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 let keyName: string
 const elements = [
@@ -35,6 +36,11 @@ describe('List Key verification', () => {
       keyName,
       element: [elements[0], elements[1], elements[2]],
     }
+
+    await KeyAPIRequests.addListKeyApi(
+      keyToAddParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
 
     // Refresh database
     await treeView.refreshDatabaseByName(
@@ -162,11 +168,9 @@ describe('List Key verification for db with version <6.2', () => {
     // Add a few elements to the List key
     await listKeyDetailsView.addListElement([elements[1]])
     // Verify that user can add element to List
-    expect(
-      await listKeyDetailsView.isElementDisplayed(
-        listKeyDetailsView.getElementValueByText(elements[1]),
-      ),
-    ).eql(true, 'Element not added')
+    await listKeyDetailsView.getElement(
+      listKeyDetailsView.getElementValueByText(elements[1]),
+    )
 
     await listKeyDetailsView.addListElement([elements[2]], AddElementInList.Head)
     await listKeyDetailsView.getElement(

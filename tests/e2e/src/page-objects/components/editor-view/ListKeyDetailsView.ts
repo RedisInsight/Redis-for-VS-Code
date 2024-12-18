@@ -76,7 +76,7 @@ export class ListKeyDetailsView extends DoubleColumnKeyDetailsView {
       )
       await ButtonActions.clickAndWaitForElement(this.fromHeadSelection, this.fromHeadSelection, false)
     }
-    for (let i = 0; i < element.length; i ++){
+    for (let i = 0; i < element.length; i++){
       await InputActions.typeText(this.getElementValueInput(i), element[i])
 
       if (element.length > 1 && i < element.length - 1) {
