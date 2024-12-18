@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
-import { VscEdit } from 'react-icons/vsc'
-import { isUndefined, toNumber } from 'lodash'
+import { VscEdit, VscRefresh } from 'react-icons/vsc'
+import { isUndefined, toNumber, isEqual } from 'lodash'
 import * as l10n from '@vscode/l10n'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 
@@ -11,7 +11,7 @@ import {
   getRedisModulesSummary,
   sendEventTelemetry,
 } from 'uiSrc/utils'
-import { ContextStoreProvider, Database, DatabaseOverview, checkConnectToDatabase, deleteDatabases } from 'uiSrc/store'
+import { ContextStoreProvider, Database, DatabaseOverview, checkConnectToDatabase, deleteDatabases, fetchDatabaseOverviewById } from 'uiSrc/store'
 import { Chevron, DatabaseIcon, Tooltip } from 'uiSrc/ui'
 import { PopoverDelete } from 'uiSrc/components'
 import { POPOVER_WINDOW_BORDER_WIDTH, StorageItem, VscodeMessageAction } from 'uiSrc/constants'
@@ -28,9 +28,29 @@ export interface Props {
   database: Database
 }
 
+const LogicalDatabase = (
+  { database, open, dbTotal }:
+  { database: Database, open?: boolean, dbTotal?: number },
+) => (
+  <ContextStoreProvider >
+    <KeysStoreProvider>
+      <LogicalDatabaseWrapper database={database}>
+        <KeysTreeHeader
+          database={database}
+          open={open}
+          dbTotal={dbTotal}
+        >
+          <KeysTree database={database} />
+        </KeysTreeHeader>
+      </LogicalDatabaseWrapper>
+    </KeysStoreProvider>
+  </ContextStoreProvider>
+)
+
 export const DatabaseWrapper = React.memo(({ database }: Props) => {
   const { id, name } = database
 
+  const [loading, setLoading] = useState<boolean>(false)
   const [showTree, setShowTree] = useState<boolean>(false)
   const [totalKeysPerDb, setTotalKeysPerDb] = useState<Maybe<Record<string, number>>>(undefined)
 
@@ -82,6 +102,16 @@ export const DatabaseWrapper = React.memo(({ database }: Props) => {
     vscodeApi.postMessage({ action: VscodeMessageAction.EditDatabase, data: { database } })
   }
 
+  const refreshHandle = async () => {
+    setLoading(true)
+    const overview = await fetchDatabaseOverviewById(id)
+    setLoading(false)
+
+    if (!isEqual(totalKeysPerDb, overview?.totalKeysPerDb)) {
+      setTotalKeysPerDb(overview?.totalKeysPerDb)
+    }
+  }
+
   const deleteDatabaseHandle = () => {
     deleteDatabases([database])
   }
@@ -94,25 +124,6 @@ export const DatabaseWrapper = React.memo(({ database }: Props) => {
       },
     })
   }
-
-  const LogicalDatabase = (
-    { database, open, dbTotal }:
-    { database: Database, open?: boolean, dbTotal?: number },
-  ) => (
-    <ContextStoreProvider>
-      <KeysStoreProvider>
-        <LogicalDatabaseWrapper database={database}>
-          <KeysTreeHeader
-            database={database}
-            open={open}
-            dbTotal={dbTotal}
-          >
-            <KeysTree database={database} />
-          </KeysTreeHeader>
-        </LogicalDatabaseWrapper>
-      </KeysStoreProvider>
-    </ContextStoreProvider>
-  )
 
   return (
     <div className={cx('flex w-full flex-col')}>
@@ -140,6 +151,14 @@ export const DatabaseWrapper = React.memo(({ database }: Props) => {
         <div className="flex pr-3.5">
           <VSCodeButton
             appearance="icon"
+            onClick={refreshHandle}
+            className={cx('hidden', 'group-hover:!flex', { '!flex': showTree })}
+            data-testid="refresh-databases"
+          >
+            <VscRefresh />
+          </VSCodeButton>
+          <VSCodeButton
+            appearance="icon"
             onClick={editHandle}
             className={cx('hidden', 'group-hover:!flex', { '!flex': showTree })}
             data-testid="edit-database"
@@ -160,6 +179,7 @@ export const DatabaseWrapper = React.memo(({ database }: Props) => {
           />
         </div>
       </div>
+      {loading && <div className="data-loading" />}
       {showTree && (<>
         {!isUndefined(totalKeysPerDb) && Object.keys(totalKeysPerDb).map((databaseIndex) => (
           <LogicalDatabase

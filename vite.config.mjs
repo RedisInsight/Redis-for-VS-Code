@@ -82,7 +82,6 @@ export default defineConfig({
     testTimeout: 20000,
     setupFiles: ['./src/webviews/test/setup.ts'],
     coverage: {
-      enabled: true,
       reporter: ['text', 'html'],
       reportsDirectory: './report/coverage',
       include: ['src/webviews/src/**'],

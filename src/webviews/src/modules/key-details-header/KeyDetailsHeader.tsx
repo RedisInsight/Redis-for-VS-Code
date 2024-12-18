@@ -157,7 +157,7 @@ const KeyDetailsHeader = ({
           </div>
         )}
       </AutoSizer>
-      {(loading || refreshing) && <div className="table-loading" />}
+      {(loading || refreshing) && <div className="data-loading" />}
     </div>
   )
 }

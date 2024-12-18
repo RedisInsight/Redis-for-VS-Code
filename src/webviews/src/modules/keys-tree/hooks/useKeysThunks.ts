@@ -261,7 +261,7 @@ KeysThunks
           eventData: {
             keyType,
             TTL: data.expire || -1,
-            databaseId: sessionStorageService.get(StorageItem.databaseId),
+            databaseId: window.ri?.database?.id ?? null,
             length: getLengthByKeyType(keyType, data),
           },
         })

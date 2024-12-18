@@ -44,7 +44,7 @@ export class TreeView extends WebView {
   keyTreeFilterCancelBtn = By.xpath(
     `//vscode-button[@data-testid='key-tree-filter-cancel-btn']`,
   )
-  loadingIndicator = By.xpath(`//*[contains(@class, "table-loading")]`)
+  loadingIndicator = By.xpath(`//*[contains(@class, "data-loading")]`)
   treeViewFilterSelect = By.xpath(
     `//vscode-dropdown[@data-testid='tree-view-filter-select']`,
   )
