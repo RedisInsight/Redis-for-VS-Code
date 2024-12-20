@@ -10,7 +10,7 @@ export class ServerActions extends CommonDriverExtension {
    * // todo: investigate if it is better to put it before all tests?
    */
   static async waitForServerInitialized(): Promise<void> {
-    const TIMEOUT = 30_000
+    const TIMEOUT = 10_000
     const start = Date.now()
 
     while(Date.now() - start < TIMEOUT) {
