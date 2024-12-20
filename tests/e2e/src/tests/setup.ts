@@ -34,10 +34,10 @@ describe('Agreements Verification', () => {
     addDatabaseView = new AddDatabaseView()
     welcomeView = new WelcomeView()
 
-    await ServerActions.waitForServerInitialized()
-    await browser.waitForWorkbench(20_000)
     await new TitleBar().getWindowControls().maximize()
     await (await new ActivityBar().getViewControl('Redis for VS Code'))?.openView()
+    await ServerActions.waitForServerInitialized()
+    await browser.waitForWorkbench(20_000)
   })
   beforeEach(async () => {
     await eulaView.switchToInnerViewFrame(InnerViews.EulaInnerView)
