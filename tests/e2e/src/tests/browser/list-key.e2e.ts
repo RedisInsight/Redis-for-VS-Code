@@ -1,26 +1,15 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { before, beforeEach, after, afterEach } from 'vscode-extension-tester'
-import {
-  TreeView,
-  ListKeyDetailsView,
-  AddListKeyView,
-  AddDatabaseView,
-} from '@e2eSrc/page-objects/components'
+import { after, afterEach, before, beforeEach } from 'vscode-extension-tester'
+import { AddDatabaseView, AddListKeyView, ListKeyDetailsView, TreeView, } from '@e2eSrc/page-objects/components'
 import { Common } from '@e2eSrc/helpers/Common'
-import {
-  ButtonActions,
-  DatabasesActions,
-  KeyDetailsActions,
-  NotificationActions,
-} from '@e2eSrc/helpers/common-actions'
+import { DatabasesActions, KeyDetailsActions, NotificationActions, } from '@e2eSrc/helpers/common-actions'
 import { DatabaseAPIRequests, KeyAPIRequests } from '@e2eSrc/helpers/api'
 import { Config } from '@e2eSrc/helpers/Conf'
 import { ListKeyParameters } from '@e2eSrc/helpers/types/types'
 import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
-import { KeyTypesShort } from '@e2eSrc/helpers/constants'
-import { ServerActions } from '@e2eSrc/helpers/common-actions/ServerActions'
-import { Eula } from '@e2eSrc/helpers/api/Eula'
+import { AddElementInList, KeyTypesShort } from '@e2eSrc/helpers/constants'
+import { CommonDriverExtension } from '@e2eSrc/helpers'
 
 let keyName: string
 const elements = [
@@ -45,33 +34,14 @@ describe('List Key verification', () => {
     keyName = Common.generateWord(10)
     const keyToAddParameters = {
       keyName,
-      element: elements[0],
-    }
-    const keyToAddParameters1 = {
-      keyName,
-      element: elements[1],
-    }
-
-    const keyToAddParameters2 = {
-      keyName,
-      element: elements[2],
+      element: [elements[0], elements[1], elements[2]],
     }
 
     await KeyAPIRequests.addListKeyApi(
       keyToAddParameters,
       Config.ossStandaloneConfig.databaseName,
     )
-    // Add elements to the list key
-    await KeyAPIRequests.addElementsToListKeyApi(
-      keyToAddParameters1,
-      Config.ossStandaloneConfig.databaseName,
-      'TAIL',
-    )
-    await KeyAPIRequests.addElementsToListKeyApi(
-      keyToAddParameters2,
-      Config.ossStandaloneConfig.databaseName,
-      'TAIL',
-    )
+
     // Refresh database
     await treeView.refreshDatabaseByName(
       Config.ossStandaloneConfig.databaseName,
@@ -185,7 +155,7 @@ describe('List Key verification for db with version <6.2', () => {
     keyName = Common.generateWord(10)
     const listKeyParameters: ListKeyParameters = {
       keyName: keyName,
-      element: elements[0],
+      element: [elements[0]],
     }
 
     // Verify that user can add List Key
@@ -196,18 +166,13 @@ describe('List Key verification for db with version <6.2', () => {
 
     await addListKeyView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
     // Add a few elements to the List key
-    await listKeyDetailsView.addListElementToTail(elements[1])
+    await listKeyDetailsView.addListElement([elements[1]])
     // Verify that user can add element to List
     await listKeyDetailsView.getElement(
       listKeyDetailsView.getElementValueByText(elements[1]),
     )
-    expect(
-      await listKeyDetailsView.isElementDisplayed(
-        listKeyDetailsView.getElementValueByText(elements[1]),
-      ),
-    ).eql(true, 'Element not added')
 
-    await listKeyDetailsView.addListElementToHead(elements[2])
+    await listKeyDetailsView.addListElement([elements[2]], AddElementInList.Head)
     await listKeyDetailsView.getElement(
       listKeyDetailsView.getElementValueByText(elements[2]),
     )

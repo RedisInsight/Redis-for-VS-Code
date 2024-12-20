@@ -15,7 +15,7 @@ export class KeyDetailsView extends WebView {
   keyType = By.xpath(`//div[contains(@class, '_keyFlexGroup')]`)
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
   keyLength = By.xpath(`//div[@data-testid='key-length-text']`)
-  refreshKeyButton = By.xpath(`//*[@data-testid='refresh-key-btn']`)
+  refreshKeyButton = By.xpath(`//*[@data-testid='key-refresh-btn']`)
   applyBtn = By.xpath(
     `//*[@class='key-details-body']//*[@data-testid='apply-btn']`,
   )
@@ -31,13 +31,13 @@ export class KeyDetailsView extends WebView {
     `//vscode-button[@data-testid='search-button']`,
   )
   addKeyValueItemsButton = By.xpath(
-    `//*[@data-testid = 'add-key-value-items-btn']`,
+    `//*[@data-testid='add-key-value-items-btn']`,
   )
   copyButton = By.xpath(
     `//vscode-button[starts-with(@data-testid, 'copy-name-button')]`,
   )
   detailsDeleteKeyButton = By.xpath(
-    `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
+    `//button[starts-with(@data-testid, 'remove-key-')]`,
   )
   submitDetailsDeleteKeyButton = By.xpath(
     `//div[@class='popup-content ']//vscode-button[starts-with(@data-testid, 'remove-key-')]`,

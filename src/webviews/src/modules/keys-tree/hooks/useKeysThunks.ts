@@ -3,11 +3,10 @@ import { StateCreator } from 'zustand'
 
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { apiService, sessionStorageService } from 'uiSrc/services'
-import { DEFAULT_SEARCH_MATCH, ApiEndpoints, KeyTypes, successMessages, SCAN_TREE_COUNT_DEFAULT, ENDPOINT_BASED_ON_KEY_TYPE, EndpointBasedOnKeyType, StorageItem } from 'uiSrc/constants'
+import { DEFAULT_SEARCH_MATCH, ApiEndpoints, KeyTypes, successMessages, SCAN_TREE_COUNT_DEFAULT, ENDPOINT_BASED_ON_KEY_TYPE, EndpointBasedOnKeyType, StorageItem, CustomHeaders } from 'uiSrc/constants'
 import {
   TelemetryEvent,
   getApiErrorMessage,
-  getEncoding,
   getMatchType,
   isStatusSuccessful,
   sendEventTelemetry,
@@ -22,7 +21,7 @@ import { GetKeysWithDetailsResponse, KeysStore, KeysActions, SetStringWithExpire
 import { parseKeysListResponse } from '../utils'
 
 // eslint-disable-next-line import/no-mutable-exports
-export let sourceKeysFetch: Nullable<CancelTokenSource> = null
+export const sourceKeysFetchStack: Record<string, Nullable<CancelTokenSource>> = {}
 
 export const createKeysThunksSlice: StateCreator<
 KeysStore & KeysActions & KeysThunks,
@@ -34,18 +33,19 @@ KeysThunks
   fetchPatternKeysAction: async (
     cursor: string = '0',
     count: number = SCAN_TREE_COUNT_DEFAULT,
-    telemetryProperties: { [key: string]: any } = {},
+    telemetryProperties: Record<string, any> = {},
     onSuccess?: (data: GetKeysWithDetailsResponse[]) => void,
     onFailed?: () => void,
   ) => {
     get().loadKeys()
 
     try {
-      sourceKeysFetch?.cancel?.()
       const { CancelToken } = axios
-      sourceKeysFetch = CancelToken.source()
+      const { search: match, filter: type, databaseId, databaseIndex } = get()
+      const sourceKeysFetchKey = databaseId! + databaseIndex!
 
-      const { search: match, filter: type, databaseId } = get()
+      sourceKeysFetchStack[sourceKeysFetchKey]?.cancel?.()
+      sourceKeysFetchStack[sourceKeysFetchKey] = CancelToken.source()
 
       const { data, status } = await apiService.post<GetKeysWithDetailsResponse[]>(
         getDatabaseUrl(databaseId, ApiEndpoints.KEYS),
@@ -53,12 +53,12 @@ KeysThunks
           cursor, count, type, match: match || DEFAULT_SEARCH_MATCH, keysInfo: false,
         },
         {
-          params: { encoding: getEncoding() },
-          cancelToken: sourceKeysFetch.token,
+          headers: { [CustomHeaders.DbIndex]: databaseIndex },
+          cancelToken: sourceKeysFetchStack[sourceKeysFetchKey]?.token,
         },
       )
 
-      sourceKeysFetch = null
+      sourceKeysFetchStack[sourceKeysFetchKey] = null
       if (isStatusSuccessful(status)) {
         get().loadKeysSuccess(
           parseKeysListResponse({}, data),
@@ -105,24 +105,25 @@ KeysThunks
     get().loadKeys()
 
     try {
-      sourceKeysFetch?.cancel?.()
-
       const { CancelToken } = axios
-      sourceKeysFetch = CancelToken.source()
+      const { search: match, filter: type, databaseId, databaseIndex } = get()
+      const sourceKeysFetchKey = databaseId! + databaseIndex!
+      sourceKeysFetchStack[sourceKeysFetchKey]?.cancel?.()
 
-      const { search: match, filter: type, databaseId } = get()
+      sourceKeysFetchStack[sourceKeysFetchKey] = CancelToken.source()
+
       const { data, status } = await apiService.post(
         getDatabaseUrl(databaseId, ApiEndpoints.KEYS),
         {
           cursor, count, type, match: match || DEFAULT_SEARCH_MATCH, keysInfo: false,
         },
         {
-          params: { encoding: getEncoding() },
-          cancelToken: sourceKeysFetch.token,
+          headers: { [CustomHeaders.DbIndex]: databaseIndex },
+          cancelToken: sourceKeysFetchStack[sourceKeysFetchKey]?.token,
         },
       )
 
-      sourceKeysFetch = null
+      sourceKeysFetchStack[sourceKeysFetchKey] = null
       if (isStatusSuccessful(status)) {
         const newKeysData = parseKeysListResponse(
           get().data.shardsMeta,
@@ -159,7 +160,9 @@ KeysThunks
       const { data } = await apiService.post<KeyInfo[]>(
         getDatabaseUrl(get().databaseId, ApiEndpoints.KEYS_METADATA),
         { keys: keys.map(([,nameBuffer]) => nameBuffer), type: get().filter || undefined },
-        { params: { encoding: getEncoding() }, signal },
+        {
+          headers: { [CustomHeaders.DbIndex]: get().databaseIndex }, signal,
+        },
       )
 
       const newData = data.map((key, i) => ({ ...key, path: keys[i][0] || 0 })) as KeyInfo[]
@@ -184,7 +187,7 @@ KeysThunks
         getDatabaseUrl(get().databaseId, ApiEndpoints.KEYS),
         {
           data: { keyNames: [key] },
-          params: { encoding: getEncoding() },
+          headers: { [CustomHeaders.DbIndex]: get().databaseIndex },
         },
       )
 
@@ -258,7 +261,7 @@ KeysThunks
           eventData: {
             keyType,
             TTL: data.expire || -1,
-            databaseId: sessionStorageService.get(StorageItem.databaseId),
+            databaseId: window.ri?.database?.id ?? null,
             length: getLengthByKeyType(keyType, data),
           },
         })

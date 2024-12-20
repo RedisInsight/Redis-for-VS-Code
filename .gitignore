@@ -19,6 +19,8 @@ lerna-debug.log*
 coverage
 /.nyc_output
 **/coverage
+reports
+report
 
 # IDEs and editors
 /.idea
@@ -59,3 +61,9 @@ scripts/*.js
 
 # security
 *.local
+
+#CI
+.actrc
+my.secrets
+my.inputs
+event.json

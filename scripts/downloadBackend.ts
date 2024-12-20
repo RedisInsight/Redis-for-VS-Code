@@ -3,7 +3,9 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as cp from 'child_process'
 import * as dotenv from 'dotenv'
+import * as upath from 'upath'
 import { parse as parseUrl } from 'url'
+
 
 dotenv.config({
   path: [
@@ -56,12 +58,14 @@ async function downloadRedisBackendArchive(
   destDir: string,
 ): Promise<string> {
   ensureFolderExists(destDir)
-  const downloadUrl = getDownloadUrl()
+  let downloadUrl = getDownloadUrl()
 
   return new Promise((resolve, reject) => {
     const requestOptions: https.RequestOptions = parseUrl(downloadUrl)
     https.get(requestOptions, (res) => {
-      if (res.statusCode !== 200) {
+      if (res.statusCode === 302 && res.headers.location) {
+        downloadUrl = res.headers.location
+      } else if (res.statusCode !== 200) {
         reject(new Error('Failed to get Redis Insight backend archive location'))
       }
 
@@ -78,13 +82,28 @@ async function downloadRedisBackendArchive(
   })
 }
 
+function getNormalizedCIString(string: string) {
+  return string?.startsWith('D:') && process.env.CI
+    ? upath.normalize(string).replace('D:', '/d')
+    : string
+}
+
 function unzipRedisServer(redisInsideArchivePath: string, extractDir: string) {
   // tar does not create extractDir by default
   if (!fs.existsSync(extractDir)) {
     fs.mkdirSync(extractDir)
   }
 
-  cp.spawnSync('tar', ['-xf', redisInsideArchivePath, '-C', extractDir, '--strip-components', '1', 'api'])
+  cp.spawnSync('tar', [
+    '-xf',
+    getNormalizedCIString(redisInsideArchivePath),
+    '-C',
+    getNormalizedCIString(extractDir),
+    '--strip-components',
+    '1',
+    'api',
+  ])
+
 
   // remove tutorials
   fs.rmSync(tutorialsPath, { recursive: true, force: true });

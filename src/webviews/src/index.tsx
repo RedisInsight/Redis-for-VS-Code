@@ -6,6 +6,7 @@ import {
   useSelectedKeyStore,
   fetchEditedDatabase,
   fetchCerts,
+  useDatabasesStore,
 } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
@@ -52,6 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
         break
       case VscodeMessageAction.RefreshTree:
         refreshTreeAction(message)
+        break
+      case VscodeMessageAction.UpdateDatabaseInList:
+        useDatabasesStore.getState().setDatabaseToList(message.data?.database)
         break
       case VscodeMessageAction.AddDatabase:
         addDatabaseAction(message)

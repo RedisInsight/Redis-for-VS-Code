@@ -8,6 +8,7 @@ import { apiService, vscodeApi } from 'uiSrc/services'
 import * as useContext from 'uiSrc/store/hooks/use-context/useContext'
 import * as useSelectedKeyStore from 'uiSrc/store/hooks/use-selected-key-store/useSelectedKeyStore'
 import { Database } from 'uiSrc/store'
+import * as useDatabasesStore from 'uiSrc/store'
 import { constants, fireEvent, render, waitForStack } from 'testSrc/helpers'
 import { DatabaseWrapper, Props } from './DatabaseWrapper'
 import * as useKeys from '../../hooks/useKeys'
@@ -30,8 +31,7 @@ const deleteKeyFromTreeMock = vi.fn();
 (vi.spyOn(useKeys, 'useKeysApi') as Mock).mockImplementation(() => ({
   fetchPatternKeysAction: fnMock,
   setDatabaseId: fnMock,
-  addKeyIntoTree: addKeyIntoTreeMock,
-  deleteKeyFromTree: deleteKeyFromTreeMock,
+  setDatabaseIndex: fnMock,
 }))
 const setKeysTreeSortMock = vi.fn()
 const resetKeysTreeMock = vi.fn();
@@ -40,21 +40,41 @@ const resetKeysTreeMock = vi.fn();
   resetKeysTree: resetKeysTreeMock,
 }))
 
+vi.spyOn(useDatabasesStore, 'fetchDatabaseOverviewById')
+
 describe('DatabaseWrapper', () => {
   it('should render', () => {
     expect(render(<DatabaseWrapper {...mockedProps} />)).toBeTruthy()
   })
 
-  it('should call fetchPatternKeysAction action after click on refresh icon', async () => {
+  it('should call fetchDatabaseOverviewById action after click on refresh icon', async () => {
+    const { queryByTestId } = render(<DatabaseWrapper {...mockedProps} />)
+
+    fireEvent.click(queryByTestId('refresh-databases')!)
+    await waitForStack()
+
+    expect(useDatabasesStore.fetchDatabaseOverviewById).toBeCalled()
+  })
+
+  it('should call fetchPatternKeysAction action after click on logical database refresh icon', async () => {
     const { queryByTestId } = render(<DatabaseWrapper {...mockedProps} />)
 
     fireEvent.click(queryByTestId(`database-${mockDatabase.id}`)!)
     await waitForStack()
 
-    fireEvent.click(queryByTestId('refresh-keys')!)
+    fireEvent.click(queryByTestId('refresh-keys-refresh-btn')!)
     await waitForStack()
 
     expect(useKeys.useKeysApi().fetchPatternKeysAction).toBeCalled()
+  })
+
+  it('should render logical databases', async () => {
+    const { queryByTestId } = render(<DatabaseWrapper {...mockedProps} />)
+
+    fireEvent.click(queryByTestId(`database-${mockDatabase.id}`)!)
+    await waitForStack()
+
+    expect(queryByTestId(`logical-database-${mockDatabase.id}-0`)!).toBeInTheDocument()
   })
 
   describe('selectedKeyAction', () => {
@@ -83,15 +103,6 @@ describe('DatabaseWrapper', () => {
       vi.restoreAllMocks()
     })
 
-    it('should call deleteKeyFromTree and setSelectedKeyAction action after if selected key action is Removed', async () => {
-      render(<DatabaseWrapper {...mockedProps} database={{ id: constants.DATABASE_ID } as Database} />)
-
-      await waitForStack()
-
-      expect(setSelectedKeyActionMock).toBeCalledWith(null)
-      expect(deleteKeyFromTreeMock).toBeCalledWith(constants.KEY_NAME_1)
-    })
-
     it('should not call any mocks if database is not equal', async () => {
       render(<DatabaseWrapper {...mockedProps} database={{ id: '123123' } as Database} />)
 
@@ -108,29 +119,6 @@ describe('DatabaseWrapper', () => {
       await waitForStack()
 
       expect(setSelectedKeyActionMock).not.toBeCalled()
-      expect(deleteKeyFromTreeMock).not.toBeCalled()
-      expect(addKeyIntoTreeMock).not.toBeCalled()
-    })
-
-    it('should call addKeyIntoTree action after if selected key action is Added', async () => {
-      const spySelectedKey = vi.spyOn(useSelectedKeyStore, 'useSelectedKeyStore') as Mock
-
-      const setSelectedKeyActionMock = vi.fn()
-      const setSelectedKeyMock = vi.fn()
-
-      spySelectedKey.mockImplementation(() => ({
-        selectedKeyAction: {
-          ...selectedKeyAction,
-          type: SelectedKeyActionType.Added,
-        },
-        setSelectedKeyAction: setSelectedKeyActionMock,
-        setSelectedKey: setSelectedKeyMock,
-      }))
-
-      render(<DatabaseWrapper {...mockedProps} database={{ id: constants.DATABASE_ID } as Database} />)
-
-      expect(setSelectedKeyMock).toBeCalledWith({ name: constants.KEY_NAME_1 })
-      expect(setSelectedKeyActionMock).toBeCalledWith(null)
       expect(deleteKeyFromTreeMock).not.toBeCalled()
       expect(addKeyIntoTreeMock).not.toBeCalled()
     })

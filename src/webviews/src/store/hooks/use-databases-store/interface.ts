@@ -60,6 +60,7 @@ export interface DatabaseOverview {
   networkInKbps?: Nullable<number>
   networkOutKbps?: Nullable<number>
   cpuUsagePercentage?: Nullable<number>
+  totalKeysPerDb?: Record<string, number>
 }
 
 export interface AdditionalRedisModule {

@@ -66,6 +66,7 @@ const PopoverDelete = (props: Props) => {
     <Popup
       key={item}
       ref={ref}
+      nested={false}
       closeOnEscape
       closeOnDocumentClick
       repositionOnResize

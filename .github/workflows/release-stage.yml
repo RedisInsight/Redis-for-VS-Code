@@ -1,0 +1,33 @@
+name: 📖 Release (stage)
+
+on:
+  push:
+    branches:
+      - 'release/**'
+
+jobs:
+  tests:
+    name: Release stage tests
+    uses: ./.github/workflows/tests.yml
+    secrets: inherit
+    with:
+      group_tests: 'without_e2e'
+      pre_release: true
+
+  builds:
+    name: Release stage builds
+    uses: ./.github/workflows/build.yml
+    needs: tests
+    secrets: inherit
+    with:
+      environment: 'staging'
+      target: 'all'
+
+  e2e-linux-tests:
+    needs: builds
+    uses: ./.github/workflows/tests-e2e-linux.yml
+    secrets: inherit
+
+
+
+

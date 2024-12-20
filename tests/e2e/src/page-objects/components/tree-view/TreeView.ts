@@ -5,7 +5,6 @@ import {
   DropdownActions,
   InputActions,
 } from '@e2eSrc/helpers/common-actions'
-import { CommonDriverExtension, Config } from '@e2eSrc/helpers'
 
 /**
  * Tree list view with databases and keys
@@ -23,9 +22,11 @@ export class TreeView extends WebView {
   sortKeysBtn = By.xpath(`//vscode-button[@data-testid='sort-keys']`)
   addDatabaseBtn = By.xpath(`//a[@aria-label='Add Redis database']`)
   editDatabaseBtn = By.xpath(`//vscode-button[@data-testid='edit-database']`)
-  settingsButton = By.xpath(`//a[@aria-label='Open Redis for VS Code settings']`)
+  settingsButton = By.xpath(
+    `//a[@aria-label='Open Redis for VS Code settings']`,
+  )
   deleteKeyInListBtn = By.xpath(
-    `//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
+    `//button[starts-with(@data-testid, 'remove-key-')]`,
   )
   submitDeleteKeyButton = By.xpath(
     `//div[@class='popup-content ']//vscode-button[starts-with(@data-testid, 'remove-key-')]`,
@@ -42,7 +43,7 @@ export class TreeView extends WebView {
   keyTreeFilterCancelBtn = By.xpath(
     `//vscode-button[@data-testid='key-tree-filter-cancel-btn']`,
   )
-  loadingIndicator = By.xpath(`//*[contains(@class, "table-loading")]`)
+  loadingIndicator = By.xpath(`//*[contains(@class, "data-loading")]`)
   treeViewFilterSelect = By.xpath(
     `//vscode-dropdown[@data-testid='tree-view-filter-select']`,
   )
@@ -53,13 +54,15 @@ export class TreeView extends WebView {
   treeViewVirtualTable = By.xpath(`//*[@data-testid='virtual-tree']/div`)
   databaseInstance = By.xpath(`//div[starts-with(@data-testid, 'database-')]`)
   keyInFolder = By.xpath(`//*[contains(@data-testid, "keys:")]`)
-  addKeyFromTreeBtn = By.xpath(`//vscode-button[@data-testid='add-key-from-tree']`)
+  addKeyFromTreeBtn = By.xpath(
+    `//vscode-button[@data-testid='add-key-from-tree']`,
+  )
 
   // mask
   keyMask = '//*[@data-testid="key-$name"]'
   getItemDeleteButton = (keyName: string): Locator =>
     By.xpath(
-      `//vscode-button[starts-with(@data-testid, 'remove-key-${keyName}')]`,
+      `//button[starts-with(@data-testid, 'remove-key-${keyName}')]`,
     )
   getTreeViewItemByIndex = (index: number): Locator =>
     By.xpath(
@@ -88,17 +91,25 @@ export class TreeView extends WebView {
     By.xpath(
       `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/div`,
     )
+  getDatabaseContainerByName = (name: string): Locator =>
+    By.xpath(
+      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/../..`,
+    )
+  getLogicalDatabaseContainerByIndex = (name: string, index: number): Locator =>
+    By.xpath(
+      `(.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/../../div[starts-with(@data-testid, 'logical-database-')])[${index - 1}]`,
+    )
   getEditDatabaseBtnByName = (name: string): Locator =>
     By.xpath(
       `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid='edit-database']`,
     )
   getRefreshDatabaseBtnByName = (name: string): Locator =>
     By.xpath(
-      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid = 'refresh-keys']`,
+      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/../..//button[@data-testid = 'refresh-keys-refresh-btn']`,
     )
   getCLIDatabaseBtnByName = (name: string): Locator =>
     By.xpath(
-      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid = 'terminal-button']`,
+      `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/../..//vscode-button[@data-testid = 'terminal-button']`,
     )
   getKeySelectorByName = (name: string): Locator =>
     By.xpath(`//*[@data-testid="key-${name}"]`)

@@ -1,5 +1,3 @@
-import { cleanup } from '@testing-library/react'
-import { cloneDeep } from 'lodash'
 import { Mock, SpyInstance } from 'vitest'
 import { createStore } from 'zustand'
 import * as utils from 'uiSrc/utils'
@@ -362,6 +360,9 @@ describe('useKeys', () => {
         apiService.post = apiServiceMock
         const controller = new AbortController()
 
+        const dbIndexMock = 2
+        useKeysStore.setState((state) => ({ ...state, databaseIndex: dbIndexMock }))
+
         // Act
         useKeysStore.getState().fetchKeysMetadataTree(
           data.map(({ name }, i) => ([i, name])) as any,
@@ -374,7 +375,7 @@ describe('useKeys', () => {
         expect(apiServiceMock).toBeCalledWith(
           `/databases/null/keys/get-metadata`,
           { keys: data.map(({ name }) => (name)), type: undefined },
-          { params: { encoding: 'buffer' }, signal: controller.signal },
+          { headers: { "ri-db-index": dbIndexMock }, signal: controller.signal },
         )
 
         expect(onSuccessMock).toBeCalledWith(data)
@@ -447,7 +448,7 @@ describe('useKeys', () => {
         // Arrange
         const data: CreateListWithExpireDto = {
           keyName: 'keyName',
-          element: 'element',
+          elements: ['element'],
         }
         const responsePayload = { data, status: 200 }
 

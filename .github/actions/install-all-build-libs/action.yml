@@ -1,0 +1,15 @@
+name: Install all libraries action
+description: Install all libraries and dependencies
+
+runs:
+  using: 'composite'
+  steps:
+    # OS libraries
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.18.0'
+
+    - name: Install dependencies for root package.js
+      shell: bash
+      run: yarn install --frozen-lockfile --network-timeout 1000000

@@ -85,7 +85,7 @@ export const getLengthByKeyType = (type: KeyTypes, data: any) => {
     case KeyTypes.String:
       return data.value?.length
     case KeyTypes.List:
-      return 1
+      return data.elements?.length
     case KeyTypes.Stream:
       return 1
     case KeyTypes.ReJSON:

@@ -36,7 +36,10 @@ describe('Edit Databases', () => {
 
   it('Verify that user can edit DB alias of Standalone DB', async function () {
     // Verify that timeout input is displayed for edit db window with default value when it wasn't specified
-    const timeoutValue = await editDatabaseView.getElementAttribute(editDatabaseView.timeoutInput, 'value')
+    const timeoutValue = await editDatabaseView.getElementAttribute(
+      editDatabaseView.timeoutInput,
+      'value',
+    )
     expect(timeoutValue).eql('30', 'Timeout is not defaulted to 30')
 
     await InputActions.typeText(editDatabaseView.aliasInput, newDatabaseName)
@@ -58,14 +61,17 @@ describe('Edit Databases', () => {
 
   it('Verify that user can edit Standalone DB', async function () {
     const connectionTimeout = '20'
-    const caCertFieldValue = await editDatabaseView.getElementAttribute(
-      editDatabaseView.caCertField, 'current-value'
+    const caCertFieldValue = await editDatabaseView.getElementText(
+      editDatabaseView.caCertField,
     )
-    const clientCertFieldValue = await editDatabaseView.getElementAttribute(
-      editDatabaseView.clientCertField, 'current-value'
+    const clientCertFieldValue = await editDatabaseView.getElementText(
+      editDatabaseView.clientCertField,
     )
 
-    expect(caCertFieldValue).not.contains('NO_CA_CERT', 'CA certificate is incorrect')
+    expect(caCertFieldValue).not.contains(
+      'NO_CA_CERT',
+      'CA certificate is incorrect',
+    )
     expect(clientCertFieldValue).not.contains(
       'ADD_NEW',
       'Client certificate is incorrect',

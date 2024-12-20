@@ -1,0 +1,55 @@
+name: Tests UI
+on:
+  workflow_call:
+
+env:
+  SLACK_AUDIT_REPORT_CHANNEL: ${{ secrets.SLACK_AUDIT_REPORT_CHANNEL }}
+  SLACK_AUDIT_REPORT_KEY: ${{ secrets.SLACK_AUDIT_REPORT_KEY }}
+  AWS_BUCKET_NAME_TEST: ${{ vars.AWS_BUCKET_NAME_TEST }}
+  AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+  AWS_DISTRIBUTION_ID: ${{ secrets.AWS_DISTRIBUTION_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  REPORT_NAME: "report-vscode-fe"
+  S3_PATH: "report-vscode-fe"
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    name: Frontend tests
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install all libs and dependencies
+      uses: ./.github/actions/install-all-build-libs
+
+    - name: Unit tests UI
+      run: yarn test:cov
+
+    - name: Get current date
+      id: date
+      if: always()
+      uses: RedisInsight/RedisInsight/.github/actions/get-current-date@873a0ebf55c85d3127bb4efb4d0636d9ab838226
+
+
+    - name: Deploy 🚀
+      if: always()
+      run: |
+
+        GZIP_FILE=html.meta.json.gz
+        S3_SUB_PATH="test-reports/${{ steps.date.outputs.date }}/${{ github.run_id }}/${{ env.REPORT_NAME }}"
+
+        aws s3 cp report/ s3://${AWS_BUCKET_NAME_TEST}/public/${S3_SUB_PATH} --recursive --exclude "*.gz"
+
+        # s3 modified "gzip" content-type
+        # https://github.com/aws/aws-cli/issues/1131
+        aws s3 cp report/${GZIP_FILE} s3://${AWS_BUCKET_NAME_TEST}/public/${S3_SUB_PATH}/${GZIP_FILE} --content-type "application/x-gzip" --metadata-directive REPLACE
+
+        echo "S3_SUB_PATH=${S3_SUB_PATH}" >> $GITHUB_ENV
+
+
+    - name: Add link to report in the workflow summary
+      if: always()
+      run: |
+        link="${{ vars.DEFAULT_TEST_REPORTS_URL }}/${S3_SUB_PATH}/index.html"
+        echo "[${link}](${link})" >> $GITHUB_STEP_SUMMARY

@@ -1,6 +1,5 @@
 export { DbInfo } from './DbInfo'
 export { MessageStandalone } from './Messages'
-export { DbIndex } from './DbIndex'
 export { DbCompressor } from './DbCompressor'
 export { TlsDetails } from './TlsDetails'
 export { DatabaseForm } from './DatabaseForm'

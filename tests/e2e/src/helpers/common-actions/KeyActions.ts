@@ -156,7 +156,7 @@ export class Key {
       case KeyTypesShort.Hash:
         return { fields: [{ field, value }] }
       case KeyTypesShort.List:
-        return { element: value }
+        return { destination: "TAIL", elements: [value] }
       case KeyTypesShort.Set:
         return { members: [value] }
       case KeyTypesShort.ZSet:

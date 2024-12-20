@@ -85,7 +85,11 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
     const data = await handleFetchVisualisationResults(selectedKey, path, true)
 
     setEditEntireObject(true)
-    setValueOfEntireObject(typeof data.data === 'object' ? JSON.stringify(data.data, undefined, 4) : data.data)
+    setValueOfEntireObject(typeof data.data === 'object' ? JSON.stringify(data.data, (_key, value) => (
+      typeof value === 'bigint'
+        ? value.toString()
+        : value
+    ), 4) : data.data)
   }
 
   const onClickExpandCollapse = (path: string) => {

@@ -49,6 +49,7 @@ describe('Set TTL for Key', () => {
       Config.ossStandaloneV7Config.databaseName,
     )
     await keyDetailsView.switchBack()
+    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
 
   it('Verify that user can specify TTL for Key', async function () {
@@ -98,7 +99,6 @@ describe('Set TTL for Key', () => {
         },
       ],
     }
-    await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     await addHashKeyView.addKey(hashKeyParameters, KeyTypesShort.Hash)
     await CommonDriverExtension.driverSleep(1000)
     await keyDetailsView.switchBack()

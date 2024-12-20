@@ -1,0 +1,60 @@
+.container {
+  @apply flex justify-center items-center relative whitespace-nowrap;
+}
+
+.btn {
+  transition: transform 0.3s ease;
+
+  &.rolling svg {
+    color: var(--vscode-button-background) !important;
+  }
+}
+
+.time {
+  @apply pr-1.5;
+
+  &.disabled {
+    @apply opacity-50;
+  }
+}
+
+
+:global(.popover-auto-refresh-content) {
+  @apply pr-[26px] #{!important};
+}
+
+.switch {
+  @apply pb-4;
+}
+
+.input {
+  @apply h-[30px] inline-block w-[90px];
+
+  input {
+    @apply h-[30px];
+  }
+}
+.inputContainer {
+  @apply h-[30px];
+}
+
+.inputLabel {
+  @apply inline-block w-20;
+}
+
+.anchorBtn {
+  @apply min-h-[14px] min-w-[14px] -ml-[3px];
+
+  svg {
+    @apply w-[10px] h-[10px];
+  }
+}
+
+.enable {
+  svg {
+    fill: var(--vscode-button-background) !important;
+  }
+  .time {
+    color: var(--vscode-button-background) !important;
+  }
+}

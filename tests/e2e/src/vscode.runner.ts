@@ -31,7 +31,7 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
       __dirname,
       '..',
       'test-extensions',
-      'redis.redis-for-vscode-1.0.0',
+      'redis.redis-for-vscode-1.2.0',
       'dist',
       'redis-backend',
       'dist-minified',
@@ -59,7 +59,7 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
     let testFilesEnv: string | string[] = process.env.TEST_FILES!
     if (process.env.TEST_FILES) {
       testFilesEnv = process.env.TEST_FILES.split('\n').map(file => file.trim()).map((file) => {
-        return path.join(__dirname, '..', 'dist', file)
+        return path.join(__dirname, '..', file)
       })
 
       // Always prepend setup.js

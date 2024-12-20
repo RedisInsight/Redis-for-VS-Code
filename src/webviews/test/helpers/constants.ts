@@ -1,9 +1,10 @@
 import { v4 as uuidv4 } from 'uuid'
-import { DEFAULT_ERROR_MESSAGE, DEFAULT_SEARCH_MATCH, KeyTypes } from 'uiSrc/constants'
-import { KeyInfo } from 'uiSrc/interfaces'
+import { DEFAULT_ERROR_MESSAGE, DEFAULT_SEARCH_MATCH, KeyTypes, VscodeMessageAction } from 'uiSrc/constants'
+import { CliAction, KeyInfo, SelectKeyAction } from 'uiSrc/interfaces'
 import { Certificate } from 'uiSrc/store/hooks/use-certificates-store/interface'
 import { UTF8ToArray, stringToBuffer } from 'uiSrc/utils'
 import { Database } from 'uiSrc/store'
+import { SuperSelectOption } from 'uiSrc/components'
 
 const COMMON_CONSENT_CONTENT = {
   defaultValue: false,
@@ -141,6 +142,10 @@ export const constants = {
     return CLIENT_CERTS
   },
 
+  get SUPER_SELECT_OPTIONS() {
+    return SUPER_SELECT_OPTIONS
+  },
+
   TEST_DATABASE_ID: uuidv4(),
   TEST_DATABASE_NAME: uuidv4(),
   TEST_DATABASE_HOST: uuidv4(),
@@ -189,6 +194,14 @@ export const constants = {
 
   get REDIS_COMMANDS_GROUPS() {
     return ['info', 'server']
+  },
+
+  get VSCODE_SELECT_KEY_ACTION() {
+    return VSCODE_SELECT_KEY_ACTION
+  },
+
+  get VSCODE_CLI_ACTION() {
+    return VSCODE_CLI_ACTION
   },
 
   SERVER_INFO: {
@@ -313,6 +326,10 @@ const KEYS_LIST: any = {
 
 const CA_CERTS: Certificate[] = [{ id: 'id1', name: 'ca_name1' }, { id: 'id2', name: 'ca_name2' }]
 const CLIENT_CERTS: Certificate[] = [{ id: 'id11', name: 'client_name1' }, { id: 'id12', name: 'client_name2' }]
+const SUPER_SELECT_OPTIONS: SuperSelectOption[] = [
+  { value: 'val', label: 'lab' },
+  { value: 'val2', label: 'lab2' },
+]
 
 const DATABASE: Database = {
   id: constants.TEST_DATABASE_ID,
@@ -345,5 +362,24 @@ const REDIS_COMMANDS = {
     ],
     arity: -2,
     provider: 'main',
+  },
+}
+
+const VSCODE_SELECT_KEY_ACTION: SelectKeyAction = {
+  action: VscodeMessageAction.SelectKey,
+  data: {
+    database: constants.DATABASE,
+    keyInfo: {
+      key: constants.KEY_NAME_2,
+      keyString: constants.KEY_NAME_HASH_2,
+      keyType: constants.KEY_TYPE_2,
+    },
+  },
+}
+
+const VSCODE_CLI_ACTION: CliAction = {
+  action: VscodeMessageAction.AddCli,
+  data: {
+    database: constants.DATABASE,
   },
 }

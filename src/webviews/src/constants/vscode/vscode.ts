@@ -27,6 +27,7 @@ export enum VscodeMessageAction {
   SaveAppInfo = 'SaveAppInfo',
   ShowEula = 'ShowEula',
   CloseEula = 'CloseEula',
+  UpdateDatabaseInList = 'UpdateDatabaseInList',
 }
 
 export enum VscodeStateItem {

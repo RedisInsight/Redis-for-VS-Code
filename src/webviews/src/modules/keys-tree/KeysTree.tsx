@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import * as l10n from '@vscode/l10n'
 import cx from 'classnames'
-import { isUndefined } from 'lodash'
+import { isString, isUndefined } from 'lodash'
 
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { AllKeyTypes, VscodeMessageAction } from 'uiSrc/constants'
@@ -36,6 +35,7 @@ export const KeysTree = ({ database }: Props) => {
 
   const keysState = useKeysInContext((state) => state.data)
   const loading = useKeysInContext((state) => state.loading)
+  const dbIndex = useKeysInContext((state) => state.databaseIndex ?? 0)
 
   const keysApi = useKeysApi()
   const contextApi = useContextApi()
@@ -58,8 +58,8 @@ export const KeysTree = ({ database }: Props) => {
 
   // open all parents for selected key
   const openSelectedKey = (selectedKeyName: Nullable<string> = '') => {
-    if (selectedKeyName) {
-      const parts = selectedKeyName.split(delimiter)
+    if (selectedKeyName && isString(selectedKeyName)) {
+      const parts = selectedKeyName?.split(delimiter)
       const parents = parts.map((_, index) => parts.slice(0, index + 1).join(delimiter) + delimiter)
 
       // remove key name from parents
@@ -111,11 +111,11 @@ export const KeysTree = ({ database }: Props) => {
     if (isUndefined(type)) {
       return
     }
-    fetchKeyInfo({ key: name, databaseId: database.id }, false, () => {
+    fetchKeyInfo({ key: name, databaseId: database.id, dbIndex }, false, () => {
       vscodeApi.postMessage({
         action: VscodeMessageAction.SelectKey,
         data: {
-          database,
+          database: { ...database, db: dbIndex },
           keyInfo: { key: name, keyString, keyType: type, displayedKeyType: getGroupTypeDisplay(type) },
         },
       })
@@ -152,7 +152,7 @@ export const KeysTree = ({ database }: Props) => {
 
     return (
       <div className="pl-8">
-        <NoKeysMessage total={keysState.total} database={database} />
+        <NoKeysMessage total={keysState.total} database={database} dbIndex={dbIndex} />
       </div>
     )
   }

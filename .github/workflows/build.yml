@@ -1,0 +1,60 @@
+name: 🚀 Build
+
+on:
+  # Manual trigger build
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Build target
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - macos:x64
+          - macos:arm64
+          - linux:x64
+          - windows:x64
+
+      environment:
+        description: Environment to run build
+        type: environment
+        default: 'staging'
+        required: false
+
+  # Called for Release workflows
+  workflow_call:
+    inputs:
+      environment:
+        description: Environment to run build
+        type: string
+        default: 'staging'
+        required: false
+      target:
+        description: Build target
+        type: string
+        default: 'all'
+        required: false
+
+jobs:
+  build-linux:
+    if: startsWith(inputs.target, 'linux') || endsWith(inputs.target, 'all')
+    uses: ./.github/workflows/pipeline-build-linux.yml
+    secrets: inherit
+    with:
+      environment: ${{ inputs.environment }}
+
+  build-macos:
+    if: startsWith(inputs.target, 'macos') || endsWith(inputs.target, 'all')
+    uses: ./.github/workflows/pipeline-build-macos.yml
+    secrets: inherit
+    with:
+      environment: ${{ inputs.environment }}
+      target: ${{ inputs.target }}
+
+  build-windows:
+    if: startsWith(inputs.target, 'windows') || endsWith(inputs.target, 'all')
+    uses: ./.github/workflows/pipeline-build-windows.yml
+    secrets: inherit
+    with:
+      environment: ${{ inputs.environment }}

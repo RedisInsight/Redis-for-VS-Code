@@ -8,6 +8,9 @@ import {
   Nullable,
   RedisResponseBufferType,
 } from 'uiSrc/interfaces'
+import JavaDate from './javaDate'
+
+ObjectInputStream.RegisterObjectClass(JavaDate, JavaDate.ClassName, JavaDate.SerialVersionUID)
 
 const decoder = new TextDecoder('utf-8')
 const encoder = new TextEncoder()
@@ -180,6 +183,10 @@ const bufferToJava = (reply: RedisString) => {
   const decoded = stream.readObject()
 
   if (typeof decoded !== 'object') {
+    return decoded
+  }
+
+  if (decoded instanceof Date) {
     return decoded
   }
 

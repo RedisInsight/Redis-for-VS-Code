@@ -1,0 +1,78 @@
+name: Build macos pipeline
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Environment for build
+        required: false
+        default: 'staging'
+        type: string
+
+      target:
+        description: Build target
+        required: false
+        default: 'all'
+        type: string
+
+jobs:
+  build:
+    name: Build macos
+    runs-on: macos-14
+    environment: ${{ inputs.environment }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install all libs and dependencies
+      uses: ./.github/actions/install-all-build-libs
+
+    - name: Set RI_SEGMENT_WRITE_KEY to .env file
+      run: echo "RI_SEGMENT_WRITE_KEY='${{ env.RI_SEGMENT_WRITE_KEY }}'" >> ${{ env.envFile }}
+
+    - name: Download backend x64
+      uses: ./.github/actions/download-backend
+      with:
+        arch: x64
+
+    - name: Build macos x64 package (staging)
+      if: inputs.environment != 'production'
+      run: |
+        sed -i '' "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" ${{ env.envFile }}
+
+        yarn package:stage --target darwin-x64 --out ${packagePath}-x64.vsix
+
+    - name: Build macos x64 package (production)
+      if: inputs.environment == 'production'
+      run: |
+        yarn package:prod --target darwin-x64 --out ${packagePath}-x64.vsix
+
+    - name: Download backend arm64
+      uses: ./.github/actions/download-backend
+      with:
+        arch: arm64
+
+    - name: Build macos arm64 package (staging)
+      if: inputs.environment != 'production'
+      run: |
+        sed -i '' "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" ${{ env.envFile }}
+
+        yarn package:stage --target darwin-arm64 --out ${packagePath}-arm64.vsix
+
+
+    - name: Build macos arm64 package (production)
+      if: inputs.environment == 'production'
+      run: |
+        yarn package:prod --target darwin-arm64 --out ${packagePath}-arm64.vsix
+
+    - uses: actions/upload-artifact@v4
+      name: Upload extension artifact
+      with:
+        name: macos-builds
+        path: |
+          release/redis-for-*.vsix
+
+    env:
+      envFile: '.env'
+      packagePath: './release/redis-for-vscode-extension-mac'
+      RI_SEGMENT_WRITE_KEY: ${{ secrets.RI_SEGMENT_WRITE_KEY }}

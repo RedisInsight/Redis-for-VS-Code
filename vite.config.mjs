@@ -49,9 +49,7 @@ export default defineConfig({
   server: {
     port: 8080,
     fs: {
-      allow: [
-        './',
-      ],
+      allow: ['./'],
     },
   },
   envPrefix: 'RI_',
@@ -84,12 +82,13 @@ export default defineConfig({
     testTimeout: 20000,
     setupFiles: ['./src/webviews/test/setup.ts'],
     coverage: {
+      reporter: ['text', 'html'],
+      reportsDirectory: './report/coverage',
       include: ['src/webviews/src/**'],
       exclude: [
         'src/webviews/src/**/index.ts',
         'src/webviews/src/**/*.d.ts',
         'src/webviews/src/**/interface.ts',
-        'src/webviews/src/**/*.stories.*',
       ],
       thresholds: {
         statements: 80,
@@ -102,6 +101,11 @@ export default defineConfig({
       deps: {
         inline: ['rawproto', 'react-monaco-editor'],
       },
+    },
+    reporters: ['default', 'junit', 'html'],
+    outputFile: {
+      junit: './report/junit.xml',
+      html: './report/index.html',
     },
   },
 })

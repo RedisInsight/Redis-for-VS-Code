@@ -3,7 +3,8 @@ import { Mock } from 'vitest'
 import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
 import * as utils from 'uiSrc/utils'
 import * as moduleUtils from 'uiSrc/modules/keys-tree/utils'
-import { apiService } from 'uiSrc/services'
+import { apiService, sessionStorageService } from 'uiSrc/services'
+import { StorageItem } from 'uiSrc/constants'
 import {
   constants,
   fireEvent,
@@ -22,6 +23,8 @@ const TREE_FILTER_TRIGGER_BTN = 'key-tree-filter-trigger'
 const FILTER_SELECT = 'tree-view-filter-select'
 const SEARCH_INPUT = 'tree-view-search-input'
 
+vi.spyOn(sessionStorageService, 'set')
+vi.spyOn(sessionStorageService, 'get')
 vi.spyOn(utils, 'sendEventTelemetry')
 vi.spyOn(moduleUtils, 'parseKeysListResponse').mockImplementation(() => constants.KEYS_LIST)
 
@@ -106,5 +109,63 @@ describe('KeyTreeDelimiter', () => {
     fireEvent.click(screen.getByTestId(CLEAR_BTN))
 
     expect(setFilterAndSearchMock).toBeCalled()
+  })
+
+  it('"setFilterAndSearch" should be called with stored values from sessionStorage', async () => {
+    const useKeysInContextMock = vi.spyOn(useKeys, 'useKeysInContext')
+    const setFilterAndSearchMock = vi.fn()
+    const mockSearch = 'search'
+    const mockFilter = 'hash';
+
+    (sessionStorageService.get as Mock).mockImplementation(() => ({
+      search: mockSearch,
+      filter: mockFilter,
+    }))
+
+    useKeysInContextMock.mockImplementation(() => ({
+      dbId: constants.DATABASE_ID,
+      dbIndex: 1,
+      filter: ALL_KEY_TYPES_VALUE,
+      searchInit: '',
+      setFilterAndSearch: setFilterAndSearchMock,
+    }))
+
+    render(<KeyTreeFilter />)
+
+    expect(sessionStorageService.get).toBeCalledWith(`${StorageItem.keysTreeFilter + constants.DATABASE_ID + 1}`)
+    expect(setFilterAndSearchMock).toBeCalledWith(mockFilter, mockSearch)
+  })
+
+  it('should set values to sessionStorage on Apply', async () => {
+    const useKeysInContextMock = vi.spyOn(useKeys, 'useKeysInContext')
+    const setFilterAndSearchMock = vi.fn()
+
+    const mockSearch = 'search'
+    const mockFilter = 'Hash'
+
+    useKeysInContextMock.mockImplementation(() => ({
+      dbId: constants.DATABASE_ID,
+      dbIndex: 1,
+      setFilterAndSearch: setFilterAndSearchMock,
+    }))
+
+    render(<KeyTreeFilter />)
+
+    fireEvent.click(screen.getByTestId(TREE_FILTER_TRIGGER_BTN))
+
+    fireEvent.input(screen.getByTestId(SEARCH_INPUT), { target: { value: mockSearch } })
+
+    fireEvent.click(screen.getByTestId(FILTER_SELECT))
+
+    fireEvent.click(await screen.findByText(mockFilter))
+
+    await waitForStack()
+
+    fireEvent.click(screen.getByTestId(APPLY_BTN))
+
+    expect(sessionStorageService.set).toBeCalledWith(
+      `${StorageItem.keysTreeFilter + constants.DATABASE_ID + 1}`,
+      { search: mockSearch, filter: mockFilter.toLowerCase() })
+    expect(setFilterAndSearchMock).toBeCalledWith(mockFilter.toLowerCase(), mockSearch)
   })
 })

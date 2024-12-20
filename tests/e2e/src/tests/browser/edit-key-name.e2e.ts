@@ -231,7 +231,7 @@ describe('Edit Key names verification', () => {
     keyNameAfter = Common.generateWord(10)
     const listKeyParameters: ListKeyParameters = {
       keyName: keyNameBefore,
-      element: 'keyElementValue',
+      element: ['keyElementValue'],
     }
     await KeyAPIRequests.addListKeyApi(
       listKeyParameters,

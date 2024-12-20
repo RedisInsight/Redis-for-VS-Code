@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 
@@ -92,7 +92,7 @@ const StringDetails = (props: Props) => {
     })
   }
 
-  const Actions = ({ children }: PropsWithChildren) => ([
+  const Actions = useCallback(({ children }: PropsWithChildren) => ([
     children,
     <EditItemAction
       key={1}
@@ -103,7 +103,7 @@ const StringDetails = (props: Props) => {
         setEditItem(!editItem)
       }}
     />,
-  ])
+  ]), [isStringEditable, isEditable])
 
   return (
     <div className="fluid flex-column relative">

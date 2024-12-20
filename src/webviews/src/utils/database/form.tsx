@@ -18,9 +18,9 @@ export const getTlsSettings = (values: DbConnectionInfo) => ({
   servername: (values.sni && values.servername) || undefined,
   verifyServerCert: values.verifyServerTlsCert,
   caCert:
-    !values.tls || values.selectedCaCertName === NO_CA_CERT
+    !values.tls || values.selectedCaCertName === NO_CA_CERT.value
       ? undefined
-      : values.selectedCaCertName === ADD_NEW_CA_CERT
+      : values.selectedCaCertName === ADD_NEW_CA_CERT.value
         ? {
           new: {
             name: values.newCaCertName,
@@ -35,9 +35,9 @@ export const getTlsSettings = (values: DbConnectionInfo) => ({
     ? undefined
     : typeof values.selectedTlsClientCertId === 'string'
     && values.tlsClientAuthRequired
-    && values.selectedTlsClientCertId !== ADD_NEW
+    && values.selectedTlsClientCertId !== ADD_NEW.value
       ? { id: values.selectedTlsClientCertId }
-      : values.selectedTlsClientCertId === ADD_NEW && values.tlsClientAuthRequired
+      : values.selectedTlsClientCertId === ADD_NEW.value && values.tlsClientAuthRequired
         ? {
           new: {
             name: values.newTlsCertPairName,
@@ -55,6 +55,7 @@ export const applyTlSDatabase = (database: any, tlsSettings: any) => {
   database.tls = useTls
   database.tlsServername = servername
   database.verifyServerCert = !!verifyServerCert
+  database.clientCert = clientCert
 
   if (!isUndefined(caCert?.new)) {
     database.caCert = {
@@ -68,7 +69,7 @@ export const applyTlSDatabase = (database: any, tlsSettings: any) => {
   }
 
   if (clientAuth) {
-    if (!isUndefined(clientCert.new)) {
+    if (!isUndefined(clientCert?.new)) {
       database.clientCert = {
         name: clientCert.new.name,
         certificate: clientCert.new.certificate,
@@ -76,7 +77,7 @@ export const applyTlSDatabase = (database: any, tlsSettings: any) => {
       }
     }
 
-    if (!isUndefined(clientCert.id)) {
+    if (!isUndefined(clientCert?.id)) {
       database.clientCert = { id: clientCert.id }
     }
   }
@@ -129,14 +130,14 @@ export const getFormErrors = (values: DbConnectionInfo) => {
   if (
     values.tls
     && values.verifyServerTlsCert
-    && values.selectedCaCertName === NO_CA_CERT
+    && values.selectedCaCertName === NO_CA_CERT.value
   ) {
     errs.selectedCaCertName = fieldDisplayNames.selectedCaCertName
   }
 
   if (
     values.tls
-    && values.selectedCaCertName === ADD_NEW_CA_CERT
+    && values.selectedCaCertName === ADD_NEW_CA_CERT.value
     && values.newCaCertName === ''
   ) {
     errs.newCaCertName = fieldDisplayNames.newCaCertName
@@ -144,7 +145,7 @@ export const getFormErrors = (values: DbConnectionInfo) => {
 
   if (
     values.tls
-    && values.selectedCaCertName === ADD_NEW_CA_CERT
+    && values.selectedCaCertName === ADD_NEW_CA_CERT.value
     && values.newCaCert === ''
   ) {
     errs.newCaCert = fieldDisplayNames.newCaCert
@@ -161,7 +162,7 @@ export const getFormErrors = (values: DbConnectionInfo) => {
   if (
     values.tls
     && values.tlsClientAuthRequired
-    && values.selectedTlsClientCertId === ADD_NEW
+    && values.selectedTlsClientCertId === ADD_NEW.value
   ) {
     if (values.newTlsCertPairName === '') {
       errs.newTlsCertPairName = fieldDisplayNames.newTlsCertPairName
@@ -285,15 +286,15 @@ export const getFormValues = (instance?: Nullable<Record<string, any>>) => ({
   modules: instance?.modules,
   showDb: !!instance?.db,
   showCompressor: instance && instance.compressor && instance.compressor !== NONE,
-  sni: !!instance?.servername,
-  servername: instance?.servername,
+  sni: !!instance?.tlsServername,
+  servername: instance?.tlsServername,
   newCaCert: '',
   newCaCertName: '',
-  selectedCaCertName: instance?.caCert?.id ?? NO_CA_CERT,
+  selectedCaCertName: instance?.caCert?.id ?? NO_CA_CERT.value,
   tlsClientAuthRequired: instance?.clientCert?.id ?? false,
   verifyServerTlsCert: instance?.verifyServerCert ?? false,
   newTlsCertPairName: '',
-  selectedTlsClientCertId: instance?.clientCert?.id ?? ADD_NEW,
+  selectedTlsClientCertId: instance?.clientCert?.id ?? ADD_NEW.value,
   newTlsClientCert: '',
   newTlsClientKey: '',
   sentinelMasterName: instance?.sentinelMaster?.name || '',
