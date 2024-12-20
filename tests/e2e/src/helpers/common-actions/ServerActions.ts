@@ -10,13 +10,15 @@ export class ServerActions extends CommonDriverExtension {
    * // todo: investigate if it is better to put it before all tests?
    */
   static async waitForServerInitialized(): Promise<void> {
-    const TIMEOUT = 20_000
+    const TIMEOUT = 30_000
     const start = Date.now()
 
     while(Date.now() - start < TIMEOUT) {
       try {
-        await CommonAPIRequests.sendGetRequest('/info')
-        return
+        const response = await CommonAPIRequests.sendGetRequest('/info')
+        if (response.status === 200) {
+          return
+        }
       } catch (e) {
         // ignore
       }
