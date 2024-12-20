@@ -44,7 +44,7 @@
     "vscode": "^1.87.0"
   },
   "activationEvents": [
-    "onStartupFinished"
+    "onView:ri-sidebar-view"
   ],
   "contributes": {
     "viewsContainers": {
