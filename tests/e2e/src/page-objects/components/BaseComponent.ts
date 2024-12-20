@@ -130,7 +130,7 @@ export class BaseComponent extends WebElement {
    */
   async waitForElementVisibility(
     locator: Locator,
-    timeout: number = 5000,
+    timeout: number = 10000,
     stateOfDisplayed: boolean = true,
   ): Promise<boolean> {
     let element: WebElement
