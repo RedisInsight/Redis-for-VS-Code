@@ -20,8 +20,7 @@
 
 
 :global(.popover-auto-refresh-content) {
-  @apply max-w-[225px] w-[225px] #{!important};
-
+  @apply pr-[26px] #{!important};
 }
 
 .switch {

@@ -63,7 +63,7 @@ vscode-button::part(control) {
   }
 }
 
-.table-loading:before {
+.data-loading:before {
   position: absolute;
   content: '';
   width: 100%;

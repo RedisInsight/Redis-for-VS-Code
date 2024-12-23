@@ -32,6 +32,7 @@ enum StorageItem {
   databaseId = 'databaseId',
   openTreeNode = 'openTreeNode',
   openTreeDatabase = 'openTreeDatabase',
+  keysTreeFilter = 'keysTreeFilter',
 }
 
 export { StorageItem }

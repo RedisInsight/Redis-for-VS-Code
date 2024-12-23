@@ -22,6 +22,10 @@ on:
         description: Run group of tests
         type: string
         default: 'all'
+      pre_release:
+        description: Is pre-release
+        default: false
+        type: boolean
 
 jobs:
   frontend-tests:

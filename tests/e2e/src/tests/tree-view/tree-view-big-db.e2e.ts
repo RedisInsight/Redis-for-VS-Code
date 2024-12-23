@@ -37,7 +37,7 @@ describe('Tree view verifications for big database', () => {
       'Scanned',
       'Scanned key is not correct',
     )
-    expect(await treeView.isElementDisplayed(treeView.totalKeyNumber)).eql(
+    expect(await treeView.waitForElementVisibility(treeView.totalKeyNumber)).eql(
       true,
       'incorrect count is displayed',
     )

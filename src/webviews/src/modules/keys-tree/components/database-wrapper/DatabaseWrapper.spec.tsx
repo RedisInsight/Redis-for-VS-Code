@@ -8,6 +8,7 @@ import { apiService, vscodeApi } from 'uiSrc/services'
 import * as useContext from 'uiSrc/store/hooks/use-context/useContext'
 import * as useSelectedKeyStore from 'uiSrc/store/hooks/use-selected-key-store/useSelectedKeyStore'
 import { Database } from 'uiSrc/store'
+import * as useDatabasesStore from 'uiSrc/store'
 import { constants, fireEvent, render, waitForStack } from 'testSrc/helpers'
 import { DatabaseWrapper, Props } from './DatabaseWrapper'
 import * as useKeys from '../../hooks/useKeys'
@@ -39,12 +40,23 @@ const resetKeysTreeMock = vi.fn();
   resetKeysTree: resetKeysTreeMock,
 }))
 
+vi.spyOn(useDatabasesStore, 'fetchDatabaseOverviewById')
+
 describe('DatabaseWrapper', () => {
   it('should render', () => {
     expect(render(<DatabaseWrapper {...mockedProps} />)).toBeTruthy()
   })
 
-  it('should call fetchPatternKeysAction action after click on refresh icon', async () => {
+  it('should call fetchDatabaseOverviewById action after click on refresh icon', async () => {
+    const { queryByTestId } = render(<DatabaseWrapper {...mockedProps} />)
+
+    fireEvent.click(queryByTestId('refresh-databases')!)
+    await waitForStack()
+
+    expect(useDatabasesStore.fetchDatabaseOverviewById).toBeCalled()
+  })
+
+  it('should call fetchPatternKeysAction action after click on logical database refresh icon', async () => {
     const { queryByTestId } = render(<DatabaseWrapper {...mockedProps} />)
 
     fireEvent.click(queryByTestId(`database-${mockDatabase.id}`)!)

@@ -178,6 +178,7 @@ export const fetchDatabaseById = async (databaseId: string, onSuccess?: (data: D
 
 export const fetchDatabaseOverviewById = async (databaseId: string): Promise<Nullable<DatabaseOverview>> => {
   try {
+    useDatabasesStore.getState().processDatabase()
     const { data, status } = await apiService.get<DatabaseOverview>(
       `${ApiEndpoints.DATABASES}/${databaseId}/overview`,
       { params: { keyspace: 'full' },
@@ -188,6 +189,8 @@ export const fetchDatabaseOverviewById = async (databaseId: string): Promise<Nul
     }
   } catch (error) {
     showErrorMessage(getApiErrorMessage(error as AxiosError))
+  } finally {
+    useDatabasesStore.getState().processDatabaseFinal()
   }
 
   return null

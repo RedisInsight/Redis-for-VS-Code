@@ -1,6 +1,6 @@
 {
   "name": "redis-for-vscode",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "displayName": "Redis for VS Code",
   "description": "Visually interact with data and build queries in Redis",
   "license": "SEE LICENSE IN LICENSE",
@@ -44,7 +44,7 @@
     "vscode": "^1.87.0"
   },
   "activationEvents": [
-    "onStartupFinished"
+    "onView:ri-sidebar-view"
   ],
   "contributes": {
     "viewsContainers": {

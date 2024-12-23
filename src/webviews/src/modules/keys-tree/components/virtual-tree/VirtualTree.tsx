@@ -269,7 +269,7 @@ const VirtualTree = (props: Props) => {
                 itemSize={22}
                 treeWalker={treeWalker}
                 onItemsRendered={onItemsRendered}
-                className={cx(styles.customScroll, { 'table-loading': loading })}
+                className={cx(styles.customScroll, { 'data-loading': loading })}
               >
                 {Node}
               </Tree>

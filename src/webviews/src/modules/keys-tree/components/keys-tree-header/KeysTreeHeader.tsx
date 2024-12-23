@@ -36,6 +36,10 @@ export const KeysTreeHeader = ({ database, open, dbTotal, children }: Props) => 
   }
 
   useEffect(() => {
+    keysApi.fetchPatternKeysAction()
+  }, [dbTotal, total])
+
+  useEffect(() => {
     if (showTree) {
       sendEventTelemetry({
         event: TelemetryEvent.BROWSER_DATABASE_INDEX_CHANGED,
@@ -66,7 +70,7 @@ export const KeysTreeHeader = ({ database, open, dbTotal, children }: Props) => 
         database={database}
         loading={loading}
         scanned={scanned}
-        total={dbTotal ?? total}
+        total={total ?? dbTotal ?? null}
         dbIndex={dbIndex}
         resultsLength={resultsLength}
         showTree={showTree}

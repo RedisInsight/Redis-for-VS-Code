@@ -84,7 +84,7 @@ const HashDetails = (props: Props) => {
     ),
     children,
     <AddItemsAction key={3} title={l10n.t('Add Fields')} openAddItemPanel={openAddItemPanel} />,
-  ]), [])
+  ]), [showTtl, isExpireFieldsAvailable])
 
   return (
     <div className="fluid flex-column relative">

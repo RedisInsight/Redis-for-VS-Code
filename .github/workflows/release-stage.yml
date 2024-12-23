@@ -10,6 +10,9 @@ jobs:
     name: Release stage tests
     uses: ./.github/workflows/tests.yml
     secrets: inherit
+    with:
+      group_tests: 'without_e2e'
+      pre_release: true
 
   builds:
     name: Release stage builds
