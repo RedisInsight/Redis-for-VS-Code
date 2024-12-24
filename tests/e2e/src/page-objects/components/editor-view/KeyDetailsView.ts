@@ -7,6 +7,7 @@ import {
 import { CommonDriverExtension } from '@e2eSrc/helpers/CommonDriverExtension'
 import { WebView } from '@e2eSrc/page-objects/components/WebView'
 import { InputWithButtons } from '../common/InputWithButtons'
+import { Key } from 'vscode-extension-tester'
 
 /**
  * Key details view
@@ -16,9 +17,14 @@ export class KeyDetailsView extends WebView {
   keySize = By.xpath(`//div[@data-testid='key-size-text']`)
   keyLength = By.xpath(`//div[@data-testid='key-length-text']`)
   refreshKeyButton = By.xpath(`//*[@data-testid='key-refresh-btn']`)
+  refreshKeyArrow = By.xpath(`//*[@data-testid='key-auto-refresh-config-btn']`)
+  refreshKeyMessage = By.xpath(`//*[@data-testid='key-refresh-message']`)
+  autoRefreshInput= By.xpath(`//*[@data-testid='inline-item-editor']`)
+  autoRefreshCheckBox= By.xpath(`//*[contains(@class, 'popover-auto-refresh-content')]//label`)
   applyBtn = By.xpath(
     `//*[@class='key-details-body']//*[@data-testid='apply-btn']`,
   )
+  applyRefreshButton = By.xpath(`//*[@data-testid='key-auto-refresh-rate-input']//*[@data-testid="apply-btn"]`)
   applyEditButton = By.xpath(`//*[@data-testid='apply-edit-btn']`)
   searchInput = By.xpath(`//*[@data-testid='search']`)
   clearSearchInput = By.xpath(`//*[@data-testid='decline-search-button']`)
@@ -214,5 +220,23 @@ export class KeyDetailsView extends WebView {
       this.formatSwitcher,
       formatter,
     )
+  }
+
+  /**
+   * Set auto-refresh
+   * @param rate The rate for refresh
+   */
+  async setAutoRefresh(rate: number = 5): Promise<void> {
+    await ButtonActions.clickElement(this.refreshKeyArrow)
+    await ButtonActions.clickElement(this.autoRefreshInput)
+    // clear the input
+    for (let i = 0; i < 3; i++) {
+      await InputActions.pressKey(this.autoRefreshInput, Key.BACK_SPACE)
+    }
+    await InputActions.typeText(this.autoRefreshInput, rate.toString())
+    await ButtonActions.clickElement(this.autoRefreshInput)
+    await ButtonActions.clickElement(this.applyRefreshButton)
+    await ButtonActions.clickElement(this.autoRefreshCheckBox)
+    await ButtonActions.clickElement(this.refreshKeyButton)
   }
 }

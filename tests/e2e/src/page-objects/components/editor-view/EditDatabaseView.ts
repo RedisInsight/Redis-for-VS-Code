@@ -12,4 +12,6 @@ export class EditDatabaseView extends DatabaseDetailsView {
   moduleBloomIcon = By.xpath(`//*[contains(@data-testid, 'RedisBloom')]`)
   moduleAIIcon = By.xpath(`//*[contains(@data-testid, 'RedisAI')]`)
   moduleGearsIcon = By.xpath(`//*[contains(@data-testid, 'RedisGears')]`)
+  removeCertificateButton = By.xpath(`//button[contains(@data-testid, 'delete-option-')]`)
+  confirmRemoveCertificateButton = By.xpath(`//vscode-button[contains(@data-testid, 'delete-option-')]`)
 }

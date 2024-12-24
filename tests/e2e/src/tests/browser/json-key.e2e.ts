@@ -294,4 +294,20 @@ describe('Add JSON Key verification', () => {
     // Check the notification message that key added
     await NotificationActions.checkNotificationMessage(`Key has been added`)
   })
+  it('Verify that user can add big int', async function () {
+    keyName = Common.generateWord(10)
+    const bigInt = '12345678998768'
+    const jsonStructure = `{"bigInt": ${bigInt}, "string":"${bigInt}"}`
+    const jsonKeyParameters: JsonKeyParameters = {
+      keyName: keyName,
+      data: jsonStructure,
+    }
+    await addJsonKeyView.addKey(jsonKeyParameters, KeyTypesShort.ReJSON)
+    await addJsonKeyView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
+    await addJsonKeyView.waitForElementVisibility(keyDetailsView.jsonKeyValue)
+    const jsonValue = await keyDetailsView.getElementText(keyDetailsView.jsonKeyValue)
+    expect(jsonValue).contains(bigInt, 'the big int value is truncated')
+    expect(jsonValue).contains(`"${bigInt}"`, 'the big int value is not string')
+  })
 })
