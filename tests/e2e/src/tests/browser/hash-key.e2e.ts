@@ -202,4 +202,41 @@ describe('Hash Key fields verification', () => {
     // Verify that details panel is closed for hash key after deletion
     await KeyDetailsActions.verifyDetailsPanelClosed()
   })
+
+  it('Verify that auto-refresh can be set', async function () {
+    keyName = Common.generateWord(10)
+
+    const hashKeyParameters: HashKeyParameters = {
+      keyName: keyName,
+      fields: [
+        {
+          field: 'field',
+          value: 'value',
+        },
+      ],
+    }
+    await KeyAPIRequests.addHashKeyApi(
+      hashKeyParameters,
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+
+    // Open key details iframe
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+    await keyDetailsView.setAutoRefresh(1)
+    let elements = await keyDetailsView.getElements(keyDetailsView.refreshKeyMessage)
+    let text = await elements[0].getText()
+    expect(text).eql('1 s', 'value is not set')
+
+    await ButtonActions.clickElement(keyDetailsView.refreshKeyArrow)
+    await ButtonActions.clickElement(keyDetailsView.autoRefreshCheckBox)
+    await ButtonActions.clickElement(keyDetailsView.refreshKeyButton)
+
+    elements = await keyDetailsView.getElements(keyDetailsView.refreshKeyMessage)
+    text = await elements[0].getText()
+    expect(text).eql('now', 'value is still set')
+  })
 })

@@ -18,7 +18,7 @@ import {
   TreeView,
   KeyDetailsView,
   HashKeyDetailsView,
-  StringKeyDetailsView,
+  StringKeyDetailsView, CliViewPanel,
 } from '@e2eSrc/page-objects/components'
 import {
   ButtonActions,
@@ -73,6 +73,7 @@ describe('Formatters', () => {
   let hashKeyDetailsView: HashKeyDetailsView
   let stringKeyDetailsView: StringKeyDetailsView
   let doubleColumnKeyDetailsView: DoubleColumnKeyDetailsView
+  let cliViewPanel: CliViewPanel
 
   let keysData = keyTypesShort
     .map((object: any) => ({ ...object }))
@@ -98,6 +99,7 @@ describe('Formatters', () => {
     hashKeyDetailsView = new HashKeyDetailsView()
     stringKeyDetailsView = new StringKeyDetailsView()
     doubleColumnKeyDetailsView = new DoubleColumnKeyDetailsView()
+    cliViewPanel = new CliViewPanel()
 
     await DatabasesActions.acceptLicenseTermsAndAddDatabaseApi(
       Config.ossStandaloneConfig,
@@ -575,5 +577,74 @@ describe('Formatters', () => {
         }
       }
     })
+  })
+  it('Verify that Datatime is parse for Java', async function () {
+    const DataTimeValue1 = "ACED00057372000E6A6176612E7574696C2E44617465686A81014B5974190300007870770800000075371FBB0078"
+    const DataTimeValue2 = "ACED00057372000E6A6176612E7574696C2E44617465686A81014B59741903000078707708FFFFFF98C729B30078"
+    const expectedDate1 = '"1985-12-14T19:20:00.000Z"'
+    const expectedDate2 = '"1955-12-14T19:20:00.000Z"'
+
+    let keyName = Common.generateWord(10)
+
+    await KeyAPIRequests.addKeyApi(
+      { keyName: keyName, keyType: KeyTypesShort.Hash },
+      Config.ossStandaloneConfig.databaseName,
+    )
+    // Refresh database
+    await treeView.refreshDatabaseByName(
+      Config.ossStandaloneConfig.databaseName,
+    )
+
+    // Open Hash key details
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+    await keyDetailsView.selectFormatter(Formatters.HEX)
+
+    await hashKeyDetailsView.editHashKeyValue(DataTimeValue1, 'test_field')
+    await keyDetailsView.selectFormatter(Formatters.Java)
+
+      expect(
+        await hashKeyDetailsView.getElementText(
+          hashKeyDetailsView.hashValuesList,),).contains(
+        expectedDate1,'the value is not parsed')
+
+    await keyDetailsView.selectFormatter(Formatters.HEX)
+
+    await hashKeyDetailsView.editHashKeyValue(DataTimeValue2, 'test_field')
+    await keyDetailsView.selectFormatter(Formatters.Java)
+
+    expect(
+      await hashKeyDetailsView.getElementText(
+        hashKeyDetailsView.hashValuesList,),).contains(
+      expectedDate2,'the value is not parsed')
+  })
+
+  it('Verify that UTF8 in PHP serialized', async function () {
+    const phpValueChinese = '测试'
+    const phpValueCRussian = 'Привет мир!'
+    let keyName = Common.generateWord(10)
+    const setValue =`SET ${keyName} "a:3:{s:4:\\"name\\";s:6:\\"${phpValueChinese}\\";s:3:\\"age\\";i:30;s:7:\\"message\\";s:20:\\"${phpValueCRussian}\\";}"`
+
+    await treeView.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await treeView.openCliByDatabaseName(
+      Config.ossStandaloneConfig.databaseName
+    )
+    await treeView.switchBack()
+    await CommonDriverExtension.driverSleep(1000)
+    await cliViewPanel.switchToInnerViewFrame(InnerViews.CliInnerView)
+    await cliViewPanel.executeCommand(setValue)
+    await cliViewPanel.switchBack()
+    await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
+    await treeView.refreshDatabaseByName(Config.ossStandaloneConfig.databaseName)
+    await KeyDetailsActions.openKeyDetailsByKeyNameInIframe(keyName)
+    await keyDetailsView.selectFormatter(Formatters.PHP)
+
+    expect(
+      await stringKeyDetailsView.getStringKeyValue(),).contains(
+      phpValueChinese,'Chinese value is not parsed')
+
+    expect(
+      await stringKeyDetailsView.getStringKeyValue(),).contains(
+      phpValueCRussian,'russian value is not parsed')
   })
 })

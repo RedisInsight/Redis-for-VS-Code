@@ -79,7 +79,7 @@ export class DatabasesActions extends CommonDriverExtension {
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     if (
       !(await treeView.isElementDisplayed(
-        treeView.getRefreshDatabaseBtnByName(databaseParameters.databaseName!),
+        treeView.getRefreshIndexedDatabaseBtnByName(databaseParameters.databaseName!),
       ))
     ) {
       await treeView.clickDatabaseByName(databaseParameters.databaseName!)
