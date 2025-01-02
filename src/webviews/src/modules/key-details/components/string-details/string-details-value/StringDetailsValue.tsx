@@ -25,6 +25,7 @@ import {
   decompressingBuffer,
 } from 'uiSrc/utils'
 import {
+  KeyValueFormat,
   TEXT_DISABLED_COMPRESSED_VALUE,
   TEXT_FAILED_CONVENT_FORMATTER,
   TEXT_INVALID_VALUE,
@@ -89,10 +90,15 @@ const StringDetailsValue = (props: Props) => {
     const { value: decompressedValue, isCompressed } = decompressingBuffer(initialValue, compressor)
 
     const initialValueString = bufferToString(decompressedValue, viewFormat)
-    const { value: formattedValue, isValid } = formattingBuffer(decompressedValue, viewFormatProp, { expanded: true })
+    const fullStringLoaded = isFullStringLoaded(initialValue?.data?.length, length)
+    const { value: formattedValue, isValid } = formattingBuffer(
+      decompressedValue,
+      fullStringLoaded ? viewFormatProp : KeyValueFormat.Unicode,
+      { expanded: true },
+    )
     setAreaValue(initialValueString)
 
-    setValue(!isFullStringLoaded(initialValue?.data?.length, length) ? `${formattedValue}...` : formattedValue)
+    setValue(!fullStringLoaded ? `${formattedValue}...` : formattedValue)
     setIsValid(isValid)
     setIsDisabled(
       !isNonUnicodeFormatter(viewFormatProp, isValid)
@@ -101,7 +107,7 @@ const StringDetailsValue = (props: Props) => {
     setIsEditable(
       !isCompressed
       && isFormatEditable(viewFormatProp)
-      && isFullStringLoaded(initialValue?.data?.length, length),
+      && fullStringLoaded,
     )
     setNoEditableText(isCompressed ? TEXT_DISABLED_COMPRESSED_VALUE : TEXT_FAILED_CONVENT_FORMATTER(viewFormatProp))
 

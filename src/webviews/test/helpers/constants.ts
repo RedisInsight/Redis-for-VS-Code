@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { DEFAULT_ERROR_MESSAGE, DEFAULT_SEARCH_MATCH, KeyTypes, VscodeMessageAction } from 'uiSrc/constants'
 import { CliAction, KeyInfo, SelectKeyAction } from 'uiSrc/interfaces'
 import { Certificate } from 'uiSrc/store/hooks/use-certificates-store/interface'
-import { UTF8ToArray, stringToBuffer } from 'uiSrc/utils'
+import { UTF8ToArray, anyToBuffer, stringToBuffer } from 'uiSrc/utils'
 import { Database } from 'uiSrc/store'
 import { SuperSelectOption } from 'uiSrc/components'
 
@@ -121,6 +121,8 @@ export const constants = {
   KEY_5_MEMBER: UTF8ToArray('member'),
   KEY_5_MEMBER_2: UTF8ToArray('member2'),
   KEY_5_MEMBER_3: UTF8ToArray('member3'),
+
+  VECTOR_32_VALUE_1: anyToBuffer(new Float32Array([2.0, 2.0, 2.0]).buffer),
 
   get LIST_DATA_RESPONSE() {
     return LIST_DATA_RESPONSE

@@ -95,7 +95,7 @@ const bufferToASCII = (reply: RedisString): string => {
   return result
 }
 
-const anyToBuffer = (reply: UintArray): RedisString =>
+const anyToBuffer = (reply: UintArray | ArrayBuffer): RedisString =>
   ({ data: reply, type: RedisResponseBufferType.Buffer }) as RedisString
 
 const ASCIIToBuffer = (strInit: string) => {

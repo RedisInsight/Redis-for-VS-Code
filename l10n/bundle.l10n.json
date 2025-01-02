@@ -310,6 +310,9 @@
   "Privacy": "Privacy",
   "To optimize your experience, Redis for VS Code uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.": "To optimize your experience, Redis for VS Code uses third-party tools. All data collected is anonymized and will not be used for any purpose without your consent.",
   "Analytics": "Analytics",
+  "Auto refresh:": "Auto refresh:",
+  "Last refresh:": "Last refresh:",
+  "Auto Refresh": "Auto Refresh",
   "Add": "Add",
   "Release Notes": "Release Notes",
   "Redis for VS Code extension updated to {0}.": "Redis for VS Code extension updated to {0}."
