@@ -69,11 +69,11 @@ describe('Edit Databases', () => {
     )
 
     expect(caCertFieldValue).not.contains(
-      'NO_CA_CERT',
+      'No CA Certificate',
       'CA certificate is incorrect',
     )
     expect(clientCertFieldValue).not.contains(
-      'ADD_NEW',
+      'Add new certificate',
       'Client certificate is incorrect',
     )
 
@@ -84,5 +84,32 @@ describe('Edit Databases', () => {
     await ButtonActions.clickElement(editDatabaseView.saveDatabaseButton)
     await editDatabaseView.switchBack()
     await DatabasesActions.verifyDatabaseEdited()
+  })
+
+  it('Verify that user can remove certificates', async function () {
+    await ButtonActions.clickElement(editDatabaseView.caCertField)
+    await ButtonActions.clickElement(editDatabaseView.removeCertificateButton)
+    await ButtonActions.clickElement(editDatabaseView.confirmRemoveCertificateButton)
+
+    await ButtonActions.clickElement(editDatabaseView.clientCertField)
+    await ButtonActions.clickElement(editDatabaseView.removeCertificateButton)
+    await ButtonActions.clickElement(editDatabaseView.confirmRemoveCertificateButton)
+
+    const caCertFieldValue = await editDatabaseView.getElementText(
+      editDatabaseView.caCertField,
+    )
+    const clientCertFieldValue = await editDatabaseView.getElementText(
+      editDatabaseView.clientCertField,
+    )
+
+    expect(caCertFieldValue).contains(
+      'No CA Certificate',
+      'CA certificate is not removed',
+    )
+    expect(clientCertFieldValue).contains(
+      'Add new certificate',
+      'Client certificate is incorrect',
+    )
+    await editDatabaseView.switchBack()
   })
 })
