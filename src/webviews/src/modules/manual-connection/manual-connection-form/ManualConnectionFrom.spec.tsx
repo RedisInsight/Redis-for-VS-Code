@@ -737,8 +737,8 @@ describe('DatabaseForm', () => {
     expect(queryByTestId('sshPrivateKey')).not.toBeInTheDocument()
     expect(queryByTestId('sshPassphrase')).not.toBeInTheDocument()
 
-    const submitBtn = getByTestId(BTN_SUBMIT)
-    expect(submitBtn).toBeDisabled()
+    const submitBtn = getByTestId(BTN_SUBMIT) as HTMLButtonElement
+    expect(submitBtn.disabled).toBe(true)
   })
 
   it('should change Use SSH checkbox and show proper fields for passphrase radio', async () => {
@@ -771,8 +771,8 @@ describe('DatabaseForm', () => {
     expect(getByTestId('sshPrivateKey')).toBeInTheDocument()
     expect(getByTestId('sshPassphrase')).toBeInTheDocument()
 
-    // const submitBtn = getByTestId(BTN_SUBMIT)
-    // expect(submitBtn).toBeDisabled()
+    const submitBtn = getByTestId(BTN_SUBMIT) as HTMLButtonElement
+    expect(submitBtn.disabled).toBe(true)
   })
 
   it('should be proper validation for ssh via ssh password', async () => {
@@ -801,7 +801,8 @@ describe('DatabaseForm', () => {
     expect(screen.getByTestId('sshPort')).toBeInTheDocument()
 
     await waitForStack()
-    expect(queryByTestId(BTN_SUBMIT)).toBeDisabled()
+    const submitBtn = queryByTestId(BTN_SUBMIT) as HTMLButtonElement
+    expect(submitBtn.disabled).toBe(true)
 
     await waitFor(() => {
       fireEvent.change(
@@ -821,7 +822,7 @@ describe('DatabaseForm', () => {
     })
 
     await waitForStack()
-    expect(queryByTestId(BTN_SUBMIT)).toBeDisabled()
+    expect(submitBtn.disabled).toBe(true)
 
     await waitFor(() => {
       fireEvent.change(

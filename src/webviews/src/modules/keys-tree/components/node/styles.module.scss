@@ -76,3 +76,23 @@
 .removeBtn {
   @apply absolute right-3;
 }
+
+.folderTooltipHeader {
+  @apply flex flex-wrap items-center break-all;
+}
+
+.delimiters {
+  @apply inline-flex flex-wrap;
+}
+
+.folderPattern {
+  @apply font-bold mr-1 whitespace-normal
+}
+
+.delimiter {
+  @apply mb-0.5 mr-1 px-0.5 py-[5px];
+  border-radius: 2px;
+  line-height: 12px;
+  background-color: var(--vscode-banner-background);
+  color: var(--vscode-banner-iconForeground);
+}

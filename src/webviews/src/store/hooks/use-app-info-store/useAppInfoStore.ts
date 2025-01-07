@@ -25,7 +25,7 @@ export const initialAppInfoState: AppInfoStore = {
   spec: null,
   server: null,
   createDbContent: null,
-  delimiter: DEFAULT_DELIMITER,
+  delimiters: [DEFAULT_DELIMITER],
   commandsSpec: {},
   commandsArray: [],
   commandGroups: [],
@@ -36,7 +36,7 @@ export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
     ...initialAppInfoState,
     // localStorage can't be called before initialization
     setInitialState: () => set({
-      delimiter: localStorageService?.get(StorageItem.treeViewDelimiter) || DEFAULT_DELIMITER,
+      delimiters: localStorageService?.get(StorageItem.treeViewDelimiter) || [DEFAULT_DELIMITER],
     }),
 
     // actions
@@ -51,8 +51,8 @@ export const useAppInfoStore = create<AppInfoStore & AppInfoActions>()(
       isShowConcepts: false,
     }),
 
-    setDelimiter: (delimiter) => set((state) => {
-      state.delimiter = delimiter
+    setDelimiters: (delimiter) => set((state) => {
+      state.delimiters = delimiter
       localStorageService?.set(StorageItem.treeViewDelimiter, delimiter)
       return state
     }),

@@ -91,17 +91,17 @@ export const AddKeyList = (props: Props) => {
     <>
       <form onSubmit={onFormSubmit} className="key-footer-items-container pl-0 h-full">
         <h3 className="font-bold uppercase pb-3">{l10n.t('Element')}</h3>
-          <div className="w-1/3 mr-2 mb-3">
-            <Select
-              position="below"
-              options={optionsDestinations}
-              containerClassName={styles.select}
-              itemClassName={styles.selectOption}
-              idSelected={destination}
-              onChange={(value) => setDestination(value as ListElementDestination)}
-              testid="destination-select"
+        <div className="w-1/3 mr-2 mb-3">
+          <Select
+            position="below"
+            options={optionsDestinations}
+            containerClassName={styles.select}
+            itemClassName={styles.selectOption}
+            idSelected={destination}
+            onChange={(value) => setDestination(value as ListElementDestination)}
+            testid="destination-select"
             />
-          </div>
+        </div>
         {elements.map((item, index) => (
           <div key={index}>
             <div className="flex items-center mb-3">

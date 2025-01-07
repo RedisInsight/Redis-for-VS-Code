@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
-import { isString, isUndefined } from 'lodash'
+import { isUndefined, escapeRegExp } from 'lodash'
 
 import { KeyInfo, Nullable, RedisString } from 'uiSrc/interfaces'
 import { AllKeyTypes, VscodeMessageAction } from 'uiSrc/constants'
@@ -26,12 +26,14 @@ export interface Props {
 }
 
 export const KeysTree = ({ database }: Props) => {
-  const delimiter = useAppInfoStore((state) => state.delimiter)
+  const delimiters = useAppInfoStore((state) => state.delimiters)
   const openNodes = useContextInContext((state) => state.keys.tree.openNodes)
   const sorting = useContextInContext((state) => state.dbConfig.treeViewSort)
 
-  const selectedKeyName = useSelectedKeyStore((state) => state.data?.nameString) || ''
-  const selectedKey = useSelectedKeyStore((state) => state.data?.name) || null
+  const { selectedKeyName, selectedKey } = useSelectedKeyStore((state) => ({
+    selectedKeyName: state.data?.nameString || '',
+    selectedKey: state.data?.name || null,
+  }))
 
   const keysState = useKeysInContext((state) => state.data)
   const loading = useKeysInContext((state) => state.loading)
@@ -44,6 +46,11 @@ export const KeysTree = ({ database }: Props) => {
   const [constructingTree, setConstructingTree] = useState<boolean>(false)
   const [firstDataLoaded, setFirstDataLoaded] = useState<boolean>(!!keysState.keys?.length)
   const [items, setItems] = useState<KeyInfo[]>(parseKeyNames(keysState.keys ?? []))
+
+  // escape regexp symbols and join and transform to regexp
+  const delimiterPattern = delimiters
+    .map(escapeRegExp)
+    .join('|')
 
   useEffect(() => {
     if (!firstDataLoaded) {
@@ -58,9 +65,9 @@ export const KeysTree = ({ database }: Props) => {
 
   // open all parents for selected key
   const openSelectedKey = (selectedKeyName: Nullable<string> = '') => {
-    if (selectedKeyName && isString(selectedKeyName)) {
-      const parts = selectedKeyName?.split(delimiter)
-      const parents = parts.map((_, index) => parts.slice(0, index + 1).join(delimiter) + delimiter)
+    if (selectedKeyName) {
+      const parts = selectedKeyName?.split(delimiterPattern)
+      const parents = parts.map((_, index) => parts.slice(0, index + 1).join(delimiterPattern) + delimiterPattern)
 
       // remove key name from parents
       parents.pop()
@@ -80,7 +87,7 @@ export const KeysTree = ({ database }: Props) => {
   useEffect(() => {
     setFirstDataLoaded(true)
     setItems(parseKeyNames(keysState.keys))
-  }, [sorting, delimiter, keysState.lastRefreshTime])
+  }, [sorting, delimiterPattern, keysState.lastRefreshTime])
 
   useEffect(() => {
     openSelectedKey(selectedKeyName)
@@ -167,7 +174,8 @@ export const KeysTree = ({ database }: Props) => {
     >
       <VirtualTree
         items={items}
-        delimiter={delimiter}
+        delimiters={delimiters}
+        delimiterPattern={delimiterPattern}
         sorting={sorting}
         database={database}
         statusSelected={selectedKeyName}

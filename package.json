@@ -145,6 +145,7 @@
     "dev:key": "cross-env RI_DATA_ROUTE=main/key vite dev",
     "dev:database": "cross-env RI_DATA_ROUTE=main/add_database vite dev",
     "dev:sidebar": "cross-env RI_DATA_ROUTE=sidebar vite dev",
+    "dev:settings": "cross-env RI_DATA_ROUTE=main/settings vite dev",
     "l10n:collect": "npx @vscode/l10n-dev export -o ./l10n ./src",
     "watch": "tsc -watch -p ./",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

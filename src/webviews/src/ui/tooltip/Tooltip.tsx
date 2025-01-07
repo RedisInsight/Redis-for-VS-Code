@@ -37,7 +37,7 @@ export const Tooltip = (props: Props) => {
       trigger={children as JSX.Element}
       {...restProps}
     >
-      <div className={cx(className, 'max-w-[350px]')}>
+      <div className={cx('max-w-[350px]', className)}>
         {!!title && <div className="font-bold">{title}</div>}
         {content}
       </div>
