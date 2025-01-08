@@ -90,7 +90,7 @@ export const constructKeysToTree = (props: Props): any[] => {
           delimiter,
           path,
         )
-        node.keyCount = node.children.reduce((a: any, b:any) => a + (b.keyCount || 1), 0)
+        node.keyCount = node.children.reduce((a: number, b: any) => a + (b.keyCount || 1), 0)
         node.keyApproximate = (node.keyCount / keys.length) * 100
         node.fullName = previousKey + name
       } else {
