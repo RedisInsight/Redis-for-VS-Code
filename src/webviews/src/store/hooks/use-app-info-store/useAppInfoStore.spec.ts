@@ -10,7 +10,7 @@ import {
   updateUserConfigSettingsAction,
 } from './useAppInfoStore'
 
-const newDelimiter = '*1*'
+const newDelimiter = ['*1*']
 
 vi.spyOn(localStorageService, 'set')
 vi.spyOn(modules, 'fetchString')
@@ -79,12 +79,12 @@ describe('useAppInfoStore', () => {
 
   it('setDelimiter', () => {
     // Arrange
-    const { setDelimiter } = useAppInfoStore.getState()
+    const { setDelimiters } = useAppInfoStore.getState()
     // Act
-    setDelimiter(newDelimiter)
+    setDelimiters(newDelimiter)
     // Assert
     expect(localStorageService.set).toBeCalledWith(StorageItem.treeViewDelimiter, newDelimiter)
-    expect(useAppInfoStore.getState().delimiter).toEqual(newDelimiter)
+    expect(useAppInfoStore.getState().delimiters).toEqual(newDelimiter)
   })
 })
 

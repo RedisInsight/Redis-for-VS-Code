@@ -123,7 +123,7 @@ const KeyDetailsHeader = ({
               <KeyDetailsHeaderTTL onEditTTL={handleEditTTL} />
               <div className="flex ml-auto">
                 <div className={styles.subtitleActionBtns}>
-                  <Actions width={width} key='auto-refresh'>
+                  <Actions width={width} key="auto-refresh">
                     <AutoRefresh
                       postfix={type}
                       disabled={refreshing || refreshDisabled}

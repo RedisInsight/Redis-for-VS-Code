@@ -1,12 +1,14 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { before, beforeEach, after, afterEach, EditorView } from 'vscode-extension-tester'
-import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
 import {
-  TreeView,
-  SettingsView,
-  InputWithButtons,
-} from '@e2eSrc/page-objects/components'
+  before,
+  beforeEach,
+  after,
+  afterEach,
+  EditorView,
+} from 'vscode-extension-tester'
+import { InnerViews } from '@e2eSrc/page-objects/components/WebView'
+import { TreeView, SettingsView } from '@e2eSrc/page-objects/components'
 import {
   ButtonActions,
   CheckboxActions,
@@ -50,9 +52,7 @@ describe('Settings', () => {
     await ButtonActions.clickElement(treeView.settingsButton)
     await settingsView.switchToInnerViewFrame(InnerViews.SettingsInnerView)
     // Change delimiter
-    await ButtonActions.clickElement(settingsView.delimiterInput)
-    await InputActions.slowType(settingsView.delimiterInput, ':')
-    await ButtonActions.clickElement(InputWithButtons.applyInput)
+    await settingsView.setDelimiterDefaultValue()
     await settingsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
@@ -79,25 +79,31 @@ describe('Settings', () => {
 
   it('Verify that when user changes the delimiter and clicks on Save button delimiter is applied', async function () {
     // Check the default delimiter value
-    expect(await InputActions.getInputValue(settingsView.delimiterInput)).eql(
-      ':',
-      'Default delimiter not applied',
-    )
+    expect(
+      await settingsView.isElementDisplayed(
+        settingsView.getDelimiterBadgeByTitle(':'),
+      ),
+    ).eql(true, 'Default delimiter not applied')
     // Apply new value to the field
-    await InputActions.typeText(settingsView.delimiterInput, 'test')
-    // Click on Cancel button
-    await ButtonActions.clickElement(InputWithButtons.cancelInput)
+    await ButtonActions.clickElement(settingsView.delimiterComboboxInput)
+    await InputActions.slowType(settingsView.delimiterComboboxInput, 'test')
+    // Click on Apply button without applying by 'Enter' or 'Space' key
+    await ButtonActions.clickElement(settingsView.applyDelimiterButton)
     // Check the previous delimiter value
-    expect(await InputActions.getInputValue(settingsView.delimiterInput)).eql(
-      ':',
-      'Default delimiter not applied',
-    )
+    expect(
+      await settingsView.isElementDisplayed(
+        settingsView.getDelimiterBadgeByTitle(':'),
+      ),
+    ).eql(true, 'Default delimiter not applied')
+    // Verify that not confirmed by 'Enter' or 'Space' key delimiter not applied
+    expect(
+      await settingsView.isElementDisplayed(
+        settingsView.getDelimiterBadgeByTitle('test'),
+      ),
+    ).eql(false, 'Not confirmed delimiter not applied')
 
     // Change delimiter
-    await ButtonActions.clickElement(settingsView.delimiterInput)
-    await InputActions.slowType(settingsView.delimiterInput, '-')
-    await ButtonActions.clickElement(InputWithButtons.applyInput)
-    // Verify that user can see that input is not saved when the Cancel button is clicked
+    await settingsView.changeDelimiterInTreeView('-')
     await settingsView.switchBack()
     await treeView.switchToInnerViewFrame(InnerViews.TreeInnerView)
     // Verify that when user changes the delimiter and clicks on Save button delimiter is applied
@@ -110,7 +116,7 @@ describe('Settings', () => {
         ['device_eu', 'central'],
         ['user_eu', 'central'],
       ],
-      '-',
+      ['-'],
     )
   })
 })

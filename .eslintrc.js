@@ -48,6 +48,7 @@ module.exports = {
         code: 140,
       },
     ],
+    'jsx-quotes': ['error', 'prefer-double'],
     'class-methods-use-this': 'off',
     // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
     'react-refresh/only-export-components': ['warn'],

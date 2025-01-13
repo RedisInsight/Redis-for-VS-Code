@@ -29,17 +29,19 @@ export const KeyRowName = (props: Props) => {
 
   return (
     <Tooltip
+      repositionOnResize
+      keepTooltipInside={false}
+      position="bottom center"
       title={nameTooltipTitle}
       content={nameTooltipContent}
       mouseEnterDelay={300}
-      className={cx(styles.keyNameContainer)}
     >
-      <>
+      <div className="flex flex-row truncate">
         <VscKey className={cx(styles.icon)} />
         <div className={cx(styles.keyName)} data-testid={`key-${shortString}`}>
           {nameContent}
         </div>
-      </>
+      </div>
     </Tooltip>
   )
 }

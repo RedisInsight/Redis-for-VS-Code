@@ -12,6 +12,7 @@ import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
 import { PostMessage, SelectKeyAction, SetDatabaseAction } from 'uiSrc/interfaces'
 import { VscodeMessageAction } from 'uiSrc/constants'
+import { migrateLocalStorageData } from 'uiSrc/services'
 import { useAppInfoStore } from './store/hooks/use-app-info-store/useAppInfoStore'
 import {
   processCliAction,
@@ -25,6 +26,8 @@ import { MonacoLanguages } from './components'
 
 import './styles/main.scss'
 import '../vscode.css'
+
+migrateLocalStorageData()
 
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('message', handleMessage)
@@ -71,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         useAppInfoStore.getState().updateUserConfigSettingsSuccess(message.data)
         break
       case VscodeMessageAction.UpdateSettingsDelimiter:
-        useAppInfoStore.getState().setDelimiter(message.data)
+        useAppInfoStore.getState().setDelimiters(message.data)
         break
 
       // CLI

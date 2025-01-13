@@ -3,20 +3,21 @@ import { KeyInfo } from 'uiSrc/interfaces'
 
 interface Props {
   items: KeyInfo[]
-  delimiter?: string
+  delimiterPattern?: string
+  delimiters?: string[]
   sorting?: SortOrder
 }
 
 export const constructKeysToTree = (props: Props): any[] => {
-  const { items: keys, delimiter = ':', sorting = 'ASC' } = props
-  const keysSymbol = `keys${delimiter}keys`
+  const { items: keys, delimiterPattern = ':', delimiters = [], sorting = 'ASC' } = props
+  const keysSymbol = `keys${delimiterPattern}keys`
   const tree: any = {}
 
   keys.forEach((key: any) => {
     // eslint-disable-next-line prefer-object-spread
     let currentNode: any = tree
     const { nameString: name = '' } = key
-    const nameSplitted = name.split(delimiter)
+    const nameSplitted = name.split(new RegExp(delimiterPattern, 'g'))
     const lastIndex = nameSplitted.length - 1
 
     nameSplitted.forEach((value: any, index: number) => {
@@ -59,10 +60,10 @@ export const constructKeysToTree = (props: Props): any[] => {
 
       // Regular sorting
       if (sorting === 'ASC') {
-        return a.localeCompare(b, 'en', { numeric: true })
+        return a.localeCompare(b, 'en')
       }
       if (sorting === 'DESC') {
-        return b.localeCompare(a, 'en', { numeric: true })
+        return b.localeCompare(a, 'en')
       }
 
       return 0
@@ -78,33 +79,34 @@ export const constructKeysToTree = (props: Props): any[] => {
     return treeNodes.map((key, index) => {
       const name = key?.toString()
       const node: any = { nameString: name }
-      const tillNowKeyName = previousKey + name + delimiter
       const path = prevIndex ? `${prevIndex}.${index}` : `${index}`
 
       // populate node with children nodes
       if (!tree[key].isLeaf && Object.keys(tree[key]).length > 0) {
+        const delimiterView = delimiters.length === 1 ? delimiters[0] : '-'
         node.children = formatTreeData(
           tree[key],
-          tillNowKeyName,
+          `${previousKey + name + delimiterView}`,
           delimiter,
           path,
         )
-        node.keyCount = node.children.reduce((a: any, b: any) => a + (b.keyCount || 1), 0)
+        node.keyCount = node.children.reduce((a: number, b: any) => a + (b.keyCount || 1), 0)
         node.keyApproximate = (node.keyCount / keys.length) * 100
+        node.fullName = previousKey + name
       } else {
         // populate leaf
         node.isLeaf = true
         node.children = []
         node.nameString = name.slice(0, -keysSymbol.length)
         node.nameBuffer = tree[key]?.name
+        node.fullName = previousKey + name + delimiter
       }
 
       node.path = path
-      node.fullName = tillNowKeyName
       node.id = getUniqueId()
       return node
     })
   }
 
-  return formatTreeData(tree, '', delimiter)
+  return formatTreeData(tree, '', delimiterPattern)
 }

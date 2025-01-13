@@ -1,3 +1,7 @@
 .box {
   @apply bg-vscode-tab-unfocusedInactiveBackground p-4 mt-9;
 }
+
+.applyBtn {
+  @apply flex items-center bg-vscode-button-background w-6 rounded-none;
+}

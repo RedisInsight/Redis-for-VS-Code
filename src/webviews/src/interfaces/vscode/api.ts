@@ -91,7 +91,7 @@ export interface UpdateSettingsAction {
 
 export interface UpdateSettingsDelimiterAction {
   action: VscodeMessageAction.UpdateSettingsDelimiter
-  data: string
+  data: string[]
 }
 
 export interface SaveAppInfoAction {

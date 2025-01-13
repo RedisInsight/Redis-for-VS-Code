@@ -36,6 +36,7 @@ export const Node = ({
     nameString,
     keyApproximate,
     isSelected,
+    delimiters = [],
     onDelete,
     onDeleteClicked,
     getMetadata,
@@ -44,6 +45,7 @@ export const Node = ({
   } = data
 
   const keyString = formatLongName(nameString)
+  const delimiterView = delimiters.length === 1 ? delimiters[0] : '-'
 
   useEffect(() => {
     if (!isLeaf || !nameBuffer) {
@@ -83,6 +85,19 @@ export const Node = ({
     onDeleteClicked?.(type)
   }
 
+  const folderTooltipTitle = (
+    <div className={styles.folderTooltipHeader}>
+      <span className={styles.folderPattern}>{`${fullName + delimiterView}*`}</span>
+      {delimiters.length > 1 && (
+      <span className={styles.delimiters}>
+        {delimiters.map((delimiter) => (
+          <span key={delimiter} className={styles.delimiter}>{delimiter}</span>
+        ))}
+      </span>
+      )}
+    </div>
+  )
+
   const folderTooltipContent = `${keyCount} ${l10n.t('key(s)')} (${Math.round(keyApproximate * 100) / 100}%)`
 
   const Folder = () => (
@@ -102,7 +117,15 @@ export const Node = ({
           <VscFolderOpened className={cx(styles.nodeIcon)} />
         </>
       )}
-      <Tooltip title={keyString} content={folderTooltipContent} mouseEnterDelay={300}>
+      <Tooltip
+        repositionOnResize
+        keepTooltipInside={false}
+        position="bottom left"
+        title={folderTooltipTitle}
+        content={folderTooltipContent}
+        mouseEnterDelay={300}
+        className="max-h-[200px] overflow-auto"
+      >
         <span className="truncate text-vscode-foreground text" data-testid={`folder-${nameString}`}>
           {nameString}
         </span>

@@ -1,0 +1,44 @@
+.container {
+  @apply min-w-[210px] #{!important};
+}
+
+.selectContainer {
+  @apply min-h-8 #{!important};
+}
+
+.control {
+  @apply bg-vscode-dropdown-background border-solid border border-vscode-input-border rounded-none min-h-8 max-h-40 cursor-pointer overflow-auto #{!important};
+
+  scroll-padding-bottom: 8px;
+}
+
+.multiValue {
+  background-color: var(--vscode-banner-background) !important;
+
+  div {
+    color: var(--vscode-banner-iconForeground) !important;
+  }
+}
+
+.multiValueRemove {
+  @apply h-[14px] w-[14px] pl-[2px] mt-1 ml-0.5 mr-1 #{!important};
+  border-radius: 50% !important;
+  background-color: var(--vscode-banner-iconForeground) !important;
+  transition: transform 0.1s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  svg {
+    @apply h-[10px] w-[10px] min-w-[10px] #{!important};
+    path {
+      fill: var(--vscode-inlineChat-background) #{!important};
+    }
+  }
+}
+
+.input {
+  @apply text-vscode-foreground max-w-full truncate #{!important};
+}
+
