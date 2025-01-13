@@ -7,7 +7,7 @@ import { VscCheck } from 'react-icons/vsc'
 
 import { Separator } from 'uiSrc/ui'
 import { ConsentsPrivacy, MultiSelect, MultiSelectOption } from 'uiSrc/components'
-import { VscodeMessageAction } from 'uiSrc/constants'
+import { DEFAULT_DELIMITER, EventKeys, VscodeMessageAction } from 'uiSrc/constants'
 import { vscodeApi } from 'uiSrc/services'
 import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 import { TelemetryEvent, arrayToMultiSelect, multiSelectToArray, sendEventTelemetry } from 'uiSrc/utils'
@@ -27,7 +27,9 @@ export const Settings = () => {
   const [delimiters, setDelimiters] = useState<readonly MultiSelectOption[]>(delimitersProp)
 
   const handleApplyClick = () => {
-    const delims = multiSelectToArray(delimiters)
+    const delimitersInit = multiSelectToArray(delimiters)
+    const delims = delimitersInit.length ? delimitersInit : [DEFAULT_DELIMITER]
+
     if (isEqual(delimitersProp, delimiters)) {
       return
     }
@@ -40,6 +42,7 @@ export const Settings = () => {
       },
     })
 
+    setDelimiters(arrayToMultiSelect(delims))
     setDelimitersAction(delims)
 
     vscodeApi.postMessage({ action: VscodeMessageAction.UpdateSettingsDelimiter, data: delims })
@@ -55,8 +58,12 @@ export const Settings = () => {
 
     // eslint-disable-next-line default-case
     switch (event.key) {
-      case 'Enter':
-      case ' ':
+      case EventKeys.ENTER:
+      case EventKeys.SPACE:
+        if (delimiters.find(({ value }) => value === inputValue)) {
+          return
+        }
+
         setOption()
         event.preventDefault()
     }
