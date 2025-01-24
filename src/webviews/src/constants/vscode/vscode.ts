@@ -28,6 +28,9 @@ export enum VscodeMessageAction {
   ShowEula = 'ShowEula',
   CloseEula = 'CloseEula',
   UpdateDatabaseInList = 'UpdateDatabaseInList',
+  CloudOAuth = 'CloudOAuth',
+  OAuthCallback = 'OAuthCallback',
+  RefreshDatabases = 'RefreshDatabases',
 }
 
 export enum VscodeStateItem {

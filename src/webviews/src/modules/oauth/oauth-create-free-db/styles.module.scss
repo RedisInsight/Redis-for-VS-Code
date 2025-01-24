@@ -1,0 +1,64 @@
+.link {
+  @apply relative flex flex-row max-w-[650px] min-h-[80px] rounded-[4px] text-left bg-cover bg-center hover:-translate-y-[1px] justify-start pl-[10px] my-4;
+
+  background-color: var(--vscode-editor-inactiveSelectionBackground);
+
+  &::before {
+    content: '';
+    @apply absolute top-0 right-0 bottom-0 left-0;
+  }
+
+  .content {
+    @apply flex flex-col pl-3;
+  }
+
+  .title {
+    @apply relative pt-[2px] font-medium leading-[20px] text-ellipsis overflow-hidden whitespace-nowrap text-[14px];
+  }
+
+  .description {
+    @apply relative pt-1 text-[12px] text-ellipsis overflow-hidden whitespace-nowrap truncate;
+  }
+
+  .iconCloud {
+    @apply w-[30px] h-[30px];
+
+    fill: var(--vscode-editorLightBulb-foreground);
+  }
+
+  .iconChevron {
+    @apply absolute right-[16px];
+  }
+
+  .compressedBtn {
+    @apply hidden;
+  }
+}
+
+.compressed {
+  &.link {
+    @apply rounded-none max-w-full w-full min-h-[24px] items-center m-0 hover:-translate-y-0;
+
+    &:hover {
+      background-color: var(--vscode-editor-inactiveSelectionBackground);
+    }
+  }
+
+  .content {
+    @apply py-0 pl-2 h-[24px];
+  }
+
+  .iconCloud {
+    @apply w-[20px] h-[20px] mt-[2px];
+  }
+
+  .title, .iconChevron {
+    @apply hidden;
+  }
+
+  .compressedBtn {
+    @apply flex absolute right-0 pl-1 pr-5 text-vscode-inputOption-activeBorder underline cursor-pointer hover:no-underline z-10;
+
+    background-color: var(--vscode-editor-inactiveSelectionBackground);
+  }
+}

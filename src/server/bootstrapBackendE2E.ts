@@ -22,9 +22,9 @@ const defaultDirPath = path.join(backendPath, 'defaults')
 let PSinst: ChildProcessWithoutNullStreams
 
 export async function startBackendE2E(logger: CustomLogger): Promise<any> {
-  logger.log('Starting backend in E2E')
+  logger.logServer('Starting backend in E2E')
   const port = await (await getPort.default(+appPort!)).toString()
-  logger.log(`Starting at port: ${port}`)
+  logger.logServer(`Starting at port: ${port}`)
 
   await setUIStorageField('appPort', port)
 
@@ -108,7 +108,7 @@ function checkServerReady(logger: CustomLogger, port: string, callback: () => vo
   const checker = setInterval(async () => {
     try {
       const url = `${appUrl}:${port}/${appPrefix}/info`
-      logger.log(`checkServerReady: ${url}`)
+      logger.logServer(`checkServerReady: ${url}`)
       const res = await fetch(url)
       if (res.status === 200) {
         clearInterval(checker)

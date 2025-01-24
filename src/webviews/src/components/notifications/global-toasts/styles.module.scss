@@ -1,0 +1,14 @@
+.toastsContainer {
+  @apply flex items-start rounded-none max-w-[300px] p-4;
+  background-color: var(--vscode-sideBarTitle-background);
+  border: 1px solid var(--vscode-inputOption-activeBorder);
+  color: var(--vscode-editor-foreground);
+}
+
+:global(.Toastify__close-button) {
+  color: var(--vscode-editor-foreground) !important;
+}
+
+:global(.Toastify__toast--error) {
+  border: 1px solid var(--vscode-inputValidation-errorBorder);
+}

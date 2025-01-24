@@ -1,0 +1,17 @@
+.modal {
+  @apply flex overflow-auto bg-[var(--vscode-tab-inactiveBackground)] min-h-[472px];
+  padding: 0 !important;
+
+  &.createDb, &.import {
+    @apply max-w-[768px] min-h-[500px] #{!important};
+  }
+}
+
+:global(.oauth-sso-dialog-content) {
+  @apply p-0 rounded-[4px] #{!important};
+  border-width: 0 !important;
+}
+
+:global(.oauth-sso-dialog-overlay) {
+  background: rgba(0, 0, 0, .5);
+}

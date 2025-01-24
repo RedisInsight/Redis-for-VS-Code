@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios'
+
 export interface CustomError {
   error: string
   message: string
@@ -25,3 +27,14 @@ export type RedisResponseBuffer = {
 export type RedisString = string | RedisResponseBuffer
 
 export type UintArray = number[] | Uint8Array
+
+export interface ErrorOptions {
+  message: string | JSX.Element
+  code?: string
+  config?: object
+  request?: object
+  response?: object
+}
+
+export interface EnhancedAxiosError extends AxiosError<CustomError> {
+}

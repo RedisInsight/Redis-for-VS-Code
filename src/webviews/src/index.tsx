@@ -21,8 +21,10 @@ import {
   setDatabaseAction,
   refreshTreeAction,
   addDatabaseAction,
+  processOauthCallback,
 } from './actions'
 import { MonacoLanguages } from './components'
+import { CloudAuthResponse } from './modules/oauth/interfaces'
 
 import './styles/main.scss'
 import '../vscode.css'
@@ -58,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshTreeAction(message)
         break
       case VscodeMessageAction.UpdateDatabaseInList:
-        useDatabasesStore.getState().setDatabaseToList(message.data?.database)
+        useDatabasesStore.getState().setDatabaseToList(message.data?.database!)
         break
       case VscodeMessageAction.AddDatabase:
         addDatabaseAction(message)
@@ -80,6 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // CLI
       case VscodeMessageAction.AddCli:
         processCliAction(message)
+        break
+
+      // OAuth
+      case VscodeMessageAction.OAuthCallback:
+        processOauthCallback(message.data as CloudAuthResponse)
         break
       default:
         break

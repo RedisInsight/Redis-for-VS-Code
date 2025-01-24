@@ -1,0 +1,34 @@
+.container {
+  @apply flex items-center;
+
+  .button {
+    @apply flex-col h-auto mx-[20px];
+    padding: 0 ;
+    transition: transform 0.3s ease;
+
+    &:hover,
+    &:focus {
+      background: none;
+      transform: translateY(-1px);
+    }
+
+    svg {
+      @apply h-[34px] w-[34px];
+      margin: 0 ;
+    }
+
+    &:global(.euiButtonEmpty) {
+      .label {
+        @apply text-[var(--vscode-foreground)];
+      }
+    }
+
+    &.githubButton {
+      svg {
+        path {
+          fill: var(--vscode-foreground);
+        }
+      }
+    }
+  }
+}

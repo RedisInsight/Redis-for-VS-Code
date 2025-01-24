@@ -120,3 +120,13 @@ export function updateUserConfigSettingsAction(
     }
   })
 }
+
+export function enableUserAnalyticsAction() {
+  useAppInfoStore.setState(async (state) => {
+    const agreements = state?.config?.agreements
+
+    if (agreements && !agreements.analytics) {
+      updateUserConfigSettingsAction({ agreements: { ...agreements, analytics: true } })
+    }
+  })
+}

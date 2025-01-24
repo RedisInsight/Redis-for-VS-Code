@@ -17,6 +17,8 @@ export { AutoRefresh } from './auto-refresh/AutoRefresh'
 export * from './database-form'
 export * from './consents-option'
 export * from './consents-privacy'
+export { INFINITE_MESSAGES } from './notifications/infinite-messages'
+export { GlobalToasts } from './notifications/global-toasts'
 
 export type { SuperSelectOption } from './super-select/SuperSelect'
 export type { MultiSelectOption } from './multi-select/MultiSelect'

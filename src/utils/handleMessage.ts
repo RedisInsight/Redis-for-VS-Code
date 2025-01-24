@@ -1,18 +1,6 @@
 import * as vscode from 'vscode'
-import { getUIStorageField, setUIStorageField } from './lib'
-import { MAX_TITLE_KEY_LENGTH } from './constants'
-
-export const getNonce = () => {
-  let text = ''
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length))
-  }
-  return text
-}
-
-export const sleep = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve, ms))
+import { getUIStorageField, setUIStorageField } from '../lib'
+import { signInCloudOauth } from '../lib/auth/auth.handler'
 
 export const handleMessage = async (message: any = {}) => {
   switch (message.action) {
@@ -27,6 +15,7 @@ export const handleMessage = async (message: any = {}) => {
       break
     case 'InformationMessage':
       vscode.window.showInformationMessage(message.data)
+
       break
     case 'AddCli':
       vscode.commands.executeCommand('RedisForVSCode.addCli', message)
@@ -50,9 +39,14 @@ export const handleMessage = async (message: any = {}) => {
       vscode.commands.executeCommand('RedisForVSCode.editKeyName', message.data)
       break
     case 'OpenAddDatabase':
+      if (message.data?.ssoFlow) {
+        await setUIStorageField('ssoFlow', message.data?.ssoFlow)
+      }
+
       vscode.commands.executeCommand('RedisForVSCode.addDatabase')
       break
     case 'CloseAddDatabase':
+      console.debug('RedisForVSCode.addDatabaseClose, ', message.data)
       vscode.commands.executeCommand('RedisForVSCode.addDatabaseClose', message.data)
       break
     case 'CloseEditDatabase':
@@ -75,16 +69,22 @@ export const handleMessage = async (message: any = {}) => {
     case 'CloseEula':
       vscode.commands.executeCommand('RedisForVSCode.closeEula', message)
       break
+    case 'RefreshDatabases':
+      vscode.commands.executeCommand('RedisForVSCode.refreshDatabases', message.data)
+      break
     case 'SaveAppInfo':
       await setUIStorageField('appInfo', message.data)
       break
+
+    case 'CloudOAuth':
+      signInCloudOauth(message.data)
+      break
+
+    case 'OpenExternalUrl':
+      await vscode.env.openExternal(vscode.Uri.parse(message.data))
+      break
+
     default:
       break
   }
 }
-
-export const truncateText = (text = '', maxLength = 0, separator = '...') =>
-  (text.length >= maxLength ? text.slice(0, maxLength) + separator : text)
-
-export const getTitleForKey = (keyType: string, keyString: string): string =>
-  `${keyType?.toLowerCase()}:${truncateText(keyString, MAX_TITLE_KEY_LENGTH)}`

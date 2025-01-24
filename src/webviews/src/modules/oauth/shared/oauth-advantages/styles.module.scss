@@ -1,0 +1,27 @@
+.container {
+  @apply flex flex-col items-center justify-center flex-grow;
+}
+
+.advantages {
+  @apply flex flex-col items-stretch justify-between bg-[var(--cloudSsoAdvantagesBgColor)];
+}
+
+.logo {
+  @apply w-[120px] h-auto mb-[12px];
+}
+
+.title {
+  @apply text-[18px] font-normal text-[var(--euiTextSubduedColor)] mb-[40px];
+}
+
+.advantageTitle {
+  @apply text-[12px] leading-normal;
+}
+
+.advantage {
+  @apply flex items-center mt-[12px];
+}
+
+.advantageIcon {
+  @apply min-w-[14px] mr-[6px];
+}

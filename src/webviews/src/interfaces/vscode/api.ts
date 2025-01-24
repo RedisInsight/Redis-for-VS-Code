@@ -1,6 +1,7 @@
-import { AllKeyTypes, KeyTypes, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
+import { AllKeyTypes, KeyTypes, OAuthSocialAction, OAuthStrategy, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
 import { Database } from 'uiSrc/store'
 import { AppInfoStore, GetAppSettingsResponse } from 'uiSrc/store/hooks/use-app-info-store/interface'
+import { CloudAuthResponse } from 'uiSrc/modules/oauth/interfaces'
 import { RedisString } from '../core/app'
 
 export interface IVSCodeApi {
@@ -26,17 +27,40 @@ export interface SelectKeyAction {
   }
 }
 
+export interface OAuthCallbackAction {
+  action: VscodeMessageAction.OAuthCallback
+  data: CloudAuthResponse
+}
+
+export interface CloudOAuthAction {
+  action: VscodeMessageAction.CloudOAuth
+  data: {
+    strategy: OAuthStrategy
+    action: string
+    data?: object
+  }
+}
+
 export interface SetDatabaseAction {
   action: VscodeMessageAction.EditDatabase
   | VscodeMessageAction.AddKey
   | VscodeMessageAction.CloseEditDatabase
   | VscodeMessageAction.RefreshTree
   | VscodeMessageAction.SetDatabase
-  | VscodeMessageAction.CloseAddDatabase
   | VscodeMessageAction.AddDatabase
   | VscodeMessageAction.UpdateDatabaseInList
   data: {
     database: Database
+  }
+}
+
+export interface DatabaseAction {
+  action: VscodeMessageAction.RefreshDatabases
+  | VscodeMessageAction.CloseAddDatabase
+  | VscodeMessageAction.OpenAddDatabase
+  data?: {
+    database?: Database
+    ssoFlow?: OAuthSocialAction
   }
 }
 export interface CliAction {
@@ -75,10 +99,6 @@ export interface SelectedKeyCloseAction {
   action: VscodeMessageAction.CloseKey
 }
 
-export interface NoDataAction {
-  action: VscodeMessageAction.OpenAddDatabase
-}
-
 export interface CloseAddKeyAction {
   action: VscodeMessageAction.CloseAddKey
   data: RedisString
@@ -112,7 +132,6 @@ export type PostMessage =
   SetDatabaseAction |
   InformationMessageAction |
   SelectedKeyAction |
-  NoDataAction |
   CloseAddKeyAction |
   UpdateSettingsAction |
   UpdateSettingsDelimiterAction |
@@ -121,4 +140,7 @@ export type PostMessage =
   ShowEulaAction |
   CloseEulaAction |
   ResetSelectedKeyAction |
-  CliAction
+  CliAction |
+  CloudOAuthAction |
+  DatabaseAction |
+  OAuthCallbackAction

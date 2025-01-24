@@ -251,6 +251,9 @@ export const constants = {
   },
 
   COMMAND: 'keys *',
+
+  USER_DATA: { id: 123123 },
+  USER_JOBS_DATA: { id: '123123' },
 }
 
 const KEY_INFO: KeyInfo = {
