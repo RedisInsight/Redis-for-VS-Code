@@ -1,5 +1,5 @@
 .popup-content {
-  @apply bg-vscode-tab-activeBackground break-words p-4 border-vscode-focusBorder;
+  @apply bg-vscode-tab-activeBackground break-words p-4 border-vscode-focusBorder overflow-auto max-h-full;
   max-width: calc(100% - 50px);
   border: 1px solid var(--vscode-focusBorder);
 

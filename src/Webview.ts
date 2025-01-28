@@ -1,6 +1,8 @@
 import * as vscode from 'vscode'
-import { getNonce, handleMessage } from './utils'
+import { getNonce } from './utils/utils'
 import { getUIStorage } from './lib'
+import { EXTENSION_NAME } from './constants'
+import { handleMessage } from './utils/handleMessage'
 
 type WebviewOptions = {
   context?: vscode.ExtensionContext
@@ -50,8 +52,8 @@ abstract class Webview {
     }
   }
 
-  protected handleMessage(message: any): void {
-    this._opts?.handleMessage?.(message)
+  protected async handleMessage(message: any): Promise<void> {
+    handleMessage(message)
   }
 
   protected _getContent(webview: vscode.Webview) {
@@ -103,7 +105,7 @@ abstract class Webview {
           window.ri=${uiStorageStringify};
         </script>
 
-        <title>Redis for VS Code Webview</title>
+        <title>${EXTENSION_NAME} Webview</title>
       </head>
       <body>
         <div id="root" data-route="${this._opts.route}"></div>

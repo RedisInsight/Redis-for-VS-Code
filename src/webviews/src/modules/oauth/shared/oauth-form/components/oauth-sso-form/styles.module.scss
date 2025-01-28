@@ -1,0 +1,11 @@
+.container {
+  @apply mb-[190px] pt-[60px] w-full text-left;
+
+  .title {
+    @apply pb-[20px] text-[16px] #{!important};
+  }
+
+  .formRaw {
+    @apply p-0 #{!important};
+  }
+}

@@ -27,8 +27,19 @@ jobs:
     - name: Install all libs and dependencies
       uses: ./.github/actions/install-all-build-libs
 
-    - name: Set RI_SEGMENT_WRITE_KEY to .env file
-      run: echo "RI_SEGMENT_WRITE_KEY='${{ env.RI_SEGMENT_WRITE_KEY }}'" >> ${{ env.envFile }}
+    - name: Configure Environment Variables
+      run: |
+        {
+          echo "RI_SEGMENT_WRITE_KEY=${{ env.RI_SEGMENT_WRITE_KEY }}"
+          echo "RI_CLOUD_IDP_AUTHORIZE_URL=${{ env.RI_CLOUD_IDP_AUTHORIZE_URL }}"
+          echo "RI_CLOUD_IDP_TOKEN_URL=${{ env.RI_CLOUD_IDP_TOKEN_URL }}"
+          echo "RI_CLOUD_IDP_REVOKE_TOKEN_URL=${{ env.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}"
+          echo "RI_CLOUD_IDP_REDIRECT_URI=${{ env.RI_CLOUD_IDP_REDIRECT_URI }}"
+          echo "RI_CLOUD_IDP_ISSUER=${{ env.RI_CLOUD_IDP_ISSUER }}"
+          echo "RI_CLOUD_IDP_CLIENT_ID=${{ env.RI_CLOUD_IDP_CLIENT_ID }}"
+          echo "RI_CLOUD_IDP_GOOGLE_ID=${{ env.RI_CLOUD_IDP_GOOGLE_ID }}"
+          echo "RI_CLOUD_IDP_GH_ID=${{ env.RI_CLOUD_IDP_GH_ID }}"
+        } >> "${{ env.envFile }}"
 
     - name: Download backend x64
       uses: ./.github/actions/download-backend
@@ -76,3 +87,11 @@ jobs:
       envFile: '.env'
       packagePath: './release/redis-for-vscode-extension-mac'
       RI_SEGMENT_WRITE_KEY: ${{ secrets.RI_SEGMENT_WRITE_KEY }}
+      RI_CLOUD_IDP_AUTHORIZE_URL: ${{ secrets.RI_CLOUD_IDP_AUTHORIZE_URL }}
+      RI_CLOUD_IDP_TOKEN_URL: ${{ secrets.RI_CLOUD_IDP_TOKEN_URL }}
+      RI_CLOUD_IDP_REVOKE_TOKEN_URL: ${{ secrets.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}
+      RI_CLOUD_IDP_REDIRECT_URI: ${{ secrets.RI_CLOUD_IDP_REDIRECT_URI }}
+      RI_CLOUD_IDP_ISSUER: ${{ secrets.RI_CLOUD_IDP_ISSUER }}
+      RI_CLOUD_IDP_CLIENT_ID: ${{ secrets.RI_CLOUD_IDP_CLIENT_ID }}
+      RI_CLOUD_IDP_GOOGLE_ID: ${{ secrets.RI_CLOUD_IDP_GOOGLE_ID }}
+      RI_CLOUD_IDP_GH_ID: ${{ secrets.RI_CLOUD_IDP_GH_ID }}
