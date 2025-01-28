@@ -26,17 +26,15 @@ jobs:
 
     - name: Configure Environment Variables
       run: |
-        {
-          echo "RI_SEGMENT_WRITE_KEY=${{ env.RI_SEGMENT_WRITE_KEY }}"
-          echo "RI_CLOUD_IDP_AUTHORIZE_URL=${{ env.RI_CLOUD_IDP_AUTHORIZE_URL }}"
-          echo "RI_CLOUD_IDP_TOKEN_URL=${{ env.RI_CLOUD_IDP_TOKEN_URL }}"
-          echo "RI_CLOUD_IDP_REVOKE_TOKEN_URL=${{ env.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}"
-          echo "RI_CLOUD_IDP_REDIRECT_URI=${{ env.RI_CLOUD_IDP_REDIRECT_URI }}"
-          echo "RI_CLOUD_IDP_ISSUER=${{ env.RI_CLOUD_IDP_ISSUER }}"
-          echo "RI_CLOUD_IDP_CLIENT_ID=${{ env.RI_CLOUD_IDP_CLIENT_ID }}"
-          echo "RI_CLOUD_IDP_GOOGLE_ID=${{ env.RI_CLOUD_IDP_GOOGLE_ID }}"
-          echo "RI_CLOUD_IDP_GH_ID=${{ env.RI_CLOUD_IDP_GH_ID }}"
-        } >> "${{ env.envFile }}"
+        echo "RI_SEGMENT_WRITE_KEY=${{ env.RI_SEGMENT_WRITE_KEY }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_AUTHORIZE_URL=${{ env.RI_CLOUD_IDP_AUTHORIZE_URL }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_TOKEN_URL=${{ env.RI_CLOUD_IDP_TOKEN_URL }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_REVOKE_TOKEN_URL=${{ env.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_REDIRECT_URI=${{ env.RI_CLOUD_IDP_REDIRECT_URI }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_ISSUER=${{ env.RI_CLOUD_IDP_ISSUER }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_CLIENT_ID=${{ env.RI_CLOUD_IDP_CLIENT_ID }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_GOOGLE_ID=${{ env.RI_CLOUD_IDP_GOOGLE_ID }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_GH_ID=${{ env.RI_CLOUD_IDP_GH_ID }}" >> ${{ env.envFile }}
 
     - name: Build windows package (production)
       if: inputs.environment == 'production'
