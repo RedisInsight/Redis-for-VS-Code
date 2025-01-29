@@ -1,4 +1,3 @@
-/* eslint import/prefer-default-export: off */
 // Replacing sensitive data inside error message
 // todo: split main.ts file and make proper structure
 export const wrapErrorMessageSensitiveData = (e: Error) => {

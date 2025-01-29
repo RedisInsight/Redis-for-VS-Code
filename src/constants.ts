@@ -18,3 +18,8 @@ export const EXTERNAL_LINKS = {
 
 export const DEFAULT_USER_ID = '1'
 export const DEFAULT_SESSION_ID = '1'
+
+export enum UrlHandlingActions {
+  OAuthCallback = '/cloud/oauth/callback',
+  Connect = '/databases/connect',
+}

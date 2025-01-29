@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import React from 'react'
 import { instance, mock } from 'ts-mockito'
 import { TelemetryEvent } from 'uiSrc/utils'
