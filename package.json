@@ -46,6 +46,9 @@
   "activationEvents": [
     "onView:ri-sidebar-view"
   ],
+  "extensionKind": [
+    "ui"
+  ],
   "contributes": {
     "viewsContainers": {
       "activitybar": [
