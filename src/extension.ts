@@ -8,7 +8,7 @@ import { startBackendE2E } from './server/bootstrapBackendE2E'
 import { checkVersionUpdate, initWorkspaceState, setUIStorageField } from './lib'
 import { WebViewProvider } from './WebViewProvider'
 import { getTitleForKey, handleMessage } from './utils'
-import { ViewId } from './constants'
+import { EXTENSION_NAME, ViewId } from './constants'
 import { logger } from './logger'
 import { registerUriHandler } from './utils/handleUri'
 
@@ -18,6 +18,11 @@ export let sidebarProvider: WebViewProvider
 export let panelProvider: WebViewProvider
 
 export async function activate(context: vscode.ExtensionContext) {
+  if (vscode.env.remoteName) {
+    vscode.window.showErrorMessage(`${EXTENSION_NAME} cannot be used in remote environments.`)
+    return
+  }
+
   logger.logCore('Extension activated')
   await initWorkspaceState(context)
   checkVersionUpdate()
