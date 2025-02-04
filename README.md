@@ -17,6 +17,18 @@ For more details, check out the [release notes](https://github.com/RedisInsight/
 
 This repository contains the source code for the Redis for VS Code extension. Install the extension from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=redis.redis-for-vscode).
 
+## Running locally 
+
+* Run following installation commands.
+
+```yarn install```
+
+```yarn download:backend```
+
+* On the VS Code sidebar, click on the "Run and Debug" icon.
+* Choose the "Run Dev Extension" configuration and click the run button next to it.
+* Application will be ran in watch mode and new VS Code window should open.
+
 ## Feedback
 
 We welcome your feedback and contributions to make Redis for VS Code even better. Here’s how you can get involved:
