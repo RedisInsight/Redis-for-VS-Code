@@ -1,0 +1,23 @@
+.container {
+  @apply flex flex-row flex-grow;
+
+  .advantagesContainer {
+    @apply flex min-w-[320px] px-6 bg-[var(--vscode-editor-background)];
+  }
+
+  .socialContainer {
+    @apply flex flex-col items-center min-w-[446px] max-w-[446px] pt-[108px] px-[60px] pb-[60px];
+
+    .subTitle {
+      @apply text-[16px];
+    }
+
+    .title {
+      @apply text-[28px] font-bold;
+    }
+  }
+
+  .socialButtons {
+    @apply my-[40px] mb-[60px];
+  }
+}

@@ -24,8 +24,17 @@ jobs:
     - name: Download backend
       uses: ./.github/actions/download-backend
 
-    - name: Set RI_SEGMENT_WRITE_KEY to .env file
-      run: echo "RI_SEGMENT_WRITE_KEY='${{ env.RI_SEGMENT_WRITE_KEY }}'" >> ${{ env.envFile }}
+    - name: Configure Environment Variables
+      run: |
+        echo "RI_SEGMENT_WRITE_KEY=${{ env.RI_SEGMENT_WRITE_KEY }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_AUTHORIZE_URL=${{ env.RI_CLOUD_IDP_AUTHORIZE_URL }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_TOKEN_URL=${{ env.RI_CLOUD_IDP_TOKEN_URL }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_REVOKE_TOKEN_URL=${{ env.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_REDIRECT_URI=${{ env.RI_CLOUD_IDP_REDIRECT_URI }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_ISSUER=${{ env.RI_CLOUD_IDP_ISSUER }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_CLIENT_ID=${{ env.RI_CLOUD_IDP_CLIENT_ID }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_GOOGLE_ID=${{ env.RI_CLOUD_IDP_GOOGLE_ID }}" >> ${{ env.envFile }}
+        echo "RI_CLOUD_IDP_GH_ID=${{ env.RI_CLOUD_IDP_GH_ID }}" >> ${{ env.envFile }}
 
     - name: Build windows package (production)
       if: inputs.environment == 'production'
@@ -49,3 +58,11 @@ jobs:
       envFile: '.env'
       packagePath: './release/redis-for-vscode-extension-win-x64.vsix'
       RI_SEGMENT_WRITE_KEY: ${{ secrets.RI_SEGMENT_WRITE_KEY }}
+      RI_CLOUD_IDP_AUTHORIZE_URL: ${{ secrets.RI_CLOUD_IDP_AUTHORIZE_URL }}
+      RI_CLOUD_IDP_TOKEN_URL: ${{ secrets.RI_CLOUD_IDP_TOKEN_URL }}
+      RI_CLOUD_IDP_REVOKE_TOKEN_URL: ${{ secrets.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}
+      RI_CLOUD_IDP_REDIRECT_URI: ${{ secrets.RI_CLOUD_IDP_REDIRECT_URI }}
+      RI_CLOUD_IDP_ISSUER: ${{ secrets.RI_CLOUD_IDP_ISSUER }}
+      RI_CLOUD_IDP_CLIENT_ID: ${{ secrets.RI_CLOUD_IDP_CLIENT_ID }}
+      RI_CLOUD_IDP_GOOGLE_ID: ${{ secrets.RI_CLOUD_IDP_GOOGLE_ID }}
+      RI_CLOUD_IDP_GH_ID: ${{ secrets.RI_CLOUD_IDP_GH_ID }}

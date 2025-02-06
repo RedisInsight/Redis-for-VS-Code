@@ -1,0 +1,24 @@
+.wrapper {
+  .list {
+    @apply list-disc pl-[32px] mt-[4px];
+
+    .listItem {
+      @apply pb-1 text-[12px] leading-[15px] text-[var(--vscode-foreground)];
+    }
+  }
+
+  &.small {
+    .list {
+      @apply list-disc pl-[28px] mt-[2px];
+
+      .listItem {
+        font-size: 10px;
+        line-height: 15px;
+      }
+    }
+  }
+}
+
+.link {
+  @apply cursor-pointer hover:underline;
+}
