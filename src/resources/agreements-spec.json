@@ -1,5 +1,5 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.7",
   "agreements": {
     "analytics": {
       "defaultValue": false,
@@ -48,7 +48,7 @@
           "editable": true,
           "disabled": false,
           "category": "privacy",
-          "since": "1.0.2",
+          "since": "1.0.7",
           "title": "Encryption",
           "label": "Encrypt sensitive information",
           "description": "Select to encrypt sensitive information using system keychain. Otherwise, this information is stored locally in plain text, which may incur security risk."
