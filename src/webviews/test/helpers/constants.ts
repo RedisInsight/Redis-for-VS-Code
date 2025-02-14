@@ -232,12 +232,12 @@ export const constants = {
       notifications: false,
       encryption: false,
       eula: true,
-      version: '1.0.6',
+      version: '1.0.7',
     },
   },
 
   SETTINGS_AGREEMENTS_SPEC: {
-    version: '1.0.6',
+    version: '1.0.7',
     agreements: {
       analytics: {
         ...COMMON_CONSENT_CONTENT,
