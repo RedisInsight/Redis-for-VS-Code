@@ -60,3 +60,62 @@ describe('isDifferentConsentsExists', () => {
     expect(isDifferentConsentsExists(spec.agreements, agreements3)).toBeTruthy()
   })
 })
+
+describe('compareConsents: custom keytar encryption conditions', () => {
+  const agreementsSpec = {
+    eula: spec.agreements.eula,
+    encryption: {
+      defaultValue: true,
+      displayInSetting: false,
+      required: false,
+      editable: true,
+      disabled: false,
+      category: 'privacy',
+      since: '1.0.2',
+      title: 'Encryption',
+      label: 'Encrypt sensitive information',
+      description:
+        'Select to encrypt sensitive information using system keychain. Otherwise, this information is stored locally in plain text, which may incur security risk.',
+    },
+  }
+
+  const agreements1 = {
+    eula: true,
+    encryption: false,
+    version: '1.0.6',
+  }
+
+  const agreements2 = {
+    eula: true,
+    encryption: false,
+    version: '1.0.7',
+  }
+
+  const agreements3 = {
+    eula: true,
+    encryption: true,
+    version: '1.0.6',
+  }
+
+  const agreements4 = {
+    eula: true,
+    encryption: true,
+    version: '1.0.7',
+  }
+
+  it('should prompt users with encryption set to false and v1.0.6 to set encryption again', () => {
+    expect(compareConsents(agreementsSpec, agreements1)).toHaveLength(1)
+  })
+
+  it('should NOT prompt users with encryption set to false and v1.0.7 to set encryption again', () => {
+    expect(compareConsents(agreementsSpec, agreements2)).toHaveLength(0)
+  })
+
+  it('should NOT prompt users with encryption set to true and v1.0.6 to set encryption again', () => {
+    expect(compareConsents(agreementsSpec, agreements3)).toHaveLength(0)
+  })
+
+  it('should NOT prompt users with encryption set to true and v1.0.7 to set encryption again', () => {
+    expect(compareConsents(agreementsSpec, agreements4)).toHaveLength(0)
+  })
+})
