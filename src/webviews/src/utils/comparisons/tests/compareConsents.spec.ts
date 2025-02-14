@@ -79,43 +79,43 @@ describe('compareConsents: custom keytar encryption conditions', () => {
     },
   }
 
-  const agreements1 = {
-    eula: true,
-    encryption: false,
-    version: '1.0.6',
-  }
-
-  const agreements2 = {
-    eula: true,
-    encryption: false,
-    version: '1.0.7',
-  }
-
-  const agreements3 = {
-    eula: true,
-    encryption: true,
-    version: '1.0.6',
-  }
-
-  const agreements4 = {
-    eula: true,
-    encryption: true,
-    version: '1.0.7',
-  }
-
   it('should prompt users with encryption set to false and v1.0.6 to set encryption again', () => {
-    expect(compareConsents(agreementsSpec, agreements1)).toHaveLength(1)
+    const agreements = {
+      eula: true,
+      encryption: false,
+      version: '1.0.6',
+    }
+
+    expect(compareConsents(agreementsSpec, agreements)).toHaveLength(1)
   })
 
   it('should NOT prompt users with encryption set to false and v1.0.7 to set encryption again', () => {
-    expect(compareConsents(agreementsSpec, agreements2)).toHaveLength(0)
+    const agreements = {
+      eula: true,
+      encryption: false,
+      version: '1.0.7',
+    }
+
+    expect(compareConsents(agreementsSpec, agreements)).toHaveLength(0)
   })
 
   it('should NOT prompt users with encryption set to true and v1.0.6 to set encryption again', () => {
-    expect(compareConsents(agreementsSpec, agreements3)).toHaveLength(0)
+    const agreements = {
+      eula: true,
+      encryption: true,
+      version: '1.0.6',
+    }
+
+    expect(compareConsents(agreementsSpec, agreements)).toHaveLength(0)
   })
 
   it('should NOT prompt users with encryption set to true and v1.0.7 to set encryption again', () => {
-    expect(compareConsents(agreementsSpec, agreements4)).toHaveLength(0)
+    const agreements = {
+      eula: true,
+      encryption: true,
+      version: '1.0.7',
+    }
+
+    expect(compareConsents(agreementsSpec, agreements)).toHaveLength(0)
   })
 })
