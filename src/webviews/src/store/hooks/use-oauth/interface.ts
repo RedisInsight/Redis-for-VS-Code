@@ -16,6 +16,12 @@ export interface OAuthStore {
   agreement: boolean
   showProgress: boolean
   isRecommendedSettings: boolean
+  plan: {
+    loading: boolean,
+    isOpenDialog: boolean,
+    data: CloudSubscriptionPlanResponse[],
+  }
+  isOpenSelectAccountDialog: boolean,
   user: {
     initialLoading: boolean
     loading: boolean
@@ -35,6 +41,12 @@ export interface OauthActions {
   getUserInfo: () => void
   getUserInfoSuccess: (data: CloudUser) => void
   getUserInfoFinal: () => void
+
+  setIsOpenSelectPlanDialog: (isOpen: boolean) => void
+  getPlans(): void
+  getPlansSuccess(data: CloudSubscriptionPlanResponse[]): void
+  getPlansFailure(): void
+  setSelectAccountDialogState: (isOpen: boolean) => void
 }
 
 export interface CloudUser {
