@@ -18,8 +18,6 @@ const OAuthRecommendedSettings = (props: Props) => {
   // <FeatureFlagComponent name={FeatureFlags.cloudSsoRecommendedSettings}>
     <div className={styles.recommendedSettings}>
       <Checkbox
-        // TODO: custom region
-        disabled
         id="ouath-recommended-settings"
         name="recommended-settings"
         labelText={l10n.t('Use a pre-selected provider and region')}
