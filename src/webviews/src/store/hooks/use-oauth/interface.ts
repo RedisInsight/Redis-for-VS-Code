@@ -108,3 +108,8 @@ export interface CloudSubscriptionRegion {
   cityName?: string
   flag?: string
 }
+
+export interface Region {
+  provider: string
+  regions: string[]
+}
