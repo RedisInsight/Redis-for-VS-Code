@@ -6,7 +6,7 @@ import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { CloudJobName, CloudJobStep, OAuthSocialAction, OAuthSocialSource } from 'uiSrc/constants'
 import { sendEventTelemetry, showInfinityToast, TelemetryEvent } from 'uiSrc/utils'
 import { Nullable } from 'uiSrc/interfaces'
-import { createFreeDbJob, useOAuthStore } from 'uiSrc/store'
+import { createFreeDbJob, fetchPlans, useOAuthStore } from 'uiSrc/store'
 import { Spacer } from 'uiSrc/ui'
 import { INFINITE_MESSAGES } from 'uiSrc/components'
 
@@ -69,7 +69,11 @@ const OAuthCreateDb = (props: Props) => {
           setSSOFlow(undefined)
         },
       })
+
+      return
     }
+
+    fetchPlans()
   }
 
   return (
