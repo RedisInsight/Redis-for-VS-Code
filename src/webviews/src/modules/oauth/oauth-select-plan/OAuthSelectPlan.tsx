@@ -3,13 +3,16 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { VscClose } from 'react-icons/vsc'
 import Popup from 'reactjs-popup'
 import { useShallow } from 'zustand/react/shallow'
-import { CloudJobName, CloudJobStep, OAuthProvider } from 'uiSrc/constants'
+import * as l10n from '@vscode/l10n'
+import cx from 'classnames'
+import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import { CloudJobName, CloudJobStep, OAuthProvider, OAuthProviders } from 'uiSrc/constants'
 import { createFreeDbJob, useOAuthStore } from 'uiSrc/store'
 import { CloudSubscriptionPlanResponse, Region } from 'uiSrc/store/hooks/use-oauth/interface'
 import { RiButton } from 'uiSrc/ui'
 import { sendEventTelemetry, showInfinityToast, TelemetryEvent } from 'uiSrc/utils'
 
-import { INFINITE_MESSAGES, SuperSelectOption } from 'uiSrc/components'
+import { INFINITE_MESSAGES, SuperSelect, SuperSelectOption } from 'uiSrc/components'
 import styles from './styles.module.scss'
 
 export const DEFAULT_REGIONS = ['us-east-2', 'asia-northeast1']
@@ -87,11 +90,17 @@ const OAuthSelectPlan = () => {
     const rsProviderRegions: string[] = find(rsRegions, { provider })?.regions || []
 
     return (
-      <div color="subdued" size="s" data-testid={`option-${region}`}>
+      <div color="subdued"
+        // size="s"
+        data-testid={`option-${region}`}>
         {`${countryName} (${cityName})`}
-        <div className={styles.regionName}>{region}</div>
+        <div
+        // className={styles.regionName}
+        >{region}</div>
         {rsProviderRegions?.includes(region) && (
-          <div className={styles.rspreview} data-testid={`rs-text-${region}`}>(Redis 7.2)</div>
+          <div
+            // className={styles.rspreview}
+            data-testid={`rs-text-${region}`}>(Redis 7.2)</div>
         )}
       </div>
     )
@@ -129,17 +138,92 @@ const OAuthSelectPlan = () => {
       modal
       open={!!isOpenDialog}
       closeOnDocumentClick={false}
-      className={styles.container}
       data-testid="oauth-select-plan-dialog"
     >
       <RiButton className="absolute top-4 right-4" onClick={handleOnClose} >
         <VscClose />
       </RiButton>
-      <div className={styles.modalBody}>
+      <div
+      >
         <section className={styles.content}>
 
-          <h2>Choose a cloud vendor</h2>
+          <h2 className={styles.title}>{l10n.t('Choose a cloud vendor')}</h2>
 
+          <div className={styles.subTitle}>
+            {l10n.t(
+              'Select a cloud vendor and region to complete the final step towards your free Redis database. No credit card is required.',
+            )}
+          </div>
+
+          <section className={styles.providers}>
+            {OAuthProviders.map(({ icon, id, label }) => (
+              <div
+                className={styles.provider}
+                key={id}>
+                {id === providerSelected
+                  && <div
+                  // className={cx(styles.providerActiveIcon)}
+                  ><VSCodeButton
+                    appearance="icon"></VSCodeButton> </div>}
+                <RiButton
+                  // iconType={icon}
+
+                  onClick={() => setProviderSelected(id)}
+                // className={cx(styles.providerBtn, { [styles.activeProvider]: id === providerSelected })}
+                />
+                <div
+                // className={styles.providerLabel}
+                >{label}</div>
+              </div>
+            ))}
+          </section>
+
+          <section>
+            <div
+            // className={styles.regionLabel}
+            >{l10n.t('Region')}</div>
+            <SuperSelect
+              // fullWidth
+              // itemClassName={styles.regionSelectItem}
+              // className={styles.regionSelect}
+              // disabled={loading || !regionOptions.length}
+              isLoading={loading}
+              options={regionOptions}
+              // valueOfSelected={planIdSelected}
+              // onChange={onChangeRegion}
+              data-testid="select-oauth-region"
+            />
+
+            {!regionOptions.length && (
+              <div
+                // className={styles.selectDescription}
+                data-testid="select-region-select-description">
+                {l10n.t('No regions available, try another vendor.')}
+              </div>
+            )}
+          </section>
+          <footer className={styles.footer}>
+            <RiButton
+              className={styles.button}
+              onClick={handleOnClose}
+              data-testid="close-oauth-select-plan-dialog"
+              aria-labelledby="close oauth select plan dialog"
+            >
+              {l10n.t('Cancel')}
+            </RiButton>
+            <RiButton
+              // fill
+              disabled={loading || !planIdSelected}
+              // isLoading={loading}
+              color="secondary"
+              className={styles.button}
+              onClick={handleSubmit}
+              data-testid="submit-oauth-select-plan-dialog"
+              aria-labelledby="submit oauth select plan dialog"
+            >
+              {l10n.t('Create database')}
+            </RiButton>
+          </footer>
         </section>
       </div>
     </Popup>
