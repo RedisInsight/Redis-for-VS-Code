@@ -1,4 +1,4 @@
-import { filter, find, first, toNumber } from 'lodash'
+import { filter, find, first, get, toNumber } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import { VscCheck, VscClose } from 'react-icons/vsc'
 import Popup from 'reactjs-popup'
@@ -9,23 +9,23 @@ import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { CloudJobName, CloudJobStep, OAuthProvider, OAuthProviders } from 'uiSrc/constants'
 import { createFreeDbJob, useOAuthStore } from 'uiSrc/store'
 import { CloudSubscriptionPlanResponse, Region } from 'uiSrc/store/hooks/use-oauth/interface'
-import { RiButton } from 'uiSrc/ui'
+import { RiButton, Select, SelectOption } from 'uiSrc/ui'
 import { sendEventTelemetry, showInfinityToast, TelemetryEvent } from 'uiSrc/utils'
 
-import { INFINITE_MESSAGES, SuperSelect, SuperSelectOption } from 'uiSrc/components'
+import { INFINITE_MESSAGES } from 'uiSrc/components'
 import styles from './styles.module.scss'
-
-export const DEFAULT_REGIONS = ['us-east-2', 'asia-northeast1']
-export const DEFAULT_PROVIDER = OAuthProvider.AWS
 
 const getProviderRegions = (regions: Region[], provider: OAuthProvider) =>
   (find(regions, { provider }) || {}).regions || []
+
+const DEFAULT_REGIONS = ['us-east-2', 'asia-northeast1']
+const DEFAULT_PROVIDER = OAuthProvider.AWS
 
 const OAuthSelectPlan = () => {
   const {
     isOpenDialog,
     plansInit,
-    loading,
+    // loading,
     setIsOpenSelectPlanDialog,
     setSocialDialogState,
   } = useOAuthStore(useShallow((state) => ({
@@ -36,8 +36,8 @@ const OAuthSelectPlan = () => {
     setSocialDialogState: state.setSocialDialogState,
   })))
 
-  // get the regions from outside
-  const rsRegions = [
+  // TODO [DA]: Remove hardcoded Redis Stack regions
+  const rsRegions: Region[] = [
     {
       provider: 'AWS',
       regions: ['us-east-2', 'ap-southeast-1', 'sa-east-1'],
@@ -47,6 +47,7 @@ const OAuthSelectPlan = () => {
       regions: ['asia-northeast1', 'europe-west1', 'us-central1'],
     },
   ]
+  // const rsRegions: Region[] = get("cloudSso", 'data.selectPlan.components.redisStackPreview', [])
 
   const [plans, setPlans] = useState(plansInit || [])
   const [planIdSelected, setPlanIdSelected] = useState('')
@@ -85,41 +86,32 @@ const OAuthSelectPlan = () => {
 
   if (!isOpenDialog) return null
 
-  const getOptionDisplay = (item: CloudSubscriptionPlanResponse) => {
-    const { region = '', details: { countryName = '', cityName = '' }, provider } = item
+  const getPlanLabel = (region: string, countryName: string, cityName: string, provider: string) => {
     const rsProviderRegions: string[] = find(rsRegions, { provider })?.regions || []
-
     return (
-      <div color="subdued"
-        // size="s"
-        data-testid={`option-${region}`}>
-        {`${countryName} (${cityName})`}
-        <div
-        // className={styles.regionName}
-        >{region}</div>
-        {rsProviderRegions?.includes(region) && (
-          <div
-            // className={styles.rspreview}
-            data-testid={`rs-text-${region}`}>(Redis 7.2)</div>
-        )}
+      <div data-testid={`option-${region}`}>
+        <span className="text-[11px]">{`${countryName} (${cityName})`}</span>
+        <span className="text-[10px]"> {region}</span>
+        {rsProviderRegions?.includes(region)
+          && (<span className="text-[10px] ml-[10px]" data-testid={`rs-text-${region}`}> (Redis 7.2)</span>)
+        }
       </div>
     )
   }
 
-  const regionOptions: SuperSelectOption[] = plans.map(
-    (item) => {
-      const { id, region = '' } = item
+  const regionOptions: SelectOption[] = plans.map(
+    (item: CloudSubscriptionPlanResponse) => {
+      const { id, region = '', details: { countryName = '', cityName = '' }, provider } = item
       return {
         value: `${id}`,
-        inputDisplay: getOptionDisplay(item),
-        dropdownDisplay: getOptionDisplay(item),
-        'data-test-subj': `oauth-region-${region}`,
+        label: getPlanLabel(region, countryName, cityName, provider),
+        testid: `oauth-region-${region}`,
       }
     },
   )
 
   const onChangeRegion = (region: string) => {
-    setPlanIdSelected(region)
+    setPlanIdSelected(region || '')
   }
 
   const handleSubmit = () => {
@@ -183,30 +175,26 @@ const OAuthSelectPlan = () => {
             ))}
           </section>
 
-          <section>
-            <div
-            // className={styles.regionLabel}
-            >{l10n.t('Region')}</div>
-            <SuperSelect
-              // fullWidth
-              // itemClassName={styles.regionSelectItem}
-              // className={styles.regionSelect}
+          <section className={styles.region}>
+            <div className={styles.regionLabel}>{l10n.t('Region')}</div>
+            <Select
               // disabled={loading || !regionOptions.length}
-              isLoading={loading}
+              disabled={!regionOptions.length}
+              idSelected={planIdSelected}
+              onChange={onChangeRegion}
               options={regionOptions}
-              // valueOfSelected={planIdSelected}
-              // onChange={onChangeRegion}
-              data-testid="select-oauth-region"
+              containerClassName={styles.select}
+              testid="select-oauth-region"
             />
 
             {!regionOptions.length && (
-              <div
-                // className={styles.selectDescription}
+              <div className={styles.selectDescription}
                 data-testid="select-region-select-description">
                 {l10n.t('No regions available, try another vendor.')}
               </div>
             )}
           </section>
+
           <footer className={styles.footer}>
             <VSCodeButton
               appearance="secondary"
@@ -218,7 +206,8 @@ const OAuthSelectPlan = () => {
               {l10n.t('Cancel')}
             </VSCodeButton>
             <VSCodeButton
-              disabled={loading || !planIdSelected}
+              disabled={!planIdSelected}
+              // disabled={loading || !planIdSelected}
               onClick={handleSubmit}
               className={styles.button}
               data-testid="submit-oauth-select-plan-dialog"

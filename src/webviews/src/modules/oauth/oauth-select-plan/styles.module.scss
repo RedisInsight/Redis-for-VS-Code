@@ -14,9 +14,7 @@
   @apply w-full flex flex-row justify-between items-center pt-[30px] pr-[45px] pb-[22px] pl-[45px];
 
   .providerBtn {
-    @apply w-[138px] h-[105px] rounded-[8px];  
-    
-    border: 1px solid;
+    @apply w-[138px] h-[105px] rounded-[8px] border border-solid;
 
     &.activeProvider {
       border: 2px solid var(--vscode-focusBorder);
@@ -48,47 +46,21 @@
   }
 }
 
+
 .awsIcon svg > path:first-of-type {
   fill: currentColor;
 }
 
 .region {
-  padding: 2px 45px;
-  text-align: left;
+  @apply pl-[45px] py-[2px] text-left;
 
   .selectDescription {
-    padding-top: 10px;
-    color: var(--euiColorMediumShade) !important;
-  }
-
-  :global(.euiSuperSelectControl) {
-    border-radius: 4px;
-    background-color: var(--euiColorLightestShade) !important;
-  }
-
-  :global(.euiTextColor) {
-    font-size: 14px !important;
+    @apply mt-[10px];
   }
 }
 
-.regionSelectItem {
-  background-color: var(--euiColorLightestShade) !important;
-  &:hover {
-    background-color: var(--hoverInListColorLight) !important;
-  }
-
-  :global(.euiTextColor) {
-    font-size: 14px !important;
-  }
-
-  :global(.euiContextMenuItem__text) {
-    position: relative;
-  }
-}
-
-.regionName {
-  padding-left: 4px;
-  color: var(--euiColorMediumShade) !important;
+.select {
+  @apply w-full mt-[5px];
 }
 
 .footer {
@@ -97,10 +69,4 @@
 
 .button {
   @apply ml-[8px];
-}
-
-:global(.euiTextColor).rspreview {
-  font-size: 12px !important;
-  margin-left: 11px;
-  color: var(--euiColorMediumShade) !important;
 }
