@@ -204,26 +204,24 @@ const OAuthSelectPlan = () => {
             )}
           </section>
           <footer className={styles.footer}>
-            <RiButton
-              className={styles.button}
+            <VSCodeButton
+              appearance="secondary"
               onClick={handleOnClose}
+              className={styles.button}
               data-testid="close-oauth-select-plan-dialog"
               aria-labelledby="close oauth select plan dialog"
             >
               {l10n.t('Cancel')}
-            </RiButton>
-            <RiButton
-              // fill
+            </VSCodeButton>
+            <VSCodeButton
               disabled={loading || !planIdSelected}
-              // isLoading={loading}
-              color="secondary"
-              className={styles.button}
               onClick={handleSubmit}
+              className={styles.button}
               data-testid="submit-oauth-select-plan-dialog"
               aria-labelledby="submit oauth select plan dialog"
             >
               {l10n.t('Create database')}
-            </RiButton>
+            </VSCodeButton>
           </footer>
         </section>
       </div>
