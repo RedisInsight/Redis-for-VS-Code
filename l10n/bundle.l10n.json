@@ -365,7 +365,8 @@
   "Release Notes": "Release Notes",
   "Redis for VS Code extension updated to {0}.": "Redis for VS Code extension updated to {0}.",
   "Choose a cloud vendor": "Choose a cloud vendor",
-  "Select a cloud vendor and region to complete the final step towards your free Redis database. No credit card is required.": "Select a cloud vendor and region to complete the final step towards your free Redis database. No credit card is required.",
+  "Select a cloud vendor and region to complete the final step towards your free Redis database.": "Select a cloud vendor and region to complete the final step towards your free Redis database.",
+  "No credit card is required.": "No credit card is required.",
   "Region": "Region",
   "No regions available, try another vendor.": "No regions available, try another vendor.",
   "Create database": "Create database"
