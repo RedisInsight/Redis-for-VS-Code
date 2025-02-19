@@ -14,24 +14,16 @@
   @apply w-full flex flex-row justify-between items-center pt-[30px] pr-[45px] pb-[22px] pl-[45px];
 
   .providerBtn {
-    width: 138px !important;
-    height: 105px !important;
-    border-radius: 8px !important;
-    background-color: var(--euiColorEmptyShade) !important;
-    border-color: var(--separatorColorLight) !important;
+    @apply w-[138px] h-[105px] rounded-[8px];  
+    
+    border: 1px solid;
 
     &.activeProvider {
-      border: 2px solid var(--euiColorPrimary) !important;
-    }
-
-    :global(.euiButton__text) {
-      display: none;
+      border: 2px solid var(--vscode-focusBorder);
     }
 
     svg {
-      width: auto;
-      height: initial;
-      max-width: 44px;
+      @apply w-auto h-auto max-w-[44px];
     }
   }
 }
@@ -41,37 +33,23 @@
 }
 
 .providerLabel {
-  font-size: 10px !important;
+  @apply text-[10px];
 }
 
 .providerActiveIcon {
-  position: absolute;
+  @apply absolute left-0 right-0 mx-auto w-[22px] h-[22px] rounded-full flex justify-center;
+  background-color: var(--vscode-focusBorder);
   top: -10px;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-
-  background-color: var(--euiColorPrimary);
-
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
   z-index: 5;
 
   svg {
-    width: 12px;
-    height: 22px;
-    fill: var(--euiColorMediumShade);
-
-    path {
-      fill: var(--euiColorEmptyShade);
-    }
+    @apply w-[12px] h-[12px];
+    stroke-width: 1;
   }
 }
 
 .awsIcon svg > path:first-of-type {
-  fill: var(--euiColorFullShade);
+  fill: currentColor;
 }
 
 .region {

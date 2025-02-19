@@ -1,6 +1,6 @@
 import { filter, find, first, toNumber } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
-import { VscClose } from 'react-icons/vsc'
+import { VscCheck, VscClose } from 'react-icons/vsc'
 import Popup from 'reactjs-popup'
 import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
@@ -156,24 +156,25 @@ const OAuthSelectPlan = () => {
           </div>
 
           <section className={styles.providers}>
-            {OAuthProviders.map(({ icon, id, label }) => (
-              <div
-                className={styles.provider}
-                key={id}>
+            {OAuthProviders.map(({ icon: Icon, id, label }) => (
+              <div className={styles.provider} key={id}>
                 {id === providerSelected
-                  && <div
-                  // className={cx(styles.providerActiveIcon)}
-                  ><VSCodeButton
-                    appearance="icon"></VSCodeButton> </div>}
-                <RiButton
-                  // iconType={icon}
+                  && <div className={cx(styles.providerActiveIcon)}>
+                    <VSCodeButton appearance="icon">
+                      <VscCheck />
+                    </VSCodeButton>
+                  </div>
+                }
 
-                  onClick={() => setProviderSelected(id)}
-                // className={cx(styles.providerBtn, { [styles.activeProvider]: id === providerSelected })}
-                />
-                <div
-                // className={styles.providerLabel}
-                >{label}</div>
+                <RiButton onClick={() => setProviderSelected(id)}
+                  className={cx(styles.providerBtn,
+                    { [styles.activeProvider]: id === providerSelected },
+                    { [styles.awsIcon]: id === OAuthProvider.AWS },
+                  )}>
+                  <Icon />
+                </RiButton>
+
+                <div className={styles.providerLabel}>{label}</div>
               </div>
             ))}
           </section>
@@ -226,7 +227,7 @@ const OAuthSelectPlan = () => {
           </footer>
         </section>
       </div>
-    </Popup>
+    </Popup >
   )
 }
 
