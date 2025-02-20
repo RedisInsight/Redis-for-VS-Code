@@ -1,3 +1,20 @@
+:global(.oauth-select-plan-dialog-overlay) {
+  background: rgba(0, 0, 0, .5);
+}
+
+:global(.oauth-select-plan-dialog-content) {
+  padding: 0 !important;
+  border-width: 0 !important;
+  border-radius: 4px !important;
+  background-color: var(--vscode-tab-inactiveBackground) !important;
+  border-width: 0 !important;
+}
+
+.closeBtn {
+  @apply absolute top-4 right-4;
+  outline: 2px solid transparent;
+}
+
 .content {
   @apply text-center p-[16px] w-[575px] min-w-[575px];
 }
@@ -43,6 +60,7 @@
   svg {
     @apply w-[12px] h-[12px];
     stroke-width: 1;
+    color: var(--vscode-tab-inactiveBackground);
   }
 }
 
@@ -52,7 +70,7 @@
 }
 
 .region {
-  @apply pl-[45px] py-[2px] text-left;
+  @apply px-[45px] py-[2px] text-left;
 
   .selectDescription {
     @apply mt-[10px];

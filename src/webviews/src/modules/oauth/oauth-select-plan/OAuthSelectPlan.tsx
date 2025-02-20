@@ -1,4 +1,4 @@
-import { filter, find, first, get, toNumber } from 'lodash'
+import { filter, find, first, toNumber } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import { VscCheck, VscClose } from 'react-icons/vsc'
 import Popup from 'reactjs-popup'
@@ -130,94 +130,92 @@ const OAuthSelectPlan = () => {
       modal
       open={!!isOpenDialog}
       closeOnDocumentClick={false}
+      className="oauth-select-plan-dialog"
       data-testid="oauth-select-plan-dialog"
     >
-      <RiButton className="absolute top-4 right-4" onClick={handleOnClose} >
+      <RiButton className={styles.closeBtn} onClick={handleOnClose} >
         <VscClose />
       </RiButton>
-      <div
-      >
-        <section className={styles.content}>
+      <section className={styles.content}>
 
-          <h2 className={styles.title}>{l10n.t('Choose a cloud vendor')}</h2>
+        <h2 className={styles.title}>{l10n.t('Choose a cloud vendor')}</h2>
 
-          <div className={styles.subTitle}>
-            {l10n.t(
-              'Select a cloud vendor and region to complete the final step towards your free Redis database.',
-            )}
-            &nbsp;
-            {l10n.t(
-              'No credit card is required.',
-            )}
-          </div>
+        <div className={styles.subTitle}>
+          {l10n.t(
+            'Select a cloud vendor and region to complete the final step towards your free Redis database.',
+          )}
+          &nbsp;
+          {l10n.t(
+            'No credit card is required.',
+          )}
+        </div>
 
-          <section className={styles.providers}>
-            {OAuthProviders.map(({ icon: Icon, id, label }) => (
-              <div className={styles.provider} key={id}>
-                {id === providerSelected
-                  && <div className={cx(styles.providerActiveIcon)}>
-                    <VSCodeButton appearance="icon">
-                      <VscCheck />
-                    </VSCodeButton>
-                  </div>
-                }
+        <section className={styles.providers}>
+          {OAuthProviders.map(({ icon: Icon, id, label }) => (
+            <div className={styles.provider} key={id}>
+              {id === providerSelected
+                && <div className={cx(styles.providerActiveIcon)}>
+                  <VSCodeButton appearance="icon">
+                    <VscCheck />
+                  </VSCodeButton>
+                </div>
+              }
 
-                <RiButton onClick={() => setProviderSelected(id)}
-                  className={cx(styles.providerBtn,
-                    { [styles.activeProvider]: id === providerSelected },
-                    { [styles.awsIcon]: id === OAuthProvider.AWS },
-                  )}>
-                  <Icon />
-                </RiButton>
+              <RiButton onClick={() => setProviderSelected(id)}
+                className={cx(styles.providerBtn,
+                  { [styles.activeProvider]: id === providerSelected },
+                  { [styles.awsIcon]: id === OAuthProvider.AWS },
+                )}>
+                <Icon />
+              </RiButton>
 
-                <div className={styles.providerLabel}>{label}</div>
-              </div>
-            ))}
-          </section>
-
-          <section className={styles.region}>
-            <div className={styles.regionLabel}>{l10n.t('Region')}</div>
-            <Select
-              // disabled={loading || !regionOptions.length}
-              disabled={!regionOptions.length}
-              idSelected={planIdSelected}
-              onChange={onChangeRegion}
-              options={regionOptions}
-              containerClassName={styles.select}
-              testid="select-oauth-region"
-            />
-
-            {!regionOptions.length && (
-              <div className={styles.selectDescription}
-                data-testid="select-region-select-description">
-                {l10n.t('No regions available, try another vendor.')}
-              </div>
-            )}
-          </section>
-
-          <footer className={styles.footer}>
-            <VSCodeButton
-              appearance="secondary"
-              onClick={handleOnClose}
-              className={styles.button}
-              data-testid="close-oauth-select-plan-dialog"
-              aria-labelledby="close oauth select plan dialog"
-            >
-              {l10n.t('Cancel')}
-            </VSCodeButton>
-            <VSCodeButton
-              disabled={!planIdSelected}
-              // disabled={loading || !planIdSelected}
-              onClick={handleSubmit}
-              className={styles.button}
-              data-testid="submit-oauth-select-plan-dialog"
-              aria-labelledby="submit oauth select plan dialog"
-            >
-              {l10n.t('Create database')}
-            </VSCodeButton>
-          </footer>
+              <div className={styles.providerLabel}>{label}</div>
+            </div>
+          ))}
         </section>
-      </div>
+
+        <section className={styles.region}>
+          <div>{l10n.t('Region')}</div>
+          <Select
+            // disabled={loading || !regionOptions.length}
+            disabled={!regionOptions.length}
+            idSelected={planIdSelected}
+            onChange={onChangeRegion}
+            options={regionOptions}
+            containerClassName={styles.select}
+            testid="select-oauth-region"
+          />
+
+          {!regionOptions.length && (
+            <div className={styles.selectDescription}
+              data-testid="select-region-select-description">
+              {l10n.t('No regions available, try another vendor.')}
+            </div>
+          )}
+        </section>
+
+        <footer className={styles.footer}>
+          <VSCodeButton
+            appearance="secondary"
+            onClick={handleOnClose}
+            className={styles.button}
+            data-testid="close-oauth-select-plan-dialog"
+            aria-labelledby="close oauth select plan dialog"
+          >
+            {l10n.t('Cancel')}
+          </VSCodeButton>
+          <VSCodeButton
+            disabled={!planIdSelected}
+            // disabled={loading || !planIdSelected}
+            onClick={handleSubmit}
+            className={styles.button}
+            data-testid="submit-oauth-select-plan-dialog"
+            aria-labelledby="submit oauth select plan dialog"
+          >
+            {l10n.t('Create database')}
+          </VSCodeButton>
+        </footer>
+      </section>
     </Popup >
   )
 }
