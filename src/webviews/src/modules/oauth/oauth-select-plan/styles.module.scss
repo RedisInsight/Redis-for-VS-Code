@@ -83,8 +83,8 @@
 
 .footer {
   @apply w-full text-right pt-[32px] pb-[1px];
-}
 
-.button {
-  @apply ml-[8px];
+  .button {
+    @apply ml-[8px];
+  }  
 }
