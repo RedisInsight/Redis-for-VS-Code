@@ -25,7 +25,7 @@ const OAuthSelectPlan = () => {
   const {
     isOpenDialog,
     plansInit,
-    // loading,
+    loading,
     setIsOpenSelectPlanDialog,
     setSocialDialogState,
   } = useOAuthStore(useShallow((state) => ({
@@ -36,18 +36,10 @@ const OAuthSelectPlan = () => {
     setSocialDialogState: state.setSocialDialogState,
   })))
 
-  // TODO [DA]: Remove hardcoded Redis Stack regions
-  const rsRegions: Region[] = [
-    {
-      provider: 'AWS',
-      regions: ['us-east-2', 'ap-southeast-1', 'sa-east-1'],
-    },
-    {
-      provider: 'GCP',
-      regions: ['asia-northeast1', 'europe-west1', 'us-central1'],
-    },
-  ]
-  // const rsRegions: Region[] = get("cloudSso", 'data.selectPlan.components.redisStackPreview', [])
+  // TODO [DA]: Replace redis stack regions [] with the following lines, once feature flags are implemented
+  // const { [FeatureFlags.cloudSso]: cloudSsoFeature = {} } = useSelector(appFeatureFlagsFeaturesSelector)
+  // const rsRegions: Region[] = get(cloudSsoFeature, 'data.selectPlan.components.redisStackPreview', [])
+  const rsRegions: Region[] = []
 
   const [plans, setPlans] = useState(plansInit || [])
   const [planIdSelected, setPlanIdSelected] = useState('')
@@ -177,8 +169,7 @@ const OAuthSelectPlan = () => {
         <section className={styles.region}>
           <div>{l10n.t('Region')}</div>
           <Select
-            // disabled={loading || !regionOptions.length}
-            disabled={!regionOptions.length}
+            disabled={loading || !regionOptions.length}
             idSelected={planIdSelected}
             onChange={onChangeRegion}
             options={regionOptions}
@@ -205,8 +196,7 @@ const OAuthSelectPlan = () => {
             {l10n.t('Cancel')}
           </VSCodeButton>
           <VSCodeButton
-            disabled={!planIdSelected}
-            // disabled={loading || !planIdSelected}
+            disabled={loading || !planIdSelected}
             onClick={handleSubmit}
             className={styles.button}
             data-testid="submit-oauth-select-plan-dialog"

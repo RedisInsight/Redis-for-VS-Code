@@ -66,7 +66,10 @@ export const useOAuthStore = create<OAuthStore & OauthActions>()(
     }),
     setIsOpenSelectPlanDialog: (showDialog: boolean) => set((state) => { state.plan.isOpenDialog = showDialog }),
     getPlans: () => set((state) => { state.plan.loading = true }),
-    getPlansSuccess: (data: CloudSubscriptionPlanResponse[]) => set((state) => { state.plan.loading = true; state.plan.data = data }),
+    getPlansSuccess: (data: CloudSubscriptionPlanResponse[]) => set((state) => {
+      state.plan.loading = false
+      state.plan.data = data
+    }),
     getPlansFailure: () => set((state) => { state.plan.loading = false }),
     setSelectAccountDialogState: (showDialog: boolean) => set((state) => { state.isOpenSelectAccountDialog = showDialog }),
   }))),
