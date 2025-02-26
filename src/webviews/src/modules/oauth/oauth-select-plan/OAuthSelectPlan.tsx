@@ -125,7 +125,7 @@ const OAuthSelectPlan = () => {
       className="oauth-select-plan-dialog"
       data-testid="oauth-select-plan-dialog"
     >
-      <RiButton className={styles.closeBtn} onClick={handleOnClose} >
+      <RiButton data-testid="close-icon-oauth-select-plan-dialog" className={styles.closeBtn} onClick={handleOnClose} >
         <VscClose />
       </RiButton>
       <section className={styles.content}>
