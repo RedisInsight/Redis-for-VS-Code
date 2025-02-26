@@ -61,6 +61,9 @@ export const useOAuthStore = create<OAuthStore & OauthActions>()(
     getUserInfoFinal: () => set((state) => {
       state.user.loading = false
     }),
+    setIsRecommendedSettingsSSO: (isRecommended) => set((state) => {
+      state.isRecommendedSettings = isRecommended
+    }),
     setIsOpenSelectPlanDialog: (showDialog: boolean) => set((state) => { state.plan.isOpenDialog = showDialog }),
     getPlans: () => set((state) => { state.plan.loading = true }),
     getPlansSuccess: (data: CloudSubscriptionPlanResponse[]) => set((state) => { state.plan.loading = true; state.plan.data = data }),

@@ -42,6 +42,7 @@ export interface OauthActions {
   getUserInfoSuccess: (data: CloudUser) => void
   getUserInfoFinal: () => void
 
+  setIsRecommendedSettingsSSO: (isRecommended: boolean) => void
   setIsOpenSelectPlanDialog: (isOpen: boolean) => void
   getPlans(): void
   getPlansSuccess(data: CloudSubscriptionPlanResponse[]): void

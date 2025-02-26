@@ -26,16 +26,19 @@ const OAuthCreateDb = (props: Props) => {
     setSSOFlow,
     showOAuthProgress,
     setSocialDialogState,
+    setIsRecommendedSettingsSSO,
   } = useOAuthStore(useShallow((state) => ({
     data: state.user.data,
     setSSOFlow: state.setSSOFlow,
     showOAuthProgress: state.showOAuthProgress,
     setSocialDialogState: state.setSocialDialogState,
+    setIsRecommendedSettingsSSO: state.setIsRecommendedSettingsSSO,
   })))
 
   const [isRecommended, setIsRecommended] = useState(true)
 
   const handleSocialButtonClick = (accountOption: string) => {
+    setIsRecommendedSettingsSSO(isRecommended)
     const cloudRecommendedSettings = isRecommended ? 'enabled' : 'disabled'
 
     sendEventTelemetry({
