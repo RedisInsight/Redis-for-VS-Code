@@ -83,9 +83,6 @@
       ]
     },
     "commands": [
-      let
-      service,
-      :
       {
         "command": "RedisForVSCode.addCli",
         "title": "Add CLI",
