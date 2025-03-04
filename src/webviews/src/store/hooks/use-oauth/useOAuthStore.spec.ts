@@ -6,7 +6,7 @@ import {
   initialOAuthState,
   fetchUserInfo,
   createFreeDbJob,
-  fetchPlans,
+  fetchCloudSubscriptionPlans,
 } from './useOAuthStore'
 import { CloudSubscriptionPlanResponse } from './interface'
 
@@ -128,8 +128,8 @@ describe('async', () => {
     )
   })
 
-  it('fetchPlans', async () => {
-    fetchPlans()
+  it('fetchCloudSubscriptionPlans', async () => {
+    fetchCloudSubscriptionPlans()
     await waitForStack()
 
     expect(useOAuthStore.getState().plan).toEqual(

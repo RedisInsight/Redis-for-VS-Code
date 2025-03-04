@@ -161,7 +161,7 @@ export function fetchUserInfo(onSuccessAction?: (isSelectAccount: boolean) => vo
   })
 }
 
-export function fetchPlans(onSuccessAction?: () => void, onFailAction?: () => void) {
+export function fetchCloudSubscriptionPlans(onSuccessAction?: () => void, onFailAction?: () => void) {
   useOAuthStore.setState(async (state) => {
     state.getPlans()
 

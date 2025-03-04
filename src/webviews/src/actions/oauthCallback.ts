@@ -3,7 +3,7 @@ import { CloudAuthStatus, CloudJobName, CloudJobStep, OAuthSocialAction, Storage
 import { CustomError } from 'uiSrc/interfaces'
 import { CloudAuthResponse } from 'uiSrc/modules/oauth/interfaces'
 import { localStorageService } from 'uiSrc/services'
-import { createFreeDbJob, fetchPlans, fetchUserInfo, useOAuthStore } from 'uiSrc/store'
+import { createFreeDbJob, fetchCloudSubscriptionPlans, fetchUserInfo, useOAuthStore } from 'uiSrc/store'
 import { getApiErrorMessage, parseCustomError, removeInfinityToast, showErrorInfinityToast, showInfinityToast } from 'uiSrc/utils'
 
 let isFlowInProgress = false
@@ -59,7 +59,7 @@ export const processOauthCallback = ({ status, message = '', error }: CloudAuthR
     //   return
     // }
 
-    fetchPlans()
+    fetchCloudSubscriptionPlans()
   }
 
   setJob({ id: '', name: CloudJobName.CreateFreeSubscriptionAndDatabase, status: '' })
