@@ -32,13 +32,13 @@ const DEFAULT_PROVIDER = OAuthProvider.AWS
 const OAuthSelectPlan = () => {
   const {
     isOpenDialog,
-    plansInit,
+    fetchedPlans,
     loading,
     setIsOpenSelectPlanDialog,
     setSocialDialogState,
   } = useOAuthStore(useShallow((state) => ({
     isOpenDialog: state.plan.isOpenDialog,
-    plansInit: state.plan.data,
+    fetchedPlans: state.plan.data,
     loading: state.plan.loading,
     setIsOpenSelectPlanDialog: state.setIsOpenSelectPlanDialog,
     setSocialDialogState: state.setSocialDialogState,
@@ -49,36 +49,36 @@ const OAuthSelectPlan = () => {
   // const rsRegions: Region[] = get(cloudSsoFeature, 'data.selectPlan.components.redisStackPreview', [])
   const rsRegions: Region[] = []
 
-  const [plans, setPlans] = useState(plansInit || [])
-  const [planIdSelected, setPlanIdSelected] = useState('')
+  const [plans, setPlans] = useState(fetchedPlans || [])
+  const [selectedPlanId, setSelectedPlanId] = useState('')
   const [providerSelected, setProviderSelected] = useState<OAuthProvider>(DEFAULT_PROVIDER)
-  const [rsProviderRegions, setRsProviderRegions] = useState(getProviderRegions(rsRegions, providerSelected))
+  const [redisStackProviderRegions, setRedisStackProviderRegions] = useState(getProviderRegions(rsRegions, providerSelected))
 
   useEffect(() => {
-    setRsProviderRegions(getProviderRegions(rsRegions, providerSelected))
-  }, [providerSelected, plansInit])
+    setRedisStackProviderRegions(getProviderRegions(rsRegions, providerSelected))
+  }, [providerSelected, fetchedPlans])
 
   useEffect(() => {
-    if (!plansInit.length) {
+    if (!fetchedPlans.length) {
       return
     }
 
-    const filteredPlans = filter(plansInit, { provider: providerSelected })
+    const filteredPlans = filter(fetchedPlans, { provider: providerSelected })
       .sort((a, b) => (a?.details?.displayOrder || 0) - (b?.details?.displayOrder || 0))
 
     const defaultPlan = filteredPlans.find(({ region = '' }) => DEFAULT_REGIONS.includes(region))
-    const rsPreviewPlan = filteredPlans.find(({ region = '' }) => rsProviderRegions?.includes(region))
+    const rsPreviewPlan = filteredPlans.find(({ region = '' }) => redisStackProviderRegions?.includes(region))
     const planId = (defaultPlan || rsPreviewPlan || first(filteredPlans) || {}).id?.toString() || ''
 
     setPlans(filteredPlans)
-    setPlanIdSelected(planId)
-  }, [plansInit, providerSelected, rsProviderRegions])
+    setSelectedPlanId(planId)
+  }, [fetchedPlans, providerSelected, redisStackProviderRegions])
 
   const handleOnClose = useCallback(() => {
     sendEventTelemetry({
       event: TelemetryEvent.CLOUD_SIGN_IN_PROVIDER_FORM_CLOSED,
     })
-    setPlanIdSelected('')
+    setSelectedPlanId('')
     setProviderSelected(DEFAULT_PROVIDER)
     setIsOpenSelectPlanDialog(false)
     setSocialDialogState(null)
@@ -87,12 +87,12 @@ const OAuthSelectPlan = () => {
   if (!isOpenDialog) return null
 
   const getPlanOptionLabel = (plan: PlanLabelData) => {
-    const rsProviderRegions: string[] = find(rsRegions, { provider: plan.provider })?.regions || []
+    const redisStackProviderRegions: string[] = find(rsRegions, { provider: plan.provider })?.regions || []
     return (
       <div data-testid={`option-${plan.region}`}>
         <span className="text-[11px]">{`${plan.countryName} (${plan.cityName})`}</span>
         <span className="text-[10px]"> {plan.region}</span>
-        {rsProviderRegions?.includes(plan.region)
+        {redisStackProviderRegions?.includes(plan.region)
           && (<span className="text-[10px] ml-[10px]" data-testid={`rs-text-${plan.region}`}> (Redis 7.2)</span>)
         }
       </div>
@@ -118,13 +118,13 @@ const OAuthSelectPlan = () => {
   )
 
   const onChangeRegion = (region: string) => {
-    setPlanIdSelected(region || '')
+    setSelectedPlanId(region || '')
   }
 
   const handleSubmit = () => {
     createFreeDbJob({
       name: CloudJobName.CreateFreeSubscriptionAndDatabase,
-      resources: { planId: toNumber(planIdSelected) },
+      resources: { planId: toNumber(selectedPlanId) },
       onSuccessAction: () => {
         setIsOpenSelectPlanDialog(false)
         showInfinityToast(INFINITE_MESSAGES.PENDING_CREATE_DB(CloudJobStep.Credentials)?.Inner)
@@ -185,7 +185,7 @@ const OAuthSelectPlan = () => {
           <div>{l10n.t('Region')}</div>
           <Select
             disabled={loading || !regionOptions.length}
-            idSelected={planIdSelected}
+            idSelected={selectedPlanId}
             onChange={onChangeRegion}
             options={regionOptions}
             containerClassName={styles.select}
@@ -211,7 +211,7 @@ const OAuthSelectPlan = () => {
             {l10n.t('Cancel')}
           </VSCodeButton>
           <VSCodeButton
-            disabled={loading || !planIdSelected}
+            disabled={loading || !selectedPlanId}
             onClick={handleSubmit}
             className={styles.button}
             data-testid="submit-oauth-select-plan-dialog"
