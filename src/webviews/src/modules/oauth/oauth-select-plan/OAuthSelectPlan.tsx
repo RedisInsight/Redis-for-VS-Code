@@ -51,19 +51,19 @@ const OAuthSelectPlan = () => {
 
   const [plans, setPlans] = useState(fetchedPlans || [])
   const [selectedPlanId, setSelectedPlanId] = useState('')
-  const [providerSelected, setProviderSelected] = useState<OAuthProvider>(DEFAULT_PROVIDER)
-  const [redisStackProviderRegions, setRedisStackProviderRegions] = useState(getProviderRegions(rsRegions, providerSelected))
+  const [selectedProvider, setSelectedProvider] = useState<OAuthProvider>(DEFAULT_PROVIDER)
+  const [redisStackProviderRegions, setRedisStackProviderRegions] = useState(getProviderRegions(rsRegions, selectedProvider))
 
   useEffect(() => {
-    setRedisStackProviderRegions(getProviderRegions(rsRegions, providerSelected))
-  }, [providerSelected, fetchedPlans])
+    setRedisStackProviderRegions(getProviderRegions(rsRegions, selectedProvider))
+  }, [selectedProvider, fetchedPlans])
 
   useEffect(() => {
     if (!fetchedPlans.length) {
       return
     }
 
-    const filteredPlans = filter(fetchedPlans, { provider: providerSelected })
+    const filteredPlans = filter(fetchedPlans, { provider: selectedProvider })
       .sort((a, b) => (a?.details?.displayOrder || 0) - (b?.details?.displayOrder || 0))
 
     const defaultPlan = filteredPlans.find(({ region = '' }) => DEFAULT_REGIONS.includes(region))
@@ -72,14 +72,14 @@ const OAuthSelectPlan = () => {
 
     setPlans(filteredPlans)
     setSelectedPlanId(planId)
-  }, [fetchedPlans, providerSelected, redisStackProviderRegions])
+  }, [fetchedPlans, selectedProvider, redisStackProviderRegions])
 
   const handleOnClose = useCallback(() => {
     sendEventTelemetry({
       event: TelemetryEvent.CLOUD_SIGN_IN_PROVIDER_FORM_CLOSED,
     })
     setSelectedPlanId('')
-    setProviderSelected(DEFAULT_PROVIDER)
+    setSelectedProvider(DEFAULT_PROVIDER)
     setIsOpenSelectPlanDialog(false)
     setSocialDialogState(null)
   }, [])
@@ -161,7 +161,7 @@ const OAuthSelectPlan = () => {
         <section className={styles.providers}>
           {OAuthProviders.map(({ icon: Icon, id, label }) => (
             <div className={styles.provider} key={id}>
-              {id === providerSelected
+              {id === selectedProvider
                 && <div className={cx(styles.providerActiveIcon)}>
                   <VSCodeButton appearance="icon">
                     <VscCheck />
@@ -169,9 +169,9 @@ const OAuthSelectPlan = () => {
                 </div>
               }
 
-              <RiButton onClick={() => setProviderSelected(id)}
+              <RiButton onClick={() => setSelectedProvider(id)}
                 className={cx(styles.providerBtn,
-                  { [styles.activeProvider]: id === providerSelected },
+                  { [styles.activeProvider]: id === selectedProvider },
                   { [styles.awsIcon]: id === OAuthProvider.AWS },
                 )}>
                 <Icon />
