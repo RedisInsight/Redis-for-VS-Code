@@ -15,6 +15,14 @@ import { sendEventTelemetry, showInfinityToast, TelemetryEvent } from 'uiSrc/uti
 import { INFINITE_MESSAGES } from 'uiSrc/components'
 import styles from './styles.module.scss'
 
+interface PlanLabelData {
+  id: number,
+  region: string,
+  countryName: string,
+  cityName: string,
+  provider: string,
+}
+
 const getProviderRegions = (regions: Region[], provider: OAuthProvider) =>
   (find(regions, { provider }) || {}).regions || []
 
@@ -78,14 +86,14 @@ const OAuthSelectPlan = () => {
 
   if (!isOpenDialog) return null
 
-  const getPlanLabel = (region: string, countryName: string, cityName: string, provider: string) => {
-    const rsProviderRegions: string[] = find(rsRegions, { provider })?.regions || []
+  const getPlanOptionLabel = (plan: PlanLabelData) => {
+    const rsProviderRegions: string[] = find(rsRegions, { provider: plan.provider })?.regions || []
     return (
-      <div data-testid={`option-${region}`}>
-        <span className="text-[11px]">{`${countryName} (${cityName})`}</span>
-        <span className="text-[10px]"> {region}</span>
-        {rsProviderRegions?.includes(region)
-          && (<span className="text-[10px] ml-[10px]" data-testid={`rs-text-${region}`}> (Redis 7.2)</span>)
+      <div data-testid={`option-${plan.region}`}>
+        <span className="text-[11px]">{`${plan.countryName} (${plan.cityName})`}</span>
+        <span className="text-[10px]"> {plan.region}</span>
+        {rsProviderRegions?.includes(plan.region)
+          && (<span className="text-[10px] ml-[10px]" data-testid={`rs-text-${plan.region}`}> (Redis 7.2)</span>)
         }
       </div>
     )
@@ -93,11 +101,18 @@ const OAuthSelectPlan = () => {
 
   const regionOptions: SelectOption[] = plans.map(
     (item: CloudSubscriptionPlanResponse) => {
-      const { id, region = '', details: { countryName = '', cityName = '' }, provider } = item
+      const plan: PlanLabelData = {
+        id: item.id,
+        region: item.region ?? '',
+        cityName: item.details.cityName ?? '',
+        countryName: item.details.countryName ?? '',
+        provider: item.provider,
+      }
+
       return {
-        value: `${id}`,
-        label: getPlanLabel(region, countryName, cityName, provider),
-        testid: `oauth-region-${region}`,
+        value: `${plan.id}`,
+        label: getPlanOptionLabel(plan),
+        testid: `oauth-region-${plan.region}`,
       }
     },
   )
