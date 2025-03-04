@@ -2,7 +2,8 @@ import React from 'react'
 
 import { Mock } from 'vitest'
 import { CloudSubscriptionPlanResponse, OAuthStore } from 'uiSrc/store/hooks/use-oauth/interface'
-import { initialOAuthState, useOAuthStore } from 'uiSrc/store'
+import { createFreeDbJob, initialOAuthState, useOAuthStore } from 'uiSrc/store'
+import * as store from 'uiSrc/store'
 import * as utils from 'uiSrc/utils'
 import { sendEventTelemetry } from 'uiSrc/utils'
 import { MOCK_CUSTOM_REGIONS, MOCK_REGIONS } from 'uiSrc/constants/mocks/mock-sso'
@@ -23,6 +24,7 @@ beforeEach(() => {
 })
 
 vi.spyOn(utils, 'sendEventTelemetry')
+vi.spyOn(store, 'createFreeDbJob')
 
 describe('OAuthSelectPlan', () => {
   beforeEach(() => {
@@ -54,7 +56,7 @@ describe('OAuthSelectPlan', () => {
     expect(queryByTestId('oauth-select-plan-dialog')).not.toBeInTheDocument()
   })
 
-  it('should send telemetry after close modal', async () => {
+  it('should send telemetry after close modal', () => {
     const sendEventTelemetryMock = vi.fn();
     (sendEventTelemetry as Mock).mockImplementation(() => sendEventTelemetryMock)
 
@@ -67,7 +69,7 @@ describe('OAuthSelectPlan', () => {
     })
   })
 
-  it('should be selected first region by default', async () => {
+  it('should be selected first region by default', () => {
     useOAuthStore.setState({
       ...customState,
       plan: {
@@ -84,7 +86,7 @@ describe('OAuthSelectPlan', () => {
     expect(selectedElement).toBeInTheDocument()
   })
 
-  it('should display text if regions is no available on this vendor', async () => {
+  it('should display text if regions is no available on this vendor', () => {
     useOAuthStore.setState({
       ...customState,
       plan: {
@@ -100,5 +102,34 @@ describe('OAuthSelectPlan', () => {
 
     expect(selectDescriptionElement).toBeInTheDocument()
     expect(selectDescriptionElement).toHaveTextContent('No regions available, try another vendor.')
+  })
+
+  it('should initiate database creation', () => {
+    const createFreeDbJobMock = vi.fn();
+    (createFreeDbJob as Mock).mockImplementation(() => createFreeDbJobMock)
+
+    useOAuthStore.setState({
+      ...customState,
+      plan: {
+        ...customState.plan,
+        isOpenDialog: true,
+        data: MOCK_CUSTOM_REGIONS as CloudSubscriptionPlanResponse[],
+        loading: false,
+      },
+    })
+
+    render(<OAuthSelectPlan />)
+
+    expect(screen.getByText('Asia Pacific (Singapore)')).toBeInTheDocument()
+    const submitButton = screen.getByTestId('submit-oauth-select-plan-dialog')
+    fireEvent.click(submitButton)
+    expect(createFreeDbJob).toHaveBeenCalledTimes(1)
+    expect(createFreeDbJob).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'CREATE_FREE_SUBSCRIPTION_AND_DATABASE',
+        resources: { planId: 12150 },
+        onSuccessAction: expect.any(Function),
+      }),
+    )
   })
 })
