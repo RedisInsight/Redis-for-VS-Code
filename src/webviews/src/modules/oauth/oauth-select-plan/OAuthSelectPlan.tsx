@@ -1,5 +1,5 @@
 import { filter, find, first, toNumber } from 'lodash'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { VscCheck, VscClose } from 'react-icons/vsc'
 import Popup from 'reactjs-popup'
 import { useShallow } from 'zustand/react/shallow'
@@ -84,8 +84,6 @@ const OAuthSelectPlan = () => {
     setSocialDialogState(null)
   }, [])
 
-  if (!isOpenDialog) return null
-
   const getPlanOptionLabel = (plan: PlanLabelData) => {
     const redisStackProviderRegions: string[] = find(rsRegions, { provider: plan.provider })?.regions || []
     return (
@@ -99,7 +97,7 @@ const OAuthSelectPlan = () => {
     )
   }
 
-  const regionOptions: SelectOption[] = plans.map(
+  const regionOptions: SelectOption[] = useMemo(() => plans.map(
     (item: CloudSubscriptionPlanResponse) => {
       const plan: PlanLabelData = {
         id: item.id,
@@ -115,7 +113,10 @@ const OAuthSelectPlan = () => {
         testid: `oauth-region-${plan.region}`,
       }
     },
+  ), [plans],
   )
+
+  if (!isOpenDialog) return null
 
   const onChangeRegion = (region: string) => {
     setSelectedPlanId(region || '')
