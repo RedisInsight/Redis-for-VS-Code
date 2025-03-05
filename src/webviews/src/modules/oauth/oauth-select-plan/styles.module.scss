@@ -55,7 +55,6 @@
   @apply absolute left-0 right-0 mx-auto w-[22px] h-[22px] rounded-full flex justify-center;
   background-color: var(--vscode-focusBorder);
   top: -10px;
-  z-index: 5;
 
   svg {
     @apply w-[12px] h-[12px];
@@ -78,7 +77,19 @@
 }
 
 .select {
-  @apply w-full mt-[5px];
+  @apply w-full mt-[5px] rounded-[5px];
+}
+
+.select::part(control) {
+  @apply rounded-[5px] border-none;
+}
+
+.select::part(listbox) {
+  @apply border-none;
+}
+
+.option:hover {
+    background-color: var(--vscode-focusBorder);
 }
 
 .footer {

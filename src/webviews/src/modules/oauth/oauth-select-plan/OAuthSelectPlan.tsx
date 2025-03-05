@@ -191,6 +191,8 @@ const OAuthSelectPlan = () => {
             options={regionOptions}
             containerClassName={styles.select}
             testid="select-oauth-region"
+            itemClassName={styles.option}
+            position={fetchedPlans.length > 2 ? 'above' : 'below'}
           />
 
           {!regionOptions.length && (
