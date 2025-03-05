@@ -17,4 +17,5 @@ export { DatabaseIcon } from './icons/database/DatabaseIcon'
 
 export type { RadioGroupOption } from './radio-group/RadioGroup'
 export type { SelectOption } from './select/Select'
+export type { DropdownMenuPosition } from './select/Select'
 export type { CheckboxEvent as CheckboxChangeEvent } from './checkbox/Checkbox'

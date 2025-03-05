@@ -9,7 +9,7 @@ import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { CloudJobName, CloudJobStep, OAuthProvider, OAuthProviders } from 'uiSrc/constants'
 import { createFreeDbJob, useOAuthStore } from 'uiSrc/store'
 import { CloudSubscriptionPlanResponse, Region } from 'uiSrc/store/hooks/use-oauth/interface'
-import { RiButton, Select, SelectOption } from 'uiSrc/ui'
+import { RiButton, Select, SelectOption, DropdownMenuPosition } from 'uiSrc/ui'
 import { sendEventTelemetry, showInfinityToast, TelemetryEvent } from 'uiSrc/utils'
 
 import { INFINITE_MESSAGES } from 'uiSrc/components'
@@ -192,7 +192,7 @@ const OAuthSelectPlan = () => {
             containerClassName={styles.select}
             testid="select-oauth-region"
             itemClassName={styles.option}
-            position={regionOptions.length > 2 ? 'above' : 'below'}
+            position={regionOptions.length > 2 ? DropdownMenuPosition.ABOVE : DropdownMenuPosition.BELOW}
           />
 
           {!regionOptions.length && (

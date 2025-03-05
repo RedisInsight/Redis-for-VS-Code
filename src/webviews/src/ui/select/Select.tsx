@@ -10,6 +10,11 @@ export interface SelectOption {
   testid?: string
 }
 
+export enum DropdownMenuPosition {
+  ABOVE = 'above',
+  BELOW = 'below',
+}
+
 export interface Props {
   options: SelectOption[]
   onChange: (event: string) => void
@@ -29,7 +34,7 @@ export const Select: FC<Props> = (props) => {
     containerClassName,
     itemClassName,
     testid,
-    position = 'below',
+    position = DropdownMenuPosition.BELOW,
     disabled,
   } = props
 
