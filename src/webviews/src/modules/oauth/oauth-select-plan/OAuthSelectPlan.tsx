@@ -84,36 +84,38 @@ const OAuthSelectPlan = () => {
     setSocialDialogState(null)
   }, [])
 
-  const getPlanOptionLabel = (plan: PlanLabelData) => {
-    const redisStackProviderRegions: string[] = find(rsRegions, { provider: plan.provider })?.regions || []
-    return (
-      <div data-testid={`option-${plan.region}`}>
-        <span className="text-[11px]">{`${plan.countryName} (${plan.cityName})`}</span>
-        <span className="text-[10px]"> {plan.region}</span>
-        {redisStackProviderRegions?.includes(plan.region)
-          && (<span className="text-[10px] ml-[10px]" data-testid={`rs-text-${plan.region}`}> (Redis 7.2)</span>)
+  const regionOptions: SelectOption[] = useMemo(() => {
+    const getPlanOptionLabel = (plan: PlanLabelData) => {
+      const redisStackProviderRegions: string[] = find(rsRegions, { provider: plan.provider })?.regions || []
+      return (
+        <div data-testid={`option-${plan.region}`}>
+          <span className="text-[11px]">{`${plan.countryName} (${plan.cityName})`}</span>
+          <span className="text-[10px]"> {plan.region}</span>
+          {redisStackProviderRegions?.includes(plan.region)
+            && (<span className="text-[10px] ml-[10px]" data-testid={`rs-text-${plan.region}`}> (Redis 7.2)</span>)
+          }
+        </div>
+      )
+    }
+
+    return plans.map(
+      (item: CloudSubscriptionPlanResponse) => {
+        const plan: PlanLabelData = {
+          id: item.id,
+          region: item.region ?? '',
+          cityName: item.details.cityName ?? '',
+          countryName: item.details.countryName ?? '',
+          provider: item.provider,
         }
-      </div>
+
+        return {
+          value: `${plan.id}`,
+          label: getPlanOptionLabel(plan),
+          testid: `oauth-region-${plan.region}`,
+        }
+      },
     )
-  }
-
-  const regionOptions: SelectOption[] = useMemo(() => plans.map(
-    (item: CloudSubscriptionPlanResponse) => {
-      const plan: PlanLabelData = {
-        id: item.id,
-        region: item.region ?? '',
-        cityName: item.details.cityName ?? '',
-        countryName: item.details.countryName ?? '',
-        provider: item.provider,
-      }
-
-      return {
-        value: `${plan.id}`,
-        label: getPlanOptionLabel(plan),
-        testid: `oauth-region-${plan.region}`,
-      }
-    },
-  ), [plans],
+  }, [plans],
   )
 
   const onChangeRegion = (region: string) => {
