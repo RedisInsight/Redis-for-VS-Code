@@ -41,6 +41,8 @@ export const processOauthCallback = ({ status, message = '', error }: CloudAuthR
           removeInfinityToast()
         },
       })
+
+      return
     }
 
     showInfinityToast(INFINITE_MESSAGES.PENDING_CREATE_DB(CloudJobStep.Credentials).Inner)
