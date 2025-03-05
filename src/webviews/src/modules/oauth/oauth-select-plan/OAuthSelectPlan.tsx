@@ -116,8 +116,6 @@ const OAuthSelectPlan = () => {
   ), [plans],
   )
 
-  if (!isOpenDialog) return null
-
   const onChangeRegion = (region: string) => {
     setSelectedPlanId(region || '')
   }
@@ -132,6 +130,8 @@ const OAuthSelectPlan = () => {
       },
     })
   }
+
+  if (!isOpenDialog) return null
 
   return (
     <Popup
