@@ -120,8 +120,7 @@ describe('OAuthCreateDb', () => {
     )
   })
 
-  it.skip('should call proper actions after click create without recommened settings', async () => {
-    const name = CloudJobName.CreateFreeSubscriptionAndDatabase
+  it('should call proper actions after click create without recommened settings', async () => {
     useOAuthStore.setState({ ...initialOAuthState,
       agreement: true,
       source: 'source',
@@ -140,8 +139,6 @@ describe('OAuthCreateDb', () => {
 
     expect(showInfinityToast).toBeCalledWith(INFINITE_MESSAGES.PENDING_CREATE_DB(CloudJobStep.Credentials).Inner)
     expect(useOAuthStore.getState().isOpenSocialDialog).toEqual(false)
-    expect(useOAuthStore.getState().job).toEqual(
-      { id: constants.USER_JOBS_DATA.id, name, status: CloudJobStatus.Running },
-    )
+    expect(useOAuthStore.getState().plan.loading).toEqual(true)
   })
 })

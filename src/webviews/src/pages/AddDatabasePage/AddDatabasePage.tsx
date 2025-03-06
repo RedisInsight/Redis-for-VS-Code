@@ -4,7 +4,7 @@ import * as l10n from '@vscode/l10n'
 
 import { OAuthSocialSource } from 'uiSrc/constants'
 import { CommonAppSubscription, DatabasePanel } from 'uiSrc/modules'
-import { OAuthCreateFreeDb, OAuthSsoDialog, OAuthJobs } from 'uiSrc/modules/oauth'
+import { OAuthCreateFreeDb, OAuthSsoDialog, OAuthJobs, OAuthSelectPlan } from 'uiSrc/modules/oauth'
 import { fetchCerts } from 'uiSrc/store'
 import { TelemetryEvent, sendEventTelemetry } from 'uiSrc/utils'
 
@@ -28,6 +28,7 @@ export const AddDatabasePage: FC<any> = () => {
       <OAuthCreateFreeDb source={OAuthSocialSource.AddDbForm} />
       <VSCodeDivider className="divider" />
       <DatabasePanel />
+      <OAuthSelectPlan />
     </div>
   )
 }

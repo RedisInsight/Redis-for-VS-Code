@@ -91,7 +91,6 @@ export const OAuthProviders = [{
   id: OAuthProvider.AWS,
   icon: AWSIcon,
   label: 'Amazon Web Services',
-  // className: styles.awsIcon,
 }, {
   id: OAuthProvider.Google,
   icon: GoogleIcon,

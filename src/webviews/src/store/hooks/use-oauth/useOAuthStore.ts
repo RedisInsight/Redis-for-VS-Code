@@ -4,9 +4,9 @@ import { immer } from 'zustand/middleware/immer'
 import { apiService, localStorageService } from 'uiSrc/services'
 import { ApiEndpoints, CloudJobName, CloudJobStatus, OAuthSocialAction, StorageItem } from 'uiSrc/constants'
 import { CloudJobInfo } from 'uiSrc/modules/oauth/interfaces'
-import { getApiErrorMessage, getCloudSsoUtmParams, isStatusSuccessful, showErrorMessage } from 'uiSrc/utils'
+import { getApiErrorMessage, getAxiosError, getCloudSsoUtmParams, isStatusSuccessful, removeInfinityToast, showErrorInfinityToast, showErrorMessage } from 'uiSrc/utils'
 import { EnhancedAxiosError } from 'uiSrc/interfaces'
-import { CloudUser, OauthActions, OAuthStore } from './interface'
+import { CloudSubscriptionPlanResponse, CloudUser, OauthActions, OAuthStore } from './interface'
 
 export const initialOAuthState: OAuthStore = {
   job: {
@@ -21,6 +21,12 @@ export const initialOAuthState: OAuthStore = {
   agreement: localStorageService.get(StorageItem.OAuthAgreement) ?? false,
   showProgress: true,
   isRecommendedSettings: true,
+  plan: {
+    loading: false,
+    isOpenDialog: false,
+    data: [],
+  },
+  isOpenSelectAccountDialog: false,
   user: {
     initialLoading: true,
     loading: false,
@@ -55,6 +61,17 @@ export const useOAuthStore = create<OAuthStore & OauthActions>()(
     getUserInfoFinal: () => set((state) => {
       state.user.loading = false
     }),
+    setIsRecommendedSettingsSSO: (isRecommended) => set((state) => {
+      state.isRecommendedSettings = isRecommended
+    }),
+    setIsOpenSelectPlanDialog: (showDialog: boolean) => set((state) => { state.plan.isOpenDialog = showDialog }),
+    getPlans: () => set((state) => { state.plan.loading = true }),
+    getPlansSuccess: (data: CloudSubscriptionPlanResponse[]) => set((state) => {
+      state.plan.loading = false
+      state.plan.data = data
+    }),
+    getPlansFailure: () => set((state) => { state.plan.loading = false }),
+    setSelectAccountDialogState: (showDialog: boolean) => set((state) => { state.isOpenSelectAccountDialog = showDialog }),
   }))),
 )
 
@@ -140,6 +157,36 @@ export function fetchUserInfo(onSuccessAction?: (isSelectAccount: boolean) => vo
       onFailAction?.()
     } finally {
       state.getUserInfoFinal()
+    }
+  })
+}
+
+export function fetchCloudSubscriptionPlans(onSuccessAction?: () => void, onFailAction?: () => void) {
+  useOAuthStore.setState(async (state) => {
+    state.getPlans()
+
+    try {
+      const { data, status } = await apiService.get<CloudSubscriptionPlanResponse[]>(
+        ApiEndpoints.CLOUD_SUBSCRIPTION_PLANS,
+      )
+
+      if (isStatusSuccessful(status)) {
+        state.getPlansSuccess(data)
+        state.setIsOpenSelectPlanDialog(true)
+        state.setSocialDialogState(null)
+        state.setSelectAccountDialogState(false)
+        removeInfinityToast()
+
+        onSuccessAction?.()
+      }
+    } catch (error) {
+      const err = getAxiosError(error as EnhancedAxiosError)
+
+      showErrorInfinityToast(getApiErrorMessage(err))
+      state.getPlansFailure()
+      removeInfinityToast()
+      state.setOAuthCloudSource(null)
+      onFailAction?.()
     }
   })
 }

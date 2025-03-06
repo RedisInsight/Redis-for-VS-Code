@@ -12,6 +12,10 @@ const handlers: RequestHandler[] = [
     getMWSUrl(`${ApiEndpoints.CLOUD_ME_JOBS}`),
     () => HttpResponse.json(constants.USER_JOBS_DATA),
   ),
+  http.get(
+    getMWSUrl(`${ApiEndpoints.CLOUD_SUBSCRIPTION_PLANS}`),
+    () => HttpResponse.json(constants.PLANS_DATA),
+  ),
 ]
 
 export default handlers

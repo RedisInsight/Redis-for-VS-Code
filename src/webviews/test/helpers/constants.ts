@@ -254,6 +254,8 @@ export const constants = {
 
   USER_DATA: { id: 123123 },
   USER_JOBS_DATA: { id: '123123' },
+
+  PLANS_DATA: [{ id: 1 }],
 }
 
 const KEY_INFO: KeyInfo = {
