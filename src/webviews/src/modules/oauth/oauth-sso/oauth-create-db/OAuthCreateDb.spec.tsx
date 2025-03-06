@@ -8,7 +8,7 @@ import { initialOAuthState, useOAuthStore } from 'uiSrc/store'
 import { INFINITE_MESSAGES } from 'uiSrc/components'
 import { act, cleanup, constants, fireEvent, render, screen } from 'testSrc/helpers'
 import OAuthCreateDb from './OAuthCreateDb'
-import { LOGIN_EVERY_TIME } from './constants'
+import { REQUIRE_LOGIN_ON_NEW_DB } from './constants'
 
 vi.spyOn(utils, 'sendEventTelemetry')
 vi.spyOn(utils, 'showInfinityToast')
@@ -107,7 +107,7 @@ describe('OAuthCreateDb', () => {
     expect(useOAuthStore.getState().isOpenSocialDialog).toEqual(false)
   })
 
-  it.skipIf(LOGIN_EVERY_TIME)('should render proper components when user is logged in', () => {
+  it.skipIf(REQUIRE_LOGIN_ON_NEW_DB)('should render proper components when user is logged in', () => {
     useOAuthStore.setState({ ...initialOAuthState,
       agreement: true,
       user: {
@@ -126,7 +126,7 @@ describe('OAuthCreateDb', () => {
     expect(screen.queryByTestId('oauth-container-social-buttons')).not.toBeInTheDocument()
   })
 
-  it.skipIf(!LOGIN_EVERY_TIME)('should render oauth form elements if user logged in', () => {
+  it.skipIf(!REQUIRE_LOGIN_ON_NEW_DB)('should render oauth form elements if user logged in', () => {
     useOAuthStore.setState({ ...initialOAuthState,
       agreement: true,
       user: {
@@ -145,7 +145,7 @@ describe('OAuthCreateDb', () => {
     expect(screen.queryByTestId('oauth-create-db')).not.toBeInTheDocument()
   })
 
-  it.skipIf(LOGIN_EVERY_TIME)('should call proper actions after click create', async () => {
+  it.skipIf(REQUIRE_LOGIN_ON_NEW_DB)('should call proper actions after click create', async () => {
     const name = CloudJobName.CreateFreeSubscriptionAndDatabase
     useOAuthStore.setState({ ...initialOAuthState,
       agreement: true,
@@ -169,7 +169,7 @@ describe('OAuthCreateDb', () => {
     )
   })
 
-  it.skipIf(LOGIN_EVERY_TIME)('should call proper actions after click create without recommened settings', async () => {
+  it.skipIf(REQUIRE_LOGIN_ON_NEW_DB)('should call proper actions after click create without recommened settings', async () => {
     useOAuthStore.setState({ ...initialOAuthState,
       agreement: true,
       source: 'source',
