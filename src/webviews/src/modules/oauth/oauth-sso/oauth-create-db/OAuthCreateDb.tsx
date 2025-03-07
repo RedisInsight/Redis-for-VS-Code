@@ -10,6 +10,7 @@ import { createFreeDbJob, fetchCloudSubscriptionPlans, useOAuthStore } from 'uiS
 import { Spacer } from 'uiSrc/ui'
 import { INFINITE_MESSAGES } from 'uiSrc/components'
 
+import { REQUIRE_LOGIN_ON_NEW_DB } from './constants'
 import { OAuthForm } from '../../shared/oauth-form'
 import OAuthAgreement from '../../shared/oauth-agreement/OAuthAgreement'
 import { OAuthAdvantages, OAuthRecommendedSettings } from '../../shared'
@@ -85,7 +86,7 @@ const OAuthCreateDb = (props: Props) => {
         <OAuthAdvantages />
       </div>
       <div className={styles.socialContainer}>
-        {!data ? (
+        {!data || REQUIRE_LOGIN_ON_NEW_DB ? (
           <OAuthForm
             className={styles.socialButtons}
             onClick={handleSocialButtonClick}
