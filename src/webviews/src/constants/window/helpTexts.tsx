@@ -26,7 +26,7 @@ export const helpTexts = {
         target="_blank"
         data-test-subj="no-json-module-try-free"
       >
-        {l10n.t('free Redis Cloud database')}
+        {l10n.t('free trial Redis Cloud database')}
       </Link>
       {l10n.t(' with built-in JSON support.')}
     </>
@@ -48,7 +48,7 @@ export const helpTexts = {
         target="_blank"
         data-test-subj="no-json-module-try-free"
       >
-        {l10n.t('free up-to-date')}
+        {l10n.t('free up-to-date trial')}
       </Link>
       {l10n.t(' Redis database.')}
     </>
