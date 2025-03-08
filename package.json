@@ -259,7 +259,7 @@
     "@stablelib/snappy": "^1.0.3",
     "@vscode/l10n": "^0.0.18",
     "@vscode/webview-ui-toolkit": "^1.4.0",
-    "axios": "^1.7.4",
+    "axios": "^1.8.2",
     "brotli-unicode": "^1.0.2",
     "buffer": "^6.0.3",
     "classnames": "^2.3.2",
