@@ -6,8 +6,9 @@ import { VscClose } from 'react-icons/vsc'
 
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { useOAuthStore } from 'uiSrc/store'
-import { OAuthSocialAction } from 'uiSrc/constants'
+import { OAuthSocialAction, OAuthSocialSource, VscodeMessageAction } from 'uiSrc/constants'
 import { RiButton } from 'uiSrc/ui'
+import { vscodeApi } from 'uiSrc/services'
 import { OAuthCreateDb } from '../oauth-sso'
 import styles from './styles.module.scss'
 
@@ -33,8 +34,17 @@ const OAuthSsoDialog = () => {
     })
     setSocialDialogState(null)
 
-    // TODO [DA]: dispose the dummy panel if the dialog was opened from it,
-    // and not from add db page panel
+    // TODO [DA]: move this logic to some sso oauth container page
+    // which will include the whole sso flow and close after it is finished
+    if (source === OAuthSocialSource.DatabasesList) {
+      vscodeApi.postMessage({
+        action: VscodeMessageAction.CloseOAuthSsoDialog,
+        data: {
+          ssoFlow: null,
+          source: null,
+        },
+      })
+    }
   }, [ssoFlow])
 
   if (!isOpenSocialDialog || !ssoFlow) {

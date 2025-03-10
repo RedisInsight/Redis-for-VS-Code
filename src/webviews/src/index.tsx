@@ -12,7 +12,7 @@ import {
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
 import { PostMessage, SelectKeyAction, SetDatabaseAction } from 'uiSrc/interfaces'
-import { OAuthSocialSource, VscodeMessageAction } from 'uiSrc/constants'
+import { VscodeMessageAction } from 'uiSrc/constants'
 import { migrateLocalStorageData } from 'uiSrc/services'
 import { useAppInfoStore } from './store/hooks/use-app-info-store/useAppInfoStore'
 import {
@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         processOauthCallback(message.data as CloudAuthResponse)
         break
       case VscodeMessageAction.OpenOAuthSsoDialog:
+      case VscodeMessageAction.CloseOAuthSsoDialog:
         useOAuthStore.getState().setSSOFlow(message.data?.ssoFlow)
         useOAuthStore.getState().setSocialDialogState(message.data?.source)
         break

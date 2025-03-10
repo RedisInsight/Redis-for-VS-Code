@@ -132,8 +132,8 @@ export interface CloseEulaAction {
   action: VscodeMessageAction.CloseEula
 }
 
-export interface OpenOAuthSsoDialogAction {
-  action: VscodeMessageAction.OpenOAuthSsoDialog
+export interface OAuthSsoDialogAction {
+  action: VscodeMessageAction.OpenOAuthSsoDialog | VscodeMessageAction.CloseOAuthSsoDialog
   data: {
     ssoFlow: OAuthSocialAction,
     source: OAuthSocialSource,

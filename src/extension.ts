@@ -218,10 +218,17 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('RedisForVSCode.openOAuthSsoDialog', (args) => {
       WebviewPanel.getInstance({
         context,
-        route: 'main/oauth_sso_dialog',
+        route: 'main/add_database',
         title: 'Redis Cloud account',
+        // TODO [DA]: to be replaced with some oauth container page so sso flow can go all the way and include all modals
         viewId: ViewId.OAuthSsoDialog,
+        handleMessage: (message) => handleMessage(message),
+        message: args,
       }).postMessage({ action: 'OpenOAuthSsoDialog', data: args })
+    }),
+
+    vscode.commands.registerCommand('RedisForVSCode.closeOAuthSsoDialog', (args) => {
+      WebviewPanel.getInstance({ viewId: ViewId.OAuthSsoDialog })?.dispose()
     }),
   )
 

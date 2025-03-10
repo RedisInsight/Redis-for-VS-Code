@@ -88,6 +88,10 @@ export const handleMessage = async (message: any = {}) => {
       vscode.commands.executeCommand('RedisForVSCode.openOAuthSsoDialog', message.data)
       break
 
+    case 'CloseOAuthSsoDialog':
+      vscode.commands.executeCommand('RedisForVSCode.closeOAuthSsoDialog', message.data)
+      break
+
     default:
       break
   }
