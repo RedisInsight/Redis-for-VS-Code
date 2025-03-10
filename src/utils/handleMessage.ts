@@ -85,7 +85,7 @@ export const handleMessage = async (message: any = {}) => {
       break
 
     case 'OpenOAuthSsoDialog':
-      vscode.commands.executeCommand('RedisForVSCode.OpenOAuthSsoDialog', message.data)
+      vscode.commands.executeCommand('RedisForVSCode.openOAuthSsoDialog', message.data)
       break
 
     default:

@@ -7,11 +7,12 @@ import {
   fetchEditedDatabase,
   fetchCerts,
   useDatabasesStore,
+  useOAuthStore,
 } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
 import { PostMessage, SelectKeyAction, SetDatabaseAction } from 'uiSrc/interfaces'
-import { VscodeMessageAction } from 'uiSrc/constants'
+import { OAuthSocialSource, VscodeMessageAction } from 'uiSrc/constants'
 import { migrateLocalStorageData } from 'uiSrc/services'
 import { useAppInfoStore } from './store/hooks/use-app-info-store/useAppInfoStore'
 import {
@@ -87,6 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // OAuth
       case VscodeMessageAction.OAuthCallback:
         processOauthCallback(message.data as CloudAuthResponse)
+        break
+      case VscodeMessageAction.OpenOAuthSsoDialog:
+        useOAuthStore.getState().setSSOFlow(message.data?.ssoFlow)
+        useOAuthStore.getState().setSocialDialogState(message.data?.source)
         break
       default:
         break

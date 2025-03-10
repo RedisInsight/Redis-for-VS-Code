@@ -32,6 +32,9 @@ const OAuthSsoDialog = () => {
       },
     })
     setSocialDialogState(null)
+
+    // TODO [DA]: dispose the dummy panel if the dialog was opened from it,
+    // and not from add db page panel
   }, [ssoFlow])
 
   if (!isOpenSocialDialog || !ssoFlow) {

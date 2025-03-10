@@ -1,4 +1,4 @@
-import { AllKeyTypes, KeyTypes, OAuthSocialAction, OAuthStrategy, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
+import { AllKeyTypes, KeyTypes, OAuthSocialAction, OAuthSocialSource, OAuthStrategy, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
 import { Database } from 'uiSrc/store'
 import { AppInfoStore, GetAppSettingsResponse } from 'uiSrc/store/hooks/use-app-info-store/interface'
 import { CloudAuthResponse } from 'uiSrc/modules/oauth/interfaces'
@@ -135,7 +135,8 @@ export interface CloseEulaAction {
 export interface OpenOAuthSsoDialogAction {
   action: VscodeMessageAction.OpenOAuthSsoDialog
   data: {
-    ssoFlow: OAuthSocialAction
+    ssoFlow: OAuthSocialAction,
+    source: OAuthSocialSource,
   }
 }
 

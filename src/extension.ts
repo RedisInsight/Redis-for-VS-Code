@@ -1,6 +1,7 @@
 /* eslint-disable import/no-mutable-exports */
 import * as vscode from 'vscode'
 import * as dotenv from 'dotenv'
+import { WebviewOptions } from 'vscode'
 import * as path from 'path'
 import { WebviewPanel } from './Webview'
 import { startBackend, getBackendGracefulShutdown } from './server/bootstrapBackend'
@@ -214,8 +215,13 @@ export async function activate(context: vscode.ExtensionContext) {
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
     }),
 
-    vscode.commands.registerCommand('RedisForVSCode.OpenOAuthSsoDialog', (args) => {
-      vscode.window.showInformationMessage('This is a modal', { modal: true })
+    vscode.commands.registerCommand('RedisForVSCode.openOAuthSsoDialog', (args) => {
+      WebviewPanel.getInstance({
+        context,
+        route: 'main/oauth_sso_dialog',
+        title: 'Redis Cloud account',
+        viewId: ViewId.OAuthSsoDialog,
+      }).postMessage({ action: 'OpenOAuthSsoDialog', data: args })
     }),
   )
 
