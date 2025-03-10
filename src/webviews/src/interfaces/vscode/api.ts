@@ -132,6 +132,13 @@ export interface CloseEulaAction {
   action: VscodeMessageAction.CloseEula
 }
 
+export interface OpenOAuthSsoDialogAction {
+  action: VscodeMessageAction.OpenOAuthSsoDialog
+  data: {
+    ssoFlow: OAuthSocialAction
+  }
+}
+
 export type PostMessage =
   SelectKeyAction |
   SetDatabaseAction |
@@ -149,4 +156,5 @@ export type PostMessage =
   CloudOAuthAction |
   DatabaseAction |
   OpenExternalUrlAction |
-  OAuthCallbackAction
+  OAuthCallbackAction |
+  OpenOAuthSsoDialogAction
