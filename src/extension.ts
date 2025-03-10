@@ -213,6 +213,10 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('RedisForVSCode.refreshDatabases', () => {
       sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
     }),
+
+    vscode.commands.registerCommand('RedisForVSCode.OpenOAuthSsoDialog', (args) => {
+      vscode.window.showInformationMessage('This is a modal', { modal: true })
+    }),
   )
 
   registerUriHandler()
