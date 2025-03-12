@@ -17,9 +17,8 @@ import {
   SettingsPage,
   EulaPage,
   WelcomePage,
+  OAuthPage,
 } from 'uiSrc/pages'
-
-import { OAuthSsoDialog } from './modules/oauth'
 
 const rootEl = document.getElementById('root')
 
@@ -41,7 +40,7 @@ export const AppRoutes = () => {
         <Route path="settings" element={<SettingsPage />} />
         <Route path="eula" element={<EulaPage />} />
         <Route path="welcome" element={<WelcomePage />} />
-        <Route path="oauth_sso_dialog" element={<OAuthSsoDialog />} />
+        <Route path="oauth" element={<OAuthPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
