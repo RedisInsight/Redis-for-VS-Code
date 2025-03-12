@@ -47,7 +47,7 @@ const OAuthSelectPlan = () => {
     source: state.source,
   })))
 
-  // TODO [DA]: Replace redis stack regions [] with the following lines, once feature flags are implemented
+  // TODO: Replace redis stack regions [] with the following lines, once feature flags are implemented
   // const { [FeatureFlags.cloudSso]: cloudSsoFeature = {} } = useSelector(appFeatureFlagsFeaturesSelector)
   // const rsRegions: Region[] = get(cloudSsoFeature, 'data.selectPlan.components.redisStackPreview', [])
   const rsRegions: Region[] = []

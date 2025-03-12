@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { get } from 'lodash'
 import { useShallow } from 'zustand/react/shallow'
 
-import { CloudJobStatus, CloudJobName, ApiStatusCode, StorageItem, CustomErrorCodes, CloudJobStep, VscodeMessageAction } from 'uiSrc/constants'
+import { CloudJobStatus, CloudJobName, ApiStatusCode, StorageItem, CustomErrorCodes, CloudJobStep, VscodeMessageAction, OAuthSocialSource } from 'uiSrc/constants'
 import { parseCustomError, TelemetryEvent, sendEventTelemetry, getApiErrorMessage } from 'uiSrc/utils'
 import { showInfinityToast, removeInfinityToast, showErrorInfinityToast } from 'uiSrc/utils/notifications/toasts'
 import { localStorageService, vscodeApi } from 'uiSrc/services'
@@ -21,6 +21,7 @@ const OAuthJobs = () => {
     setSSOFlow,
     setJob,
     setSocialDialogState,
+    source,
   } = useOAuthStore(useShallow((state) => ({
     status: state.job?.status,
     jobName: state.job?.name,
@@ -31,15 +32,19 @@ const OAuthJobs = () => {
     setSSOFlow: state.setSSOFlow,
     setJob: state.setJob,
     setSocialDialogState: state.setSocialDialogState,
+    source: state.source,
   })))
 
   const onConnect = () => {
-    vscodeApi.postMessage({
-      action: VscodeMessageAction.CloseAddDatabase,
-    })
-    vscodeApi.postMessage({
-      action: VscodeMessageAction.CloseOAuthSso,
-    })
+    if (source === OAuthSocialSource.AddDbForm) {
+      vscodeApi.postMessage({
+        action: VscodeMessageAction.CloseAddDatabase,
+      })
+    } else if (source === OAuthSocialSource.DatabasesList) {
+      vscodeApi.postMessage({
+        action: VscodeMessageAction.CloseOAuthSso,
+      })
+    }
   }
 
   useEffect(() => {
@@ -51,7 +56,6 @@ const OAuthJobs = () => {
         break
 
       case CloudJobStatus.Finished:
-        // the onConnect is never executed
         showInfinityToast(INFINITE_MESSAGES.SUCCESS_CREATE_DB(jobName, onConnect)?.Inner)
 
         setJob({
@@ -62,11 +66,9 @@ const OAuthJobs = () => {
 
         localStorageService.remove(StorageItem.OAuthJobId)
 
-        // Close one of two following depending on source
-        vscodeApi.postMessage({ action: VscodeMessageAction.CloseAddDatabase })
-        vscodeApi.postMessage({ action: VscodeMessageAction.CloseOAuthSso })
-
         vscodeApi.postMessage({ action: VscodeMessageAction.RefreshDatabases })
+
+        onConnect()
         break
 
       case CloudJobStatus.Failed:

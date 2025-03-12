@@ -38,6 +38,7 @@ export const signInCloudOauth = async (options: CloudAuthRequestOptions) => {
 }
 
 export const getTokenCallbackFunction = (response: any) => {
+  // TODO [DA]: Add a check for the viewId and execute only one of the following...
   Promise.all([
     new Promise<void>((resolve) => {
       WebviewPanel.getInstance({ viewId: ViewId.AddDatabase })?.postMessage({
