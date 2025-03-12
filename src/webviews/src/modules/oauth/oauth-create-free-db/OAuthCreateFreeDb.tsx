@@ -29,7 +29,7 @@ const OAuthCreateFreeDb = ({ source, compressed }: Props) => {
 
     if (compressed) {
       vscodeApi.postMessage({
-        action: VscodeMessageAction.OpenOAuthSsoDialog,
+        action: VscodeMessageAction.OpenOAuthSso,
         data: {
           ssoFlow: OAuthSocialAction.Create,
           source,

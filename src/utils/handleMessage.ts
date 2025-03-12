@@ -84,12 +84,11 @@ export const handleMessage = async (message: any = {}) => {
       await vscode.env.openExternal(vscode.Uri.parse(message.data))
       break
 
-    case 'OpenOAuthSsoDialog':
-      vscode.commands.executeCommand('RedisForVSCode.openOAuthSsoDialog', message.data)
+    case 'OpenOAuthSso': ''
+      vscode.commands.executeCommand('RedisForVSCode.oAuthSso', message.data)
       break
-
-    case 'CloseOAuthSsoDialog':
-      vscode.commands.executeCommand('RedisForVSCode.closeOAuthSsoDialog', message.data)
+    case 'CloseOAuthSso':
+      vscode.commands.executeCommand('RedisForVSCode.closeOAuthSso', message.data)
       break
 
     default:

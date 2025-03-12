@@ -32,19 +32,14 @@ const OAuthSsoDialog = () => {
         action: ssoFlow,
       },
     })
-    setSocialDialogState(null)
 
-    // TODO [DA]: move this logic to some sso oauth container page
-    // which will include the whole sso flow and close after it is finished
     if (source === OAuthSocialSource.DatabasesList) {
       vscodeApi.postMessage({
-        action: VscodeMessageAction.CloseOAuthSsoDialog,
-        data: {
-          ssoFlow: null,
-          source: null,
-        },
+        action: VscodeMessageAction.CloseOAuthSso,
       })
     }
+
+    setSocialDialogState(null)
   }, [ssoFlow])
 
   if (!isOpenSocialDialog || !ssoFlow) {

@@ -112,10 +112,6 @@
         "title": "Show extension output",
         "category": "Redis for VS Code",
         "icon": "$(add)"
-      },
-      {
-        "command": "RedisForVSCode.OpenOAuthSsoDialog",
-        "title": "Show Modal"
       }
     ],
     "menus": {

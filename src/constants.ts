@@ -6,7 +6,7 @@ export enum ViewId {
   EditDatabase = 'ri-edit-database',
   Welcome = 'ri-welcome',
   Eula = 'ri-eula',
-  OAuthSsoDialog = 'ri-oauth-sso-dialog',
+  OAuth = 'ri-oauth',
 }
 
 export const MAX_TITLE_KEY_LENGTH = 30

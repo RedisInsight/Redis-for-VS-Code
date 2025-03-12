@@ -10,8 +10,6 @@ export const OAuthPage: FC<any> = () => (
     <OAuthJobs />
     <CommonAppSubscription />
     <OAuthSsoDialog />
-    <OAuthCreateFreeDb source={OAuthSocialSource.AddDbForm} />
-    <DatabasePanel />
     <OAuthSelectPlan />
   </div>
 )
