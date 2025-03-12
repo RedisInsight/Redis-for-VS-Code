@@ -6,13 +6,14 @@ import { useShallow } from 'zustand/react/shallow'
 import * as l10n from '@vscode/l10n'
 import cx from 'classnames'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
-import { CloudJobName, CloudJobStep, OAuthProvider, OAuthProviders } from 'uiSrc/constants'
+import { CloudJobName, CloudJobStep, OAuthProvider, OAuthProviders, OAuthSocialSource, VscodeMessageAction } from 'uiSrc/constants'
 import { createFreeDbJob, useOAuthStore } from 'uiSrc/store'
 import { CloudSubscriptionPlanResponse, Region } from 'uiSrc/store/hooks/use-oauth/interface'
 import { RiButton, Select, SelectOption, DropdownMenuPosition } from 'uiSrc/ui'
 import { sendEventTelemetry, showInfinityToast, TelemetryEvent } from 'uiSrc/utils'
 
 import { INFINITE_MESSAGES } from 'uiSrc/components'
+import { vscodeApi } from 'uiSrc/services'
 import styles from './styles.module.scss'
 
 interface PlanLabelData {
@@ -36,12 +37,14 @@ const OAuthSelectPlan = () => {
     loading,
     setIsOpenSelectPlanDialog,
     setSocialDialogState,
+    source,
   } = useOAuthStore(useShallow((state) => ({
     isOpenDialog: state.plan.isOpenDialog,
     fetchedPlans: state.plan.data,
     loading: state.plan.loading,
     setIsOpenSelectPlanDialog: state.setIsOpenSelectPlanDialog,
     setSocialDialogState: state.setSocialDialogState,
+    source: state.source,
   })))
 
   // TODO [DA]: Replace redis stack regions [] with the following lines, once feature flags are implemented
@@ -78,10 +81,17 @@ const OAuthSelectPlan = () => {
     sendEventTelemetry({
       event: TelemetryEvent.CLOUD_SIGN_IN_PROVIDER_FORM_CLOSED,
     })
+
+    if (source === OAuthSocialSource.DatabasesList) {
+      vscodeApi.postMessage({
+        action: VscodeMessageAction.CloseOAuthSso,
+      })
+    }
+
     setSelectedPlanId('')
     setSelectedProvider(DEFAULT_PROVIDER)
-    setIsOpenSelectPlanDialog(false)
     setSocialDialogState(null)
+    setIsOpenSelectPlanDialog(false)
   }, [])
 
   const regionOptions: SelectOption[] = useMemo(() => {
