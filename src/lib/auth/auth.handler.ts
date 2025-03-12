@@ -38,10 +38,22 @@ export const signInCloudOauth = async (options: CloudAuthRequestOptions) => {
 }
 
 export const getTokenCallbackFunction = (response: any) => {
-  WebviewPanel.getInstance({ viewId: ViewId.AddDatabase })?.postMessage({
-    action: 'OAuthCallback',
-    data: response,
-  })
+  Promise.all([
+    new Promise<void>((resolve) => {
+      WebviewPanel.getInstance({ viewId: ViewId.AddDatabase })?.postMessage({
+        action: 'OAuthCallback',
+        data: response,
+      })
+      resolve()
+    }),
+    new Promise<void>((resolve) => {
+      WebviewPanel.getInstance({ viewId: ViewId.OAuth })?.postMessage({
+        action: 'OAuthCallback',
+        data: response,
+      })
+      resolve()
+    }),
+  ])
 }
 
 export const cloudOauthCallback = async (query: any) => {
