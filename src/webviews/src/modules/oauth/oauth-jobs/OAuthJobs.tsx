@@ -37,6 +37,9 @@ const OAuthJobs = () => {
     vscodeApi.postMessage({
       action: VscodeMessageAction.CloseAddDatabase,
     })
+    vscodeApi.postMessage({
+      action: VscodeMessageAction.CloseOAuthSso,
+    })
   }
 
   useEffect(() => {
@@ -48,7 +51,7 @@ const OAuthJobs = () => {
         break
 
       case CloudJobStatus.Finished:
-
+        // the onConnect is never executed
         showInfinityToast(INFINITE_MESSAGES.SUCCESS_CREATE_DB(jobName, onConnect)?.Inner)
 
         setJob({
@@ -58,6 +61,10 @@ const OAuthJobs = () => {
         })
 
         localStorageService.remove(StorageItem.OAuthJobId)
+
+        // Close one of two following depending on source
+        vscodeApi.postMessage({ action: VscodeMessageAction.CloseAddDatabase })
+        vscodeApi.postMessage({ action: VscodeMessageAction.CloseOAuthSso })
 
         vscodeApi.postMessage({ action: VscodeMessageAction.RefreshDatabases })
         break
