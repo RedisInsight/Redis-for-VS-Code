@@ -32,6 +32,7 @@ export enum VscodeMessageAction {
   OAuthCallback = 'OAuthCallback',
   RefreshDatabases = 'RefreshDatabases',
   OpenExternalUrl = 'OpenExternalUrl',
+  OpenOAuthSsoDialog = 'OpenOAuthSsoDialog',
 }
 
 export enum VscodeStateItem {

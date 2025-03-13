@@ -88,6 +88,9 @@ export async function activate(context: vscode.ExtensionContext) {
         viewId: ViewId.AddDatabase,
         handleMessage: (message) => handleMessage(message),
         message: args,
+      }).postMessage({
+        action: 'OpenOAuthSsoDialog',
+        data: { source: args?.source, ssoFlow: args?.ssoFlow },
       })
     }),
 

@@ -1,4 +1,4 @@
-import { AllKeyTypes, KeyTypes, OAuthSocialAction, OAuthStrategy, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
+import { AllKeyTypes, KeyTypes, OAuthSocialAction, OAuthSocialSource, OAuthStrategy, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/constants'
 import { Database } from 'uiSrc/store'
 import { AppInfoStore, GetAppSettingsResponse } from 'uiSrc/store/hooks/use-app-info-store/interface'
 import { CloudAuthResponse } from 'uiSrc/modules/oauth/interfaces'
@@ -63,9 +63,11 @@ export interface DatabaseAction {
   action: VscodeMessageAction.RefreshDatabases
   | VscodeMessageAction.CloseAddDatabase
   | VscodeMessageAction.OpenAddDatabase
+  | VscodeMessageAction.OpenOAuthSsoDialog
   data?: {
     database?: Database
     ssoFlow?: OAuthSocialAction
+    source?: OAuthSocialSource
   }
 }
 export interface CliAction {
