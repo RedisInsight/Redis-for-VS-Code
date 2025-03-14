@@ -42,11 +42,11 @@ const OAuthJobs = () => {
   }
 
   const closeAddDatabasePanel = () => {
-    setTimeout(() => {
+    if (source === OAuthSocialSource.DatabasesList) {
       vscodeApi.postMessage({
         action: VscodeMessageAction.CloseAddDatabase,
       })
-    }, 2000)
+    }
   }
 
   useEffect(() => {
@@ -59,7 +59,10 @@ const OAuthJobs = () => {
 
       case CloudJobStatus.Finished:
 
-        showInfinityToast(INFINITE_MESSAGES.SUCCESS_CREATE_DB(jobName, onConnect)?.Inner)
+        showInfinityToast(INFINITE_MESSAGES.SUCCESS_CREATE_DB(
+          jobName, onConnect)?.Inner,
+        { onClose: closeAddDatabasePanel },
+        )
 
         setJob({
           id: '',
@@ -70,9 +73,6 @@ const OAuthJobs = () => {
         localStorageService.remove(StorageItem.OAuthJobId)
 
         vscodeApi.postMessage({ action: VscodeMessageAction.RefreshDatabases })
-        if (source === OAuthSocialSource.DatabasesList) {
-          closeAddDatabasePanel()
-        }
         break
 
       case CloudJobStatus.Failed:
