@@ -90,8 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
         processOauthCallback(message.data as CloudAuthResponse)
         break
       case VscodeMessageAction.OpenOAuthSsoDialog:
-        useOAuthStore.getState().setSSOFlow(message.data?.ssoFlow)
-        useOAuthStore.getState().setSocialDialogState(message.data?.source || null)
+        const { source, ssoFlow } = message.data ?? {}
+        if (ssoFlow && source) {
+          const state = useOAuthStore.getState()
+          state.setSSOFlow(ssoFlow)
+          state.setSocialDialogState(source)
+        }
         break
       default:
         break
