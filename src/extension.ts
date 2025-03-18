@@ -81,21 +81,17 @@ export async function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('RedisForVSCode.addDatabase', (args) => {
-      const panel = WebviewPanel.getInstance({
+      WebviewPanel.getInstance({
         context,
         route: 'main/add_database',
         title: vscode.l10n.t('Redis for VS Code - Add Database connection'),
         viewId: ViewId.AddDatabase,
         handleMessage: (message) => handleMessage(message),
         message: args,
+      }).postMessage({
+        action: 'OpenOAuthSsoDialog',
+        data: { source: args?.source, ssoFlow: args?.ssoFlow },
       })
-
-      if (args?.ssoFlow && args?.source) {
-        panel.postMessage({
-          action: 'OpenOAuthSsoDialog',
-          data: { source: args?.source, ssoFlow: args?.ssoFlow },
-        })
-      }
     }),
 
     vscode.commands.registerCommand('RedisForVSCode.openSettings', (args) => {
