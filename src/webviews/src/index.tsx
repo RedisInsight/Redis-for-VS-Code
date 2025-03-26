@@ -7,6 +7,7 @@ import {
   fetchEditedDatabase,
   fetchCerts,
   useDatabasesStore,
+  useOAuthStore,
 } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
@@ -87,6 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
       // OAuth
       case VscodeMessageAction.OAuthCallback:
         processOauthCallback(message.data as CloudAuthResponse)
+        break
+      case VscodeMessageAction.OpenOAuthSsoDialog:
+        const { source, ssoFlow } = message.data ?? {}
+        if (ssoFlow && source) {
+          const state = useOAuthStore.getState()
+          state.setSSOFlow(ssoFlow)
+          state.setSocialDialogState(source)
+        }
         break
       default:
         break

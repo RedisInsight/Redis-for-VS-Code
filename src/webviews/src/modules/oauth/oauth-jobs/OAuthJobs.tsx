@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { get } from 'lodash'
 import { useShallow } from 'zustand/react/shallow'
 
-import { CloudJobStatus, CloudJobName, ApiStatusCode, StorageItem, CustomErrorCodes, CloudJobStep, VscodeMessageAction } from 'uiSrc/constants'
+import { CloudJobStatus, CloudJobName, ApiStatusCode, StorageItem, CustomErrorCodes, CloudJobStep, VscodeMessageAction, OAuthSocialSource } from 'uiSrc/constants'
 import { parseCustomError, TelemetryEvent, sendEventTelemetry, getApiErrorMessage } from 'uiSrc/utils'
 import { showInfinityToast, removeInfinityToast, showErrorInfinityToast } from 'uiSrc/utils/notifications/toasts'
 import { localStorageService, vscodeApi } from 'uiSrc/services'
@@ -21,6 +21,7 @@ const OAuthJobs = () => {
     setSSOFlow,
     setJob,
     setSocialDialogState,
+    source,
   } = useOAuthStore(useShallow((state) => ({
     status: state.job?.status,
     jobName: state.job?.name,
@@ -31,12 +32,21 @@ const OAuthJobs = () => {
     setSSOFlow: state.setSSOFlow,
     setJob: state.setJob,
     setSocialDialogState: state.setSocialDialogState,
+    source: state.source,
   })))
 
   const onConnect = () => {
     vscodeApi.postMessage({
       action: VscodeMessageAction.CloseAddDatabase,
     })
+  }
+
+  const closeAddDatabasePanel = () => {
+    if (source === OAuthSocialSource.DatabasesList) {
+      vscodeApi.postMessage({
+        action: VscodeMessageAction.CloseAddDatabase,
+      })
+    }
   }
 
   useEffect(() => {
@@ -49,7 +59,10 @@ const OAuthJobs = () => {
 
       case CloudJobStatus.Finished:
 
-        showInfinityToast(INFINITE_MESSAGES.SUCCESS_CREATE_DB(jobName, onConnect)?.Inner)
+        showInfinityToast(INFINITE_MESSAGES.SUCCESS_CREATE_DB(
+          jobName, onConnect)?.Inner,
+        { onClose: closeAddDatabasePanel },
+        )
 
         setJob({
           id: '',

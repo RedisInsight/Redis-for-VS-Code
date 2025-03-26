@@ -32,6 +32,7 @@ const OAuthCreateFreeDb = ({ source, compressed }: Props) => {
         action: VscodeMessageAction.OpenAddDatabase,
         data: {
           ssoFlow: OAuthSocialAction.Create,
+          source,
         },
       })
 
