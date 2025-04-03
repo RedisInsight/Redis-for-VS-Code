@@ -4,7 +4,6 @@ import { KeyTypes, SelectedKeyActionType, VscodeMessageAction } from 'uiSrc/cons
 
 import { Maybe } from 'uiSrc/interfaces'
 import { vscodeApi } from 'uiSrc/services'
-import { useDatabasesStore } from 'uiSrc/store'
 import { getGroupTypeDisplay, stringToBuffer } from 'uiSrc/utils'
 
 import AddKeyCommonFields from './components/AddKeyCommonFields/AddKeyCommonFields'
@@ -23,7 +22,6 @@ import styles from './styles.module.scss'
 export const AddKey = () => {
   const loading = useKeysInContext((state) => state.addKeyLoading)
   const keysApi = useKeysApi()
-  const database = useDatabasesStore((state) => state.connectedDatabase)
 
   useEffect(
     () =>
