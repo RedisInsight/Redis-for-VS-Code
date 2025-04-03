@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { AddKey } from 'uiSrc/modules'
 import { KeysStoreProvider } from 'uiSrc/modules/keys-tree/hooks/useKeys'
+import { OAuthSsoDialog } from 'uiSrc/modules/oauth'
 import { ContextStoreProvider } from 'uiSrc/store'
 
 export const AddKeyPage: FC<any> = () => (
@@ -8,6 +9,7 @@ export const AddKeyPage: FC<any> = () => (
     <ContextStoreProvider>
       <KeysStoreProvider>
         <AddKey />
+        <OAuthSsoDialog />
       </KeysStoreProvider>
     </ContextStoreProvider>
   </div>

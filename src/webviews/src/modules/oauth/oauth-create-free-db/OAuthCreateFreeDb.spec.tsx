@@ -81,13 +81,14 @@ describe('OAuthCreateFreeDb', () => {
 
     // component is initialized in the document, but the state is not updated yet to show the dialog
     render(<OAuthSsoDialog />)
-    expect(screen.queryByTestId('social-oauth-dialog')).not.toBeInTheDocument()
+    const oauthDialogId = 'social-oauth-dialog'
+    expect(screen.queryByTestId(oauthDialogId)).not.toBeInTheDocument()
 
     const regularCreateBtn = queryByTestId('create-free-db-btn')
     expect(regularCreateBtn).toBeInTheDocument()
 
     fireEvent.click(regularCreateBtn as HTMLButtonElement)
 
-    expect(screen.queryByTestId('social-oauth-dialog')).toBeInTheDocument()
+    expect(screen.queryByTestId(oauthDialogId)).toBeInTheDocument()
   })
 })
