@@ -19,7 +19,7 @@ export const helpTexts = {
         })}
         className="underline hover:no-underline"
         target="_blank"
-        data-test-subj="no-json-module-info"
+        data-testid="no-json-module-info"
       >
         {l10n.t('here. ')}
       </Link>
@@ -27,7 +27,7 @@ export const helpTexts = {
       <a
         onClick={onFreeTrialDbClick}
         className="underline hover:no-underline"
-        data-test-subj="no-json-module-try-free"
+        data-testid="no-json-module-create-free-db"
         href="#"
       >
         {l10n.t('free trial Redis Cloud database')}
