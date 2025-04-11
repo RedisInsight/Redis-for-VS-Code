@@ -4,16 +4,27 @@ import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import Popup from 'reactjs-popup'
 
 import { MonacoJson } from 'uiSrc/components/monaco-editor'
-import { getRequiredFieldsText, isContainJSONModule, sendEventTelemetry, stringToBuffer, TelemetryEvent } from 'uiSrc/utils'
+import {
+  getRequiredFieldsText,
+  isContainJSONModule,
+  sendEventTelemetry,
+  stringToBuffer,
+  TelemetryEvent,
+} from 'uiSrc/utils'
 import { Maybe } from 'uiSrc/interfaces'
-import { useKeysApi, useKeysInContext } from 'uiSrc/modules/keys-tree/hooks/useKeys'
+import {
+  useKeysApi,
+  useKeysInContext,
+} from 'uiSrc/modules/keys-tree/hooks/useKeys'
 import {
   AddJSONFormConfig as config,
   helpTexts,
   KeyTypes,
+  OAuthSocialAction,
+  OAuthSocialSource,
 } from 'uiSrc/constants'
 import { CreateRejsonRlWithExpireDto } from 'uiSrc/modules/keys-tree/hooks/interface'
-import { useDatabasesStore } from 'uiSrc/store'
+import { useDatabasesStore, useOAuthStore } from 'uiSrc/store'
 import { UploadFile } from 'uiSrc/components'
 import { JSONErrors } from 'uiSrc/modules/key-details/components/rejson-details/constants'
 
@@ -24,6 +35,11 @@ export interface Props {
 }
 
 export const AddKeyReJSON = (props: Props) => {
+  const { setSSOFlow, setSocialDialogState } = useOAuthStore((state) => ({
+    setSSOFlow: state.setSSOFlow,
+    setSocialDialogState: state.setSocialDialogState,
+  }))
+
   const { keyName = '', keyTTL, onClose } = props
   const loading = useKeysInContext((state) => state.addKeyLoading)
   const modules = useDatabasesStore((state) => state.connectedDatabase?.modules)
@@ -76,6 +92,17 @@ export const AddKeyReJSON = (props: Props) => {
     })
   }, [databaseId])
 
+  const onFreeTrialDbClick = () => {
+    const source = OAuthSocialSource.BrowserRedisJSON
+    sendEventTelemetry({
+      event: TelemetryEvent.CLOUD_FREE_DATABASE_CLICKED,
+      eventData: { source },
+    })
+
+    setSSOFlow(OAuthSocialAction.Create)
+    setSocialDialogState(source)
+  }
+
   const SubmitBtn = () => (
     <VSCodeButton
       onClick={submitData}
@@ -96,7 +123,7 @@ export const AddKeyReJSON = (props: Props) => {
     <form onSubmit={onFormSubmit}>
       {!isJsonLoaded && (
         <span className="block pb-3" data-testid="json-not-loaded-text">
-          {helpTexts.REJSON_SHOULD_BE_LOADED}
+          {helpTexts.REJSON_SHOULD_BE_LOADED(onFreeTrialDbClick)}
         </span>
       )}
       <>
@@ -104,7 +131,9 @@ export const AddKeyReJSON = (props: Props) => {
         <MonacoJson
           value={ReJSONValue}
           onChange={setReJSONValue}
-          wrapperClassName={!isJsonLoaded ? 'h-[calc(100vh-340px)]' : 'h-[calc(100vh-300px)]'}
+          wrapperClassName={
+            !isJsonLoaded ? 'h-[calc(100vh-340px)]' : 'h-[calc(100vh-300px)]'
+          }
           disabled={loading}
           data-testid="json-value"
         />
