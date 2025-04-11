@@ -24,14 +24,14 @@ export const helpTexts = {
         {l10n.t('here. ')}
       </Link>
       {l10n.t('You can also create a ')}
-      <a
+      <Link
         onClick={onFreeTrialDbClick}
         className="underline hover:no-underline"
         data-testid="no-json-module-create-free-db"
-        href="#"
+        to=""
       >
         {l10n.t('free trial Redis Cloud database')}
-      </a>
+      </Link>
       {l10n.t(' with built-in JSON support.')}
     </>
   ),
