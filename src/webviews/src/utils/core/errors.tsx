@@ -198,6 +198,7 @@ export const parseCustomError = (err: CustomError | string = DEFAULT_ERROR_MESSA
     default:
       title = 'Error'
       message = err?.message || DEFAULT_ERROR_MESSAGE
+      console.warn('Unidentified error response:', err)
       break
   }
 
