@@ -10,6 +10,7 @@ export enum OAuthSocialSource {
   BrowserContentMenu = 'browser content menu',
   BrowserFiltering = 'browser filtering',
   BrowserSearch = 'browser search',
+  BrowserRedisJSON = 'browser RedisJSON',
   RediSearch = 'workbench RediSearch',
   RedisJSON = 'workbench RedisJSON',
   RedisTimeSeries = 'workbench RedisTimeSeries',
@@ -91,7 +92,6 @@ export const OAuthProviders = [{
   id: OAuthProvider.AWS,
   icon: AWSIcon,
   label: 'Amazon Web Services',
-  // className: styles.awsIcon,
 }, {
   id: OAuthProvider.Google,
   icon: GoogleIcon,

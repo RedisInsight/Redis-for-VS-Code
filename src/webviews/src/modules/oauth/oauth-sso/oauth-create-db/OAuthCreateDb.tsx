@@ -6,10 +6,11 @@ import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import { CloudJobName, CloudJobStep, OAuthSocialAction, OAuthSocialSource } from 'uiSrc/constants'
 import { sendEventTelemetry, showInfinityToast, TelemetryEvent } from 'uiSrc/utils'
 import { Nullable } from 'uiSrc/interfaces'
-import { createFreeDbJob, useOAuthStore } from 'uiSrc/store'
+import { createFreeDbJob, fetchCloudSubscriptionPlans, useOAuthStore } from 'uiSrc/store'
 import { Spacer } from 'uiSrc/ui'
 import { INFINITE_MESSAGES } from 'uiSrc/components'
 
+import { REQUIRE_LOGIN_ON_NEW_DB } from './constants'
 import { OAuthForm } from '../../shared/oauth-form'
 import OAuthAgreement from '../../shared/oauth-agreement/OAuthAgreement'
 import { OAuthAdvantages, OAuthRecommendedSettings } from '../../shared'
@@ -26,16 +27,19 @@ const OAuthCreateDb = (props: Props) => {
     setSSOFlow,
     showOAuthProgress,
     setSocialDialogState,
+    setIsRecommendedSettingsSSO,
   } = useOAuthStore(useShallow((state) => ({
     data: state.user.data,
     setSSOFlow: state.setSSOFlow,
     showOAuthProgress: state.showOAuthProgress,
     setSocialDialogState: state.setSocialDialogState,
+    setIsRecommendedSettingsSSO: state.setIsRecommendedSettingsSSO,
   })))
 
   const [isRecommended, setIsRecommended] = useState(true)
 
   const handleSocialButtonClick = (accountOption: string) => {
+    setIsRecommendedSettingsSSO(isRecommended)
     const cloudRecommendedSettings = isRecommended ? 'enabled' : 'disabled'
 
     sendEventTelemetry({
@@ -69,7 +73,11 @@ const OAuthCreateDb = (props: Props) => {
           setSSOFlow(undefined)
         },
       })
+
+      return
     }
+
+    fetchCloudSubscriptionPlans()
   }
 
   return (
@@ -78,7 +86,7 @@ const OAuthCreateDb = (props: Props) => {
         <OAuthAdvantages />
       </div>
       <div className={styles.socialContainer}>
-        {!data ? (
+        {!data || REQUIRE_LOGIN_ON_NEW_DB ? (
           <OAuthForm
             className={styles.socialButtons}
             onClick={handleSocialButtonClick}
@@ -87,7 +95,7 @@ const OAuthCreateDb = (props: Props) => {
             {(form: React.ReactNode) => (
               <>
                 <div className={styles.subTitle}>{l10n.t('Get started with')}</div>
-                <div className={styles.title}><h2>{l10n.t('Free Cloud database')}</h2></div>
+                <div className={styles.title}><h2>{l10n.t('Free Trial Cloud database')}</h2></div>
                 {form}
                 <div>
                   <OAuthRecommendedSettings value={isRecommended} onChange={handleChangeRecommendedSettings} />
@@ -99,7 +107,7 @@ const OAuthCreateDb = (props: Props) => {
         ) : (
           <>
             <div className={styles.subTitle}>{l10n.t('Get your')}</div>
-            <div className={styles.title}><h2>{l10n.t('Free Cloud database')}</h2></div>
+            <div className={styles.title}><h2>{l10n.t('Free Trial Cloud database')}</h2></div>
             <Spacer size="xl" />
             <div >
               {l10n.t('The database will be created automatically and can be changed from Redis Cloud.')}

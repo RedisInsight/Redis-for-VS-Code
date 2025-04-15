@@ -43,7 +43,7 @@ export const handleMessage = async (message: any = {}) => {
         await setUIStorageField('ssoFlow', message.data?.ssoFlow)
       }
 
-      vscode.commands.executeCommand('RedisForVSCode.addDatabase')
+      vscode.commands.executeCommand('RedisForVSCode.addDatabase', message.data)
       break
     case 'CloseAddDatabase':
       console.debug('RedisForVSCode.addDatabaseClose, ', message.data)

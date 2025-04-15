@@ -8,6 +8,7 @@ import { initialOAuthState, useOAuthStore } from 'uiSrc/store'
 import { INFINITE_MESSAGES } from 'uiSrc/components'
 import { act, cleanup, constants, fireEvent, render, screen } from 'testSrc/helpers'
 import OAuthCreateDb from './OAuthCreateDb'
+import { REQUIRE_LOGIN_ON_NEW_DB } from './constants'
 
 vi.spyOn(utils, 'sendEventTelemetry')
 vi.spyOn(utils, 'showInfinityToast')
@@ -85,18 +86,66 @@ describe('OAuthCreateDb', () => {
     })
   })
 
-  it('should render proper components if user is logged in', () => {
+  it('should call proper actions after click on sign button w/o recommended settings', async () => {
+    render(<OAuthCreateDb />)
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('oauth-recommended-settings-checkbox'))
+    })
+
+    fireEvent.click(screen.getByTestId('google-oauth'))
+
+    expect(sendEventTelemetry).toBeCalledWith({
+      event: TelemetryEvent.CLOUD_SIGN_IN_SOCIAL_ACCOUNT_SELECTED,
+      eventData: {
+        accountOption: OAuthStrategy.Google,
+        action: OAuthSocialAction.Create,
+        cloudRecommendedSettings: 'disabled',
+      },
+    })
+
+    expect(useOAuthStore.getState().isOpenSocialDialog).toEqual(false)
+  })
+
+  it.skipIf(REQUIRE_LOGIN_ON_NEW_DB)('should render proper components when user is logged in', () => {
+    useOAuthStore.setState({ ...initialOAuthState,
+      agreement: true,
+      user: {
+        ...initialOAuthState.user,
+        data: {},
+      },
+    })
+
     render(<OAuthCreateDb />)
 
     expect(screen.getByTestId('oauth-advantages')).toBeInTheDocument()
-    // expect(screen.getByTestId('oauth-create-db')).toBeInTheDocument()
     expect(screen.getByTestId('oauth-recommended-settings-checkbox')).toBeInTheDocument()
+    expect(screen.getByTestId('oauth-create-db')).toBeInTheDocument()
 
-    // expect(screen.queryByTestId('oauth-agreement-checkbox')).not.toBeInTheDocument()
-    // expect(screen.queryByTestId('oauth-container-social-buttons')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('oauth-agreement-checkbox')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('oauth-container-social-buttons')).not.toBeInTheDocument()
   })
 
-  it('should call proper actions after click create', async () => {
+  it.skipIf(!REQUIRE_LOGIN_ON_NEW_DB)('should render oauth form elements if user logged in', () => {
+    useOAuthStore.setState({ ...initialOAuthState,
+      agreement: true,
+      user: {
+        ...initialOAuthState.user,
+        data: {},
+      },
+    })
+
+    render(<OAuthCreateDb />)
+
+    expect(screen.getByTestId('oauth-advantages')).toBeInTheDocument()
+    expect(screen.getByTestId('oauth-recommended-settings-checkbox')).toBeInTheDocument()
+    expect(screen.getByTestId('oauth-agreement-checkbox')).toBeInTheDocument()
+    expect(screen.getByTestId('oauth-container-social-buttons')).toBeInTheDocument()
+
+    expect(screen.queryByTestId('oauth-create-db')).not.toBeInTheDocument()
+  })
+
+  it.skipIf(REQUIRE_LOGIN_ON_NEW_DB)('should call proper actions after click create', async () => {
     const name = CloudJobName.CreateFreeSubscriptionAndDatabase
     useOAuthStore.setState({ ...initialOAuthState,
       agreement: true,
@@ -120,8 +169,7 @@ describe('OAuthCreateDb', () => {
     )
   })
 
-  it.skip('should call proper actions after click create without recommened settings', async () => {
-    const name = CloudJobName.CreateFreeSubscriptionAndDatabase
+  it.skipIf(REQUIRE_LOGIN_ON_NEW_DB)('should call proper actions after click create without recommened settings', async () => {
     useOAuthStore.setState({ ...initialOAuthState,
       agreement: true,
       source: 'source',
@@ -140,8 +188,6 @@ describe('OAuthCreateDb', () => {
 
     expect(showInfinityToast).toBeCalledWith(INFINITE_MESSAGES.PENDING_CREATE_DB(CloudJobStep.Credentials).Inner)
     expect(useOAuthStore.getState().isOpenSocialDialog).toEqual(false)
-    expect(useOAuthStore.getState().job).toEqual(
-      { id: constants.USER_JOBS_DATA.id, name, status: CloudJobStatus.Running },
-    )
+    expect(useOAuthStore.getState().plan.loading).toEqual(true)
   })
 })
