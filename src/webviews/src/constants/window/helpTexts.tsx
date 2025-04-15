@@ -4,7 +4,7 @@ import * as l10n from '@vscode/l10n'
 import { Link } from 'react-router-dom'
 
 import { getUtmExternalLink } from 'uiSrc/utils'
-import { EXTERNAL_LINKS, UTM_CAMPAIGNS } from 'uiSrc/constants'
+import { CLOUD_ADS, EXTERNAL_LINKS, UTM_CAMPAIGNS } from 'uiSrc/constants'
 import styles from 'uiSrc/components/popover-delete/styles.module.scss'
 
 export const helpTexts = {
@@ -23,16 +23,20 @@ export const helpTexts = {
       >
         {l10n.t('here. ')}
       </Link>
-      {l10n.t('You can also create a ')}
-      <Link
-        onClick={onFreeTrialDbClick}
-        className="underline hover:no-underline"
-        data-testid="no-json-module-create-free-db"
-        to=""
+      {CLOUD_ADS && (
+        <>
+          {l10n.t('You can also create a ')}
+          <Link
+            onClick={onFreeTrialDbClick}
+            className="underline hover:no-underline"
+            data-testid="no-json-module-create-free-db"
+            to=""
       >
-        {l10n.t('free trial Redis Cloud database')}
-      </Link>
-      {l10n.t(' with built-in JSON support.')}
+            {l10n.t('free trial Redis Cloud database')}
+          </Link>
+          {l10n.t(' with built-in JSON support.')}
+        </>
+      )}
     </>
   ),
   REMOVE_LAST_ELEMENT: (fieldType: string) => (

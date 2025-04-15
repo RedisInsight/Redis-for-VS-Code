@@ -5,7 +5,7 @@ import { VscChevronRight, VscCloud } from 'react-icons/vsc'
 
 import { RiButton } from 'uiSrc/ui'
 import { useOAuthStore } from 'uiSrc/store'
-import { OAuthSocialAction, OAuthSocialSource, VscodeMessageAction } from 'uiSrc/constants'
+import { CLOUD_ADS, OAuthSocialAction, OAuthSocialSource, VscodeMessageAction } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { vscodeApi } from 'uiSrc/services'
 import styles from './styles.module.scss'
@@ -46,6 +46,10 @@ const OAuthCreateFreeDb = ({ source, compressed }: Props) => {
   const description = !compressed
     ? l10n.t('Includes native support for JSON, Query and Search and more.')
     : l10n.t('Get free trial Redis Cloud database')
+
+  if (!CLOUD_ADS) {
+    return null
+  }
 
   return (
     <>
