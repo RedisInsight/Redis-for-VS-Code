@@ -2,7 +2,7 @@ import { VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 import React, { FC, useEffect } from 'react'
 import * as l10n from '@vscode/l10n'
 
-import { OAuthSocialSource } from 'uiSrc/constants'
+import { CLOUD_ADS, OAuthSocialSource } from 'uiSrc/constants'
 import { CommonAppSubscription, DatabasePanel } from 'uiSrc/modules'
 import { OAuthCreateFreeDb, OAuthSsoDialog, OAuthJobs, OAuthSelectPlan } from 'uiSrc/modules/oauth'
 import { fetchCerts } from 'uiSrc/store'
@@ -22,13 +22,17 @@ export const AddDatabasePage: FC<any> = () => {
         {l10n.t('Add Redis database')}
       </h1>
       <VSCodeDivider className="divider" />
-      <OAuthJobs />
-      <CommonAppSubscription />
-      <OAuthSsoDialog />
-      <OAuthCreateFreeDb source={OAuthSocialSource.AddDbForm} />
-      <VSCodeDivider className="divider" />
+      {CLOUD_ADS && (
+        <>
+          <OAuthJobs />
+          <CommonAppSubscription />
+          <OAuthSsoDialog />
+          <OAuthCreateFreeDb source={OAuthSocialSource.AddDbForm} />
+          <OAuthSelectPlan />
+          <VSCodeDivider className="divider" />
+        </>
+      )}
       <DatabasePanel />
-      <OAuthSelectPlan />
     </div>
   )
 }
