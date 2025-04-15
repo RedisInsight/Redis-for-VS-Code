@@ -31,7 +31,7 @@ export const helpTexts = {
             className="underline hover:no-underline"
             data-testid="no-json-module-create-free-db"
             to=""
-      >
+          >
             {l10n.t('free trial Redis Cloud database')}
           </Link>
           {l10n.t(' with built-in JSON support.')}
