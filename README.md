@@ -38,6 +38,7 @@ We welcome your feedback and contributions to make Redis for VS Code even better
 * Report a [bug](https://github.com/RedisInsight/Redis-for-VS-Code/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=%5BBUG%5D)
 
 ## Current limitations
+
 Redis for VS Code is not compatible with Visual Studio Code Remote Development.
 As an alternative, you can run Redis for VS Code locally and connect to your remote Redis database via SSH directly within the extension.
 
