@@ -4,7 +4,7 @@ import * as l10n from '@vscode/l10n'
 
 import { PromoLink } from 'uiSrc/ui'
 import { vscodeApi } from 'uiSrc/services'
-import { OAuthSocialSource, VscodeMessageAction } from 'uiSrc/constants'
+import { CLOUD_ADS, OAuthSocialSource, VscodeMessageAction } from 'uiSrc/constants'
 import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/utils'
 import { useAppInfoStore } from 'uiSrc/store/hooks/use-app-info-store/useAppInfoStore'
 import DockerIcon from 'uiSrc/assets/database/docker.svg?react'
@@ -64,7 +64,7 @@ export const NoDatabases: FC = () => {
         <h2 className="pb-3 text-[24px]">
           {l10n.t('Links')}
         </h2>
-        {contentCloud && (
+        {CLOUD_ADS && contentCloud && (
           <PromoLink Icon={LogoSvg} onClick={handleClickFree} {...contentCloud} />
         )}
         {contentDocker && (

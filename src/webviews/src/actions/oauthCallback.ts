@@ -1,5 +1,5 @@
 import { INFINITE_MESSAGES } from 'uiSrc/components'
-import { CloudAuthStatus, CloudJobName, CloudJobStep, OAuthSocialAction, StorageItem } from 'uiSrc/constants'
+import { CLOUD_ADS, CloudAuthStatus, CloudJobName, CloudJobStep, OAuthSocialAction, StorageItem } from 'uiSrc/constants'
 import { CustomError } from 'uiSrc/interfaces'
 import { CloudAuthResponse } from 'uiSrc/modules/oauth/interfaces'
 import { localStorageService } from 'uiSrc/services'
@@ -9,6 +9,10 @@ import { getApiErrorMessage, parseCustomError, removeInfinityToast, showErrorInf
 let isFlowInProgress = false
 
 export const processOauthCallback = ({ status, message = '', error }: CloudAuthResponse) => {
+  if (!CLOUD_ADS) {
+    return
+  }
+
   const {
     ssoFlow,
     isRecommendedSettings,
