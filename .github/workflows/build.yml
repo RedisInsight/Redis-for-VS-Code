@@ -54,6 +54,7 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ inputs.environment }}
+      enterprise: ${{ inputs.enterprise }}
 
   build-macos:
     if: startsWith(inputs.target, 'macos') || endsWith(inputs.target, 'all')
@@ -61,6 +62,7 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ inputs.environment }}
+      enterprise: ${{ inputs.enterprise }}
       target: ${{ inputs.target }}
 
   build-windows:
@@ -69,3 +71,4 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ inputs.environment }}
+      enterprise: ${{ inputs.enterprise }}

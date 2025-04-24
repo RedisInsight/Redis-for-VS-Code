@@ -1,4 +1,4 @@
-name: ❗ Release (prod)
+name: ❗ Release Enterprise (prod)
 
 on:
   push:
