@@ -39,7 +39,7 @@ jobs:
         if [ "${{ inputs.enterprise }}" = "true" ]; then
           uploadPath="s3://${AWS_BUCKET_NAME}/private/vscode-enterprise/${applicationVersion}"
         else
-          uploadPath="s3://${AWS_BUCKET_NAME}/private/vscode-temp/${applicationVersion}"
+          uploadPath="s3://${AWS_BUCKET_NAME}/private/vscode/${applicationVersion}"
         fi
 
         aws s3 cp release/ $uploadPath --recursive
