@@ -22,6 +22,7 @@ jobs:
     with:
       environment: 'staging'
       target: 'all'
+      enterprise: false
 
   e2e-linux-tests:
     needs: builds

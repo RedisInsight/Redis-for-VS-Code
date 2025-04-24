@@ -2,6 +2,12 @@ name: AWS
 
 on:
   workflow_call:
+    inputs:
+      enterprise:
+        description: Enterprise build
+        type: boolean
+        default: false
+        required: false
 
 env:
   AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
@@ -30,4 +36,10 @@ jobs:
         .github/build/sum_sha256.sh
         applicationVersion=$(jq -r '.version' package.json)
 
-        aws s3 cp release/ s3://${AWS_BUCKET_NAME}/private/vscode/${applicationVersion} --recursive
+        if [ "${{ inputs.enterprise }}" = "true" ]; then
+          uploadPath="s3://${AWS_BUCKET_NAME}/private/vscode-enterprise/${applicationVersion}"
+        else
+          uploadPath="s3://${AWS_BUCKET_NAME}/private/vscode-temp/${applicationVersion}"
+        fi
+
+        aws s3 cp release/ $uploadPath --recursive

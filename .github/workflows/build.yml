@@ -22,6 +22,12 @@ on:
         default: 'staging'
         required: false
 
+      enterprise:
+        description: Enterprise build
+        type: boolean
+        default: false
+        required: false
+
   # Called for Release workflows
   workflow_call:
     inputs:
@@ -34,6 +40,11 @@ on:
         description: Build target
         type: string
         default: 'all'
+        required: false
+      enterprise:
+        description: Enterprise build
+        type: boolean
+        default: false
         required: false
 
 jobs:

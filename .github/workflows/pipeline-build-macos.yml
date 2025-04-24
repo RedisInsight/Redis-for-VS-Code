@@ -15,6 +15,12 @@ on:
         default: 'all'
         type: string
 
+      enterprise:
+        description: Enterprise build
+        type: boolean
+        default: false
+        required: false
+
 jobs:
   build:
     name: Build macos
@@ -95,3 +101,4 @@ jobs:
       RI_CLOUD_IDP_CLIENT_ID: ${{ secrets.RI_CLOUD_IDP_CLIENT_ID }}
       RI_CLOUD_IDP_GOOGLE_ID: ${{ secrets.RI_CLOUD_IDP_GOOGLE_ID }}
       RI_CLOUD_IDP_GH_ID: ${{ secrets.RI_CLOUD_IDP_GH_ID }}
+      RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG: ${{ inputs.enterprise == false }}
