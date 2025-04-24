@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'latest'
+      - 'latest-enterprise'
 
 jobs:
   tests-prod:
@@ -22,7 +23,7 @@ jobs:
     with:
       environment: 'production'
       target: 'all'
-      enterprise: false
+      enterprise: ${{ github.ref_name == 'latest-enterprise' }}
 
   e2e-linux-tests:
     name: E2E Docker tests
@@ -36,4 +37,4 @@ jobs:
     needs: builds-prod
     secrets: inherit
     with:
-      enterprise: false
+      enterprise: ${{ github.ref_name == 'latest-enterprise' }}
