@@ -22,6 +22,12 @@ on:
         default: 'staging'
         required: false
 
+      enterprise:
+        description: Enterprise build
+        type: boolean
+        default: false
+        required: false
+
   # Called for Release workflows
   workflow_call:
     inputs:
@@ -35,6 +41,11 @@ on:
         type: string
         default: 'all'
         required: false
+      enterprise:
+        description: Enterprise build
+        type: boolean
+        default: false
+        required: false
 
 jobs:
   build-linux:
@@ -43,6 +54,7 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ inputs.environment }}
+      enterprise: ${{ inputs.enterprise }}
 
   build-macos:
     if: startsWith(inputs.target, 'macos') || endsWith(inputs.target, 'all')
@@ -50,6 +62,7 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ inputs.environment }}
+      enterprise: ${{ inputs.enterprise }}
       target: ${{ inputs.target }}
 
   build-windows:
@@ -58,3 +71,4 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ inputs.environment }}
+      enterprise: ${{ inputs.enterprise }}
