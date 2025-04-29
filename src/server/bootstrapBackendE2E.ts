@@ -68,6 +68,7 @@ export async function startBackendE2E(logger: CustomLogger): Promise<any> {
               RI_APP_HOST: appHost,
               RI_STDOUT_LOGGER: process.env.RI_STDOUT_LOGGER,
               RI_BUILD_TYPE: process.env.RI_BUILD_TYPE,
+              RI_APP_TYPE: process.env.RI_APP_TYPE,
               RI_SEGMENT_WRITE_KEY: process.env.RI_SEGMENT_WRITE_KEY,
               RI_MIGRATE_OLD_FOLDERS: process.env.RI_MIGRATE_OLD_FOLDERS,
               RI_DEFAULTS_DIR: defaultDirPath,

@@ -52,6 +52,8 @@ jobs:
           echo "RI_CLOUD_IDP_CLIENT_ID=${{ env.RI_CLOUD_IDP_CLIENT_ID }}"
           echo "RI_CLOUD_IDP_GOOGLE_ID=${{ env.RI_CLOUD_IDP_GOOGLE_ID }}"
           echo "RI_CLOUD_IDP_GH_ID=${{ env.RI_CLOUD_IDP_GH_ID }}"
+          echo "RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG=${{ env.RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG }}"
+          echo "RI_APP_TYPE=${{ env.RI_APP_TYPE }}"
         } >> "${{ env.envFile }}"
 
     - name: Build linux package (production)
@@ -85,3 +87,4 @@ jobs:
       RI_CLOUD_IDP_GOOGLE_ID: ${{ secrets.RI_CLOUD_IDP_GOOGLE_ID }}
       RI_CLOUD_IDP_GH_ID: ${{ secrets.RI_CLOUD_IDP_GH_ID }}
       RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG: ${{ inputs.enterprise == false }}
+      RI_APP_TYPE: ${{ inputs.enterprise && 'VS_CODE_ENTERPRISE' || 'VS_CODE' }}
