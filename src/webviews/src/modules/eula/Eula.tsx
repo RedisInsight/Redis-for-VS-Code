@@ -209,8 +209,7 @@ export const Eula = ({ onSubmitted }: Props) => {
               <h2 className={styles.title}>{l10n.t('Privacy Settings')}</h2>
               <Spacer size="s" />
               <span className={styles.smallText}>
-                {l10n.t(`To optimize your experience, Redis for VS Code uses third-party tools.
-                All data collected is anonymized and will not be used for any purpose without your consent.`)}
+                {l10n.t('To optimize your experience, Redis for VS Code uses third-party tools.')}
               </span>
               <Spacer />
             </>
