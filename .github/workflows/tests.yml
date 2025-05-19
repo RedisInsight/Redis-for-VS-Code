@@ -15,7 +15,8 @@ on:
         options:
           - all
           - without_e2e
-          
+          - only_e2e
+
   workflow_call:
     inputs:
       group_tests:
@@ -29,21 +30,25 @@ on:
 
 jobs:
   frontend-tests:
-    if: inputs.group_tests == 'all' || inputs.group_tests == 'without_e2e' || startsWith(github.ref_name, 'feature/')
+    if: |
+      (github.event_name == 'workflow_dispatch' && (inputs.group_tests == 'all' || inputs.group_tests == 'without_e2e')) ||
+      (github.event_name == 'workflow_call' && (inputs.group_tests == 'all' || inputs.group_tests == 'without_e2e')) ||
+      startsWith(github.ref_name, 'feature/')
     uses: ./.github/workflows/tests-frontend.yml
     secrets: inherit
 
-  # E2E Approve
   e2e-approve:
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    if: inputs.group_tests == 'all' || startsWith(github.ref_name, 'e2e/')
+    if: |
+      (github.event_name == 'workflow_dispatch' && (inputs.group_tests == 'all' || inputs.group_tests == 'only_e2e')) ||
+      (github.event_name == 'workflow_call' && (inputs.group_tests == 'all' || inputs.group_tests == 'only_e2e')) ||
+      startsWith(github.ref_name, 'e2e/')
     environment: ${{ startsWith(github.ref_name, 'e2e/') && 'e2e-approve' || 'staging' }}
     name: Approve E2E tests
     steps:
       - uses: actions/checkout@v4
 
-  # E2E Docker
   build-linux:
     uses: ./.github/workflows/pipeline-build-linux.yml
     needs: e2e-approve
