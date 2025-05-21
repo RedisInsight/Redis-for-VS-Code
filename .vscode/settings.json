@@ -1,5 +1,4 @@
 {
-  "editor.formatOnSave": true,
   "css.customData": [".vscode/css_custom_data.json"],
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "[javascript, typescript, typescriptreact]": {
