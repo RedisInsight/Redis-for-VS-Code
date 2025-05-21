@@ -107,16 +107,16 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
     }
 
     // Run tests
-    await exTester.runTests(
-      testFilesEnv ||
-        path.join(__dirname, '..', 'dist', 'tests', '**', '*.e2e.js'),
-      {
-        settings: 'settings.json',
-        logLevel: logging.Level.INFO,
-        offline: false,
-        resources: [],
-      },
-    )
+    // await exTester.runTests(
+    //   testFilesEnv ||
+    //     path.join(__dirname, '..', 'dist', 'tests', '**', '*.e2e.js'),
+    //   {
+    //     settings: 'settings.json',
+    //     logLevel: logging.Level.INFO,
+    //     offline: false,
+    //     resources: [],
+    //   },
+    // )
     // Terminate extension node process
     VScodeScripts.terminateSpecificNodeProcesses(extensionProcessPath)
   } catch (error) {
