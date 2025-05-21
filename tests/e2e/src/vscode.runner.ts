@@ -90,33 +90,36 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
         .map(file => {
           return path.join(__dirname, '..', file)
         })
-
-      // Always prepend setup.js
-      const setupTestPath = path.join(
-        __dirname,
-        '..',
-        'dist',
-        'tests',
-        'setup.js',
-      )
-      testFilesEnv.unshift(setupTestPath)
-
       console.log('Full Paths:', testFilesEnv)
     } else {
       console.error('TEST_FILES environment variable is not defined.')
+    }
+
+    const runTestsConfig = {
+      settings: 'settings.json',
+      logLevel: logging.Level.INFO,
+      offline: false,
+      resources: [],
+    }
+
+    // Run tests
+    // First run EULA tests as EULA is not shown again
+    // after accepting it and it prevents other controls from being shown
+
+    if (!process.env.SKIP_EULA_TESTS) {
+      await exTester.runTests(
+        path.join(__dirname, '..', 'dist', 'tests', 'eula.e2e.js'),
+        runTestsConfig,
+      )
     }
 
     // Run tests
     await exTester.runTests(
       testFilesEnv ||
         path.join(__dirname, '..', 'dist', 'tests', '**', '*.e2e.js'),
-      {
-        settings: 'settings.json',
-        logLevel: logging.Level.INFO,
-        offline: false,
-        resources: [],
-      },
+      runTestsConfig,
     )
+
     // Terminate extension node process
     VScodeScripts.terminateSpecificNodeProcesses(extensionProcessPath)
   } catch (error) {
