@@ -41,7 +41,7 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
     await exTester.downloadCode()
     await exTester.downloadChromeDriver()
 
-    console.log('📁 Contents of test resources folder:')
+    console.log(`${DEFAULT_STORAGE_FOLDER} contents:`)
     const testResources = fs.readdirSync(DEFAULT_STORAGE_FOLDER)
     testResources.forEach(item => {
       const fullPath = path.join(DEFAULT_STORAGE_FOLDER, item)
