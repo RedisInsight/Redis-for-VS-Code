@@ -160,8 +160,7 @@
     "test:watch:ui": "vitest watch --ui --coverage --dir ./src/webviews/src",
     "test:cov": "vitest run --silent --coverage --dir ./src/webviews/src",
     "package:prod": "npx mkdirp release && npx @vscode/vsce package",
-    "package:stage": "npx mkdirp release && npx @vscode/vsce package --pre-release",
-    "prepare": "husky install"
+    "package:stage": "npx mkdirp release && npx @vscode/vsce package --pre-release"
   },
   "vsce": {
     "yarn": true,
@@ -223,7 +222,6 @@
     "eslint-plugin-tailwindcss": "^3.15.1",
     "googleapis": "^142.0.0",
     "html-entities": "^2.3.2",
-    "husky": "^8.0.3",
     "jsdom": "^22.1.0",
     "jsdom-worker": "^0.3.0",
     "lint-staged": "^15.0.2",

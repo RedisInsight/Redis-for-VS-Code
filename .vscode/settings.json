@@ -1,10 +1,5 @@
 {
-  "editor.formatOnSave": true,
   "css.customData": [".vscode/css_custom_data.json"],
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "[javascript, typescript, typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
   "eslint.format.enable": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
@@ -21,11 +16,6 @@
     "strings": "on"
   },
   "files.eol": "\n",
-  "javascript.inlayHints.parameterNames.enabled": "all",
-  "typescript.inlayHints.parameterNames.enabled": "all",
-  "[scss]": {
-    "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter"
-  },
   "search.exclude": {
     "**/*.svg": true,
     "dist": true,
@@ -55,11 +45,5 @@
     "webviews",
     "zustand"
   ],
-  "testing.automaticallyOpenPeekView": "never",
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  }
+  "testing.automaticallyOpenPeekView": "never"
 }
