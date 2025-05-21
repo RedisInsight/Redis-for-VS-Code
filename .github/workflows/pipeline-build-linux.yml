@@ -22,57 +22,67 @@ jobs:
     environment: ${{ inputs.environment }}
 
     steps:
-    - uses: actions/checkout@v4
-      # SSH
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
-      #   with:
-      #     detached: true
+      - uses: actions/checkout@v4
+        # SSH
+        # - name: Setup tmate session
+        #   uses: mxschmitt/action-tmate@v3
+        #   with:
+        #     detached: true
 
-    - name: Setup Node
-      uses: actions/setup-node@v4.0.4
-      with:
-        node-version: '20.15'
+      - name: Setup Node
+        uses: actions/setup-node@v4.0.4
+        with:
+          node-version: '20.15'
 
-    - name: Install dependencies for root package.js
-      run: yarn install --frozen-lockfile
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/yarn
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-    - name: Download backend
-      uses: ./.github/actions/download-backend
+      - name: Install dependencies for root package.js
+        run: yarn install --frozen-lockfile
 
-    - name: Configure Environment Variables
-      run: |
-        {
-          echo "RI_SEGMENT_WRITE_KEY=${{ env.RI_SEGMENT_WRITE_KEY }}"
-          echo "RI_CLOUD_IDP_AUTHORIZE_URL=${{ env.RI_CLOUD_IDP_AUTHORIZE_URL }}"
-          echo "RI_CLOUD_IDP_TOKEN_URL=${{ env.RI_CLOUD_IDP_TOKEN_URL }}"
-          echo "RI_CLOUD_IDP_REVOKE_TOKEN_URL=${{ env.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}"
-          echo "RI_CLOUD_IDP_REDIRECT_URI=${{ env.RI_CLOUD_IDP_REDIRECT_URI }}"
-          echo "RI_CLOUD_IDP_ISSUER=${{ env.RI_CLOUD_IDP_ISSUER }}"
-          echo "RI_CLOUD_IDP_CLIENT_ID=${{ env.RI_CLOUD_IDP_CLIENT_ID }}"
-          echo "RI_CLOUD_IDP_GOOGLE_ID=${{ env.RI_CLOUD_IDP_GOOGLE_ID }}"
-          echo "RI_CLOUD_IDP_GH_ID=${{ env.RI_CLOUD_IDP_GH_ID }}"
-          echo "RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG=${{ env.RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG }}"
-          echo "RI_APP_TYPE=${{ env.RI_APP_TYPE }}"
-        } >> "${{ env.envFile }}"
+      - name: Download backend
+        uses: ./.github/actions/download-backend
 
-    - name: Build linux package (production)
-      if: inputs.environment == 'production'
-      run: |
-        yarn package:prod --target linux-x64 --out ${packagePath}
+      - name: Configure Environment Variables
+        run: |
+          {
+            echo "RI_SEGMENT_WRITE_KEY=${{ env.RI_SEGMENT_WRITE_KEY }}"
+            echo "RI_CLOUD_IDP_AUTHORIZE_URL=${{ env.RI_CLOUD_IDP_AUTHORIZE_URL }}"
+            echo "RI_CLOUD_IDP_TOKEN_URL=${{ env.RI_CLOUD_IDP_TOKEN_URL }}"
+            echo "RI_CLOUD_IDP_REVOKE_TOKEN_URL=${{ env.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}"
+            echo "RI_CLOUD_IDP_REDIRECT_URI=${{ env.RI_CLOUD_IDP_REDIRECT_URI }}"
+            echo "RI_CLOUD_IDP_ISSUER=${{ env.RI_CLOUD_IDP_ISSUER }}"
+            echo "RI_CLOUD_IDP_CLIENT_ID=${{ env.RI_CLOUD_IDP_CLIENT_ID }}"
+            echo "RI_CLOUD_IDP_GOOGLE_ID=${{ env.RI_CLOUD_IDP_GOOGLE_ID }}"
+            echo "RI_CLOUD_IDP_GH_ID=${{ env.RI_CLOUD_IDP_GH_ID }}"
+            echo "RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG=${{ env.RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG }}"
+            echo "RI_APP_TYPE=${{ env.RI_APP_TYPE }}"
+          } >> "${{ env.envFile }}"
 
-    - name: Build linux package (staging)
-      if: inputs.environment == 'staging'
-      run: |
-        sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" ${{ env.envFile }}
-        yarn package:stage --target linux-x64 --out ${packagePath}
+      - name: Build linux package (production)
+        if: inputs.environment == 'production'
+        run: |
+          yarn package:prod --target linux-x64 --out ${packagePath}
 
-    - uses: actions/upload-artifact@v4
-      name: Upload extension artifact
-      with:
-        name: linux-build
-        path: |
-          release/redis-for-*.vsix
+      - name: Build linux package (staging)
+        if: inputs.environment == 'staging'
+        run: |
+          sed -i "s/^RI_APP_FOLDER_NAME=.*/RI_APP_FOLDER_NAME='.redis-for-vscode-stage'/" ${{ env.envFile }}
+          yarn package:stage --target linux-x64 --out ${packagePath}
+
+      - uses: actions/upload-artifact@v4
+        name: Upload extension artifact
+        with:
+          name: linux-build
+          path: |
+            release/redis-for-*.vsix
 
     env:
       envFile: '.env'
