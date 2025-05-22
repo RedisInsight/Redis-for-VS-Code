@@ -16,8 +16,14 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
       fs.rmSync(reportDir, { recursive: true })
     }
 
+    const isLocalRun = !!process.env.LOCAL_RUN
+
+    const storageFolder = !isLocalRun
+      ? DEFAULT_STORAGE_FOLDER
+      : path.join(__dirname, '..', 'test-resources')
+
     const exTester = new ExTester(
-      DEFAULT_STORAGE_FOLDER,
+      storageFolder,
       ReleaseQuality.Stable,
       './test-extensions',
     )
@@ -41,30 +47,34 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
     await exTester.downloadCode()
     await exTester.downloadChromeDriver()
 
-    console.log(`${DEFAULT_STORAGE_FOLDER} contents:`)
-    const testResources = fs.readdirSync(DEFAULT_STORAGE_FOLDER)
+    console.log(`${storageFolder} contents:`)
+    const testResources = fs.readdirSync(storageFolder)
     testResources.forEach(item => {
-      const fullPath = path.join(DEFAULT_STORAGE_FOLDER, item)
+      const fullPath = path.join(storageFolder, item)
       const stats = fs.statSync(fullPath)
       const type = stats.isDirectory() ? '(directory)' : '(file)'
       console.log(`${type} ${item}`)
     })
 
-    // Fix ChromeDriver path for selenium
-    const chromedriverSource = path.join(
-      DEFAULT_STORAGE_FOLDER,
-      'chromedriver-linux64',
-      'chromedriver',
-    )
-    const chromedriverTarget = path.join(DEFAULT_STORAGE_FOLDER, 'chromedriver')
+    if (!isLocalRun) {
+      // Fix ChromeDriver path for selenium
+      const chromedriverSource = path.join(
+        storageFolder,
+        'chromedriver-linux64',
+        'chromedriver',
+      )
+      const chromedriverTarget = path.join(storageFolder, 'chromedriver')
 
-    if (fs.existsSync(chromedriverSource)) {
-      fs.copyFileSync(chromedriverSource, chromedriverTarget)
-      fs.chmodSync(chromedriverTarget, 0o755)
-      console.log(`ChromeDriver moved to expected path: ${chromedriverTarget}`)
-    } else {
-      console.error(`ChromeDriver binary not found at: ${chromedriverSource}`)
-      process.exit(1)
+      if (fs.existsSync(chromedriverSource)) {
+        fs.copyFileSync(chromedriverSource, chromedriverTarget)
+        fs.chmodSync(chromedriverTarget, 0o755)
+        console.log(
+          `ChromeDriver moved to expected path: ${chromedriverTarget}`,
+        )
+      } else {
+        console.error(`ChromeDriver binary not found at: ${chromedriverSource}`)
+        process.exit(1)
+      }
     }
 
     // Install vsix if not installed yet
