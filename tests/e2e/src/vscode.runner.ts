@@ -46,7 +46,7 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
     testResources.forEach(item => {
       const fullPath = path.join(DEFAULT_STORAGE_FOLDER, item)
       const stats = fs.statSync(fullPath)
-      const type = stats.isDirectory() ? '📂' : '📄'
+      const type = stats.isDirectory() ? '(directory)' : '(file)'
       console.log(`${type} ${item}`)
     })
 
