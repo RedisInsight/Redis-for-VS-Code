@@ -57,9 +57,6 @@ jobs:
 
       - name: Run tests
         run: |
-          if [ "${{ matrix.parallel }}" != "0" ]; then
-            export SKIP_EULA_TESTS=true
-          fi
           .github/e2e/test.app.sh
 
       - name: Upload Test Mocha Report
