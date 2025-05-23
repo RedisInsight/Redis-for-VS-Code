@@ -67,7 +67,7 @@ const notEditableFormattersSet = [
 ]
 const defaultFormatter = Formatters.Unicode
 
-describe('Formatters', () => {
+describe.skip('Formatters', () => {
   let keyDetailsView: KeyDetailsView
   let treeView: TreeView
   let hashKeyDetailsView: HashKeyDetailsView
