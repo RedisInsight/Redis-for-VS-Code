@@ -214,6 +214,7 @@ describe('Add JSON Key verification', () => {
       Config.ossStandaloneConfig,
     )
   })
+
   after(async () => {
     await CliAPIRequests.sendRedisCliCommandApi(
       `FLUSHDB`,
@@ -222,6 +223,7 @@ describe('Add JSON Key verification', () => {
     await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
+
   it('Verify that user can create different types(string, number, null, array, boolean) of JSON', async function () {
     for (let i = 0; i < jsonKeys.length; i++) {
       const jsonKeyParameters: JsonKeyParameters = {
@@ -294,7 +296,9 @@ describe('Add JSON Key verification', () => {
     // Check the notification message that key added
     await NotificationActions.checkNotificationMessage(`Key has been added`)
   })
+
   it('Verify that user can add big int', async function () {
+    await ButtonActions.clickElement(treeView.addKeyButton)
     keyName = Common.generateWord(10)
     const bigInt = '12345678998768'
     const jsonStructure = `{"bigInt": ${bigInt}, "string":"${bigInt}"}`
@@ -306,7 +310,9 @@ describe('Add JSON Key verification', () => {
     await addJsonKeyView.switchBack()
     await treeView.switchToInnerViewFrame(InnerViews.KeyDetailsInnerView)
     await addJsonKeyView.waitForElementVisibility(keyDetailsView.jsonKeyValue)
-    const jsonValue = await keyDetailsView.getElementText(keyDetailsView.jsonKeyValue)
+    const jsonValue = await keyDetailsView.getElementText(
+      keyDetailsView.jsonKeyValue,
+    )
     expect(jsonValue).contains(bigInt, 'the big int value is truncated')
     expect(jsonValue).contains(`"${bigInt}"`, 'the big int value is not string')
   })
