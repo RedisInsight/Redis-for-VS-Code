@@ -40,6 +40,33 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
     // Install VSCode and Chromedriver
     await exTester.downloadCode()
     await exTester.downloadChromeDriver()
+
+    console.log(`${DEFAULT_STORAGE_FOLDER} contents:`)
+    const testResources = fs.readdirSync(DEFAULT_STORAGE_FOLDER)
+    testResources.forEach(item => {
+      const fullPath = path.join(DEFAULT_STORAGE_FOLDER, item)
+      const stats = fs.statSync(fullPath)
+      const type = stats.isDirectory() ? '(directory)' : '(file)'
+      console.log(`${type} ${item}`)
+    })
+
+    // Fix ChromeDriver path for selenium
+    const chromedriverSource = path.join(
+      DEFAULT_STORAGE_FOLDER,
+      'chromedriver-linux64',
+      'chromedriver',
+    )
+    const chromedriverTarget = path.join(DEFAULT_STORAGE_FOLDER, 'chromedriver')
+
+    if (fs.existsSync(chromedriverSource)) {
+      fs.copyFileSync(chromedriverSource, chromedriverTarget)
+      fs.chmodSync(chromedriverTarget, 0o755)
+      console.log(`ChromeDriver moved to expected path: ${chromedriverTarget}`)
+    } else {
+      console.error(`ChromeDriver binary not found at: ${chromedriverSource}`)
+      process.exit(1)
+    }
+
     // Install vsix if not installed yet
     if (!fs.existsSync(extensionDir)) {
       await exTester.installVsix({
@@ -58,9 +85,11 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
 
     let testFilesEnv: string | string[] = process.env.TEST_FILES!
     if (process.env.TEST_FILES) {
-      testFilesEnv = process.env.TEST_FILES.split('\n').map(file => file.trim()).map((file) => {
-        return path.join(__dirname, '..', file)
-      })
+      testFilesEnv = process.env.TEST_FILES.split('\n')
+        .map(file => file.trim())
+        .map(file => {
+          return path.join(__dirname, '..', file)
+        })
 
       // Always prepend setup.js
       const setupTestPath = path.join(
