@@ -5,11 +5,35 @@ import {
 } from 'vscode-extension-tester'
 import { logging } from 'selenium-webdriver'
 import * as fs from 'fs'
+import * as os from 'os'
 import path = require('path')
+
 import { Config } from './helpers/Conf'
 import { VScodeScripts } from './helpers/scripts/vscodeScripts'
+
+const listDirContent = (storageFolder: string): void => {
+  console.log('----------------------------------------------------')
+  console.log(`${storageFolder} contents:`)
+  const testResources = fs.readdirSync(storageFolder)
+  testResources.forEach(item => {
+    const fullPath = path.join(storageFolder, item)
+    const stats = fs.statSync(fullPath)
+    const type = stats.isDirectory() ? '(directory)' : '(file)'
+    console.log(`${type} ${item}`)
+  })
+  console.log('----------------------------------------------------')
+}
+
 ;(async (): Promise<void> => {
   try {
+    //
+    const workingDirectory =
+      process.env.APP_FOLDER_ABSOLUTE_PATH ||
+      path.join(
+        os.homedir(),
+        process.env.RI_APP_FOLDER_NAME || '.redis-for-vscode',
+      )
+    listDirContent(workingDirectory)
     // Delete mochawesome-report directory
     const reportDir = path.join(__dirname, '..', 'mochawesome-report')
     if (fs.existsSync(reportDir)) {
@@ -121,6 +145,8 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
         runTestsConfig,
       )
     }
+
+    listDirContent(workingDirectory)
 
     // Run tests
     await exTester.runTests(
