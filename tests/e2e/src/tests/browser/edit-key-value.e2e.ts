@@ -286,7 +286,7 @@ describe('Edit Key values verification', () => {
       `timeSeries-${Common.generateWord(10)}`,
       `bloom-${Common.generateWord(10)}`,
     ]
-    const unsupportedTypeMessage = 'This data type is not currently supported.'
+    const unsupportedTypeMessage = 'This key type is not currently supported.'
 
     // Open CLI and create unsupported keys
     await treeView.openCliByDatabaseName(
