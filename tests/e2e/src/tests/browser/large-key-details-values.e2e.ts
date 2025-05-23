@@ -52,6 +52,7 @@ describe('Large key details verification', () => {
       Config.ossStandaloneConfig,
     )
   })
+
   afterEach(async () => {
     await keyDetailsView.switchBack()
     await KeyAPIRequests.deleteKeyByNameApi(
@@ -60,17 +61,19 @@ describe('Large key details verification', () => {
     )
     await keyDetailsView.switchToInnerViewFrame(InnerViews.TreeInnerView)
   })
+
   after(async () => {
     await keyDetailsView.switchBack()
     await DatabaseAPIRequests.deleteAllDatabasesApi()
   })
+
   it('Verify that user can expand/collapse for sorted set data type', async function () {
     keyName = Common.generateWord(20)
     const sortedSetKeyParameters: SortedSetKeyParameters = {
       keyName: keyName,
       members: [
         {
-          name: 'wqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsa',
+          name: 'wqertjhhgfdasdfghfdsadfghfdsa'.repeat(20),
           score: 1,
         },
       ],
@@ -110,6 +113,7 @@ describe('Large key details verification', () => {
     newSize = await memberValueCell.getRect()
     expect(newSize.height).eql(rowHeight, 'Row is not collapsed')
   })
+
   it('Verify that user can expand/collapse for hash data type', async function () {
     keyName = Common.generateWord(20)
     const hashKeyParameters: HashKeyParameters = {
@@ -117,8 +121,7 @@ describe('Large key details verification', () => {
       fields: [
         {
           field: 'keyFieldValue',
-          value:
-            'keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue keyValue ',
+          value: 'keyValue '.repeat(25),
         },
       ],
     }
@@ -157,13 +160,12 @@ describe('Large key details verification', () => {
     newSize = await fieldValueCell.getRect()
     expect(newSize.height).eql(rowHeight, 'Row is not collapsed')
   })
+
   it('Verify that user can expand/collapse for list data type', async function () {
     keyName = Common.generateWord(20)
     const listKeyParameters: ListKeyParameters = {
       keyName: keyName,
-      element:[
-        'wqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsa',
-    ]
+      element: ['wqertjhhgfdasdfghfdsadfghfdsa'.repeat(15)],
     }
 
     await KeyAPIRequests.addListKeyApi(
@@ -200,13 +202,12 @@ describe('Large key details verification', () => {
     newSize = await elementValueCell.getRect()
     expect(newSize.height).eql(rowHeight, 'Row is not collapsed')
   })
+
   it('Verify that user can expand/collapse for set data type', async function () {
     keyName = Common.generateWord(20)
     const setKeyParameters: SetKeyParameters = {
       keyName: keyName,
-      members: [
-        'wqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsawqertjhhgfdasdfghfdsadfghfdsa',
-      ],
+      members: ['wqertjhhgfdasdfghfdsadfghfdsa'.repeat(15)],
     }
 
     await KeyAPIRequests.addSetKeyApi(
@@ -243,6 +244,7 @@ describe('Large key details verification', () => {
     newSize = await memberValueCell.getRect()
     expect(newSize.height).eql(rowHeight, 'Row is not collapsed')
   })
+
   it('Verify that user can download String key value as txt file when it has > 5000 characters', async function () {
     keyName = Common.generateWord(10)
     // let foundStringDownloadedFiles = 0
@@ -305,7 +307,10 @@ describe('Large key details verification', () => {
         stringKeyDetailsView.editKeyValueButton,
         'class',
       ),
-    ).eql(true, 'Edit String key value button not disabled before loading all clicked')
+    ).eql(
+      true,
+      'Edit String key value button not disabled before loading all clicked',
+    )
 
     // Verify that user can see String key value with only 5000 characters uploaded if length is more than 5000
     // Verify that 3 dots after truncated big strings displayed
