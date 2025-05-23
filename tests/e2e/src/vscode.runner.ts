@@ -123,11 +123,13 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
     }
 
     // Run tests
-    await exTester.runTests(
-      testFilesEnv ||
-        path.join(__dirname, '..', 'dist', 'tests', '**', '*.e2e.js'),
-      runTestsConfig,
-    )
+    if (!process.env.ONLY_EULA_TESTS) {
+      await exTester.runTests(
+        testFilesEnv ||
+          path.join(__dirname, '..', 'dist', 'tests', '**', '*.e2e.js'),
+        runTestsConfig,
+      )
+    }
 
     // Terminate extension node process
     VScodeScripts.terminateSpecificNodeProcesses(extensionProcessPath)

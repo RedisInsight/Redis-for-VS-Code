@@ -13,54 +13,40 @@ env:
   TEST_BIG_DB_DUMP: ${{ secrets.TEST_BIG_DB_DUMP }}
 
 jobs:
-  e2e-linux-tests:
+  e2e-linux-tests-eula:
     runs-on: ubuntu-latest
-    name: E2E tests
-    strategy:
-      fail-fast: false
-      matrix:
-        # Number of threads to run tests
-        parallel: [0, 1, 2, 3]
-
+    name: E2E tests (EULA)
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.18.0'
+      - uses: ./.github/actions/setup-e2e
 
-      - name: Download linux artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: linux-build
-          path: ./release
-
-      - name: Setup e2e tests
-        working-directory: ./tests/e2e
+      - name: Run EULA tests
         run: |
-          npm install -g @vscode/vsce
-          yarn install
-          yarn compile
-          ls -R dist/tests/
+          ONLY_EULA_TESTS=true .github/e2e/test.app.sh
+
+  e2e-linux-tests:
+    runs-on: ubuntu-latest
+    needs: e2e-linux-tests-eula
+    strategy:
+      matrix:
+        parallel: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-e2e
 
       - name: Generate short list of the test files
         working-directory: ./tests/e2e
         run: |
           testFiles=$(find dist -type f -name '*.e2e.js' | sort | awk "NR % 4 == ${{ matrix.parallel }}")
-          echo $testFiles
-
-          # Multi-Line value
           echo "TEST_FILES<<EOF" >> $GITHUB_ENV
           echo "$testFiles" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Run tests
         run: |
-          if [ "${{ matrix.parallel }}" != "0" ]; then
-            export SKIP_EULA_TESTS=true
-          fi
-          .github/e2e/test.app.sh
+          SKIP_EULA_TESTS=true .github/e2e/test.app.sh
 
       - name: Upload Test Mocha Report
         uses: actions/upload-artifact@v4
