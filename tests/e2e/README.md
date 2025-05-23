@@ -19,7 +19,7 @@ yarn install:extension
 The tests require several Redis instances to be running. Use the provided Docker Compose setup to start them:
 
 ```bash
-docker compose -f tests/e2e/rte.docker-compose.yml up --force-recreate -d -V
+docker compose -f rte.docker-compose.yml up --force-recreate -d -V
 ```
 
 For the most up-to-date command, refer to:
@@ -30,8 +30,6 @@ For the most up-to-date command, refer to:
 ---
 
 ## Running Tests Locally
-
-Navigate to the `tests/e2e` directory before running the commands below.
 
 ### Run all E2E tests
 
