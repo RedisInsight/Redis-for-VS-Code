@@ -115,7 +115,6 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
     // Run tests
     // First run EULA tests as EULA is not shown again
     // after accepting it and it prevents other controls from being shown
-
     if (!process.env.SKIP_EULA_TESTS) {
       await exTester.runTests(
         path.join(__dirname, '..', 'dist', 'tests', 'eula.e2e.js'),
