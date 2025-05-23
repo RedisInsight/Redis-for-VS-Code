@@ -263,7 +263,7 @@
     "classnames": "^2.3.2",
     "connection-string": "^4.4.0",
     "cors": "^2.8.5",
-    "date-fns": "^2.30.0",
+    "date-fns": "^3.0.0",
     "detect-port": "^1.6.1",
     "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
