@@ -14,13 +14,25 @@ import { VScodeScripts } from './helpers/scripts/vscodeScripts'
 const listDirContent = (storageFolder: string): void => {
   console.log('----------------------------------------------------')
   console.log(`${storageFolder} contents:`)
+
+  if (!fs.existsSync(storageFolder)) {
+    console.warn(`⚠️  Directory does not exist: ${storageFolder}`)
+    console.log('----------------------------------------------------')
+    return
+  }
+
   const testResources = fs.readdirSync(storageFolder)
-  testResources.forEach(item => {
-    const fullPath = path.join(storageFolder, item)
-    const stats = fs.statSync(fullPath)
-    const type = stats.isDirectory() ? '(directory)' : '(file)'
-    console.log(`${type} ${item}`)
-  })
+  if (testResources.length === 0) {
+    console.log('(empty)')
+  } else {
+    testResources.forEach(item => {
+      const fullPath = path.join(storageFolder, item)
+      const stats = fs.statSync(fullPath)
+      const type = stats.isDirectory() ? '(directory)' : '(file)'
+      console.log(`${type} ${item}`)
+    })
+  }
+
   console.log('----------------------------------------------------')
 }
 
