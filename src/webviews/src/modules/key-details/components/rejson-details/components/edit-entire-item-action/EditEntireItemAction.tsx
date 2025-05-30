@@ -68,6 +68,7 @@ export const EditEntireItemAction = (props: Props) => {
                 wrapperClassName={styles.editorWrapper}
                 value={value}
                 onChange={setValue}
+                data-testid="json-value"
               />
             </div>
           </div>
