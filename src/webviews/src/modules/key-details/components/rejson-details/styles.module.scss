@@ -152,8 +152,12 @@
   }
 }
 
-.fullWidthTextArea {
-  @apply h-[150px] w-full pb-[30px] max-w-none scroll-pb-5;
+.editor {
+  @apply h-[200px] w-full pb-[30px] max-w-none scroll-pb-5;
+}
+
+.editorWrapper {
+  @apply h-[200px];
 }
 
 .buttonStyle,

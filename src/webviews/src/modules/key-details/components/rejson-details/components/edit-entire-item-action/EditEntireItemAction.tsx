@@ -63,9 +63,9 @@ export const EditEntireItemAction = (props: Props) => {
           onKeyDown={handleKeyDown}
         >
           <div className="grow">
-            <div className="h-[300px]">
+            <div className={styles.editor}>
               <MonacoJson
-                wrapperClassName={'h-[300px]'}
+                wrapperClassName={styles.editorWrapper}
                 value={value}
                 onChange={setValue}
               />
