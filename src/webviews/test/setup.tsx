@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest'
 import 'jsdom-worker'
+import React from 'react'
 
 import { mswServer } from 'testSrc/server'
 
@@ -8,6 +9,7 @@ window.URL.revokeObjectURL = () => {}
 window.URL.createObjectURL = () => URL
 
 // Mock the ResizeObserver
+// eslint-disable-next-line react-refresh/only-export-components
 const ResizeObserverMock = vi.fn(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
@@ -15,12 +17,21 @@ const ResizeObserverMock = vi.fn(() => ({
 }))
 
 vi.mock('react-virtualized-auto-sizer', async () => ({
-  ...(await vi.importActual<typeof import('react-virtualized-auto-sizer')>('react-virtualized-auto-sizer')),
-  default: ({ children }: { children: any }) => children({ height: 600, width: 600 }),
+  ...(await vi.importActual<typeof import('react-virtualized-auto-sizer')>(
+    'react-virtualized-auto-sizer',
+  )),
+  default: ({ children }: { children: any }) =>
+    children({ height: 600, width: 600 }),
 }))
 
 vi.mock('react-monaco-editor', () => ({
-  default: () => null,
+  default: ({ value, onChange, 'data-testid': dataTestId }: any) => (
+    <textarea
+      data-testid={dataTestId}
+      value={value}
+      onChange={(e) => onChange?.(e.target.value)}
+    />
+  ),
   monaco: {
     languages: {
       getLanguages: vi.fn(),

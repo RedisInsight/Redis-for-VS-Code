@@ -80,7 +80,7 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     testTimeout: 20000,
-    setupFiles: ['./src/webviews/test/setup.ts'],
+    setupFiles: ['./src/webviews/test/setup.tsx'],
     coverage: {
       reporter: ['text', 'html'],
       reportsDirectory: './report/coverage',
