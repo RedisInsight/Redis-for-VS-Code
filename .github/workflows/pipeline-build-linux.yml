@@ -53,6 +53,8 @@ jobs:
       - name: Configure Environment Variables
         run: |
           {
+            echo "RI_CLOUD_API_URL=${{ env.RI_CLOUD_API_URL }}"
+            echo "RI_CLOUD_CAPI_URL=${{ env.RI_CLOUD_CAPI_URL }}"
             echo "RI_SEGMENT_WRITE_KEY=${{ env.RI_SEGMENT_WRITE_KEY }}"
             echo "RI_CLOUD_IDP_AUTHORIZE_URL=${{ env.RI_CLOUD_IDP_AUTHORIZE_URL }}"
             echo "RI_CLOUD_IDP_TOKEN_URL=${{ env.RI_CLOUD_IDP_TOKEN_URL }}"
@@ -87,6 +89,8 @@ jobs:
     env:
       envFile: '.env'
       packagePath: './release/redis-for-vscode-extension-linux-x64.vsix'
+      RI_CLOUD_API_URL: ${{ secrets.RI_CLOUD_API_URL }}
+      RI_CLOUD_CAPI_URL: ${{ secrets.RI_CLOUD_CAPI_URL }}
       RI_SEGMENT_WRITE_KEY: ${{ secrets.RI_SEGMENT_WRITE_KEY }}
       RI_CLOUD_IDP_AUTHORIZE_URL: ${{ secrets.RI_CLOUD_IDP_AUTHORIZE_URL }}
       RI_CLOUD_IDP_TOKEN_URL: ${{ secrets.RI_CLOUD_IDP_TOKEN_URL }}

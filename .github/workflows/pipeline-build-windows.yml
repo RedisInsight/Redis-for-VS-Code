@@ -33,6 +33,8 @@ jobs:
     - name: Configure Environment Variables
       run: |
         {
+          echo "RI_CLOUD_API_URL=${{ env.RI_CLOUD_API_URL }}"
+          echo "RI_CLOUD_CAPI_URL=${{ env.RI_CLOUD_CAPI_URL }}"
           echo "RI_SEGMENT_WRITE_KEY=${{ env.RI_SEGMENT_WRITE_KEY }}"
           echo "RI_CLOUD_IDP_AUTHORIZE_URL=${{ env.RI_CLOUD_IDP_AUTHORIZE_URL }}"
           echo "RI_CLOUD_IDP_TOKEN_URL=${{ env.RI_CLOUD_IDP_TOKEN_URL }}"
@@ -67,7 +69,8 @@ jobs:
     env:
       envFile: '.env'
       packagePath: './release/redis-for-vscode-extension-win-x64.vsix'
-      RI_SEGMENT_WRITE_KEY: ${{ secrets.RI_SEGMENT_WRITE_KEY }}
+      RI_CLOUD_API_URL: ${{ secrets.RI_CLOUD_API_URL }}
+      RI_CLOUD_CAPI_URL: ${{ secrets.RI_CLOUD_CAPI_URL }}
       RI_CLOUD_IDP_AUTHORIZE_URL: ${{ secrets.RI_CLOUD_IDP_AUTHORIZE_URL }}
       RI_CLOUD_IDP_TOKEN_URL: ${{ secrets.RI_CLOUD_IDP_TOKEN_URL }}
       RI_CLOUD_IDP_REVOKE_TOKEN_URL: ${{ secrets.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}
@@ -76,5 +79,6 @@ jobs:
       RI_CLOUD_IDP_CLIENT_ID: ${{ secrets.RI_CLOUD_IDP_CLIENT_ID }}
       RI_CLOUD_IDP_GOOGLE_ID: ${{ secrets.RI_CLOUD_IDP_GOOGLE_ID }}
       RI_CLOUD_IDP_GH_ID: ${{ secrets.RI_CLOUD_IDP_GH_ID }}
+      RI_SEGMENT_WRITE_KEY: ${{ secrets.RI_SEGMENT_WRITE_KEY }}
       RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG: ${{ inputs.enterprise == false }}
       RI_APP_TYPE: ${{ inputs.enterprise && 'VS_CODE_ENTERPRISE' || 'VS_CODE' }}
