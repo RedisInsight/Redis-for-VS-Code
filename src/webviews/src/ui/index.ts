@@ -15,6 +15,8 @@ export { RiButton } from './button/RiButton'
 export { Chevron } from './icons/chevron/Chevron'
 export { DatabaseIcon } from './icons/database/DatabaseIcon'
 
+export { DropdownMenuPosition } from './select/Select'
+
 export type { RadioGroupOption } from './radio-group/RadioGroup'
 export type { SelectOption } from './select/Select'
 export type { CheckboxEvent as CheckboxChangeEvent } from './checkbox/Checkbox'

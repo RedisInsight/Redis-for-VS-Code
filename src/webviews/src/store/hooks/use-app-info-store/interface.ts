@@ -9,7 +9,7 @@ export interface AppInfoStore {
   spec: Nullable<GetAgreementsSpecResponse>
   server: Nullable<GetServerInfoResponse>
   createDbContent: Nullable<Record<string, ContentCreateRedis>>
-  delimiter: string
+  delimiters: string[]
   commandsSpec: ICommands
   commandsArray: string[]
   commandGroups: string[]
@@ -31,7 +31,7 @@ export interface AppInfoActions {
   setIsShowConcepts: (isShowConcepts: boolean) => void
 
   updateUserConfigSettingsSuccess: (config: GetAppSettingsResponse) => void
-  setDelimiter: (delimiter: string) => void
+  setDelimiters: (delimiter: string[]) => void
 }
 
 export type AppInfoResponses = [

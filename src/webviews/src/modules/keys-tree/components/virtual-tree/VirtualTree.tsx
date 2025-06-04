@@ -22,7 +22,8 @@ import styles from './styles.module.scss'
 
 export interface Props {
   items: KeyInfo[]
-  delimiter?: string
+  delimiterPattern: string
+  delimiters?: string[]
   loading: boolean
   deleting?: boolean
   sorting?: SortOrder
@@ -44,7 +45,8 @@ interface OpenedNodes {
 const VirtualTree = (props: Props) => {
   const {
     items = [],
-    delimiter = DEFAULT_DELIMITER,
+    delimiterPattern,
+    delimiters = [],
     statusOpen = {},
     statusSelected,
     loading,
@@ -100,13 +102,13 @@ const VirtualTree = (props: Props) => {
       nodes.current = []
       elements.current = {}
       rerender({})
-      runWebworker?.({ items: [], delimiter, sorting })
+      runWebworker?.({ items: [], delimiterPattern, delimiters, sorting })
       return
     }
 
     setConstructingTree?.(true)
-    runWebworker?.({ items, delimiter, sorting })
-  }, [items, delimiter])
+    runWebworker?.({ items, delimiterPattern, delimiters, sorting })
+  }, [items, delimiterPattern])
 
   const handleUpdateSelected = useCallback((name: RedisString, keyString: string, type: AllKeyTypes) => {
     onStatusSelected?.(name, keyString, type)
@@ -198,7 +200,8 @@ const VirtualTree = (props: Props) => {
       size: node.size,
       type: node.type,
       fullName: node.fullName,
-      shortName: node.nameString?.split(delimiter).pop(),
+      shortName: node.nameString?.split(new RegExp(delimiterPattern, 'g')).pop(),
+      delimiters,
       nestingLevel: getNestingLevel(nestingLevel),
       deleting,
       path: node.path,

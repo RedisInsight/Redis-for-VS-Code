@@ -103,9 +103,13 @@ export class TreeView extends WebView {
     By.xpath(
       `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid='edit-database']`,
     )
-  getRefreshDatabaseBtnByName = (name: string): Locator =>
+  getRefreshIndexedDatabaseBtnByName = (name: string): Locator =>
     By.xpath(
       `.//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/../..//button[@data-testid = 'refresh-keys-refresh-btn']`,
+    )
+  getRefreshDatabaseBtnByName = (name: string): Locator =>
+    By.xpath(
+      `//div[starts-with(@data-testid, 'database-')][.//*[text()='${name}']]/..//vscode-button[@data-testid = 'refresh-databases']`,
     )
   getCLIDatabaseBtnByName = (name: string): Locator =>
     By.xpath(
@@ -121,7 +125,10 @@ export class TreeView extends WebView {
     By.xpath(
       `(//div[@role='treeitem']//div[starts-with(@data-testid, 'key-')])[position() <= ${number}]`,
     )
-
+  getIndexedDataBaseSummary = (number: number): Locator =>
+    By.xpath(
+      `//div[contains(@data-testid, 'logical-database') and contains(@data-testid, '-${number}')]//div[@data-testid = 'keys-summary']`,
+    )
   /**
    * Open key details of the key by name
    * @param keyName The name of the key
@@ -229,10 +236,32 @@ export class TreeView extends WebView {
    */
   async refreshDatabaseByName(databaseName: string): Promise<void> {
     await ButtonActions.clickElement(
+      this.getRefreshIndexedDatabaseBtnByName(databaseName),
+    )
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, true)
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, false)
+  }
+
+  /**
+   * Click on indexed database in list by its name
+   * @param index The index of the database
+   */
+  async clickOnIndexedDb(index: number): Promise<void> {
+    await ButtonActions.clickElement(
+      this.getIndexedDataBaseSummary(index),
+    )
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, true)
+    await this.waitForElementVisibility(this.loadingIndicator, 1000, false)
+  }
+
+  /**
+   * Click on refresh database in list by its name
+   * @param databaseName The name of the database
+   */
+  async refreshNotIndexedDatabaseByName(databaseName: string): Promise<void> {
+    await ButtonActions.clickElement(
       this.getRefreshDatabaseBtnByName(databaseName),
     )
-    // Hover to CLI btn to not display refresh popover
-    await ButtonActions.hoverElement(this.getCLIDatabaseBtnByName(databaseName))
     await this.waitForElementVisibility(this.loadingIndicator, 1000, true)
     await this.waitForElementVisibility(this.loadingIndicator, 1000, false)
   }

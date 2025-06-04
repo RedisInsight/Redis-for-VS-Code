@@ -15,7 +15,20 @@ For more details, check out the [release notes](https://github.com/RedisInsight/
 
 ## Get started with Redis for VS Code
 
-This repository contains the source code for the Redis for VS Code extension. Install the extension from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=redis.redis-for-vscode).
+This repository contains the source code for the Redis for VS Code extension.
+You can install the extension from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=redis.redis-for-vscode) or download it from [Open VSX](https://open-vsx.org/).
+
+## Running locally 
+
+* Run following installation commands.
+
+```yarn install```
+
+```yarn download:backend```
+
+* On the VS Code sidebar, click on the "Run and Debug" icon.
+* Choose the "Run Dev Extension" configuration and click the run button next to it.
+* Application will be ran in watch mode and new VS Code window should open.
 
 ## Feedback
 
@@ -24,6 +37,11 @@ We welcome your feedback and contributions to make Redis for VS Code even better
 * Suggest a new [feature](https://github.com/RedisInsight/Redis-for-VS-Code/issues/new?assignees=&labels=&projects=&template=feature_request.md&title=)
 * Upvote [popular feature requests](https://github.com/RedisInsight/Redis-for-VS-Code/issues?q=is%3Aissue+is%3Aopen+sort%3Acomments-desc)
 * Report a [bug](https://github.com/RedisInsight/Redis-for-VS-Code/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=%5BBUG%5D)
+
+## Current limitations
+
+If you encounter an error using Redis for VS Code with Visual Studio Code Remote Development, it may be due to an OS mismatch between your local and remote environments, which can lead to the wrong extension being installed remotely.
+As an alternative, you can run Redis for VS Code locally and connect to your remote Redis database via SSH directly within the extension.
 
 ## Telemetry
 

@@ -1,0 +1,109 @@
+:global(.oauth-select-plan-dialog-overlay) {
+  background: rgba(0, 0, 0, .5);
+}
+
+:global(.oauth-select-plan-dialog-content) {
+  padding: 0 !important;
+  border-width: 0 !important;
+  border-radius: 4px !important;
+  background-color: var(--vscode-tab-inactiveBackground) !important;
+  border-width: 0 !important;
+}
+
+.closeBtn {
+  @apply absolute top-4 right-4;
+  outline: 2px solid transparent;
+}
+
+.content {
+  @apply text-center p-[16px] w-[575px] min-w-[575px];
+}
+
+.title {
+  @apply text-[28px] text-center;
+}
+
+.subTitle {
+  @apply text-[14px] text-center px-[40px] pt-[24px];
+}
+  
+.providers {
+  @apply w-full flex flex-row justify-between items-center pt-[30px] pr-[45px] pb-[22px] pl-[45px];
+
+  .providerBtn {
+    @apply w-[138px] h-[105px] rounded-[8px] border border-solid;
+
+    &.activeProvider {
+      border: 2px solid var(--vscode-focusBorder);
+    }
+
+    svg {
+      @apply w-auto h-auto max-w-[44px];
+    }
+  }
+}
+
+.provider {
+  @apply relative;
+}
+
+.providerLabel {
+  @apply text-[10px];
+}
+
+.providerActiveIcon {
+  @apply absolute left-0 right-0 mx-auto w-[22px] h-[22px] rounded-full flex justify-center;
+  background-color: var(--vscode-focusBorder);
+  top: -10px;
+
+  svg {
+    @apply w-[12px] h-[12px];
+    stroke-width: 1;
+    color: var(--vscode-tab-inactiveBackground);
+  }
+}
+
+
+.awsIcon svg > path:first-of-type {
+  fill: currentColor;
+}
+
+.region {
+  @apply px-[45px] py-[2px] text-left;
+
+  .selectDescription {
+    @apply mt-[10px];
+  }
+}
+
+.select {
+  @apply w-full mt-[5px] rounded-[5px];
+}
+
+.select::part(control) {
+  @apply rounded-[5px] border-none;
+}
+
+.select::part(listbox) {
+  @apply border-none;
+}
+
+.option:hover {
+    background-color: var(--vscode-focusBorder);
+}
+
+.footer {
+  @apply w-full text-right pt-[32px] pb-[1px];
+
+  .button {
+    @apply ml-[8px];
+  }  
+}
+
+// Redis stack providers preview style, copied from RI desktop code
+// TODO [DA]: Should be modified and applied once redis stack providers fetching is implemented
+/* :global(.euiTextColor).rspreview {
+  font-size: 12px !important;
+  margin-left: 11px;
+  color: var(--euiColorMediumShade) !important;
+} */

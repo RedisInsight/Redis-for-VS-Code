@@ -11,18 +11,24 @@ export class TreeViewActions extends CommonDriverExtension {
    * Verify that not patterned keys not visible with delimiter
    * @param delimiter string with delimiter value
    */
-  static async verifyNotPatternedKeys(delimiter: string): Promise<void> {
+  static async verifyNotPatternedKeysNotDisplayed(
+    delimiter: string,
+  ): Promise<void> {
     let treeView = new TreeView()
-    const notPatternedKeys = await treeView.getElements(
-      treeView.getLimitedTreeViewKeys(40),
-    )
-    const notPatternedKeysNumber = notPatternedKeys.length
-
-    for (let i = 0; i < notPatternedKeysNumber; i++) {
-      expect(await notPatternedKeys[i].getText()).not.contain(
-        delimiter,
-        'Not patterned Keys contain delimiter',
+    if (
+      await treeView.isElementDisplayed(treeView.getLimitedTreeViewKeys(40))
+    ) {
+      const notPatternedKeys = await treeView.getElements(
+        treeView.getLimitedTreeViewKeys(40),
       )
+      const notPatternedKeysNumber = notPatternedKeys.length
+
+      for (let i = 0; i < notPatternedKeysNumber; i++) {
+        expect(await notPatternedKeys[i].getText()).not.contain(
+          delimiter,
+          'Not patterned Keys contain delimiter',
+        )
+      }
     }
   }
 
@@ -35,9 +41,11 @@ export class TreeViewActions extends CommonDriverExtension {
   static getNodeName(
     startFolder: string,
     folderName: string,
-    delimiter: string,
+    delimiter?: string,
   ): string {
-    return startFolder + folderName + delimiter
+    return delimiter
+      ? `${startFolder}${delimiter}${folderName}`
+      : `${startFolder}${folderName}`
   }
 
   /**
@@ -47,37 +55,43 @@ export class TreeViewActions extends CommonDriverExtension {
    */
   static async checkTreeViewFoldersStructure(
     folders: string[][],
-    delimiter: string,
+    delimiters: string[],
   ): Promise<void> {
     let treeView = new TreeView()
     // Wait for key refresh
     await TreeViewActions.driverSleep(2000)
     // Verify not patterned keys
-    await this.verifyNotPatternedKeys(delimiter)
+    await this.verifyNotPatternedKeysNotDisplayed(delimiters[0])
 
-    const foldersNumber = folders.length
+    for (let i = 0; i < folders.length; i++) {
+      const delimiter = delimiters.length > 1 ? '-' : delimiters[0]
+      let prevNodeName = ''
+      let prevDelimiter = ''
 
-    for (let i = 0; i < foldersNumber; i++) {
-      const innerFoldersNumber = folders[i].length
-      let prevNodeSelector = ''
-
-      for (let j = 0; j < innerFoldersNumber; j++) {
+      // Expand subfolders
+      for (let j = 0; j < folders[i].length; j++) {
         const nodeName = this.getNodeName(
-          prevNodeSelector,
+          prevNodeName,
           folders[i][j],
-          delimiter,
+          prevDelimiter,
         )
         const node = treeView.getFolderSelectorByName(nodeName)
-        const fullTestIdSelector = await treeView.getElementAttribute(node, 'data-testid')
+        const fullTestIdSelector = await treeView.getElementAttribute(
+          node,
+          'data-testid',
+        )
+
         if (!fullTestIdSelector?.includes('expanded')) {
           await ButtonActions.clickElement(node)
         }
-        prevNodeSelector = nodeName
+
+        prevNodeName = nodeName
+        prevDelimiter = delimiter
       }
 
       // Verify that the last folder level contains required keys
       const foundKeyName = `${folders[i].join(delimiter)}`
-      const firstFolderName = this.getNodeName('', folders[i][0], delimiter)
+      const firstFolderName = this.getNodeName('', folders[i][0])
       const firstFolder = treeView.getFolderSelectorByName(firstFolderName)
       expect(
         await treeView.isElementDisplayed(
@@ -109,7 +123,12 @@ export class TreeViewActions extends CommonDriverExtension {
         regExp,
         `The database is not automatically scanned by ${i} 000 keys`,
       )
-      await ButtonActions.clickAndWaitForElement(treeView.scanMoreBtn, treeView.loadingIndicator, true, 2000)
+      await ButtonActions.clickAndWaitForElement(
+        treeView.scanMoreBtn,
+        treeView.loadingIndicator,
+        true,
+        2000,
+      )
       await treeView.waitForElementVisibility(
         treeView.loadingIndicator,
         2000,

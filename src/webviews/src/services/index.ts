@@ -4,6 +4,7 @@ export { vscodeApi } from './vscodeAPI'
 export { resourcesService } from './resourcesService'
 export * from './storage'
 export * from './routing'
+export * from './migrateStorageData'
 
 export {
   apiService,

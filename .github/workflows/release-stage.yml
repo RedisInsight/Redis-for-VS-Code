@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'release/**'
+      - 'release-enterprise/**'
 
 jobs:
   tests:
@@ -22,12 +23,9 @@ jobs:
     with:
       environment: 'staging'
       target: 'all'
+      enterprise: ${{ startsWith(github.ref_name, 'release-enterprise/') }}
 
   e2e-linux-tests:
     needs: builds
     uses: ./.github/workflows/tests-e2e-linux.yml
     secrets: inherit
-
-
-
-

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-mutable-exports */
 import * as vscode from 'vscode'
 import * as dotenv from 'dotenv'
 import * as path from 'path'
@@ -9,12 +10,15 @@ import { WebViewProvider } from './WebViewProvider'
 import { getTitleForKey, handleMessage } from './utils'
 import { ViewId } from './constants'
 import { logger } from './logger'
+import { registerUriHandler } from './utils/handleUri'
 
 dotenv.config({ path: path.join(__dirname, '..', '.env') })
 
-let myStatusBarItem: vscode.StatusBarItem
+export let sidebarProvider: WebViewProvider
+export let panelProvider: WebViewProvider
+
 export async function activate(context: vscode.ExtensionContext) {
-  logger.log('Extension activated')
+  logger.logCore('Extension activated')
   await initWorkspaceState(context)
   checkVersionUpdate()
 
@@ -27,24 +31,13 @@ export async function activate(context: vscode.ExtensionContext) {
       }
     }
   } catch (error) {
-    logger.log(`startBackend error: ${error}`)
+    logger.logCore(`startBackend error: ${error}`)
   }
-  const sidebarProvider = new WebViewProvider('sidebar', context)
-  const panelProvider = new WebViewProvider('cli', context)
 
-  // Create a status bar item with a text and an icon
-  myStatusBarItem = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Left,
-    100,
-  )
-  myStatusBarItem.text = 'Redis for VS Code' // Use the desired icon from the list
-  myStatusBarItem.tooltip = 'Click me for more info'
-  // myStatusBarItem.command = 'RedisForVSCode.openPage' // Command to execute on click
-  // Show the status bar item
-  // myStatusBarItem.show()
+  sidebarProvider = new WebViewProvider('sidebar', context)
+  panelProvider = new WebViewProvider('cli', context)
 
   context.subscriptions.push(
-    myStatusBarItem,
     vscode.window.registerWebviewViewProvider('ri-sidebar', sidebarProvider),
     vscode.window.registerWebviewViewProvider('ri-panel', panelProvider, { webviewOptions: { retainContextWhenHidden: true } }),
 
@@ -95,6 +88,9 @@ export async function activate(context: vscode.ExtensionContext) {
         viewId: ViewId.AddDatabase,
         handleMessage: (message) => handleMessage(message),
         message: args,
+      }).postMessage({
+        action: 'OpenOAuthSsoDialog',
+        data: { source: args?.source, ssoFlow: args?.ssoFlow },
       })
     }),
 
@@ -212,13 +208,23 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('RedisForVSCode.updateSettingsDelimiter', (args) => {
       sidebarProvider.view?.webview.postMessage({ action: 'UpdateSettingsDelimiter', data: args.data })
     }),
+
+    vscode.commands.registerCommand('RedisForVSCode.showExtensionOutput', () => {
+      logger.show()
+    }),
+
+    vscode.commands.registerCommand('RedisForVSCode.refreshDatabases', () => {
+      sidebarProvider.view?.webview.postMessage({ action: 'RefreshTree' })
+    }),
   )
+
+  registerUriHandler()
 }
 
 export function deactivate() {
   try {
     getBackendGracefulShutdown()
   } catch (error) {
-    logger.log(`Deactivating error: ${error}`)
+    logger.logCore(`Deactivating error: ${error}`)
   }
 }

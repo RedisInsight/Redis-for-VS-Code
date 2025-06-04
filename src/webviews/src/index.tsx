@@ -7,11 +7,13 @@ import {
   fetchEditedDatabase,
   fetchCerts,
   useDatabasesStore,
+  useOAuthStore,
 } from 'uiSrc/store'
 import { Config } from 'uiSrc/modules'
 import { AppRoutes } from 'uiSrc/Routes'
 import { PostMessage, SelectKeyAction, SetDatabaseAction } from 'uiSrc/interfaces'
 import { VscodeMessageAction } from 'uiSrc/constants'
+import { migrateLocalStorageData } from 'uiSrc/services'
 import { useAppInfoStore } from './store/hooks/use-app-info-store/useAppInfoStore'
 import {
   processCliAction,
@@ -20,11 +22,15 @@ import {
   setDatabaseAction,
   refreshTreeAction,
   addDatabaseAction,
+  processOauthCallback,
 } from './actions'
 import { MonacoLanguages } from './components'
+import { CloudAuthResponse } from './modules/oauth/interfaces'
 
 import './styles/main.scss'
 import '../vscode.css'
+
+migrateLocalStorageData()
 
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('message', handleMessage)
@@ -55,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshTreeAction(message)
         break
       case VscodeMessageAction.UpdateDatabaseInList:
-        useDatabasesStore.getState().setDatabaseToList(message.data?.database)
+        useDatabasesStore.getState().setDatabaseToList(message.data?.database!)
         break
       case VscodeMessageAction.AddDatabase:
         addDatabaseAction(message)
@@ -71,12 +77,25 @@ document.addEventListener('DOMContentLoaded', () => {
         useAppInfoStore.getState().updateUserConfigSettingsSuccess(message.data)
         break
       case VscodeMessageAction.UpdateSettingsDelimiter:
-        useAppInfoStore.getState().setDelimiter(message.data)
+        useAppInfoStore.getState().setDelimiters(message.data)
         break
 
       // CLI
       case VscodeMessageAction.AddCli:
         processCliAction(message)
+        break
+
+      // OAuth
+      case VscodeMessageAction.OAuthCallback:
+        processOauthCallback(message.data as CloudAuthResponse)
+        break
+      case VscodeMessageAction.OpenOAuthSsoDialog:
+        const { source, ssoFlow } = message.data ?? {}
+        if (ssoFlow && source) {
+          const state = useOAuthStore.getState()
+          state.setSSOFlow(ssoFlow)
+          state.setSocialDialogState(source)
+        }
         break
       default:
         break

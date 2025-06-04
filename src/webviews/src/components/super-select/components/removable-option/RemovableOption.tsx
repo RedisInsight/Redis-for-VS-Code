@@ -47,8 +47,8 @@ const SuperSelectRemovableOption = (props: Props) => {
             text={l10n.t('will be removed from Redis for VS Code.')}
             item={(options[i] as SuperSelectOption).value}
             suffix={suffix}
-            triggerClassName='absolute right-2.5'
-            position='right center'
+            triggerClassName="absolute right-2.5"
+            position="right center"
             deleting={activeOptionId}
             showPopover={showPopover}
             handleDeleteItem={handleRemoveOption}

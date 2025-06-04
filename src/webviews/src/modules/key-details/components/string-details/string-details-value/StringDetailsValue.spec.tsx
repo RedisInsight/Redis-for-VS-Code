@@ -2,9 +2,11 @@ import React from 'react'
 import { instance, mock } from 'ts-mockito'
 
 import * as utils from 'uiSrc/utils'
-import { bufferToString } from 'uiSrc/utils'
+import { bufferToASCII, bufferToString } from 'uiSrc/utils'
 import { downloadFile } from 'uiSrc/utils/dom/downloadFile'
 import { useSelectedKeyStore } from 'uiSrc/store'
+import { KeyValueFormat } from 'uiSrc/constants'
+import * as useContext from 'uiSrc/store/hooks/use-context/useContext'
 import { render, screen, fireEvent, constants, waitForStack } from 'testSrc/helpers'
 import { StringDetailsValue, Props } from './StringDetailsValue'
 import * as useString from '../hooks/useStringStore'
@@ -144,6 +146,25 @@ describe('StringDetailsValue', () => {
       />,
     )
     expect(screen.getByTestId(STRING_VALUE)).toHaveTextContent(`${bufferToString(constants.KEY_1_VALUE)}...`)
+  })
+
+  it('Should render partValue in the Unicode format', async () => {
+    useStringStore.setState((state) => ({
+      ...state,
+      data: { value: constants.VECTOR_32_VALUE_1 },
+    }))
+
+    const useContextInContext = vi.spyOn(useContext, 'useContextInContext')
+    useContextInContext.mockImplementation(() => KeyValueFormat.Vector32Bit)
+
+    render(
+      <StringDetailsValue
+        {...instance(mockedProps)}
+      />,
+    )
+
+    expect(screen.getByTestId(STRING_VALUE)).toHaveTextContent('@...')
+    expect(screen.getByTestId(STRING_VALUE)).not.toHaveTextContent('[object Object]')
   })
 
   it('Should not add "..." in the end of the full value', async () => {

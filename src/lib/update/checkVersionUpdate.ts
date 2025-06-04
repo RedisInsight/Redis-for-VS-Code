@@ -7,7 +7,7 @@ export const checkVersionUpdate = async () => {
   const previousVersion = workspaceStateService.get('extensionVersion')
   const currentVersion = vscode.extensions.getExtension(EXTENSION_ID)?.packageJSON.version
 
-  logger.log(`Current version: ${currentVersion}`)
+  logger.logCore(`Current version: ${currentVersion}`)
   workspaceStateService.set('extensionVersion', currentVersion)
 
   const linkText = vscode.l10n.t('Release Notes')

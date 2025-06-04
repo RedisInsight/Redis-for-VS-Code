@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
-import { getNonce, handleMessage } from './utils'
+import { getNonce } from './utils/utils'
 import { getUIStorage } from './lib'
+import { handleMessage } from './utils/handleMessage'
 
 export class WebViewProvider implements vscode.WebviewViewProvider {
   _doc?: vscode.TextDocument

@@ -28,6 +28,11 @@ export enum VscodeMessageAction {
   ShowEula = 'ShowEula',
   CloseEula = 'CloseEula',
   UpdateDatabaseInList = 'UpdateDatabaseInList',
+  CloudOAuth = 'CloudOAuth',
+  OAuthCallback = 'OAuthCallback',
+  RefreshDatabases = 'RefreshDatabases',
+  OpenExternalUrl = 'OpenExternalUrl',
+  OpenOAuthSsoDialog = 'OpenOAuthSsoDialog',
 }
 
 export enum VscodeStateItem {

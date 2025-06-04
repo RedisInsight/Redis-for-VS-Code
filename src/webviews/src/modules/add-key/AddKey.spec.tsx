@@ -29,36 +29,4 @@ describe('AddKey', () => {
 
     expect((screen.getByTestId('select-key-type') as HTMLInputElement).value).toBe(ADD_KEY_TYPE_OPTIONS[0].value)
   })
-
-  // it('should show text if db not contains ReJSON module', async () => {
-  //   render(<AddKey
-  //   />)
-
-  //   fireEvent.click(screen.getByTestId('select-key-type'))
-  //   await waitFor(() => {
-  //     fireEvent.click(
-  //       screen.queryByText('JSON') || document,
-  //     )
-  //   })
-
-  //   expect(screen.getByTestId('json-not-loaded-text')).toBeInTheDocument()
-  // })
-
-  // it('should not show text if db contains ReJSON module', async () => {
-  //   (connectedInstanceSelector as vi.Mock).mockImplementation(() => ({
-  //     modules: [{ name: RedisDefaultModules.FT }, { name: RedisDefaultModules.ReJSON }],
-  //   }))
-
-  //   render(<AddKey
-  //   />)
-
-  //   fireEvent.click(screen.getByTestId('select-key-type'))
-  //   await waitFor(() => {
-  //     fireEvent.click(
-  //       screen.queryByText('JSON') || document,
-  //     )
-  //   })
-
-  //   expect(screen.queryByTestId('json-not-loaded-text')).not.toBeInTheDocument()
-  // })
 })

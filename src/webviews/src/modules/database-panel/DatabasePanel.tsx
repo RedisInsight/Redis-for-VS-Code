@@ -114,11 +114,6 @@ const DatabasePanel = React.memo((props: Props) => {
   return (
     <>
       <div className={cx('relative', styles.container, { addDbWrapper: !editMode })}>
-        <h1 className="text-2xl pt-4 pb-4">
-          {!editMode ? l10n.t('Add Redis database') : l10n.t('Edit Redis database')}
-        </h1>
-        <VSCodeDivider className="divider" />
-
         <div
           className={cx(styles.content)}
           style={{ height: editMode ? 'calc(100vh - 194px)' : 'calc(100vh - 162px)' }}

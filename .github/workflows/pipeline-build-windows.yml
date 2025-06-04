@@ -9,6 +9,12 @@ on:
         default: 'staging'
         type: string
 
+      enterprise:
+        description: Enterprise build
+        type: boolean
+        default: false
+        required: false
+
 jobs:
   build:
     name: Build windows
@@ -24,8 +30,23 @@ jobs:
     - name: Download backend
       uses: ./.github/actions/download-backend
 
-    - name: Set RI_SEGMENT_WRITE_KEY to .env file
-      run: echo "RI_SEGMENT_WRITE_KEY='${{ env.RI_SEGMENT_WRITE_KEY }}'" >> ${{ env.envFile }}
+    - name: Configure Environment Variables
+      run: |
+        {
+          echo "RI_CLOUD_API_URL=${{ env.RI_CLOUD_API_URL }}"
+          echo "RI_CLOUD_CAPI_URL=${{ env.RI_CLOUD_CAPI_URL }}"
+          echo "RI_SEGMENT_WRITE_KEY=${{ env.RI_SEGMENT_WRITE_KEY }}"
+          echo "RI_CLOUD_IDP_AUTHORIZE_URL=${{ env.RI_CLOUD_IDP_AUTHORIZE_URL }}"
+          echo "RI_CLOUD_IDP_TOKEN_URL=${{ env.RI_CLOUD_IDP_TOKEN_URL }}"
+          echo "RI_CLOUD_IDP_REVOKE_TOKEN_URL=${{ env.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}"
+          echo "RI_CLOUD_IDP_REDIRECT_URI=${{ env.RI_CLOUD_IDP_REDIRECT_URI }}"
+          echo "RI_CLOUD_IDP_ISSUER=${{ env.RI_CLOUD_IDP_ISSUER }}"
+          echo "RI_CLOUD_IDP_CLIENT_ID=${{ env.RI_CLOUD_IDP_CLIENT_ID }}"
+          echo "RI_CLOUD_IDP_GOOGLE_ID=${{ env.RI_CLOUD_IDP_GOOGLE_ID }}"
+          echo "RI_CLOUD_IDP_GH_ID=${{ env.RI_CLOUD_IDP_GH_ID }}"
+          echo "RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG=${{ env.RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG }}"
+          echo "RI_APP_TYPE=${{ env.RI_APP_TYPE }}"
+        } >> "${{ env.envFile }}"
 
     - name: Build windows package (production)
       if: inputs.environment == 'production'
@@ -48,4 +69,16 @@ jobs:
     env:
       envFile: '.env'
       packagePath: './release/redis-for-vscode-extension-win-x64.vsix'
+      RI_CLOUD_API_URL: ${{ secrets.RI_CLOUD_API_URL }}
+      RI_CLOUD_CAPI_URL: ${{ secrets.RI_CLOUD_CAPI_URL }}
+      RI_CLOUD_IDP_AUTHORIZE_URL: ${{ secrets.RI_CLOUD_IDP_AUTHORIZE_URL }}
+      RI_CLOUD_IDP_TOKEN_URL: ${{ secrets.RI_CLOUD_IDP_TOKEN_URL }}
+      RI_CLOUD_IDP_REVOKE_TOKEN_URL: ${{ secrets.RI_CLOUD_IDP_REVOKE_TOKEN_URL }}
+      RI_CLOUD_IDP_REDIRECT_URI: ${{ secrets.RI_CLOUD_IDP_REDIRECT_URI }}
+      RI_CLOUD_IDP_ISSUER: ${{ secrets.RI_CLOUD_IDP_ISSUER }}
+      RI_CLOUD_IDP_CLIENT_ID: ${{ secrets.RI_CLOUD_IDP_CLIENT_ID }}
+      RI_CLOUD_IDP_GOOGLE_ID: ${{ secrets.RI_CLOUD_IDP_GOOGLE_ID }}
+      RI_CLOUD_IDP_GH_ID: ${{ secrets.RI_CLOUD_IDP_GH_ID }}
       RI_SEGMENT_WRITE_KEY: ${{ secrets.RI_SEGMENT_WRITE_KEY }}
+      RI_FEATURES_CLOUD_ADS_DEFAULT_FLAG: ${{ inputs.enterprise == false }}
+      RI_APP_TYPE: ${{ inputs.enterprise && 'VS_CODE_ENTERPRISE' || 'VS_CODE' }}

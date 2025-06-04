@@ -41,6 +41,7 @@ export interface TreeData extends FixedSizeNodeData {
   keyApproximate: number
   fullName: string
   shortName?: string
+  delimiters?: string[]
   type: AllKeyTypes
   ttl: number
   size: number

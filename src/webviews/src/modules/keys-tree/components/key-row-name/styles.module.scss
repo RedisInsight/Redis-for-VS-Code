@@ -3,10 +3,6 @@
   margin-top: 7px;
 }
 
-.keyNameContainer {
-  @apply flex truncate h-full;
-}
-
 .keyName {
   @apply inline-block truncate;
   padding-left: 10px;

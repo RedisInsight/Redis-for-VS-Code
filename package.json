@@ -1,6 +1,6 @@
 {
   "name": "redis-for-vscode",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "displayName": "Redis for VS Code",
   "description": "Visually interact with data and build queries in Redis",
   "license": "SEE LICENSE IN LICENSE",
@@ -106,6 +106,12 @@
         "title": "Add Redis database",
         "category": "Redis for VS Code",
         "icon": "$(add)"
+      },
+      {
+        "command": "RedisForVSCode.showExtensionOutput",
+        "title": "Show extension output",
+        "category": "Redis for VS Code",
+        "icon": "$(add)"
       }
     ],
     "menus": {
@@ -138,13 +144,14 @@
   "scripts": {
     "vscode:prepublish": "yarn compile && cross-env NODE_ENV=production BUILD_EXIT=true yarn build",
     "compile": "tsc -p ./",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && yarn download:backend",
     "build": "cross-env NODE_ENV=production vite build",
     "download:backend": "tsc ./scripts/downloadBackend.ts && node ./scripts/downloadBackend.js",
     "dev": "vite dev",
     "dev:key": "cross-env RI_DATA_ROUTE=main/key vite dev",
     "dev:database": "cross-env RI_DATA_ROUTE=main/add_database vite dev",
     "dev:sidebar": "cross-env RI_DATA_ROUTE=sidebar vite dev",
+    "dev:settings": "cross-env RI_DATA_ROUTE=main/settings vite dev",
     "l10n:collect": "npx @vscode/l10n-dev export -o ./l10n ./src",
     "watch": "tsc -watch -p ./",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
@@ -153,8 +160,7 @@
     "test:watch:ui": "vitest watch --ui --coverage --dir ./src/webviews/src",
     "test:cov": "vitest run --silent --coverage --dir ./src/webviews/src",
     "package:prod": "npx mkdirp release && npx @vscode/vsce package",
-    "package:stage": "npx mkdirp release && npx @vscode/vsce package --pre-release",
-    "prepare": "husky install"
+    "package:stage": "npx mkdirp release && npx @vscode/vsce package --pre-release"
   },
   "vsce": {
     "yarn": true,
@@ -216,7 +222,6 @@
     "eslint-plugin-tailwindcss": "^3.15.1",
     "googleapis": "^142.0.0",
     "html-entities": "^2.3.2",
-    "husky": "^8.0.3",
     "jsdom": "^22.1.0",
     "jsdom-worker": "^0.3.0",
     "lint-staged": "^15.0.2",
@@ -227,9 +232,11 @@
     "postcss-nested": "^6.0.1",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.0.0",
+    "react-element-to-jsx-string": "^17.0.0",
     "react-intl": "^6.5.1",
     "react-refresh": "^0.14.0",
     "sass": "^1.69.5",
+    "socket.io-mock": "^1.3.2",
     "source-map-support": "^0.5.21",
     "supertest": "^6.3.3",
     "tailwindcss": "^3.4.3",
@@ -250,7 +257,7 @@
     "@stablelib/snappy": "^1.0.3",
     "@vscode/l10n": "^0.0.18",
     "@vscode/webview-ui-toolkit": "^1.4.0",
-    "axios": "^1.7.4",
+    "axios": "^1.8.3",
     "brotli-unicode": "^1.0.2",
     "buffer": "^6.0.3",
     "classnames": "^2.3.2",
@@ -290,11 +297,13 @@
     "react-router-dom": "^6.17.0",
     "react-select": "^5.8.3",
     "react-spinners": "^0.13.8",
+    "react-toastify": "^11.0.3",
     "react-virtualized": "^9.22.5",
     "react-virtualized-auto-sizer": "^1.0.20",
     "react-vtree": "^3.0.0-beta.3",
     "react-window": "^1.8.6",
     "reactjs-popup": "^2.0.6",
+    "socket.io-client": "^4.8.1",
     "ws": "^8.17.1",
     "zustand": "^4.5.4"
   }
