@@ -15,7 +15,8 @@ For more details, check out the [release notes](https://github.com/RedisInsight/
 
 ## Get started with Redis for VS Code
 
-This repository contains the source code for the Redis for VS Code extension. Install the extension from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=redis.redis-for-vscode).
+This repository contains the source code for the Redis for VS Code extension.
+You can install the extension from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=redis.redis-for-vscode) or download it from [Open VSX](https://open-vsx.org/).
 
 ## Running locally 
 

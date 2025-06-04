@@ -36,6 +36,15 @@ jobs:
         name: linux-build
         path: ./release
 
+    - name: Cache E2E Yarn dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          tests/e2e/node_modules
+        key: ${{ runner.os }}-yarn-e2e-${{ hashFiles('tests/e2e/yarn.lock', 'tests/e2e/package.json') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-e2e-
+
     - name: Setup e2e tests
       working-directory: ./tests/e2e
       run: |
