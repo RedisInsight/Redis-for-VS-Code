@@ -5,6 +5,7 @@ import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import * as l10n from '@vscode/l10n'
 
 import { RiButton } from 'uiSrc/ui'
+import styles from '../styles.module.scss'
 
 export interface ReJSONConfirmDialogProps {
   open: boolean
@@ -17,12 +18,21 @@ const ReJSONConfirmDialog = ({
   onClose,
   onConfirm,
 }: ReJSONConfirmDialogProps) => (
-  <Popup modal open={open} closeOnDocumentClick={false} className="">
-    <h1>{l10n.t('Duplicate JSON key detected')}</h1>
+  <Popup
+    modal
+    open={open}
+    closeOnDocumentClick={false}
+    className={styles.confirmPopup}
+  >
+    <h1 className={styles.confirmPopupH1}>
+      {l10n.t('Duplicate JSON key detected')}
+    </h1>
 
-    <h2>{l10n.t('You already have the same JSON key.')}</h2>
+    <h2 className={styles.confirmPopupH2}>
+      {l10n.t('You already have the same JSON key.')}
+    </h2>
 
-    <p>
+    <p className={styles.confirmPopupText}>
       {l10n.t(
         'If you proceed, a value of the existing JSON key will be overwritten.',
       )}
@@ -32,13 +42,25 @@ const ReJSONConfirmDialog = ({
       <VscClose />
     </RiButton>
 
-    <VSCodeButton
-      appearance="primary"
-      data-testid="confirm-btn"
-      onClick={onConfirm}
-    >
-      {l10n.t('Overwrite')}
-    </VSCodeButton>
+    <div className={styles.confirmPopupActions}>
+      <VSCodeButton
+        appearance="primary"
+        data-testid="confirm-btn"
+        className={styles.confirmPopupButton}
+        onClick={onConfirm}
+      >
+        {l10n.t('Overwrite')}
+      </VSCodeButton>
+
+      <VSCodeButton
+        appearance="secondary"
+        data-testid="cancel-btn"
+        className={styles.confirmPopupButton}
+        onClick={onClose}
+      >
+        {l10n.t('Cancel')}
+      </VSCodeButton>
+    </div>
   </Popup>
 )
 
