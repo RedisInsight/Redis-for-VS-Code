@@ -44,7 +44,7 @@
 }
 
 .row {
-  @apply min-h-[25px] relative flex items-end;
+  @apply relative flex items-end;
 
   &:last-child {
     @apply pb-3;
@@ -52,7 +52,7 @@
 
   &:before {
     @apply block absolute h-full top-0 left-0 right-0 z-0 mx-[-16px];
-    content: "";
+    content: '';
   }
 
   &:nth-child(2n):before {
@@ -63,11 +63,13 @@
     background-color: var(--vscode-panelStickyScroll-shadow);
   }
 
-  > div, span, button {
+  > div,
+  span,
+  button {
     @apply z-[1];
   }
 
-  div, input {
+  input {
     @apply min-h-[25px];
   }
 }
@@ -123,7 +125,7 @@
 }
 
 .stringStyle {
-  @apply break-all
+  @apply break-all;
 }
 
 .quoted {
@@ -133,7 +135,8 @@
   }
 }
 
-.actionButtons, .deleteBtn {
+.actionButtons,
+.deleteBtn {
   @apply ml-4 flex items-center min-w-6;
 }
 
@@ -149,10 +152,15 @@
   }
 }
 
-.fullWidthTextArea {
-  @apply h-[150px] w-full pb-[30px] max-w-none scroll-pb-5;
+.editor {
+  @apply h-[200px] w-full pb-[30px] max-w-none scroll-pb-5;
 }
 
-.buttonStyle, .jsonButtonStyle {
+.editorWrapper {
+  @apply h-[200px];
+}
+
+.buttonStyle,
+.jsonButtonStyle {
   @apply z-[1];
 }
