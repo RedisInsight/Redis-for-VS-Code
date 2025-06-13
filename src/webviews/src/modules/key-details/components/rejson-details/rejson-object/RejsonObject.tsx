@@ -103,6 +103,7 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
 
     if (isKeyExisting) {
       setConfirmDialogAction(() => () => {
+        setIsConfirmVisible(false)
         setAddNewKeyValuePair(false)
 
         if (updatedPath) {
@@ -121,8 +122,9 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
   }
 
   const handleUpdateValueFormSubmit = (updatedValue: string) => {
-    if (hasModifications(value, updatedValue)) {
+    if (hasModifications(value, JSONParse(updatedValue))) {
       setConfirmDialogAction(() => () => {
+        setIsConfirmVisible(false)
         setEditEntireObject(false)
         handleSetRejsonDataAction(selectedKey, path, updatedValue as string)
       })
