@@ -3,6 +3,8 @@ import { instance, mock } from 'ts-mockito'
 import { fireEvent, render, screen, act, waitForStack, constants } from 'testSrc/helpers'
 
 import { RejsonObject } from './RejsonObject'
+import * as tbdUtils from './tbd'
+import * as store from '../hooks/useRejsonStore'
 import { JSONObjectProps, ObjectTypes } from '../interfaces'
 
 const EXPAND_OBJECT = 'expand-object'
@@ -285,7 +287,7 @@ describe('JSONObject', () => {
     })
 
     fireEvent.input(screen.getByTestId(JSON_VALUE), {
-      target: { value: '{}' },
+      target: { value: JSON.stringify([]) },
     })
 
     await act(async () => {
@@ -293,5 +295,144 @@ describe('JSONObject', () => {
     })
 
     expect(onJSONPropertyEdited).toBeCalled()
+  })
+
+  it('should apply value for edit with modifications (via ConfirmDialog)', async () => {
+    const fetchVisualisationResults = vi
+      .fn()
+      .mockReturnValue(Promise.resolve({ data: {} }))
+    const onJSONPropertyEdited = vi.fn()
+
+    render(
+      <RejsonObject
+        {...instance(mockedProps)}
+        keyName="keyName"
+        value={constants.REJSON_DATA}
+        isDownloaded
+        handleFetchVisualisationResults={fetchVisualisationResults}
+        handleSetRejsonDataAction={onJSONPropertyEdited}
+        onJsonKeyExpandAndCollapse={vi.fn()}
+      />,
+    )
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId(EDIT_OBJECT_BTN))
+    })
+
+    fireEvent.input(screen.getByTestId(JSON_VALUE), {
+      target: { value: '{}' },
+    })
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('apply-edit-btn'))
+    })
+
+    expect(screen.getByText('Duplicate JSON key detected')).toBeInTheDocument()
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('confirm-btn'))
+    })
+
+    expect(onJSONPropertyEdited).toBeCalled()
+
+    expect(
+      screen.queryByText('Duplicate JSON key detected'),
+    ).not.toBeInTheDocument()
+  })
+
+  it('should close ConfirmDialog without calling action when cancel is clicked on edit with modifications', async () => {
+    const fetchVisualisationResults = vi
+      .fn()
+      .mockReturnValue(Promise.resolve({ data: {} }))
+    const onJSONPropertyEdited = vi.fn()
+
+    render(
+      <RejsonObject
+        {...instance(mockedProps)}
+        keyName="keyName"
+        value={constants.REJSON_DATA}
+        isDownloaded
+        handleFetchVisualisationResults={fetchVisualisationResults}
+        handleSetRejsonDataAction={onJSONPropertyEdited}
+        onJsonKeyExpandAndCollapse={vi.fn()}
+      />,
+    )
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId(EDIT_OBJECT_BTN))
+    })
+
+    fireEvent.input(screen.getByTestId(JSON_VALUE), {
+      target: { value: '{}' },
+    })
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('apply-edit-btn'))
+    })
+
+    expect(screen.getByText('Duplicate JSON key detected')).toBeInTheDocument()
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('cancel-btn'))
+    })
+
+    expect(onJSONPropertyEdited).not.toBeCalled()
+
+    expect(
+      screen.queryByText('Duplicate JSON key detected'),
+    ).not.toBeInTheDocument()
+  })
+
+  it('should apply new value for existing key after confirming in ConfirmDialog', async () => {
+    vi.spyOn(tbdUtils, 'checkExistingPath').mockReturnValue(true)
+    vi.spyOn(store, 'useRejsonStore').mockReturnValue({
+      fullValue: JSON.stringify({ existingKey: 1 }),
+    })
+
+    const onSetRejsonDataAction = vi.fn()
+
+    render(
+      <RejsonObject
+        {...instance(mockedProps)}
+        keyName="keyName"
+        type={ObjectTypes.Object}
+        value={constants.REJSON_DATA}
+        isDownloaded
+        handleSetRejsonDataAction={onSetRejsonDataAction}
+        onJsonKeyExpandAndCollapse={vi.fn()}
+      />,
+    )
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId(EXPAND_OBJECT))
+    })
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('add-field-btn'))
+    })
+
+    fireEvent.input(screen.getByTestId(JSON_KEY), {
+      target: { value: '"existingKey"' },
+    })
+
+    fireEvent.input(screen.getByTestId(JSON_VALUE), {
+      target: { value: '{}' },
+    })
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('apply-btn'))
+    })
+
+    expect(screen.getByText('Duplicate JSON key detected')).toBeInTheDocument()
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('confirm-btn'))
+    })
+
+    expect(onSetRejsonDataAction).toBeCalled()
+
+    expect(
+      screen.queryByText('Duplicate JSON key detected'),
+    ).not.toBeInTheDocument()
   })
 })
