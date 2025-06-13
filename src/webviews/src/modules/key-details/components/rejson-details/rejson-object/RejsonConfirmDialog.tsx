@@ -38,7 +38,11 @@ const ReJSONConfirmDialog = ({
       )}
     </p>
 
-    <RiButton className="absolute top-4 right-4" onClick={onClose}>
+    <RiButton
+      className="absolute top-4 right-4"
+      onClick={onClose}
+      aria-label="Close"
+    >
       <VscClose />
     </RiButton>
 
