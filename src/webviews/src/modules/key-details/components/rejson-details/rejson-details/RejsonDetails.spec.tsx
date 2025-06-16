@@ -338,4 +338,66 @@ describe('RejsonDetails', () => {
     expect(useRejson.setReJSONDataAction).not.toBeCalled()
     expect(useRejson.appendReJSONArrayItemAction).toBeCalled()
   })
+
+  it('should show confirmation dialog when adding a key that already exists', () => {
+    render(
+      <RejsonDetails
+        {...instance(mockedProps)}
+        data={{ existingKey: '123' }}
+        dataType="object"
+        selectedKey={mockedSelectedKey}
+        isDownloaded
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('add-object-btn'))
+
+    fireEvent.change(screen.getByTestId('json-key'), {
+      target: { value: '"existingKey"' },
+    })
+
+    fireEvent.change(screen.getByTestId('json-value'), {
+      target: { value: '"newValue"' },
+    })
+
+    fireEvent.click(screen.getByTestId('apply-btn'))
+
+    expect(screen.getByText('Duplicate JSON key detected')).toBeInTheDocument()
+    expect(useRejson.setReJSONDataAction).not.toBeCalled()
+  })
+
+  it('should call setReJSONDataAction when user confirms overwrite', () => {
+    render(
+      <RejsonDetails
+        {...instance(mockedProps)}
+        data={{ existingKey: '123' }}
+        dataType="object"
+        selectedKey={mockedSelectedKey}
+        isDownloaded
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('add-object-btn'))
+
+    fireEvent.change(screen.getByTestId('json-key'), {
+      target: { value: '"existingKey"' },
+    })
+
+    fireEvent.change(screen.getByTestId('json-value'), {
+      target: { value: '"newValue"' },
+    })
+
+    fireEvent.click(screen.getByTestId('apply-btn'))
+
+    const confirmBtn = screen.getByTestId('confirm-btn')
+    fireEvent.click(confirmBtn)
+
+    expect(useRejson.setReJSONDataAction).toBeCalledWith(
+      mockedSelectedKey,
+      '["existingKey"]',
+      '"newValue"',
+      undefined, // length is not required
+      expect.any(Function), // callback is not required
+    )
+  })
 })

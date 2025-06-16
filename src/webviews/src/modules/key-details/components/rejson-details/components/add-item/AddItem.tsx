@@ -19,8 +19,9 @@ import styles from '../../styles.module.scss'
 export interface Props {
   isPair: boolean
   onCancel: () => void
-  onSubmit: (pair: { key?: string, value: string }) => void
+  onSubmit: (pair: { key?: string; value: string }) => void
   leftPadding?: number
+  shouldCloseOnOutsideClick?: boolean
 }
 
 export const AddItem = (props: Props) => {
@@ -29,13 +30,14 @@ export const AddItem = (props: Props) => {
     leftPadding = 0,
     onCancel,
     onSubmit,
+    shouldCloseOnOutsideClick = true,
   } = props
 
   const [key, setKey] = useState<string>('')
   const [value, setValue] = useState<string>('')
   const [error, setError] = useState<Nullable<string>>(null)
 
-  const handleClickOutside = () => { onCancel?.() }
+  const handleClickOutside = () => shouldCloseOnOutsideClick && onCancel?.()
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -91,7 +93,9 @@ export const AddItem = (props: Props) => {
                 value={key}
                 invalid={!!error}
                 placeholder={l10n.t('Enter JSON key')}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKey(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setKey(e.target.value)
+                }
                 data-testid="json-key"
               />
             </span>
@@ -103,7 +107,9 @@ export const AddItem = (props: Props) => {
               value={value}
               placeholder={l10n.t('Enter JSON value')}
               invalid={!!error}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setValue(e.target.value)
+              }
               data-testid="json-value"
             />
           </span>

@@ -164,3 +164,35 @@
 .jsonButtonStyle {
   @apply z-[1];
 }
+
+.confirmPopup {
+  padding: 8px 16px;
+}
+
+.confirmPopupH1 {
+  @apply text-[16px] font-semibold;
+  margin-bottom: 12px;
+}
+
+.confirmPopupH2 {
+  @apply text-[14px] font-normal;
+  margin-bottom: 8px;
+}
+
+.confirmPopupText {
+  @apply text-[14px] font-normal;
+  margin-bottom: 16px;
+}
+
+.confirmPopupActions {
+  @apply flex;
+}
+
+.confirmPopupButton {
+  @apply min-w-[85px];
+  margin-right: 8px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}

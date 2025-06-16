@@ -52,4 +52,41 @@ describe('EditEntireItemAction', () => {
     )
     expect(handleUpdateValueFormSubmit).not.toHaveBeenCalled()
   })
+
+  it('should call onCancel when clicking outside and shouldCloseOnOutsideClick is true', () => {
+    const handleCancel = vi.fn()
+
+    render(
+      <div data-testid="outside">
+        <EditEntireItemAction
+          {...instance(mockedProps)}
+          initialValue={valueOfEntireItem}
+          onCancel={handleCancel}
+          shouldCloseOnOutsideClick
+        />
+      </div>,
+    )
+
+    // Simulate outside click
+    fireEvent.mouseDown(screen.getByTestId('outside'))
+    expect(handleCancel).toHaveBeenCalled()
+  })
+
+  it('should NOT call onCancel when clicking outside and shouldCloseOnOutsideClick is false', () => {
+    const handleCancel = vi.fn()
+
+    render(
+      <div data-testid="outside">
+        <EditEntireItemAction
+          {...instance(mockedProps)}
+          initialValue={valueOfEntireItem}
+          onCancel={handleCancel}
+          shouldCloseOnOutsideClick={false}
+        />
+      </div>,
+    )
+
+    fireEvent.mouseDown(screen.getByTestId('outside'))
+    expect(handleCancel).not.toHaveBeenCalled()
+  })
 })

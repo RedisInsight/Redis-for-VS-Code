@@ -255,6 +255,7 @@
   },
   "dependencies": {
     "@stablelib/snappy": "^1.0.3",
+    "@types/deep-diff": "^1.0.5",
     "@vscode/l10n": "^0.0.18",
     "@vscode/webview-ui-toolkit": "^1.4.0",
     "axios": "^1.8.3",
@@ -264,6 +265,7 @@
     "connection-string": "^4.4.0",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
+    "deep-diff": "^1.0.2",
     "detect-port": "^1.6.1",
     "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
