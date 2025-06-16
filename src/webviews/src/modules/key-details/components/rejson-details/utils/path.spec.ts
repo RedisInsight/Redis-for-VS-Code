@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/quotes */
-import { checkExistingPath } from './tbd'
+import { checkExistingPath } from './path'
 
 describe('checkExistingPath', () => {
   it('returns true for empty path (a.k.a. the whole object)', () => {

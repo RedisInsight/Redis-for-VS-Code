@@ -3,7 +3,7 @@ import { instance, mock } from 'ts-mockito'
 import { fireEvent, render, screen, act, waitForStack, constants } from 'testSrc/helpers'
 
 import { RejsonObject } from './RejsonObject'
-import * as tbdUtils from './tbd'
+import * as pathUtils from '../utils/path'
 import * as store from '../hooks/useRejsonStore'
 import { JSONObjectProps, ObjectTypes } from '../interfaces'
 
@@ -384,7 +384,7 @@ describe('JSONObject', () => {
   })
 
   it('should apply new value for existing key after confirming in ConfirmDialog', async () => {
-    vi.spyOn(tbdUtils, 'checkExistingPath').mockReturnValue(true)
+    vi.spyOn(pathUtils, 'checkExistingPath').mockReturnValue(true)
     vi.spyOn(store, 'useRejsonStore').mockReturnValue({
       fullValue: JSON.stringify({ existingKey: 1 }),
     })

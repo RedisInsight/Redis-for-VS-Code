@@ -16,7 +16,7 @@ import {
   setReJSONDataAction,
 } from '../hooks/useRejsonStore'
 
-import { checkExistingPath } from '../rejson-object/tbd'
+import { checkExistingPath } from '../utils/path'
 import ReJSONConfirmDialog from '../rejson-object/RejsonConfirmDialog'
 import styles from '../styles.module.scss'
 
