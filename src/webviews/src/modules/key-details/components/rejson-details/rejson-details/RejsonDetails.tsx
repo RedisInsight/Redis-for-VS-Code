@@ -16,6 +16,8 @@ import {
   setReJSONDataAction,
 } from '../hooks/useRejsonStore'
 
+import { checkExistingPath } from '../rejson-object/tbd'
+import ReJSONConfirmDialog from '../rejson-object/RejsonConfirmDialog'
 import styles from '../styles.module.scss'
 
 export const RejsonDetails = (props: BaseProps) => {
@@ -31,6 +33,8 @@ export const RejsonDetails = (props: BaseProps) => {
   } = props
 
   const [addRootKVPair, setAddRootKVPair] = useState<boolean>(false)
+  const [isConfirmVisible, setIsConfirmVisible] = useState<boolean>(false)
+  const [confirmDialogAction, setConfirmDialogAction] = useState<any>(() => {})
 
   const databaseId = useKeysInContext((state) => state.databaseId)
 
@@ -61,14 +65,38 @@ export const RejsonDetails = (props: BaseProps) => {
     })
   }
 
-  const handleFormSubmit = ({ key, value }: { key?: string, value: string }) => {
+  const handleFormSubmit = ({
+    key,
+    value,
+  }: {
+    key?: string
+    value: string
+  }) => {
+    const updatedPath = wrapPath(key as string)
+    if (key) {
+      const isExisting = checkExistingPath(updatedPath as string, data)
+
+      if (isExisting) {
+        setConfirmDialogAction(() => () => {
+          setIsConfirmVisible(false)
+
+          if (updatedPath) {
+            handleSetRejsonDataAction(selectedKey, updatedPath, value)
+          }
+          setAddRootKVPair(false)
+        })
+
+        setIsConfirmVisible(true)
+        return
+      }
+    }
+
     setAddRootKVPair(false)
     if (isRealArray(data, dataType)) {
       handleAppendRejsonArrayItemAction(selectedKey, '.', value)
       return
     }
 
-    const updatedPath = wrapPath(key as string)
     if (updatedPath) {
       handleSetRejsonDataAction(selectedKey, updatedPath, value)
     }
@@ -101,6 +129,11 @@ export const RejsonDetails = (props: BaseProps) => {
             <span>{getBrackets(isObject ? ObjectTypes.Object : ObjectTypes.Array, 'start')}</span>
           </div>
         )}
+        <ReJSONConfirmDialog
+          open={isConfirmVisible}
+          onClose={() => setIsConfirmVisible(false)}
+          onConfirm={confirmDialogAction}
+        />
         <RejsonDynamicTypes
           data={data}
           parentPath={parentPath}
