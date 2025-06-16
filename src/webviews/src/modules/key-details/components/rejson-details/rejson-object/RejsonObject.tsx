@@ -256,6 +256,7 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
           initialValue={valueOfEntireObject}
           onCancel={() => setEditEntireObject(false)}
           onSubmit={handleUpdateValueFormSubmit}
+          shouldCloseOnOutsideClick={false}
         />
       ) : (
         <RejsonDynamicTypes

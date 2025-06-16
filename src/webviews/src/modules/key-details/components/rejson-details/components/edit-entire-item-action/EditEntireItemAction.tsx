@@ -17,18 +17,22 @@ import styles from '../../styles.module.scss'
 
 export interface Props {
   initialValue: string
+  shouldCloseOnOutsideClick?: boolean
   onCancel?: () => void
   onSubmit: (value: string) => void
 }
 
 export const EditEntireItemAction = (props: Props) => {
-  const { initialValue, onCancel, onSubmit } = props
+  const {
+    initialValue,
+    onCancel,
+    onSubmit,
+    shouldCloseOnOutsideClick = true,
+  } = props
   const [value, setValue] = useState<string>(initialValue)
   const [error, setError] = useState<Nullable<string>>(null)
 
-  const handleClickOutside = () => {
-    onCancel?.()
-  }
+  const handleClickOutside = () => shouldCloseOnOutsideClick && onCancel?.()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
