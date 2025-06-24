@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
+import { diff } from 'deep-diff'
 
+import { useShallow } from 'zustand/react/shallow'
 import { Spinner } from 'uiSrc/ui'
 
+import ReJSONConfirmDialog from './RejsonConfirmDialog'
+import { checkExistingPath } from '../utils/path'
 import { RejsonDynamicTypes } from '../rejson-dynamic-types'
 import { JSONObjectProps, ObjectTypes } from '../interfaces'
 import { generatePath, getBrackets, wrapPath } from '../utils'
@@ -13,9 +17,17 @@ import {
   EditItemFieldAction,
 } from '../components'
 
+import { useRejsonStore } from '../hooks/useRejsonStore'
 import styles from '../styles.module.scss'
 
 const defaultValue: [] = []
+
+const JSONParse = (value: string) => JSON.parse(value)
+
+const hasModifications = (oldObj: any, newObj: any) => {
+  const differences = diff(oldObj, newObj)
+  return differences?.some((d: any) => d.kind === 'E')
+}
 
 export const RejsonObject = React.memo((props: JSONObjectProps) => {
   const {
@@ -38,7 +50,9 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
     value: currentValue,
   } = props
 
-  const [path] = useState<string>(currentFullPath || generatePath(parentPath, keyName))
+  const [path] = useState<string>(
+    currentFullPath || generatePath(parentPath, keyName),
+  )
   const [value, setValue] = useState<any>(defaultValue)
   const [downloaded, setDownloaded] = useState<boolean>(isDownloaded)
   const [editEntireObject, setEditEntireObject] = useState<boolean>(false)
@@ -46,6 +60,14 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
   const [addNewKeyValuePair, setAddNewKeyValuePair] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
+  const [isConfirmVisible, setIsConfirmVisible] = useState<boolean>(false)
+  const [confirmDialogAction, setConfirmDialogAction] = useState<any>(() => {})
+
+  const { fullValue } = useRejsonStore(
+    useShallow((state) => ({
+      fullValue: state.data.data,
+    })),
+  )
 
   useEffect(() => {
     if (!expandedRows?.has(path)) {
@@ -62,34 +84,73 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
     fetchObject()
   }, [])
 
-  const handleFormSubmit = ({ key, value }: { key?: string, value: string }) => {
-    setAddNewKeyValuePair(false)
-
+  const handleFormSubmit = ({
+    key,
+    value: updatedValue,
+  }: {
+    key?: string
+    value: string
+  }) => {
     if (type === ObjectTypes.Array) {
       handleAppendRejsonObjectItemAction(selectedKey, path, value)
       return
     }
 
     const updatedPath = wrapPath(key as string, path)
+    const isKeyExisting = fullValue
+      ? checkExistingPath(updatedPath || '', JSONParse(fullValue as string))
+      : false
+
+    if (isKeyExisting) {
+      setConfirmDialogAction(() => () => {
+        setIsConfirmVisible(false)
+        setAddNewKeyValuePair(false)
+
+        if (updatedPath) {
+          handleSetRejsonDataAction(selectedKey, updatedPath, updatedValue)
+        }
+      })
+
+      setIsConfirmVisible(true)
+      return
+    }
+
+    setAddNewKeyValuePair(false)
     if (updatedPath) {
-      handleSetRejsonDataAction(selectedKey, updatedPath, value)
+      handleSetRejsonDataAction(selectedKey, updatedPath, updatedValue)
     }
   }
 
-  const handleUpdateValueFormSubmit = (value: string) => {
+  const handleUpdateValueFormSubmit = (updatedValue: string) => {
+    if (hasModifications(value, JSONParse(updatedValue))) {
+      setConfirmDialogAction(() => () => {
+        setIsConfirmVisible(false)
+        setEditEntireObject(false)
+        handleSetRejsonDataAction(selectedKey, path, updatedValue as string)
+      })
+
+      setIsConfirmVisible(true)
+      return
+    }
+
     setEditEntireObject(false)
-    handleSetRejsonDataAction(selectedKey, path, value as string)
+    handleSetRejsonDataAction(selectedKey, path, updatedValue as string)
   }
 
   const onClickEditEntireObject = async () => {
     const data = await handleFetchVisualisationResults(selectedKey, path, true)
 
     setEditEntireObject(true)
-    setValueOfEntireObject(typeof data.data === 'object' ? JSON.stringify(data.data, (_key, value) => (
-      typeof value === 'bigint'
-        ? value.toString()
-        : value
-    ), 4) : data.data)
+    setValueOfEntireObject(
+      typeof data.data === 'object'
+        ? JSON.stringify(
+          data.data,
+          (_key, value) =>
+            (typeof value === 'bigint' ? value.toString() : value),
+          4,
+        )
+        : data.data,
+    )
   }
 
   const onClickExpandCollapse = (path: string) => {
@@ -116,7 +177,10 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
     const spinnerDelay = setTimeout(() => setLoading(true), 300)
 
     try {
-      const { data, downloaded } = await handleFetchVisualisationResults(selectedKey, path)
+      const { data, downloaded } = await handleFetchVisualisationResults(
+        selectedKey,
+        path,
+      )
 
       setValue(data)
       onJsonKeyExpandAndCollapse(true, path)
@@ -134,7 +198,15 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
     <>
       <div className={styles.row} key={keyName + parentPath}>
         <div className={styles.rowContainer}>
-          <div className={styles.quotedKeyName} style={{ paddingLeft: `${leftPadding}em` }}>
+          <ReJSONConfirmDialog
+            open={isConfirmVisible}
+            onClose={() => setIsConfirmVisible(false)}
+            onConfirm={confirmDialogAction}
+          />
+          <div
+            className={styles.quotedKeyName}
+            style={{ paddingLeft: `${leftPadding}em` }}
+          >
             <span
               className={cx(styles.quoted, styles.keyName)}
               onClick={() => onClickExpandCollapse(path)}
@@ -155,7 +227,11 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
                 {getBrackets(type, 'end')}
               </div>
             )}
-            {isExpanded && !editEntireObject && <span className={styles.defaultFontOpenIndex}>{getBrackets(type, 'start')}</span>}
+            {isExpanded && !editEntireObject && (
+              <span className={styles.defaultFontOpenIndex}>
+                {getBrackets(type, 'start')}
+              </span>
+            )}
           </div>
           {!editEntireObject && !loading && (
             <EditItemFieldAction
@@ -180,6 +256,7 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
           initialValue={valueOfEntireObject}
           onCancel={() => setEditEntireObject(false)}
           onSubmit={handleUpdateValueFormSubmit}
+          shouldCloseOnOutsideClick={false}
         />
       ) : (
         <RejsonDynamicTypes
@@ -193,7 +270,9 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
           onJsonKeyExpandAndCollapse={onJsonKeyExpandAndCollapse}
           handleSubmitUpdateValue={handleSubmitUpdateValue}
           handleFetchVisualisationResults={handleFetchVisualisationResults}
-          handleAppendRejsonObjectItemAction={handleAppendRejsonObjectItemAction}
+          handleAppendRejsonObjectItemAction={
+            handleAppendRejsonObjectItemAction
+          }
           handleSetRejsonDataAction={handleSetRejsonDataAction}
         />
       )}
@@ -203,6 +282,7 @@ export const RejsonObject = React.memo((props: JSONObjectProps) => {
           onCancel={() => setAddNewKeyValuePair(false)}
           onSubmit={handleFormSubmit}
           leftPadding={leftPadding}
+          shouldCloseOnOutsideClick={false}
         />
       )}
       {isExpanded && !editEntireObject && (
